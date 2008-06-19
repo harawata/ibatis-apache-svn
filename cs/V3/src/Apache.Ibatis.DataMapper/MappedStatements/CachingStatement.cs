@@ -32,6 +32,7 @@ using System.Diagnostics;
 using Apache.Ibatis.DataMapper.Data;
 using Apache.Ibatis.DataMapper.Model;
 using Apache.Ibatis.DataMapper.Model.Cache;
+using Apache.Ibatis.DataMapper.Model.Cache.Decorators;
 using Apache.Ibatis.DataMapper.Model.Events;
 using Apache.Ibatis.DataMapper.Model.Statements;
 using Apache.Ibatis.DataMapper.Scope;
@@ -144,7 +145,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
 			if (map == null) 
 			{
 				map = mappedStatement.RunQueryForMap( request, session, parameterObject, keyProperty, valueProperty, null );
-				Statement.CacheModel[cacheKey] = map;
+                Statement.CacheModel[cacheKey] = map;
 			}
 
 			return map;
@@ -340,9 +341,9 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
 			CacheKey cacheKey = GetCacheKey(request);
 			cacheKey.Update("ExecuteQueryForObject");
 
-			obj = Statement.CacheModel[cacheKey];
+            obj = Statement.CacheModel[cacheKey];
 			// check if this query has alreay been run 
-			if (obj == CacheModel.NULL_OBJECT) 
+            if (obj == CacheModel.NULL_OBJECT) 
 			{ 
 				// convert the marker object back into a null value 
 				obj = null; 
@@ -350,7 +351,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
 			else if (obj ==null)
 			{
                 obj = mappedStatement.RunQueryForObject(request, session, param, resultObject);
-				Statement.CacheModel[cacheKey] = obj;
+                Statement.CacheModel[cacheKey] = obj;
 			}
 
             return RaisePostEvent<object, PostSelectEventArgs>(PostSelectEvent, param, obj);
@@ -445,22 +446,6 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
 
 		#endregion
 
-		/// <summary>
-		/// Gets a percentage of successful cache hits achieved
-		/// </summary>
-		/// <returns>The percentage of hits (0-1), or -1 if cache is disabled.</returns>
-		public double GetDataCacheHitRatio() 
-		{
-			if (mappedStatement.Statement.CacheModel != null) 
-			{
-				return mappedStatement.Statement.CacheModel.HitRatio;
-			} 
-			else 
-			{
-				return -1;
-			}
-		}
-
         /// <summary>
         /// Gets the cache key.
         /// </summary>
@@ -483,11 +468,12 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
             cacheKey.Update(mappedStatement.ModelStore.SessionFactory.DataSource.ConnectionString);
 			cacheKey.Update(request.IDbCommand.CommandText);
 
-			CacheModel cacheModel = mappedStatement.Statement.CacheModel;
-			if (!cacheModel.IsReadOnly && !cacheModel.IsSerializable) 
-			{
-				cacheKey.Update(request);
-			}
+            //todo a supprimer
+            //CacheModel cacheModel = mappedStatement.Statement.CacheModel;
+            //if (!cacheModel.IsReadOnly && !cacheModel.IsSerializable) 
+            //{
+			//	cacheKey.Update(request);
+            //}
 			return cacheKey;
 		}
     }

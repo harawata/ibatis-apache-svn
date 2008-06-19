@@ -205,7 +205,7 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures
             // Cache model
             Assert.That(store.CacheModels.Length, Is.EqualTo(2));
             IConfiguration cacheModel = store.CacheModels[0];
-            Assert.That(cacheModel.Children.Count, Is.EqualTo(4));
+            Assert.That(cacheModel.Children.Count, Is.EqualTo(2));
             Assert.That(cacheModel.Attributes.ContainsKey(ConfigConstants.ATTRIBUTE_NAMESPACE), Is.True);
 
             // Result map

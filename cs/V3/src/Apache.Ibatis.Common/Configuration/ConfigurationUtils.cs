@@ -140,6 +140,27 @@ namespace Apache.Ibatis.Common.Configuration
         }
 
         /// <summary>
+        /// Gets the long value of the attribute with the specified name.
+        /// </summary>
+        /// <param name="attributes">The attributes.</param>
+        /// <param name="name">The name.</param>
+        /// <param name="def">The default value to be returned if the attribute is not found.</param>
+        /// <returns>If the attribute exists its value otherwise the default value</returns>
+        public static long GetLongAttribute(IDictionary<string, string> attributes, string name, long def)
+        {
+            string value = null;
+            attributes.TryGetValue(name, out value);
+            if (value == null)
+            {
+                return def;
+            }
+            else
+            {
+                return XmlConvert.ToInt64(value);
+            }
+        }
+
+        /// <summary>
         /// Gets the bool value of the attribute with the specified name.
         /// </summary>
         /// <param name="attributes">The list of attributes</param>

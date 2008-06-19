@@ -5,11 +5,12 @@ using System.Threading;
 using Apache.Ibatis.Common.Utilities;
 
 using Apache.Ibatis.DataMapper.MappedStatements;
+using Apache.Ibatis.DataMapper.Model.Cache.Decorators;
+using Apache.Ibatis.DataMapper.Model.Cache.Implementation;
 using Apache.Ibatis.DataMapper.SqlClient.Test.Domain;
 using Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures;
 using NUnit.Framework;
 using Apache.Ibatis.DataMapper.Model.Cache;
-using Apache.Ibatis.DataMapper.Model.Cache.Lru;
 using Apache.Ibatis.DataMapper.Session;
 
 namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
@@ -288,7 +289,6 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
             object returnedObject = cache[key];
             Assert.AreEqual(CacheModel.NULL_OBJECT, returnedObject);
             Assert.AreEqual(HashCodeProvider.GetIdentityHashCode(CacheModel.NULL_OBJECT), HashCodeProvider.GetIdentityHashCode(returnedObject));
-            Assert.AreEqual(1, cache.HitRatio);
         }
 
 
@@ -299,6 +299,7 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
         public void TestCacheHit() 
         {
             CacheModel cache = GetCacheModel();
+
             CacheKey key = new CacheKey();
             key.Update("testKey");
 
@@ -308,7 +309,6 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
             object returnedObject = cache[key];
             Assert.AreEqual(value, returnedObject);
             Assert.AreEqual(HashCodeProvider.GetIdentityHashCode(value), HashCodeProvider.GetIdentityHashCode(returnedObject));
-            Assert.AreEqual(1, cache.HitRatio);
         }
 
         /// <summary>
@@ -318,6 +318,7 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
         public void TestCacheMiss() 
         {
             CacheModel cache = GetCacheModel();
+
             CacheKey key = new CacheKey();
             key.Update("testKey");
 
@@ -330,7 +331,7 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
             object returnedObject = cache[wrongKey];
             Assert.IsTrue(!value.Equals(returnedObject));
             Assert.IsNull(returnedObject) ;
-            Assert.AreEqual(0, cache.HitRatio);
+            //Assert.AreEqual(0, cache.HitRatio);
         }
 		
         /// <summary>
@@ -340,6 +341,7 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
         public void TestCacheHitMiss() 
         {
             CacheModel cache = GetCacheModel();
+
             CacheKey key = new CacheKey();
             key.Update("testKey");
 
@@ -356,7 +358,7 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
             returnedObject = cache[wrongKey];
             Assert.IsTrue(!value.Equals(returnedObject));
             Assert.IsNull(returnedObject) ;
-            Assert.AreEqual(0.5, cache.HitRatio);
+            //Assert.AreEqual(0.5, cache.HitRatio);
         }
 
 
@@ -368,6 +370,7 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
         public void TestDuplicateAddCache() 
         {
             CacheModel cache = GetCacheModel();
+
             CacheKey key = new CacheKey();
             key.Update("testKey");
             string value = "testValue";
@@ -388,8 +391,8 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
 
         private CacheModel GetCacheModel() 
         {
-            CacheModel cache = new CacheModel("test", typeof(LruCacheController).FullName, new Hashtable());
-            cache.FlushInterval = new FlushInterval(0, 5, 0, 0);
+            CacheModel cache = new CacheModel("test", typeof(PerpetualCache).FullName, long.MinValue, 0, false);
+            //cache.FlushInterval = new FlushInterval(0, 5, 0, 0);
 			
             return cache;
         }

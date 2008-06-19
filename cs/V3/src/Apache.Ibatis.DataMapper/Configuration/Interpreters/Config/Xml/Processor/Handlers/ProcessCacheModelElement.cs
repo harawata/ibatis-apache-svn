@@ -39,7 +39,7 @@ namespace Apache.Ibatis.DataMapper.Configuration.Interpreters.Config.Xml.Process
             MutableConfiguration config = new MutableConfiguration(
                 element.Name,
                 ApplyNamespace(element.Attributes[ConfigConstants.ATTRIBUTE_ID]),
-                element.Attributes[ConfigConstants.ATTRIBUTE_IMPLEMENTATION]);
+                element.Attributes[ConfigConstants.ATTRIBUTE_TYPE]);
             config.CreateAttributes(element.Attributes);
             config.CreateAttribute(ConfigConstants.ATTRIBUTE_NAMESPACE, nameSpace);
 

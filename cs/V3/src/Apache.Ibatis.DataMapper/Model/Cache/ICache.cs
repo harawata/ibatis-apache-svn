@@ -24,33 +24,34 @@
  ********************************************************************************/
 #endregion
 
-#region Imports
 using System;
-using System.Collections;
-using System.Collections.Specialized;
-#endregion
+using System.Collections.Generic;
 
 namespace Apache.Ibatis.DataMapper.Model.Cache
 {
 	/// <summary>
-	/// Summary description for ICacheController.
+	/// Summary description for ICache.
 	/// </summary>
-	public interface ICacheController
+	public interface ICache
 	{
-		#region Properties
+        /// <summary>
+        /// Gets the id.
+        /// </summary>
+        /// <value>The id.</value>
+        string Id { get; set;}
+
+        /// <summary>
+        /// Gets the size.
+        /// </summary>
+        /// <value>The size.</value>
+        int Size { get; set;}
+
 		/// <summary>
 		/// Adds an item with the specified key and value into cached data.
 		/// Gets a cached object with the specified key.
 		/// </summary>
 		/// <value>The cached object or <c>null</c></value>
-		object this [object key] 
-		{
-			get;
-			set;
-		}
-		#endregion
-
-		#region Methods
+		object this [object key] {get;set;}
 	
 		/// <summary>
 		/// Remove an object from a cache model
@@ -62,14 +63,16 @@ namespace Apache.Ibatis.DataMapper.Model.Cache
 		/// <summary>
 		/// Clears all elements from the cache.
 		/// </summary>
-		void Flush ();
+        void Clear();
 
-		/// <summary>
-		/// Configures the CacheController
-		/// </summary>
-		/// <param name="properties"></param>
-		void Configure(IDictionary properties);
-		#endregion
+        /// <summary>
+        /// Determines whether the cache contains the key.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <returns>
+        /// 	<c>true</c> if the specified key contains key; otherwise, <c>false</c>.
+        /// </returns>
+        bool ContainsKey(Object key);
 
 	}
 }

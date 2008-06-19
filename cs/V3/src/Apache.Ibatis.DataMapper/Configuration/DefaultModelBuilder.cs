@@ -31,11 +31,9 @@ using Apache.Ibatis.Common.Data;
 using Apache.Ibatis.Common.Utilities.Objects;
 using Apache.Ibatis.Common.Utilities.Objects.Members;
 using Apache.Ibatis.DataMapper.Model.Alias;
-using Apache.Ibatis.DataMapper.Model.Cache.Fifo;
-using Apache.Ibatis.DataMapper.Model.Cache.Lru;
-using Apache.Ibatis.DataMapper.Model.Cache.Memory;
 using Apache.Ibatis.DataMapper.DataExchange;
 using Apache.Ibatis.DataMapper.Model;
+using Apache.Ibatis.DataMapper.Model.Cache.Implementation;
 using Apache.Ibatis.DataMapper.Session.Transaction;
 using Apache.Ibatis.DataMapper.TypeHandlers;
 using Apache.Ibatis.DataMapper.Configuration.Interpreters.Config;
@@ -143,13 +141,24 @@ namespace Apache.Ibatis.DataMapper.Configuration
             AccessorFactory accessorFactory = new AccessorFactory(setAccessorFactory, getAccessorFactory);
 
             TypeHandlerFactory typeHandlerFactory = new TypeHandlerFactory();
-            TypeAlias alias = new TypeAlias("MEMORY", typeof(MemoryCacheControler));
+            TypeAlias alias = new TypeAlias("MEMORY", typeof(PerpetualCache));
+            typeHandlerFactory.AddTypeAlias(alias.Id, alias);
+            alias = new TypeAlias("Perpetual", typeof(PerpetualCache));
             typeHandlerFactory.AddTypeAlias(alias.Id, alias);
 
-            alias = new TypeAlias("LRU", typeof(LruCacheController));
+            alias = new TypeAlias("LRU", typeof(LruCache));
+            typeHandlerFactory.AddTypeAlias(alias.Id, alias);
+            alias = new TypeAlias("Lru", typeof(LruCache));
             typeHandlerFactory.AddTypeAlias(alias.Id, alias);
 
-            alias = new TypeAlias("FIFO", typeof(FifoCacheController));
+            alias = new TypeAlias("FIFO", typeof(FifoCache));
+            typeHandlerFactory.AddTypeAlias(alias.Id, alias);
+            alias = new TypeAlias("Fifo", typeof(FifoCache));
+            typeHandlerFactory.AddTypeAlias(alias.Id, alias);
+
+            alias = new TypeAlias("Weak", typeof(WeakCache));
+            typeHandlerFactory.AddTypeAlias(alias.Id, alias);
+            alias = new TypeAlias("WEAK", typeof(WeakCache));
             typeHandlerFactory.AddTypeAlias(alias.Id, alias);
 
             alias = new TypeAlias("AnsiStringTypeHandler", typeof(AnsiStringTypeHandler));

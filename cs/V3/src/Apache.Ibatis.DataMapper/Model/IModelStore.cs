@@ -137,12 +137,6 @@ namespace Apache.Ibatis.DataMapper.Model
         /// Flushes the caches.
         /// </summary>
         void FlushCaches();
-
-        /// <summary>
-        /// Gets the data cache statistique.
-        /// </summary>
-        /// <returns></returns>
-        string GetDataCacheStats();
         
     }
 }

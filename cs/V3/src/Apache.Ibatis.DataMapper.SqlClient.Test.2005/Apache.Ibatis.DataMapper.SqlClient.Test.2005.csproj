@@ -49,6 +49,13 @@
     <Compile Include="Domain\SimpleSqlSource.cs" />
     <Compile Include="Domain\SqlSourceWithInlineParameter.cs" />
     <Compile Include="Domain\SqlSourceWithParameter.cs" />
+    <Compile Include="Fixtures\Mapping\Cache\BaseCacheTest.cs" />
+    <Compile Include="Fixtures\Mapping\Cache\CacheKeyTest.cs" />
+    <Compile Include="Fixtures\Mapping\Cache\FifoCacheTest.cs" />
+    <Compile Include="Fixtures\Mapping\Cache\LruCacheTest.cs" />
+    <Compile Include="Fixtures\Mapping\Cache\PerpetualCacheTest.cs" />
+    <Compile Include="Fixtures\Mapping\Cache\ScheduledCacheTest.cs" />
+    <Compile Include="Fixtures\Mapping\Cache\WeakCacheTest.cs" />
     <Compile Include="Fixtures\Mapping\CircularReferenceTest.cs" />
     <Compile Include="Fixtures\Mapping\EventTest.cs" />
     <Compile Include="Fixtures\Mapping\VelocityTest.cs" />
@@ -106,11 +113,7 @@
     <Compile Include="Fixtures\ConfigureTest.cs" />
     <Compile Include="Fixtures\DefaultConfigurationEngineTest.cs" />
     <Compile Include="Fixtures\DefaultModelBuilderTest.cs" />
-    <Compile Include="Fixtures\Mapping\CacheController\CacheModelTest.cs" />
-    <Compile Include="Fixtures\Mapping\CacheController\FifoCacheControllerTest.cs" />
-    <Compile Include="Fixtures\Mapping\CacheController\LruCacheControllerTest.cs" />
-    <Compile Include="Fixtures\Mapping\CacheController\MemoryCacheControllerTest.cs" />
-    <Compile Include="Fixtures\Mapping\CacheKeyTest.cs" />
+    <Compile Include="Fixtures\Mapping\Cache\CacheModelTest.cs" />
     <Compile Include="Fixtures\Mapping\CacheTest.cs" />
     <Compile Include="Fixtures\Mapping\ComplexTypeTest.cs" />
     <Compile Include="Fixtures\Mapping\ConstructorTest.cs" />

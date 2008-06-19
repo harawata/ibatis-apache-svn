@@ -23,17 +23,11 @@
  ********************************************************************************/
 #endregion
 
-using System;
+using System.Collections.Generic;
 using Apache.Ibatis.Common.Configuration;
-using Apache.Ibatis.Common.Data;
-
-using Apache.Ibatis.DataMapper.Configuration.Serializers;
-using Apache.Ibatis.DataMapper.Configuration.Interpreters.Config.Xml;
-using Apache.Ibatis.DataMapper.Model.Cache;
 using Apache.Ibatis.DataMapper.Configuration.Interpreters.Config;
-using Apache.Ibatis.Common.Exceptions;
-using System.Collections;
-using System.Collections.Specialized;
+using Apache.Ibatis.DataMapper.Configuration.Serializers;
+using Apache.Ibatis.DataMapper.Model.Cache;
 
 namespace Apache.Ibatis.DataMapper.Configuration
 {
@@ -48,9 +42,7 @@ namespace Apache.Ibatis.DataMapper.Configuration
         {
             foreach (IConfiguration cacheModelConfig in store.CacheModels)
             {
-                IDictionary properties = GetProperties(cacheModelConfig);
-
-                CacheModel cacheModel = CacheModelDeSerializer.Deserialize(cacheModelConfig, properties, modelStore.DataExchangeFactory.TypeHandlerFactory);
+                CacheModel cacheModel = CacheModelDeSerializer.Deserialize(cacheModelConfig, modelStore.DataExchangeFactory);
 
                 string nameSpace = ConfigurationUtils.GetMandatoryStringAttribute(cacheModelConfig, ConfigConstants.ATTRIBUTE_NAMESPACE);
 
@@ -67,8 +59,6 @@ namespace Apache.Ibatis.DataMapper.Configuration
                     cacheModel.StatementFlushNames.Add(statementId);
                 }
 
-                cacheModel.FlushInterval = BuildFlushInterval(cacheModelConfig);
-
                 modelStore.AddCacheModel(cacheModel);
             }
         }
@@ -78,9 +68,9 @@ namespace Apache.Ibatis.DataMapper.Configuration
         /// </summary>
         /// <param name="cacheModelConfiguration">The cache model configuration.</param>
         /// <returns></returns>
-        private IDictionary GetProperties(IConfiguration cacheModelConfiguration)
+        private IDictionary<string, string> GetProperties(IConfiguration cacheModelConfiguration)
         {
-            IDictionary properties = new HybridDictionary();
+            IDictionary<string, string> properties = new Dictionary<string, string>();
 
             // Get Properties 
             ConfigurationCollection propertiesConfigs = cacheModelConfiguration.Children.Find(ConfigConstants.ELEMENT_PROPERTY);
@@ -95,26 +85,5 @@ namespace Apache.Ibatis.DataMapper.Configuration
             return properties;
         }
 
-        /// <summary>
-        /// Builds the flush interval.
-        /// </summary>
-        /// <param name="cacheModelConfiguration">The cache model configuration.</param>
-        private FlushInterval BuildFlushInterval(IConfiguration cacheModelConfiguration)
-        {
-            FlushInterval flushInterval = null;
-            ConfigurationCollection flushIntervalConfigs = cacheModelConfiguration.Children.Find(ConfigConstants.ELEMENT_FLUSHINTERVAL);
-
-            if (flushIntervalConfigs.Count > 0)
-            {
-                int hours = ConfigurationUtils.GetIntAttribute(flushIntervalConfigs[0].Attributes, "hours", 0);
-                int minutes = ConfigurationUtils.GetIntAttribute(flushIntervalConfigs[0].Attributes, "minutes", 0);
-                int seconds = ConfigurationUtils.GetIntAttribute(flushIntervalConfigs[0].Attributes, "seconds", 0);
-                int milliseconds = ConfigurationUtils.GetIntAttribute(flushIntervalConfigs[0].Attributes, "milliseconds", 0);
-
-                flushInterval = new FlushInterval(hours, minutes, seconds, milliseconds);
-            }
-
-            return flushInterval;
-        }
     }
 }

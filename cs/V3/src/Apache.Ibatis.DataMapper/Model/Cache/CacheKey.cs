@@ -24,7 +24,7 @@
  ********************************************************************************/
 #endregion
 
-using System.Collections;
+using System.Collections.Generic;
 using System.Text;
 using Apache.Ibatis.Common.Utilities;
 
@@ -43,7 +43,7 @@ namespace Apache.Ibatis.DataMapper.Model.Cache
 		private int hashCode = DEFAULT_HASHCODE;
 		private long checksum = long.MinValue;
 		private int count = 0;
-        private readonly IList paramList = new ArrayList();
+        private readonly IList<object> paramList = new List<object>();
 
 		/// <summary>
 		/// Default constructor
@@ -55,28 +55,14 @@ namespace Apache.Ibatis.DataMapper.Model.Cache
 			count = 0;
 		}
 
-		/// <summary>
-		/// Constructor that supplies an initial hashcode
-		/// </summary>
-		/// <param name="initialNonZeroOddNumber">the hashcode to use</param>
-		public CacheKey(int initialNonZeroOddNumber) 
-		{
-			hashCode = initialNonZeroOddNumber;
-			multiplier = DEFAULT_MULTIPLYER;
-			count = 0;
-		}
-
-		/// <summary>
-		/// Constructor that supplies an initial hashcode and multiplier
-		/// </summary>
-		/// <param name="initialNonZeroOddNumber">the hashcode to use</param>
-		/// <param name="multiplierNonZeroOddNumber">the multiplier to use</param>
-		public CacheKey(int initialNonZeroOddNumber, int multiplierNonZeroOddNumber) 
-		{
-			hashCode = initialNonZeroOddNumber;
-			multiplier = multiplierNonZeroOddNumber;
-			count = 0;
-		}
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CacheKey"/> class.
+        /// </summary>
+        /// <param name="objects">The objects.</param>
+	    public CacheKey(object[] objects):this()
+        {
+            UpdateAll(objects);
+        }
 
 		/// <summary>
 		/// Updates this object with new information based on an object
@@ -85,7 +71,7 @@ namespace Apache.Ibatis.DataMapper.Model.Cache
 		/// <returns>the cachekey</returns>
 		public CacheKey Update(object obj) 
 		{
-			int baseHashCode = HashCodeProvider.GetIdentityHashCode(obj);
+			int baseHashCode =  (obj == null)? 1 :HashCodeProvider.GetIdentityHashCode(obj);
 
 			count++;
 			checksum += baseHashCode;
@@ -97,6 +83,18 @@ namespace Apache.Ibatis.DataMapper.Model.Cache
 
 			return this;
 		}
+
+        /// <summary>
+        /// Updates all.
+        /// </summary>
+        /// <param name="objects">The objects.</param>
+          public void UpdateAll(object[] objects) 
+          {
+                foreach(object o in objects) 
+                {
+                  Update(o);
+                }
+            }
 
 		/// <summary>
 		/// 

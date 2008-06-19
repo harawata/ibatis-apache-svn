@@ -255,7 +255,14 @@ namespace Apache.Ibatis.DataMapper.Configuration.Interpreters.Config
         /// Token for attribute validateSqlMap.
         /// </summary>
         public const string ATTRIBUTE_VALIDATE_SQLMAP = "validateSqlMap";
-
+        /// <summary>
+        /// Token for attribute flushInterval.
+        /// </summary>
+        public const string ATTRIBUTE_FLUSHINTERVAL = "flushInterval";
+        /// <summary>
+        /// Token for attribute share.
+        /// </summary>
+        public const string ATTRIBUTE_SHARE = "share";
         #endregion
 
         #region Token element

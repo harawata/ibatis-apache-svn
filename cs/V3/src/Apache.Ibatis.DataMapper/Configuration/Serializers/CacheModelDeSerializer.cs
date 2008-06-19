@@ -25,15 +25,11 @@
 
 #region Using
 
-using System.Collections.Specialized;
-using System.Xml;
-using Apache.Ibatis.Common.Xml;
-using Apache.Ibatis.DataMapper.Model.Cache;
-using Apache.Ibatis.DataMapper.Scope;
 using Apache.Ibatis.Common.Configuration;
-using Apache.Ibatis.DataMapper.TypeHandlers;
-using System.Collections;
 using Apache.Ibatis.DataMapper.Configuration.Interpreters.Config;
+using Apache.Ibatis.DataMapper.DataExchange;
+using Apache.Ibatis.DataMapper.Model.Cache;
+
 #endregion 
 
 
@@ -49,18 +45,18 @@ namespace Apache.Ibatis.DataMapper.Configuration.Serializers
         /// Deserializes the specified config in a CacheModel object.
         /// </summary>
         /// <param name="config">The config.</param>
-        /// <param name="properties">The cacheModel properties.</param>
-        /// <param name="typeHandlerFactory">The type handler factory.</param>
+        /// <param name="dataExchangeFactory">The data exchange factory.</param>
         /// <returns>A CacheModel object</returns>
-        public static CacheModel Deserialize(IConfiguration config, IDictionary properties, TypeHandlerFactory typeHandlerFactory)
+        public static CacheModel Deserialize(IConfiguration config, DataExchangeFactory dataExchangeFactory)
         {
             string id = config.Id;
-            string implementation = ConfigurationUtils.GetMandatoryStringAttribute(config, ConfigConstants.ATTRIBUTE_IMPLEMENTATION);
-            implementation = typeHandlerFactory.GetTypeAlias(implementation).Type.AssemblyQualifiedName;
-            bool isReadOnly = ConfigurationUtils.GetBooleanAttribute(config.Attributes, ConfigConstants.ATTRIBUTE_READONLY, true);
-            bool isSerializable = ConfigurationUtils.GetBooleanAttribute(config.Attributes, ConfigConstants.ATTRIBUTE_SERIALIZE, false);
+            string type = ConfigurationUtils.GetMandatoryStringAttribute(config, ConfigConstants.ATTRIBUTE_TYPE);
+            type = dataExchangeFactory.TypeHandlerFactory.GetTypeAlias(type).Type.AssemblyQualifiedName;
+            long flushInterval = ConfigurationUtils.GetLongAttribute(config.Attributes, ConfigConstants.ATTRIBUTE_FLUSHINTERVAL, int.MinValue);
+            bool isShare = ConfigurationUtils.GetBooleanAttribute(config.Attributes, ConfigConstants.ATTRIBUTE_SHARE, false);
+            int size = ConfigurationUtils.GetIntAttribute(config.Attributes, ConfigConstants.ATTRIBUTE_SIZE, int.MinValue);
 
-            return new CacheModel(id, implementation, properties, isReadOnly, isSerializable);
+            return new CacheModel(id, type, flushInterval, size, isShare);
         }
 	}
 }

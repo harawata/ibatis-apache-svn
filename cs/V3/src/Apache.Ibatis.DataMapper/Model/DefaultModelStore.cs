@@ -25,19 +25,17 @@
 #endregion
 
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
-using Apache.Ibatis.Common.Data;
+using Apache.Ibatis.Common.Utilities;
+using Apache.Ibatis.DataMapper.Data;
 using Apache.Ibatis.DataMapper.DataExchange;
 using Apache.Ibatis.DataMapper.Exceptions;
 using Apache.Ibatis.DataMapper.MappedStatements;
 using Apache.Ibatis.DataMapper.Model.Cache;
 using Apache.Ibatis.DataMapper.Model.ParameterMapping;
 using Apache.Ibatis.DataMapper.Model.ResultMapping;
-using Apache.Ibatis.DataMapper.Data;
 using Apache.Ibatis.DataMapper.Session;
-using Apache.Ibatis.Common.Utilities;
-using System.Diagnostics;
-using System;
 
 namespace Apache.Ibatis.DataMapper.Model
 {
@@ -126,15 +124,15 @@ namespace Apache.Ibatis.DataMapper.Model
         /// <summary>
         /// Gets a ResultMap by Id
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="resultMapId">The ResultMap id.</param>
         /// <returns>The ResultMap</returns>
-        public IResultMap GetResultMap(string id)
+        public IResultMap GetResultMap(string resultMapId)
         {
-            if (resultMaps.ContainsKey(id) == false)
+            if (resultMaps.ContainsKey(resultMapId) == false)
             {
-                throw new DataMapperException("The DataMapper does not contain an ResultMap named " + id);
+                throw new DataMapperException("The DataMapper does not contain an ResultMap named " + resultMapId);
             }
-            return resultMaps[id];
+            return resultMaps[resultMapId];
         }
 
         /// <summary>
@@ -153,15 +151,15 @@ namespace Apache.Ibatis.DataMapper.Model
         /// <summary>
         /// Get a ParameterMap by id
         /// </summary>
-        /// <param name="id">The id of the ParameterMap</param>
+        /// <param name="parameterMapId">The id of the ParameterMap</param>
         /// <returns>The ParameterMap</returns>
-        public ParameterMap GetParameterMap(string id)
+        public ParameterMap GetParameterMap(string parameterMapId)
         {
-            if (!parameterMaps.ContainsKey(id))
+            if (!parameterMaps.ContainsKey(parameterMapId))
             {
-                throw new DataMapperException("The DataMapper does not contain an ParameterMap named " + id + ".  ");
+                throw new DataMapperException("The DataMapper does not contain an ParameterMap named " + parameterMapId + ".  ");
             }
-            return parameterMaps[id];
+            return parameterMaps[parameterMapId];
         }
 
         /// <summary>
@@ -180,15 +178,15 @@ namespace Apache.Ibatis.DataMapper.Model
         /// <summary>
         /// Gets a MappedStatement by name
         /// </summary>
-        /// <param name="id"> The id of the statement</param>
+        /// <param name="mappedStatementId"> The id of the statement</param>
         /// <returns> The MappedStatement</returns>
-        public IMappedStatement GetMappedStatement(string id)
+        public IMappedStatement GetMappedStatement(string mappedStatementId)
         {
-            if (!mappedStatements.ContainsKey(id))
+            if (!mappedStatements.ContainsKey(mappedStatementId))
             {
-                throw new DataMapperException("The DataMapper does not contain a MappedStatement named " + id);
+                throw new DataMapperException("The DataMapper does not contain a MappedStatement named " + mappedStatementId);
             }
-            return mappedStatements[id];
+            return mappedStatements[mappedStatementId];
         }
 
         /// <summary>
@@ -208,15 +206,15 @@ namespace Apache.Ibatis.DataMapper.Model
         /// <summary>
         /// Gets a cache model by id
         /// </summary>
-        /// <param name="id">The id of the cache model</param>
+        /// <param name="cacheModelId">The id of the cache model</param>
         /// <returns>The cache model</returns>
-        public CacheModel GetCacheModel(string id)
+        public CacheModel GetCacheModel(string cacheModelId)
         {
-            if (!cacheModels.ContainsKey(id))
+            if (!cacheModels.ContainsKey(cacheModelId))
             {
-                throw new DataMapperException("The DataMapper does not contain a CacheModel named " + id);
+                throw new DataMapperException("The DataMapper does not contain a CacheModel named " + cacheModelId);
             }
-            return cacheModels[id];
+            return cacheModels[cacheModelId];
         }
 
 
@@ -241,52 +239,8 @@ namespace Apache.Ibatis.DataMapper.Model
         {
             foreach(CacheModel cacheModel in cacheModels.Values)
             {
-                cacheModel.Flush();
+                cacheModel.Cache.Clear();
             }
-        }
-
-        /// <summary>
-        /// Gets the data cache statistique.
-        /// </summary>
-        /// <returns></returns>
-        public string GetDataCacheStats()
-        {
-            StringBuilder buffer = new StringBuilder();
-            buffer.Append(Environment.NewLine);
-            buffer.Append("Cache Data Statistics");
-            buffer.Append(Environment.NewLine);
-            buffer.Append("=====================");
-            buffer.Append(Environment.NewLine);
-
-            foreach(IMappedStatement mappedStatement in mappedStatements.Values)
-            {
-                buffer.Append(mappedStatement.Id);
-                buffer.Append(": ");
-
-                if (mappedStatement is CachingStatement)
-                {
-                    double hitRatio = ((CachingStatement)mappedStatement).GetDataCacheHitRatio();
-                    if (hitRatio != -1)
-                    {
-                        buffer.Append(Math.Round(hitRatio * 100));
-                        buffer.Append("%");
-                    }
-                    else
-                    {
-                        // this statement has a cache but it hasn't been accessed yet
-                        // buffer.Append("Cache has not been accessed."); ???
-                        buffer.Append("No Cache.");
-                    }
-                }
-                else
-                {
-                    buffer.Append("No Cache.");
-                }
-
-                buffer.Append(Environment.NewLine);
-            }
-
-            return buffer.ToString();
         }
 
         #endregion
@@ -310,7 +264,7 @@ namespace Apache.Ibatis.DataMapper.Model
             IEnumerator<CacheModel> caches = cacheModels.Values.GetEnumerator();
             while (caches.MoveNext())
             {
-                builder.AppendLine(string.Empty.PadLeft(level * 3, ' ') + caches.Current.Id + "/" + caches.Current.Implementation);
+                builder.AppendLine(string.Empty.PadLeft(level * 3, ' ') + caches.Current.Id + "/" + caches.Current.Cache);
             }
             builder.AppendLine(string.Empty);
 
@@ -321,7 +275,7 @@ namespace Apache.Ibatis.DataMapper.Model
                builder.AppendLine(string.Empty.PadLeft(level * 3, ' ') + rMaps.Current.Id + "/" + rMaps.Current.Class.Name);
                for (int i = 0; i < rMaps.Current.Parameters.Count; i++)
                {
-                   builder.AppendLine(string.Empty.PadLeft(level * 2 * 3, ' ') + " Argument: "+((ArgumentProperty)rMaps.Current.Parameters[i]).ArgumentName);
+                   builder.AppendLine(string.Empty.PadLeft(level * 2 * 3, ' ') + " Argument: "+(rMaps.Current.Parameters[i]).ArgumentName);
                }
                for (int i = 0; i < rMaps.Current.Properties.Count; i++ )
                {
