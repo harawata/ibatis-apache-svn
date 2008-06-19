@@ -227,6 +227,15 @@ namespace Apache.Ibatis.Common.Utilities.TypesResolver
         public const string NullableInt32ArrayAlias = "int?[]";
 
         /// <summary>
+        /// The alias around the nullable 'DateTime' type.
+        /// </summary>
+        public const string NullableDateAlias1 = "datetime?";
+        /// <summary>
+        /// Another alias around nullable the 'DateTime' type.
+        /// </summary>
+        public const string NullableDateAlias2 = "date?";
+
+        /// <summary>
         /// The alias around the 'decimal?' type.
         /// </summary>
         public const string NullableDecimalAlias = "decimal?";
@@ -408,6 +417,9 @@ namespace Apache.Ibatis.Common.Utilities.TypesResolver
 
             types[NullableInt32Alias] = typeof(int?);
             types[NullableInt32ArrayAlias] = typeof(int?[]);
+
+            types[NullableDateAlias1] = typeof(DateTime?);
+            types[NullableDateAlias2] = typeof(DateTime?);
 
             types[NullableDecimalAlias] = typeof(decimal?);
             types[NullableDecimalArrayAlias] = typeof(decimal?[]);
