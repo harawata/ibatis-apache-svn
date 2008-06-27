@@ -247,7 +247,7 @@ public class Ibator {
                         .getTargetProject(), gjf.getTargetPackage(), warnings);
                 targetFile = new File(directory, gjf.getFileName());
                 if (targetFile.exists()) {
-                    if (shellCallback.mergeSupported()) {
+                    if (shellCallback.mergeSupported() && gjf.isMergeable()) {
                         source = shellCallback.mergeJavaFile(gjf,
                                 MergeConstants.OLD_JAVA_ELEMENT_TAGS,
                                 warnings);

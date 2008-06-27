@@ -735,7 +735,7 @@ public class BaseDAOGenerator implements DAOGenerator {
         Method method = new Method();
         method.setVisibility(exampleMethodVisibility);
 
-        FullyQualifiedJavaType returnType;
+        FullyQualifiedJavaType returnType = FullyQualifiedJavaType.getNewListInstance();;
         if (useJava5Features) {
             FullyQualifiedJavaType fqjt;
             if (introspectedTable.getRules().generateBaseRecordClass()) {
@@ -748,11 +748,9 @@ public class BaseDAOGenerator implements DAOGenerator {
             }
 
             compilationUnit.addImportedType(fqjt);
-            returnType = FullyQualifiedJavaType.getNewListInstance();
             returnType.addTypeArgument(fqjt);
-        } else {
-            returnType = FullyQualifiedJavaType.getNewListInstance();
         }
+        
         method.setReturnType(returnType);
 
         method.setName(methodNameCalculator.getSelectByExampleWithoutBLOBsMethodName(introspectedTable));
@@ -767,18 +765,14 @@ public class BaseDAOGenerator implements DAOGenerator {
 
         if (!interfaceMethod) {
             // generate the implementation method
-            StringBuffer sb = new StringBuffer();
 
             if (useJava5Features) {
                 method.addSuppressTypeWarningsAnnotation();
-                sb.append(returnType.getShortName());
-                sb.append(" list = ("); //$NON-NLS-1$
-                sb.append(returnType.getShortName());
-                sb.append(") "); //$NON-NLS-1$
-            } else {
-                sb.append("List list = "); //$NON-NLS-1$
             }
-
+            
+            StringBuffer sb = new StringBuffer();
+            sb.append(returnType.getShortName());
+            sb.append(" list = "); //$NON-NLS-1$
             sb.append(daoTemplate.getQueryForListMethod(table.getSqlMapNamespace(),
                     XmlConstants.SELECT_BY_EXAMPLE_STATEMENT_ID,
                     "example")); //$NON-NLS-1$
@@ -806,21 +800,18 @@ public class BaseDAOGenerator implements DAOGenerator {
         Method method = new Method();
         method.setVisibility(exampleMethodVisibility);
 
-        FullyQualifiedJavaType returnType;
+        FullyQualifiedJavaType returnType = FullyQualifiedJavaType.getNewListInstance();
         if (useJava5Features) {
             FullyQualifiedJavaType fqjt;
             if (introspectedTable.getRules().generateRecordWithBLOBsClass()) {
                 fqjt = introspectedTable.getRecordWithBLOBsType();
             } else {
-                // the blob fileds must be rolled up into the base class
+                // the blob fields must be rolled up into the base class
                 fqjt = introspectedTable.getBaseRecordType();
             }
             
             compilationUnit.addImportedType(fqjt);
-            returnType = FullyQualifiedJavaType.getNewListInstance();
             returnType.addTypeArgument(fqjt);
-        } else {
-            returnType = FullyQualifiedJavaType.getNewListInstance();
         }
         method.setReturnType(returnType);
 
@@ -837,18 +828,13 @@ public class BaseDAOGenerator implements DAOGenerator {
         if (!interfaceMethod) {
             // generate the implementation method
 
-            StringBuffer sb = new StringBuffer();
-
             if (useJava5Features) {
                 method.addSuppressTypeWarningsAnnotation();
-                sb.append(returnType.getShortName());
-                sb.append(" list = ("); //$NON-NLS-1$
-                sb.append(returnType.getShortName());
-                sb.append(") "); //$NON-NLS-1$
-            } else {
-                sb.append("List list = "); //$NON-NLS-1$
             }
-
+            
+            StringBuffer sb = new StringBuffer();
+            sb.append(returnType.getShortName());
+            sb.append(" list = "); //$NON-NLS-1$
             sb.append(daoTemplate.getQueryForListMethod(table.getSqlMapNamespace(),
                     XmlConstants.SELECT_BY_EXAMPLE_WITH_BLOBS_STATEMENT_ID,
                     "example")); //$NON-NLS-1$
@@ -1100,6 +1086,10 @@ public class BaseDAOGenerator implements DAOGenerator {
             IntrospectedTable introspectedTable, boolean interfaceMethod,
             CompilationUnit compilationUnit) {
 
+        if (interfaceMethod && exampleMethodVisibility != JavaVisibility.PUBLIC) {
+            return null;
+        }
+        
         FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
         FullyQualifiedJavaType parameterType;
         
@@ -1114,7 +1104,7 @@ public class BaseDAOGenerator implements DAOGenerator {
         compilationUnit.addImportedType(parameterType);
 
         Method method = new Method();
-        method.setVisibility(JavaVisibility.PUBLIC);
+        method.setVisibility(exampleMethodVisibility);
         method.setReturnType(FullyQualifiedJavaType.getIntInstance());
         method.setName(methodNameCalculator.getUpdateByExampleSelectiveMethodName(introspectedTable));
         method.addParameter(new Parameter(parameterType, "record")); //$NON-NLS-1$
@@ -1191,6 +1181,11 @@ public class BaseDAOGenerator implements DAOGenerator {
     protected Method getUpdateByExampleWithBLOBsMethod(
             IntrospectedTable introspectedTable, boolean interfaceMethod,
             CompilationUnit compilationUnit) {
+
+        if (interfaceMethod && exampleMethodVisibility != JavaVisibility.PUBLIC) {
+            return null;
+        }
+        
         FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
         FullyQualifiedJavaType parameterType; 
         if (introspectedTable.getRules().generateRecordWithBLOBsClass()) {
@@ -1202,7 +1197,7 @@ public class BaseDAOGenerator implements DAOGenerator {
         compilationUnit.addImportedType(parameterType);
 
         Method method = new Method();
-        method.setVisibility(JavaVisibility.PUBLIC);
+        method.setVisibility(exampleMethodVisibility);
         method.setReturnType(FullyQualifiedJavaType.getIntInstance());
         method.setName(methodNameCalculator.getUpdateByExampleWithBLOBsMethodName(introspectedTable));
         method.addParameter(new Parameter(parameterType, "record")); //$NON-NLS-1$
@@ -1237,6 +1232,10 @@ public class BaseDAOGenerator implements DAOGenerator {
             IntrospectedTable introspectedTable, boolean interfaceMethod,
             CompilationUnit compilationUnit) {
 
+        if (interfaceMethod && exampleMethodVisibility != JavaVisibility.PUBLIC) {
+            return null;
+        }
+        
         FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
         FullyQualifiedJavaType parameterType; 
         if (introspectedTable.getRules().generateBaseRecordClass()) {
@@ -1248,7 +1247,7 @@ public class BaseDAOGenerator implements DAOGenerator {
         compilationUnit.addImportedType(parameterType);
 
         Method method = new Method();
-        method.setVisibility(JavaVisibility.PUBLIC);
+        method.setVisibility(exampleMethodVisibility);
         method.setReturnType(FullyQualifiedJavaType.getIntInstance());
         method.setName(methodNameCalculator.getUpdateByExampleWithoutBLOBsMethodName(introspectedTable));
         method.addParameter(new Parameter(parameterType, "record")); //$NON-NLS-1$
