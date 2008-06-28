@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Apache.Ibatis.DataMapper.SqlClient.Test.Domain;
 using Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures;
 using NUnit.Framework;
+using NUnit.Framework.SyntaxHelpers;
 
 namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
 {
@@ -75,7 +76,11 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
         [Test]
         public void TestMultipleAccountResultClass()
         {
-            Assert.AreEqual(2, dataMapper.QueryForList("GetMultipleResultClassAccount", null).Count);
+            IList list = dataMapper.QueryForList("GetMultipleResultClassAccount", null);
+            Assert.AreEqual(2, list.Count);
+
+            Assert.That(list[0], Is.InstanceOfType(typeof(List<Account>)));
+            Assert.That(list[1], Is.InstanceOfType(typeof(List<Account>)));
         }
 
         /// <summary>
@@ -93,12 +98,12 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
             
             Assert.AreEqual(2, list.Count);
             
-            Account account = list[0] as Account;
-            Category saveCategory = list[1] as Category;
-            AssertAccount1(account);
-            Assert.AreEqual(key, saveCategory.Id);
-            Assert.AreEqual(category.Name, saveCategory.Name);
-            Assert.AreEqual(category.Guid, saveCategory.Guid);
+            List<Account> accounts = (List<Account>)list[0];
+            List<Category> categorys = (List<Category>)list[1];
+            AssertAccount1(accounts[0]);
+            Assert.AreEqual(key, categorys[0].Id);
+            Assert.AreEqual(category.Name, categorys[0].Name);
+            Assert.AreEqual(category.Guid, categorys[0].Guid);
         }
 
         /// <summary>
@@ -115,6 +120,10 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
 
             IList list = dataMapper.QueryForList("GetMultipleResultClass", null);
             Assert.AreEqual(2, list.Count);
+
+            Assert.That(list[0], Is.InstanceOfType(typeof(List<Account>)));
+            Assert.That(list[1], Is.InstanceOfType(typeof(List<Category>)));
+
         }
         
         /// <summary>

@@ -393,13 +393,32 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
                 {
                      do
                      {
+                         IList currentList = null;
+                         if (request.Statement.ResultsMap.Count == 1)
+                         {
+                             currentList = list;
+                         }
+                         else
+                         {
+                             if (request.CurrentResultMap != null)
+                             {
+                                 Type genericListType = typeof(List<>).MakeGenericType(new Type[] { request.CurrentResultMap.Class });
+                                 currentList = (IList)Activator.CreateInstance(genericListType);
+                             }
+                             else
+                             {
+                                 currentList = new ArrayList();
+                             }
+                             list.Add(currentList);
+
+                         }
                          // Get Results
                          while (reader.Read())
                          {
                              object obj = resultStrategy.Process(request, ref reader, null);
                              if (obj != BaseStrategy.SKIP)
                              {
-                                 list.Add(obj);
+                                 currentList.Add(obj);
                              }
                          }
                      }
@@ -454,12 +473,34 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
                     {
                         if (rowDelegate == null)
                         {
+                            //***
+                            IList currentList = null;
+                            if (request.Statement.ResultsMap.Count == 1)
+                            {
+                                currentList = list;
+                            }
+                            else
+                            {
+                                if (request.CurrentResultMap != null)
+                                {
+                                    Type genericListType = typeof(List<>).MakeGenericType(new Type[] { request.CurrentResultMap.Class });
+                                    currentList = (IList)Activator.CreateInstance(genericListType);
+                                }
+                                else
+                                {
+                                    currentList = new ArrayList();
+                                }
+                                list.Add(currentList);
+
+                            }
+                            //***
                             while (reader.Read())
                             {
                                 object obj = resultStrategy.Process(request, ref reader, null);
                                 if (obj != BaseStrategy.SKIP)
                                 {
-                                    list.Add(obj);
+                                    //list.Add(obj);
+                                    currentList.Add(obj);
                                 }
                             }
                         }
