@@ -33,15 +33,15 @@ namespace Apache.Ibatis.DataMapper
 	/// </summary>
 	public class ExecuteEventArgs : EventArgs
 	{
-		private string _statementName = string.Empty;
+		private string statementName = string.Empty;
 
 		/// <summary>
 		/// Set or get the statement name
 		/// </summary>
 		public string StatementName
 		{
-			get { return _statementName; }
-			set { _statementName = value; }
+			get { return statementName; }
+			set { statementName = value; }
 		}
 	}
 }

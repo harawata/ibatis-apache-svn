@@ -33,10 +33,17 @@ namespace Apache.Ibatis.DataMapper.Configuration.Module
     /// </summary>
     public abstract class Module : ModuleBuilder, IModule
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Module"/> class.
+        /// </summary>
         public Module()
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Module"/> class.
+        /// </summary>
+        /// <param name="nameSpace">The name space.</param>
         public Module(string nameSpace)
             : base(nameSpace)
         {

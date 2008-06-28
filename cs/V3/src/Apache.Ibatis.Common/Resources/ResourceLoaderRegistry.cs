@@ -33,8 +33,8 @@ namespace Apache.Ibatis.Common.Resources
     /// </summary>
     public class ResourceLoaderRegistry
     {
-        private static IDictionary<string, IResourceLoader> _resourceLoaders = new Dictionary<string, IResourceLoader>();
-        private static object syncLock = new object();
+        private static readonly IDictionary<string, IResourceLoader> resourceLoaders = new Dictionary<string, IResourceLoader>();
+        private static readonly object syncLock = new object();
 
         /// <summary>
         /// Registers standard and user-configured resource handlers.
@@ -43,11 +43,11 @@ namespace Apache.Ibatis.Common.Resources
         {
             lock (syncLock)
             {
-                _resourceLoaders[FileResourceLoader.Scheme] = new FileResourceLoader();
-                _resourceLoaders[UrlResourceLoader.SchemeHttp] = new UrlResourceLoader();
-                _resourceLoaders[UrlResourceLoader.SchemeHttps] = new UrlResourceLoader();
-                _resourceLoaders[UrlResourceLoader.SchemeFtp] = new UrlResourceLoader();
-                _resourceLoaders[AssemblyResourceLoader.Scheme] = new AssemblyResourceLoader();
+                resourceLoaders[FileResourceLoader.Scheme] = new FileResourceLoader();
+                resourceLoaders[UrlResourceLoader.SchemeHttp] = new UrlResourceLoader();
+                resourceLoaders[UrlResourceLoader.SchemeHttps] = new UrlResourceLoader();
+                resourceLoaders[UrlResourceLoader.SchemeFtp] = new UrlResourceLoader();
+                resourceLoaders[AssemblyResourceLoader.Scheme] = new AssemblyResourceLoader();
 
                 // register custom resource handlers
                 //ConfigurationUtils.GetSection(ResourcesSectionName);
@@ -68,7 +68,7 @@ namespace Apache.Ibatis.Common.Resources
 
             CustomUriBuilder builder = new CustomUriBuilder(resource, Resources.DefaultBasePath);
 
-            IResourceLoader loader = _resourceLoaders[builder.Uri.Scheme];
+            IResourceLoader loader = resourceLoaders[builder.Uri.Scheme];
             return loader.Create(builder.Uri);
         }
 
