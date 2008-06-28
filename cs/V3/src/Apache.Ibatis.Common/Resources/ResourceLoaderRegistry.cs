@@ -23,6 +23,7 @@
  ********************************************************************************/
 #endregion
 
+using System;
 using System.Collections.Generic;
 using Apache.Ibatis.Common.Contracts;
 
@@ -35,6 +36,11 @@ namespace Apache.Ibatis.Common.Resources
     {
         private static readonly IDictionary<string, IResourceLoader> resourceLoaders = new Dictionary<string, IResourceLoader>();
         private static readonly object syncLock = new object();
+
+        /// <summary>
+        /// Event launch on processing file resource
+        /// </summary>
+        public static event EventHandler<FileResourceLoadEventArgs> LoadFileResource = delegate { };
 
         /// <summary>
         /// Registers standard and user-configured resource handlers.
@@ -69,7 +75,24 @@ namespace Apache.Ibatis.Common.Resources
             CustomUriBuilder builder = new CustomUriBuilder(resource, Resources.DefaultBasePath);
 
             IResourceLoader loader = resourceLoaders[builder.Uri.Scheme];
-            return loader.Create(builder.Uri);
+            IResource res = loader.Create(builder.Uri);
+
+            if (loader is FileResourceLoader)
+            {
+                FileResourceLoadEventArgs evnt = new FileResourceLoadEventArgs();
+                evnt.FileInfo = res.FileInfo;
+
+                LoadFileResource(loader, evnt);
+            }
+            return res;
+        }
+
+        /// <summary>
+        /// Resets the event handler.
+        /// </summary>
+        public static void ResetEventHandler()
+        {
+            LoadFileResource = delegate { };
         }
 
     }

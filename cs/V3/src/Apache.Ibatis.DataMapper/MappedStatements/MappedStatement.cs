@@ -62,7 +62,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         /// <summary>
         /// Event launch on execute query
         /// </summary>
-        public event ExecuteEventHandler Execute = delegate {};
+        public event EventHandler<ExecuteEventArgs> Execute = delegate { };
 
         #region Fields
         private readonly IStatement statement = null;

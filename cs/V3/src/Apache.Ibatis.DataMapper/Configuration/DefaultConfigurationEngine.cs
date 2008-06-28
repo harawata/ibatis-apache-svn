@@ -24,12 +24,14 @@
  ********************************************************************************/
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Apache.Ibatis.Common.Configuration;
 using Apache.Ibatis.Common.Contracts;
 using Apache.Ibatis.Common.Exceptions;
 using Apache.Ibatis.Common.Logging;
+using Apache.Ibatis.Common.Resources;
 using Apache.Ibatis.DataMapper.Configuration.Interpreters.Config;
 using Apache.Ibatis.DataMapper.Model;
 using Apache.Ibatis.DataMapper.Configuration.Module;
@@ -55,6 +57,11 @@ namespace Apache.Ibatis.DataMapper.Configuration
         private IModelStore modelStore = null;
         private IConfigurationInterpreter interpreter = null;
 
+        /// <summary>
+        /// Event launch on processing file resource
+        /// </summary>
+        public event EventHandler<FileResourceLoadEventArgs> FileResourceLoad = delegate { };
+
         private static readonly ILog logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         #region constructors
@@ -67,6 +74,9 @@ namespace Apache.Ibatis.DataMapper.Configuration
             configurationStore = new DefaultConfigurationStore();
             configurationSetting = new ConfigurationSetting();
             modules = new List<IModule>();
+
+            ResourceLoaderRegistry.ResetEventHandler();
+            ResourceLoaderRegistry.LoadFileResource += FileResourceEventHandler;
         }
 
         /// <summary>
@@ -298,5 +308,9 @@ namespace Apache.Ibatis.DataMapper.Configuration
             return statement;
         }
 
+        private void FileResourceEventHandler(object sender, FileResourceLoadEventArgs evnt)
+        {
+            FileResourceLoad(sender, evnt);
+        }
     }
 }

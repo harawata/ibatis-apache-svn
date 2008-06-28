@@ -25,6 +25,7 @@
 
 #region Using
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
@@ -32,7 +33,6 @@ using System.Diagnostics;
 using Apache.Ibatis.DataMapper.Data;
 using Apache.Ibatis.DataMapper.Model;
 using Apache.Ibatis.DataMapper.Model.Cache;
-using Apache.Ibatis.DataMapper.Model.Cache.Decorators;
 using Apache.Ibatis.DataMapper.Model.Events;
 using Apache.Ibatis.DataMapper.Model.Statements;
 using Apache.Ibatis.DataMapper.Scope;
@@ -51,9 +51,9 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
 		private readonly MappedStatement mappedStatement =null;
 
 		/// <summary>
-		/// Event launch on exceute query
+        /// Event launch on Execute query
 		/// </summary>
-        public event ExecuteEventHandler Execute = delegate { };
+        public event EventHandler<ExecuteEventArgs> Execute = delegate { };
 
 		/// <summary>
 		/// Constructor

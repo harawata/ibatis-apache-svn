@@ -24,6 +24,8 @@
  ********************************************************************************/
 #endregion
 
+using System;
+using Apache.Ibatis.Common.Resources;
 using Apache.Ibatis.DataMapper.Configuration.Interpreters.Config;
 using Apache.Ibatis.DataMapper.Configuration.Module;
 using Apache.Ibatis.DataMapper.Model;
@@ -37,6 +39,11 @@ namespace Apache.Ibatis.DataMapper.Configuration
     /// </summary>
     public interface IConfigurationEngine
     {
+        /// <summary>
+        /// Event launch on processing file resource
+        /// </summary>
+        event EventHandler<FileResourceLoadEventArgs> FileResourceLoad;
+
         /// <summary>
         /// Gets the model store.
         /// </summary>

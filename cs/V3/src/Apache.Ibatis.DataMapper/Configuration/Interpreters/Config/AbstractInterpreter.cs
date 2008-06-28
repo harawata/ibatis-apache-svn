@@ -23,7 +23,7 @@
  ********************************************************************************/
 #endregion
 
-using Apache.Ibatis.Common.Configuration;
+using System;
 using Apache.Ibatis.Common.Resources;
 using Apache.Ibatis.Common.Contracts;
 
@@ -35,7 +35,7 @@ namespace Apache.Ibatis.DataMapper.Configuration.Interpreters.Config
     /// </summary>
     public abstract class AbstractInterpreter : IConfigurationInterpreter
     {
-        private IResource resource = null;
+        private readonly IResource resource = null;
 
         /// <summary>
         /// Exposes the reference to <see cref="IResource"/>

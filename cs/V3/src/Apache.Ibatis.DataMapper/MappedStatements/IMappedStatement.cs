@@ -25,6 +25,8 @@
 #endregion
 
 #region Imports
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
@@ -36,10 +38,6 @@ using Apache.Ibatis.DataMapper.Session;
 
 namespace Apache.Ibatis.DataMapper.MappedStatements
 {
-	/// <summary>
-	/// 
-	/// </summary>
-	public delegate void ExecuteEventHandler(object sender, ExecuteEventArgs e);
 
 	/// <summary>
 	/// Summary description for IMappedStatement.
@@ -52,7 +50,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
 		/// <summary>
 		/// Event launch on exceute query
 		/// </summary>
-		event ExecuteEventHandler Execute;
+        event EventHandler<ExecuteEventArgs> Execute;
 
 		#endregion 
 

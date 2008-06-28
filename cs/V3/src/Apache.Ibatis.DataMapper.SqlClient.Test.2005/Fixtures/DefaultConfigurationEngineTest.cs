@@ -9,12 +9,15 @@ using Apache.Ibatis.DataMapper.Session.Stores;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Apache.Ibatis.DataMapper.SqlClient.Test.Domain;
+using System.Collections.Generic;
 
 namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures
 {
     [TestFixture] 
     public class DefaultConfigurationEngineTest
     {
+        private List<string> fileNames = new List<string>();
+
         private class AccountModule : Module
         {
             public override void Load()
@@ -24,6 +27,30 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures
             }
         }
 
+        [Test]
+        public void Event_FileReourceLoad_should_be_launch()
+        {
+            string resource = "SqlMap_Test_Configure.config";
+
+            IConfigurationEngine engine = new DefaultConfigurationEngine();
+            engine.FileResourceLoad += FileResourceEventHandler;
+
+            engine.RegisterInterpreter(new XmlConfigurationInterpreter(resource));
+            engine.BuildMapperFactory();
+
+            Assert.That(fileNames.Count, Is.EqualTo(6));
+            Assert.Contains(resource, fileNames);
+            Assert.Contains("database.config", fileNames);
+            Assert.Contains("providers.config", fileNames);
+            Assert.Contains("Mapping1.xml", fileNames);
+            Assert.Contains("Mapping3.xml", fileNames);
+            Assert.Contains("Mapping4.xml", fileNames);
+        }
+
+        private void FileResourceEventHandler(object sender, FileResourceLoadEventArgs evnt)
+        {
+            fileNames.Add(evnt.FileInfo.Name);
+        }
 
         [Test]
         public void ResultMap_configuration_via_code_should_override_file_configuration()

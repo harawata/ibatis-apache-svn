@@ -206,6 +206,7 @@
     <Compile Include="Logging\LogSetting.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Resources\FileResourceLoadEventArgs.cs" />
     <Compile Include="Resources\StaticContentResource.cs" />
     <Compile Include="Transaction\IsolationLevel.cs">
       <SubType>Code</SubType>

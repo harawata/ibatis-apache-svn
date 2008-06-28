@@ -23,8 +23,8 @@
  ********************************************************************************/
 #endregion
 
+using System;
 using Apache.Ibatis.Common.Resources;
-using Apache.Ibatis.Common.Configuration;
 
 namespace Apache.Ibatis.DataMapper.Configuration.Interpreters.Config
 {
@@ -34,6 +34,7 @@ namespace Apache.Ibatis.DataMapper.Configuration.Interpreters.Config
     /// </summary>
     public interface IConfigurationInterpreter
     {
+
         /// <summary>
         /// Exposes the reference to <see cref="IResource"/>
         /// which the interpreter is likely to hold
