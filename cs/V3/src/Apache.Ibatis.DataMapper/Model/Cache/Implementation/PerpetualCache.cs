@@ -6,7 +6,7 @@
  * $Date: 2008-06-07 10:14:33 +0200 (sam., 07 juin 2008) $
  * 
  * iBATIS.NET Data Mapper
- * Copyright (C) 2004 - Gilles Bayon
+ * Copyright (C) 2008/2005 - The Apache Software Foundation
  *  
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");

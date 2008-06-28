@@ -10,7 +10,7 @@ using Apache.Ibatis.DataMapper.TypeHandlers;
  * $LastChangedBy$
  * 
  * iBATIS.NET Data Mapper
- * Copyright (C) 2006/2005 - The Apache Software Foundation
+ * Copyright (C) 2008/2005 - The Apache Software Foundation
  *  
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");

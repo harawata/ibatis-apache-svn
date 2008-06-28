@@ -5,7 +5,7 @@
  * $Date$
  * 
  * iBATIS.NET Data Mapper
- * Copyright (C) 2006 - Apache Fondation
+ * Copyright (C) 2008/2005 - Apache Fondation
  *  
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");

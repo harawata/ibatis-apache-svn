@@ -5,7 +5,7 @@
  * $LastChangedBy$
  * 
  * iBATIS.NET Data Mapper
- * Copyright (C) 2006/2005 - The Apache Software Foundation
+ * Copyright (C) 2008/2005 - The Apache Software Foundation
  *  
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -35,8 +35,8 @@ namespace Apache.Ibatis.Common.Resources
     /// </summary>
     public class FileResource : AbstractResource
     {
-        private readonly Uri _uri = null;
-        private FileInfo _fileInfo = null;
+        private readonly Uri uri = null;
+        private FileInfo fileInfo = null;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UrlResource"/> class.
@@ -50,7 +50,7 @@ namespace Apache.Ibatis.Common.Resources
             {
                 throw new FileNotFoundException(string.Format(" This specified resource {0} is not a file.", uri.AbsoluteUri));
             }
-            _uri = uri;
+            this.uri = uri;
 
             CreateFileInfoStream(uri.LocalPath);
         }
@@ -70,7 +70,7 @@ namespace Apache.Ibatis.Common.Resources
                 filePath = Path.Combine(Resources.ApplicationBase, filePath);
             }
 
-            _fileInfo = new FileInfo(filePath);
+            fileInfo = new FileInfo(filePath);
             stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
         }
 
@@ -96,7 +96,7 @@ namespace Apache.Ibatis.Common.Resources
         /// </exception>
         public override FileInfo FileInfo
         {
-            get { return _fileInfo; }
+            get { return fileInfo; }
         }
 
         /// <summary>
@@ -105,7 +105,7 @@ namespace Apache.Ibatis.Common.Resources
         /// <value></value>
         public override Uri Uri
         {
-            get { return _uri; }
+            get { return uri; }
         }
 
         /// <summary>
@@ -155,7 +155,7 @@ namespace Apache.Ibatis.Common.Resources
             {
                 return string.Format(
                     CultureInfo.InvariantCulture,
-                    "file [{0}]", _fileInfo.FullName);
+                    "file [{0}]", fileInfo.FullName);
             }
         }
 
