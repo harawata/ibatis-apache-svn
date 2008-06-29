@@ -104,9 +104,7 @@ namespace Apache.Ibatis.Common.Data
 		[NonSerialized]
 		private bool _allowMARS = false;
 
-		
-//		private static readonly ILog _connectionLogger = LogManager.GetLogger("System.Data.IDbConnection");
-
+	
 		#endregion
 		
 		#region Properties

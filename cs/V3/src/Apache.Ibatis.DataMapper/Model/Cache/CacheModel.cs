@@ -31,6 +31,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Apache.Ibatis.Common.Contracts;
 using Apache.Ibatis.Common.Exceptions;
+using Apache.Ibatis.Common.Logging;
+using Apache.Ibatis.Common.Logging.Impl;
 using Apache.Ibatis.Common.Utilities;
 using Apache.Ibatis.DataMapper.MappedStatements;
 using Apache.Ibatis.DataMapper.Model.Cache.Decorators;
@@ -47,15 +49,14 @@ namespace Apache.Ibatis.DataMapper.Model.Cache
     [DebuggerDisplay("CacheModel: {Id}-{Cache}")]
 	public class CacheModel
 	{
+		private ICache cache = null;
+        private readonly IList<string> statementFlushNames = new List<string>();
+
         /// <summary>
         /// This is used to represent null objects that are returned from the cache so 
         /// that they can be cached, too.
         /// </summary>
         public readonly static object NULL_OBJECT = new Object(); 
-
-		private ICache cache = null;
-
-        private readonly IList<string> statementFlushNames = new List<string>();
 
 		/// <summary>
 		/// Identifier used to identify the CacheModel amongst the others.
@@ -135,7 +136,11 @@ namespace Apache.Ibatis.DataMapper.Model.Cache
                 {
                     cache = cache = new SharedCache(cache);
                 }
-                cache = new SynchronizedCache(cache);
+                if (!(LogManager.Adapter is NoOpLoggerFA))
+                {
+                    cache = new LoggingCache(cache);
+                }
+			    cache = new SynchronizedCache(cache);
 			} 
 			catch (Exception e) 
 			{
