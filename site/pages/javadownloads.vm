@@ -10,20 +10,7 @@
 <table cellpadding="0" cellspacing="0" border="0">
   <tr>
     <td rowspan="2" width="70%">
-      <h4>Current Release 2.3.0</h4>
-      <ul>
-        <li>
-		<a href="[preferred]/ibatis/binaries/ibatis.java/ibatis-2.3.0.677.zip"><b>Download iBATIS Java 2.3.0</b></a>
-        <br/> Includes binaries, source, and documentation
-        <br/>[Status: General Availability | Dec 1, 2006]
-        <br/>
-		[<a href="http://www.apache.org/dist/ibatis/binaries/ibatis.java/ibatis-2.3.0.677.zip.md5">MD5</a>]
-         [<a href="http://www.apache.org/dist/ibatis/binaries/ibatis.java/ibatis-2.3.0.677.zip.asc">PGP</a>]         
-         <a href="https://issues.apache.org/jira/secure/ReleaseNote.jspa?projectId=10601&styleName=Html&version=12312035">Release Notes</a>
-         </li>
-      </ul>
-
-      <h4>Beta Release  2.3.2</h4>
+      <h4>Current Release  2.3.2 (JDK 1.5 Required)</h4>
       <ul>
         <li>
 		  <a href="[preferred]/ibatis/binaries/ibatis.java/ibatis-2.3.2.715.zip"><b>Download iBATIS Java 2.3.2</b></a> 
@@ -112,6 +99,18 @@
          of our mirrors.  It is good practice to <a href="#verify">verify</a> the integrity of the
          distributions files, especially if you are using one of our mirror sites.
       </p>
+      <h4>2.3.0 (JDK 1.4)</h4>
+	  <p>The last JDK 1.4 compatible release was 2.3.0.  It is a stable release that was in production for over a year, but obviously lacks a few features
+	  and fixes of the current release.  Sun will be <a href="http://java.sun.com/products/archive/eol.policy.html">discontinuing support</a> for JDK 1.4 in October of 2008.</p>
+      <ul>
+        <li>
+		  <a href="[preferred]/ibatis/binaries/ibatis.java/ibatis-2.3.0.677.zip"><b>Download iBATIS Java 2.3.0</b></a>
+          <br/>[<a href="http://www.apache.org/dist/ibatis/binaries/ibatis.java/ibatis-2.3.0.677.zip.md5">MD5</a>]
+           [<a href="http://www.apache.org/dist/ibatis/binaries/ibatis.java/ibatis-2.3.0.677.zip.asc">PGP</a>]         
+           <a href="https://issues.apache.org/jira/secure/ReleaseNote.jspa?projectId=10601&styleName=Html&version=12312035">Release Notes</a>
+           <br/>[Status: General Availability | Dec 1, 2006]
+        </li>
+      </ul>
       <h4>DAO</h4>
       <p>The DAO Framework was deprecated in 2.3, but will remain permanently available
       as it was in 2.2.</p>

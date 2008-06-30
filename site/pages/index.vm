@@ -48,10 +48,15 @@
 </div>
 
   <h2>News</h2>
+
+<h3>iBATIS 2.3.2 Promoted to General Availability</h3>
+<p>(Jun 30, 2008) The latest version of iBATIS has been promoted to GA.  This latest version requires Java 5.  While it wasn't planned that way originally, we decided to take the plunge 
+and start to "encourage" our users to upgrade their platforms (or at least become one more reason to do so).  Sun will be discontinuing support for JDK 1.4 in about four months and 
+most of the world has already moved to Java 5.  This also allows us to include built-in support for enumerations and will better prepare you for iBATIS 3 when the time comes. </p>
+<p><b><a href="javadownloads.cgi">Get the 2.3.2 GA from the Java downloads page now!</a></b></p>
   
 <h3>iBATIS 2.3.2 Beta and German Docs</h3>
 <p>(Apr 22, 2008) I've released a small update which corrects a few logistical issues with the 2.3.1 deploy.  It's a very minor release, but this will be the next GA version if all goes well.  Thus 2.3.1 will never be GA, so get this one.  In addition to that, <b>Axel Leucht</b> has contributed documentation in German.  So now all of my co-workers at Arvato can read about iBATIS too!  ;-)   Thanks Axel.  
-<p><b><a href="javadownloads.cgi">So go get the 2.3.2 Beta from the Java downloads page now!</a></b></p>
 
 <h3>Abator Renamed to iBATOR</h3>
 <p>(April 14, 2008) Due to a trade registration dispute, Abator is renamed to iBATOR.  iBATOR is
@@ -61,7 +66,6 @@
 
 <h3>iBATIS 2.3.1 Beta Available</h3>
 <p>(March 25, 2008) This is a long overdue maintenance release.  Fixes about 20 issues and includes two significant improvements.  The first is the elimination of the Throttle.  Originally included to artificially constrain threads, requests, and transactions to improve performance on certain infrastructure.  It's not as much of an issue anymore and today the Throttle caused more problems than it solved.  So bye-bye.  :-)  The only real impact you'll see is that the maxSessions/maxTransactions/maxRequests no longer have any effect whatsoever.  The other new change is built-in support for enums out of the box!  It's currently a Beta release as per our process.  But if all goes well over the next week or two, we'll vote to promote it to GA.  The best thing you can do is test it out for us!
-<p><b><a href="javadownloads.cgi">So go get the 2.3.1 Beta from the Java downloads page now!</a></b></p>
 
 <h3>Abator 1.1 Available</h3>
 <p>(March 20, 2008) Abator version 1.1 is available.  This version has quite a few minor enhancements,
