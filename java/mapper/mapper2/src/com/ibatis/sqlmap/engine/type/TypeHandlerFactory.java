@@ -140,7 +140,7 @@ public class TypeHandlerFactory {
         handler = (TypeHandler) jdbcHandlerMap.get(null);
       }
     }
-    if (handler == null && Enum.class.isAssignableFrom(type)) {
+    if (handler == null && type != null && Enum.class.isAssignableFrom(type)) {
       handler = new EnumTypeHandler(type);
     }
     return handler;
