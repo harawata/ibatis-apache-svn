@@ -15,11 +15,10 @@
  */
 package com.ibatis.common.beans;
 
-import com.ibatis.sqlmap.engine.mapping.result.ResultObjectFactoryUtil;
-
-import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.StringTokenizer;
+
+import com.ibatis.sqlmap.engine.mapping.result.ResultObjectFactoryUtil;
 
 /**
  * StaticBeanProbe provides methods that allow simple, reflective access to
@@ -364,9 +363,9 @@ public class ComplexBeanProbe extends BaseProbe {
       throw e;
     } catch (Throwable t) {
       if (object == null) {
-        throw new ProbeException("Could not set property '" + name + "' for null reference.  Cause: " + t.toString(), t);
+        throw new ProbeException("Could not set property '" + name + "' to value '"+value+"' for null reference.  Cause: " + t.toString(), t);
       } else {
-        throw new ProbeException("Could not set property '" + name + "' for " + object.getClass().getName() + ".  Cause: " + t.toString(), t);
+        throw new ProbeException("Could not set property '" + name + "' to value '"+value+"' for " + object.getClass().getName() + ".  Cause: " + t.toString(), t);
       }
     }
   }
