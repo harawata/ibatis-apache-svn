@@ -29,6 +29,16 @@ public class TypeHandlerFactory {
   private final TypeHandler unknownTypeHandler = new UnknownTypeHandler(this);
   private final HashMap typeAliases = new HashMap();
 
+  private static final Map reversePrimitiveMap = new HashMap() {{
+    put(Byte.class, byte.class);
+    put(Short.class, short.class);
+    put(Integer.class, int.class);
+    put(Long.class, long.class);
+    put(Float.class, float.class);
+    put(Double.class, double.class);
+    put(Boolean.class, boolean.class);
+  }};
+
 
   /* Constructor */
 
@@ -191,6 +201,10 @@ public class TypeHandlerFactory {
       typeHandlerMap.put(type, map);
     }
     map.put(jdbcType, handler);
+
+    if (reversePrimitiveMap.containsKey(type)) {
+      register((Class)reversePrimitiveMap.get(type),jdbcType,handler);
+    }
   }
 
   /**
