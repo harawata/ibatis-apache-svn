@@ -164,7 +164,7 @@ public class TypeHandlerFactory {
    * @return - true if there is a TypeHandler
    */
   public boolean hasTypeHandler(Class type) {
-    return getTypeHandler(type) != null || Enum.class.isAssignableFrom(type);
+    return type != null && (getTypeHandler(type) != null || Enum.class.isAssignableFrom(type));
   }
 
   /**
