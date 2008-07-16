@@ -5,27 +5,27 @@ import junit.framework.TestCase;
 public class ComplexBeanProbeTest extends TestCase {
 
 	public void testSetObject() {
-		Test myTest = new Test();
-		Probe probe = ProbeFactory.getProbe(myTest);
-		probe.setObject(myTest, "myInt", Integer.valueOf(1));
-		assertEquals(1, myTest.getMyInt());
-		probe.setObject(myTest, "myInt", Integer.valueOf(2));
-		assertEquals(2, myTest.getMyInt());
+		SimpleClass mySimpleClass = new SimpleClass();
+		Probe probe = ProbeFactory.getProbe(mySimpleClass);
+		probe.setObject(mySimpleClass, "myInt", Integer.valueOf(1));
+		assertEquals(1, mySimpleClass.getMyInt());
+		probe.setObject(mySimpleClass, "myInt", Integer.valueOf(2));
+		assertEquals(2, mySimpleClass.getMyInt());
 		try {
-			probe.setObject(myTest, "myInt", null);
+			probe.setObject(mySimpleClass, "myInt", null);
 			fail();
 		} catch (RuntimeException e) {
 			assertTrue(e.getMessage().contains("'myInt' to value 'null'"));
 		}
 		try {
-			probe.setObject(myTest, "myInt", Float.valueOf(1.2f));
+			probe.setObject(mySimpleClass, "myInt", Float.valueOf(1.2f));
 			fail();
 		} catch (RuntimeException e) {
       assertTrue(e.getMessage().contains("'myInt' to value '1.2'"));
 		}
 	}
 
-	public class Test {
+	public class SimpleClass {
 
 		int	myInt;
 

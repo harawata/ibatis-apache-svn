@@ -2,6 +2,17 @@ Build Date: @buildDate@
 Build Number: @buildNum@
 
 ------------------------------
+ 2.3.3
+------------------------------
+
+ o Reintroduced fully defined ExtendedSqlMapClient interface for Spring compatibility
+ o iBATIS-522 -- Null type causing TypeHandlerFactory to throw NPE
+ o iBATIS-511 -- Added values to error messages
+ o iBATIS-515 -- Added comments to DTD
+ o iBATIS-244 -- configured type handler not used for insert
+
+
+------------------------------
  2.3.2
 ------------------------------
  o Updated this release.txt file for 2.3.1
