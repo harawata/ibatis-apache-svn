@@ -191,9 +191,10 @@ public class EqualsHashCodePlugin extends IbatorPluginAdapter {
                 sb.append("().equals(other."); //$NON-NLS-1$
                 sb.append(getterMethod);
                 sb.append("())"); //$NON-NLS-1$
-                if (!iter.hasNext()) {
-                    sb.append(';');
-                }
+            }
+            
+            if (!iter.hasNext()) {
+                sb.append(';');
             }
 
             method.addBodyLine(sb.toString());
