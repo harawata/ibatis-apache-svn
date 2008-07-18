@@ -36,7 +36,9 @@
   <a href="background.html" title="Where did iBATIS come from, what does 'iBATIS' mean?">Background</a><br/>
   <a href="license.html" title="The Apache Software Foundation License 2.0">License</a><br/>
   <a href="http://svn.apache.org/repos/asf/ibatis/trunk" title="Subversion Repository" target="_new">Subversion</a>
-    <a href="http://fisheye6.cenqua.com/viewrep/ibatis" title="FishEye Repository Browser" target="_new">(FishEye)</a>
+  <a href="http://fisheye6.cenqua.com/viewrep/ibatis" title="FishEye Repository Browser" target="_new">(FishEye)</a><br/>
+  <a href="http://parabuild.viewtier.com:8080/parabuild/index.htm?cid=a1a&view=detailed&buildid=150" title="Continuous Build by Viewtier Systems" target="_new">Continuous Build</a>
+  <br/>
   <br/>
   <a href="team.html" title="Who's responsible for iBATIS?">Team</a><br/>
   <a href="bylaws.html" title="How do we operate?">Bylaws</a><br/>

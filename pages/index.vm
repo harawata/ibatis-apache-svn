@@ -49,6 +49,15 @@
 
   <h2>News</h2>
 
+
+<h3>iBATIS 2.3.3 BETA Released.  And it will remain beta until...</h3>
+<p>(Jul 16, 2008) Practically moments after promoting iBATIS 2.3.2 to GA, a number of nasty bugs were discovered, particularly with the Spring integration.  We refactored a lot of 
+"internal" (i.e. non-client) code in these latest versions, and so as an end-user, you really need to test the betas!  So from now on, we're going to wait until we get enough confirmation 
+from actual production implementations (either through test suites or staging environments) that things are working well.  I'm thinking at least 20 responses before moving to GA. Maybe in the long run we'll 
+identify dedicated testers who are willing to update to the latest beta and run a comprehensive application test suite against it. </p>
+<p><b><a href="javadownloads.cgi">Get the 2.3.3 Beta from the Java downloads page now!</a></b></p>
+
+
 <h3>iBATIS 2.3.2 Promoted to General Availability</h3>
 <p>(Jun 30, 2008) The latest version of iBATIS has been promoted to GA.  This latest version requires Java 5.  While it wasn't planned that way originally, we decided to take the plunge 
 and start to "encourage" our users to upgrade their platforms (or at least become one more reason to do so).  Sun will be discontinuing support for JDK 1.4 in about four months and 
