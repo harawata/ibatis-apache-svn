@@ -7,23 +7,43 @@
 
 <h2>iBATIS for Java Downloads</h2>
 
+
 <table cellpadding="0" cellspacing="0" border="0">
   <tr>
     <td rowspan="2" width="70%">
-      <h4>Current Release  2.3.2 (JDK 1.5 Required)</h4>
+      <div style="float:right;width:150px;vertical-align:top;padding:5px;background-color:#CCF">
+          <b>BETA is the new Production:</b> 
+          Our "Beta" status is a maker that is simply an indication that the product is new and has yet to be deployed to known production environments.  Once 
+          we have enough feedback from users that the sofware is working as intended, then we promote the status of the build to "General Availability".  The 
+          software does not change between Beta and General Availability release status.
+          <br/><br/>            
+          As the development team, we can only release Beta status software.  YOU must get it promoted to General Availability by responding to the [ANNOUNCE]
+          email on the Mailing list with your vote of confidence and your experience having deployed it to your production environment.  
+          <br/><br/>
+          Please download this version and test it in the most production-like way possible and post your experience to the release announcement thread.   
+          If you absolutely require the last General Availability version, you can download it in the sidebar to the right. 
+      </div>
+
+      <h4>Release  2.3.3 (JDK 1.5 Required)</h4>
       <ul>
         <li>
-		  <a href="[preferred]/ibatis/binaries/ibatis.java/ibatis-2.3.2.715.zip"><b>Download iBATIS Java 2.3.2</b></a> 
+		  <a href="[preferred]/ibatis/binaries/ibatis.java/ibatis-2.3.3.720.zip"><b>Download iBATIS Java 2.3.3</b></a> 
           <br/> Includes binaries, source, and documentation
-		  <br/> [Status: Beta | Apr 22, 2008]
+		  <br/> [Status: <b>Beta</b> | Jul 16, 2008]
 		  <br/>
-           [<a href="http://www.apache.org/dist/ibatis/binaries/ibatis.java/ibatis-2.3.2.715.zip.md5">MD5</a>]
-           [<a href="http://www.apache.org/dist/ibatis/binaries/ibatis.java/ibatis-2.3.2.715.zip.asc">PGP</a>]
+          [<a href="http://www.apache.org/dist/ibatis/binaries/ibatis.java/ibatis-2.3.3.720.zip.md5">MD5</a>]
+          [<a href="http://www.apache.org/dist/ibatis/binaries/ibatis.java/ibatis-2.3.3.720.zip.asc">PGP</a>]
            
-          <a href="https://issues.apache.org/jira/secure/ReleaseNote.jspa?projectId=10601&styleName=Html&version=12312222">Release Notes </a><i>(2.3.1 because they're more relevant)</i>
+          <a href="https://issues.apache.org/jira/secure/ReleaseNote.jspa?projectId=10601&styleName=Html&version=12313115">Release Notes </a>
         </li>
       </ul>
-
+      <h4>Developer Build</h4>
+      <ul>
+        <li>
+          <a href="http://parabuild.viewtier.com:8080/parabuild/index.htm?cid=a1a&view=detailed&buildid=150"><b>Parabuild Continuous Build Server</b></a> 
+          <br/> Click the link above.  Click the "Results" link.  Look for the "ibatis-2.x.x.xxx.zip" download link near the bottom of the page.
+        </li>
+      </ul>
       <h4>Example Application</h4>
       <ul>
         <li><a href="[preferred]/ibatis/binaries/ibatis.java/JPetStore-5.0.zip">JPetStore 5.0 Example
