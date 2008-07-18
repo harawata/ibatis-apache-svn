@@ -243,6 +243,7 @@ public class SqlMapParser {
         String statementName = childAttributes.getProperty("select");
         String resultMapName = childAttributes.getProperty("resultMap");
         String callback = childAttributes.getProperty("typeHandler");
+        String notNullColumn = childAttributes.getProperty("notNullColumn");
 
         state.getConfig().getErrorContext().setMoreInfo("Check the result mapping property type or name.");
         Class javaClass = null;
@@ -275,7 +276,7 @@ public class SqlMapParser {
           }
         }
 
-        state.getResultConfig().addResultMapping(propertyName, columnName, columnIndex, javaClass, jdbcType, nullValue, statementName, resultMapName, typeHandlerImpl);
+        state.getResultConfig().addResultMapping(propertyName, columnName, columnIndex, javaClass, jdbcType, nullValue, notNullColumn, statementName, resultMapName, typeHandlerImpl);
       }
     });
 

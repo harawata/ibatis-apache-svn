@@ -30,6 +30,7 @@ public class ResultMapping {
   private int jdbcType;
   private String jdbcTypeName;
   private String nullValue;
+  private String notNullColumn;
   private String statementName;
   private Class javaType;
 
@@ -175,6 +176,24 @@ public class ResultMapping {
    */
   public void setNullValue(String nullValue) {
     this.nullValue = nullValue;
+  }
+
+  /**
+   * Getter for the name of the column to check for null before instantiating a nested resultMapping value
+   *
+   * @return - the null substitution
+   */
+  public String getNotNullColumn() {
+    return notNullColumn;
+  }
+
+  /**
+   * Setter for the name of the column to check for null before instantiating a nested resultMapping value
+   *
+   * @param notNullColumn - the column name
+   */
+  public void setNotNullColumn(String notNullColumn) {
+    this.notNullColumn = notNullColumn;
   }
 
   /**

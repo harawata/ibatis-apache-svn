@@ -101,7 +101,7 @@ public class ResultMapConfig {
     discriminator.addSubMap(value.toString(), resultMap);
   }
 
-  public void addResultMapping(String propertyName, String columnName, Integer columnIndex, Class javaClass, String jdbcType, String nullValue, String statementName, String resultMapName, Object impl) {
+  public void addResultMapping(String propertyName, String columnName, Integer columnIndex, Class javaClass, String jdbcType, String nullValue, String notNullColumn, String statementName, String resultMapName, Object impl) {
     errorContext.setObjectId(propertyName + " mapping of the " + resultMap.getId() + " result map");
     TypeHandler handler;
     if (impl != null) {
@@ -121,6 +121,7 @@ public class ResultMapConfig {
     mapping.setJdbcTypeName(jdbcType);
     mapping.setTypeHandler(handler);
     mapping.setNullValue(nullValue);
+    mapping.setNotNullColumn(notNullColumn);
     mapping.setStatementName(statementName);
     mapping.setNestedResultMapName(resultMapName);
     if (resultMapName != null && resultMapName.length() > 0) {

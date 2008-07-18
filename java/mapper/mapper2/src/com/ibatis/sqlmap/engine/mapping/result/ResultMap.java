@@ -443,14 +443,23 @@ public class ResultMap {
         }
       }
 
-      values = resultMap.getResults(statementScope, statementScope.getResultSet());
-      if (statementScope.isRowDataFound()) {
-        Object o = resultMap.setResultObjectValues(statementScope, null, values);
-        if (o != NO_VALUE) {
-          if (obj != null && obj instanceof Collection) {
-            ((Collection) obj).add(o);
-          } else {
-            PROBE.setObject(resultObject, propertyName, o);
+      //JIRA 375 "Provide a way for not creating items from nested ResultMaps when the items contain only null values"
+      boolean subResultObjectAbsent = false;
+      if(mapping.getNotNullColumn() != null) {
+        if(statementScope.getResultSet().getObject(mapping.getNotNullColumn()) == null) {
+          subResultObjectAbsent = true;
+        }
+      }
+      if(!subResultObjectAbsent) {
+        values = resultMap.getResults(statementScope, statementScope.getResultSet());
+        if (statementScope.isRowDataFound()) {
+          Object o = resultMap.setResultObjectValues(statementScope, null, values);
+          if (o != NO_VALUE) {
+            if (obj != null && obj instanceof Collection) {
+              ((Collection) obj).add(o);
+            } else {
+              PROBE.setObject(resultObject, propertyName, o);
+            }
           }
         }
       }
