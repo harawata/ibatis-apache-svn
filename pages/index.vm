@@ -49,6 +49,28 @@
 
   <h2>News</h2>
 
+<h3>Call for Official QA/Testing Team Members</h3>
+<p>(Jul 16, 2008) It seems that we have two very distinct types of teams using iBATIS:</p>
+<ul>
+  <li>Adventurous bleeding edge types</li>
+  <li>Conservative stable types</li>
+</ul>
+<p>It's hard to cater to both groups, so we've come up with a way that these groups can help each other.  We've now provided access to 
+a <b>Parabuild continuous build server</b>.  The software and hosting is graciously provided by <b>Viewtier Systems</b>.  This will
+allow the bleeding edge types to simply download the latest and greatest software, without waiting for a formal release by us.</p>
+
+<p><b>In addition, we'd like to invite some of these teams or individuals to become a formal QA/Testing group for iBATIS.</b></p>
+
+<p>This doesn't have to mean a lot of work! The best candidates are teams with excellent test suites for their applications and those who use a lot of the different features
+of iBATIS in different or even odd ways.  We especially want to target groups who are using <b>Spring</b> or other 3rd party software that integrates
+or works closely with iBATIS.  Alone we cannot test every single deployment, but together we can.  This will allow us to learn about potential 
+integration problems sooner and allow us to get to General Availability status faster.  
+</p>
+<p>The continuous integration link and instructions can be found on the <a href="javadownloads.cgi">Java Downloads</a> page.</p>
+<p><b>If you'd like to register yourself or your team as a formal tester</b>, please send an email to the mailing list. Or to Clinton Begin if you'd 
+like to remain anonymous (you should know my email if you're on the list). Of course I recommend you keep it wide open and identify yourselves both for 
+credit and so that you can share knowledge with other testers or teams</p>
+<p>Thanks to all!</p>
 
 <h3>iBATIS 2.3.3 BETA Released.  And it will remain beta until...</h3>
 <p>(Jul 16, 2008) Practically moments after promoting iBATIS 2.3.2 to GA, a number of nasty bugs were discovered, particularly with the Spring integration.  We refactored a lot of 
@@ -56,54 +78,6 @@
 from actual production implementations (either through test suites or staging environments) that things are working well.  I'm thinking at least 20 responses before moving to GA. Maybe in the long run we'll 
 identify dedicated testers who are willing to update to the latest beta and run a comprehensive application test suite against it. </p>
 <p><b><a href="javadownloads.cgi">Get the 2.3.3 Beta from the Java downloads page now!</a></b></p>
-
-
-<h3>iBATIS 2.3.2 Promoted to General Availability</h3>
-<p>(Jun 30, 2008) The latest version of iBATIS has been promoted to GA.  This latest version requires Java 5.  While it wasn't planned that way originally, we decided to take the plunge 
-and start to "encourage" our users to upgrade their platforms (or at least become one more reason to do so).  Sun will be discontinuing support for JDK 1.4 in about four months and 
-most of the world has already moved to Java 5.  This also allows us to include built-in support for enumerations and will better prepare you for iBATIS 3 when the time comes. </p>
-<p><b><a href="javadownloads.cgi">Get the 2.3.2 GA from the Java downloads page now!</a></b></p>
-  
-<h3>iBATIS 2.3.2 Beta and German Docs</h3>
-<p>(Apr 22, 2008) I've released a small update which corrects a few logistical issues with the 2.3.1 deploy.  It's a very minor release, but this will be the next GA version if all goes well.  Thus 2.3.1 will never be GA, so get this one.  In addition to that, <b>Axel Leucht</b> has contributed documentation in German.  So now all of my co-workers at Arvato can read about iBATIS too!  ;-)   Thanks Axel.  
-
-<h3>Abator Renamed to iBATOR</h3>
-<p>(April 14, 2008) Due to a trade registration dispute, Abator is renamed to iBATOR.  iBATOR is
-  currently a work in progress, but an initial code drop has been added to SVN.  See the 
-  <a href="ibator.html">new iBATOR page</a> for more information.
-</p>
-
-<h3>iBATIS 2.3.1 Beta Available</h3>
-<p>(March 25, 2008) This is a long overdue maintenance release.  Fixes about 20 issues and includes two significant improvements.  The first is the elimination of the Throttle.  Originally included to artificially constrain threads, requests, and transactions to improve performance on certain infrastructure.  It's not as much of an issue anymore and today the Throttle caused more problems than it solved.  So bye-bye.  :-)  The only real impact you'll see is that the maxSessions/maxTransactions/maxRequests no longer have any effect whatsoever.  The other new change is built-in support for enums out of the box!  It's currently a Beta release as per our process.  But if all goes well over the next week or two, we'll vote to promote it to GA.  The best thing you can do is test it out for us!
-
-<h3>Abator 1.1 Available</h3>
-<p>(March 20, 2008) Abator version 1.1 is available.  This version has quite a few minor enhancements,
- two major enhancements (two new methods can be generated), and a few bug fixes.  Check it out
- <a href="abator.html">here</a>.
-
-<h3>It's quiet, too quiet!</h3>
- <p>(March 10, 2008) Yes, we're alive.  I felt the need to update the homepage since it's been a while(!).  All of the activity is on the mailing list these days,
- and we haven't had a major release in a while.  That's all about to change.  The iBATIS 3.0 whiteboard has been up for a while and I think the ideas are sound.  We've had a lot
- of great feedback and it's time to get to work.  iBATIS will have it's sixth birthday on July 1st, 2008.  I'd like to suggest that we have a Beta 
- version of iBATIS 3.0 out by that day.  Don't get too excited!  If you're currently using 2.0, you likely will be for a long time (heck, Larry still uses 1.x).  So, we'll 
- continue to support it for a long time as well.  iBATIS 3.0 will be the biggest change to the framework since the original concept.  While we're hoping to hold
- true to some of the philosophies that have made iBATIS popular, it will look very different.  Check out the iBATIS 3.0 whiteboard for more.</p>
- <p><b><a href="http://opensource.atlassian.com/confluence/oss/display/IBATIS/iBATIS+3.0+Whiteboard">Check out the iBATIS 3.0 Whiteboard and tell us what you think!</a></b></p>
-
-<h3>iBATIS 3.0 Design Whiteboard</h3>
- <p>(June 12, 2007) Next month, on July 1st iBATIS will officially be 5 years old, and 2.0 alone
-   will be 3 years long in the tooth.  It's time, or perhaps overdue that we start designing and
-   implementing the third version.  A lot has changed in 5 years, many best practices are now simply
-   "old practices".  It's time to start from scratch.  Clinton's thoughts are up. This is your chance to
-   influence the future direction of iBATIS.</p>
- <p><b><a href="http://opensource.atlassian.com/confluence/oss/display/IBATIS/iBATIS+3.0+Whiteboard">Check out the iBATIS 3.0 Whiteboard and have your say!</a></b></p>
-
-<h3>Java Documentation in 7 languages including Japanese</h3>
- <p>(June 12, 2007) Thanks to the contributions from our iBATIS community, we now have
- documentation in 7 languages!  The most recent addition is Japanese, which joins Chinese,
- Korean, Italian, Spanish, French and English.</p>
- <p><b><a href="javadownloads.cgi">Download documentation from the Java downloads page</a></b></p>
-
 
 </body>
 </html>
