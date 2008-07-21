@@ -16,27 +16,13 @@
 
 package ibatortest.execute.conditional.java2;
 
-import java.math.BigDecimal;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import ibatortest.BaseTest;
 import ibatortest.generated.conditional.java2.dao.AwfulTableDAO;
-import ibatortest.generated.conditional.java2.dao.AwfulTableDAOImpl;
 import ibatortest.generated.conditional.java2.dao.FieldsblobsDAO;
-import ibatortest.generated.conditional.java2.dao.FieldsblobsDAOImpl;
 import ibatortest.generated.conditional.java2.dao.FieldsonlyDAO;
-import ibatortest.generated.conditional.java2.dao.FieldsonlyDAOImpl;
 import ibatortest.generated.conditional.java2.dao.PkblobsDAO;
-import ibatortest.generated.conditional.java2.dao.PkblobsDAOImpl;
 import ibatortest.generated.conditional.java2.dao.PkfieldsDAO;
-import ibatortest.generated.conditional.java2.dao.PkfieldsDAOImpl;
 import ibatortest.generated.conditional.java2.dao.PkfieldsblobsDAO;
-import ibatortest.generated.conditional.java2.dao.PkfieldsblobsDAOImpl;
 import ibatortest.generated.conditional.java2.dao.PkonlyDAO;
-import ibatortest.generated.conditional.java2.dao.PkonlyDAOImpl;
 import ibatortest.generated.conditional.java2.model.AwfulTable;
 import ibatortest.generated.conditional.java2.model.AwfulTableExample;
 import ibatortest.generated.conditional.java2.model.Fieldsblobs;
@@ -55,20 +41,19 @@ import ibatortest.generated.conditional.java2.model.PkfieldsblobsKey;
 import ibatortest.generated.conditional.java2.model.PkonlyExample;
 import ibatortest.generated.conditional.java2.model.PkonlyKey;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 /**
  * @author Jeff Butler
  * 
  */
-public class ConditionalJava2Tests extends BaseTest {
-
-    protected void setUp() throws Exception {
-        super.setUp();
-        initSqlMapClient(
-                "ibatortest/execute/conditional/java2/SqlMapConfig.xml", null);
-    }
+public class ConditionalJava2Tests extends BaseConditionalJava2Test {
 
     public void testFieldsOnlyInsert() {
-        FieldsonlyDAO dao = new FieldsonlyDAOImpl(sqlMapClient);
+        FieldsonlyDAO dao = getFieldsonlyDAO();
 
         try {
             Fieldsonly record = new Fieldsonly();
@@ -89,13 +74,13 @@ public class ConditionalJava2Tests extends BaseTest {
             assertEquals(record.getDoublefield(), returnedRecord
                     .getDoublefield());
             assertEquals(record.getFloatfield(), returnedRecord.getFloatfield());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testFieldsOnlySelectByExample() {
-        FieldsonlyDAO dao = new FieldsonlyDAOImpl(sqlMapClient);
+        FieldsonlyDAO dao = getFieldsonlyDAO();
 
         try {
             Fieldsonly record = new Fieldsonly();
@@ -125,13 +110,13 @@ public class ConditionalJava2Tests extends BaseTest {
             example = new FieldsonlyExample();
             answer = dao.selectByExample(example);
             assertEquals(3, answer.size());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testFieldsOnlySelectByExampleNoCriteria() {
-        FieldsonlyDAO dao = new FieldsonlyDAOImpl(sqlMapClient);
+        FieldsonlyDAO dao = getFieldsonlyDAO();
 
         try {
             Fieldsonly record = new Fieldsonly();
@@ -157,13 +142,13 @@ public class ConditionalJava2Tests extends BaseTest {
 
             List answer = dao.selectByExample(example);
             assertEquals(3, answer.size());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testFieldsOnlyDeleteByExample() {
-        FieldsonlyDAO dao = new FieldsonlyDAOImpl(sqlMapClient);
+        FieldsonlyDAO dao = getFieldsonlyDAO();
 
         try {
             Fieldsonly record = new Fieldsonly();
@@ -193,13 +178,13 @@ public class ConditionalJava2Tests extends BaseTest {
             example = new FieldsonlyExample();
             List answer = dao.selectByExample(example);
             assertEquals(1, answer.size());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testFieldsOnlyCountByExample() {
-        FieldsonlyDAO dao = new FieldsonlyDAOImpl(sqlMapClient);
+        FieldsonlyDAO dao = getFieldsonlyDAO();
 
         try {
             Fieldsonly record = new Fieldsonly();
@@ -228,13 +213,13 @@ public class ConditionalJava2Tests extends BaseTest {
             example.clear();
             rows = dao.countByExample(example);
             assertEquals(3, rows);
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
     
     public void testPKOnlyInsert() {
-        PkonlyDAO dao = new PkonlyDAOImpl(sqlMapClient);
+        PkonlyDAO dao = getPkonlyDAO();
 
         try {
             PkonlyKey key = new PkonlyKey();
@@ -249,13 +234,13 @@ public class ConditionalJava2Tests extends BaseTest {
             PkonlyKey returnedRecord = (PkonlyKey) answer.get(0);
             assertEquals(key.getId(), returnedRecord.getId());
             assertEquals(key.getSeqNum(), returnedRecord.getSeqNum());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKOnlyDeleteByPrimaryKey() {
-        PkonlyDAO dao = new PkonlyDAOImpl(sqlMapClient);
+        PkonlyDAO dao = getPkonlyDAO();
 
         try {
             PkonlyKey key = new PkonlyKey();
@@ -280,13 +265,13 @@ public class ConditionalJava2Tests extends BaseTest {
 
             answer = dao.selectByExample(example);
             assertEquals(1, answer.size());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKOnlyDeleteByExample() {
-        PkonlyDAO dao = new PkonlyDAOImpl(sqlMapClient);
+        PkonlyDAO dao = getPkonlyDAO();
 
         try {
             PkonlyKey key = new PkonlyKey();
@@ -312,13 +297,13 @@ public class ConditionalJava2Tests extends BaseTest {
             example = new PkonlyExample();
             List answer = dao.selectByExample(example);
             assertEquals(1, answer.size());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKOnlySelectByExample() {
-        PkonlyDAO dao = new PkonlyDAOImpl(sqlMapClient);
+        PkonlyDAO dao = getPkonlyDAO();
 
         try {
             PkonlyKey key = new PkonlyKey();
@@ -340,13 +325,13 @@ public class ConditionalJava2Tests extends BaseTest {
             example.createCriteria().andIdGreaterThan(4);
             List answer = dao.selectByExample(example);
             assertEquals(2, answer.size());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKOnlySelectByExampleNoCriteria() {
-        PkonlyDAO dao = new PkonlyDAOImpl(sqlMapClient);
+        PkonlyDAO dao = getPkonlyDAO();
 
         try {
             PkonlyKey key = new PkonlyKey();
@@ -368,13 +353,13 @@ public class ConditionalJava2Tests extends BaseTest {
             example.createCriteria();
             List answer = dao.selectByExample(example);
             assertEquals(3, answer.size());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKOnlyCountByExample() {
-        PkonlyDAO dao = new PkonlyDAOImpl(sqlMapClient);
+        PkonlyDAO dao = getPkonlyDAO();
 
         try {
             PkonlyKey key = new PkonlyKey();
@@ -400,13 +385,13 @@ public class ConditionalJava2Tests extends BaseTest {
             example.clear();
             rows = dao.countByExample(example);
             assertEquals(3, rows);
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKFieldsInsert() {
-        PkfieldsDAO dao = new PkfieldsDAOImpl(sqlMapClient);
+        PkfieldsDAO dao = getPkfieldsDAO();
 
         try {
             Pkfields record = new Pkfields();
@@ -449,13 +434,13 @@ public class ConditionalJava2Tests extends BaseTest {
                     .getTimefield()));
             assertEquals(record.getTimestampfield(), returnedRecord
                     .getTimestampfield());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKFieldsUpdateByPrimaryKey() {
-        PkfieldsDAO dao = new PkfieldsDAOImpl(sqlMapClient);
+        PkfieldsDAO dao = getPkfieldsDAO();
 
         try {
             Pkfields record = new Pkfields();
@@ -482,13 +467,13 @@ public class ConditionalJava2Tests extends BaseTest {
             assertEquals(record.getLastname(), record2.getLastname());
             assertEquals(record.getId1(), record2.getId1());
             assertEquals(record.getId2(), record2.getId2());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKFieldsUpdateByPrimaryKeySelective() {
-        PkfieldsDAO dao = new PkfieldsDAOImpl(sqlMapClient);
+        PkfieldsDAO dao = getPkfieldsDAO();
 
         try {
             Pkfields record = new Pkfields();
@@ -534,13 +519,13 @@ public class ConditionalJava2Tests extends BaseTest {
                     .getTimefield()));
             assertEquals(record.getTimestampfield(), returnedRecord
                     .getTimestampfield());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKfieldsDeleteByPrimaryKey() {
-        PkfieldsDAO dao = new PkfieldsDAOImpl(sqlMapClient);
+        PkfieldsDAO dao = getPkfieldsDAO();
 
         try {
             Pkfields record = new Pkfields();
@@ -561,13 +546,13 @@ public class ConditionalJava2Tests extends BaseTest {
             PkfieldsExample example = new PkfieldsExample();
             List answer = dao.selectByExample(example);
             assertEquals(0, answer.size());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKFieldsDeleteByExample() {
-        PkfieldsDAO dao = new PkfieldsDAOImpl(sqlMapClient);
+        PkfieldsDAO dao = getPkfieldsDAO();
 
         try {
             Pkfields record = new Pkfields();
@@ -597,13 +582,13 @@ public class ConditionalJava2Tests extends BaseTest {
             example = new PkfieldsExample();
             answer = dao.selectByExample(example);
             assertEquals(1, answer.size());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKFieldsSelectByPrimaryKey() {
-        PkfieldsDAO dao = new PkfieldsDAOImpl(sqlMapClient);
+        PkfieldsDAO dao = getPkfieldsDAO();
 
         try {
             Pkfields record = new Pkfields();
@@ -630,13 +615,13 @@ public class ConditionalJava2Tests extends BaseTest {
             assertEquals(record.getLastname(), newRecord.getLastname());
             assertEquals(record.getId1(), newRecord.getId1());
             assertEquals(record.getId2(), newRecord.getId2());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKFieldsSelectByExampleLike() {
-        PkfieldsDAO dao = new PkfieldsDAOImpl(sqlMapClient);
+        PkfieldsDAO dao = getPkfieldsDAO();
 
         try {
             Pkfields record = new Pkfields();
@@ -695,13 +680,13 @@ public class ConditionalJava2Tests extends BaseTest {
             returnedRecord = (Pkfields) answer.get(2);
             assertEquals(2, returnedRecord.getId1().intValue());
             assertEquals(3, returnedRecord.getId2().intValue());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKFieldsSelectByExampleNotLike() {
-        PkfieldsDAO dao = new PkfieldsDAOImpl(sqlMapClient);
+        PkfieldsDAO dao = getPkfieldsDAO();
 
         try {
             Pkfields record = new Pkfields();
@@ -760,13 +745,13 @@ public class ConditionalJava2Tests extends BaseTest {
             returnedRecord = (Pkfields) answer.get(2);
             assertEquals(1, returnedRecord.getId1().intValue());
             assertEquals(3, returnedRecord.getId2().intValue());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKFieldsSelectByExampleComplexLike() {
-        PkfieldsDAO dao = new PkfieldsDAOImpl(sqlMapClient);
+        PkfieldsDAO dao = getPkfieldsDAO();
 
         try {
             Pkfields record = new Pkfields();
@@ -824,13 +809,13 @@ public class ConditionalJava2Tests extends BaseTest {
             returnedRecord = (Pkfields) answer.get(1);
             assertEquals(2, returnedRecord.getId1().intValue());
             assertEquals(3, returnedRecord.getId2().intValue());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKFieldsSelectByExampleIn() {
-        PkfieldsDAO dao = new PkfieldsDAOImpl(sqlMapClient);
+        PkfieldsDAO dao = getPkfieldsDAO();
 
         try {
             Pkfields record = new Pkfields();
@@ -897,13 +882,13 @@ public class ConditionalJava2Tests extends BaseTest {
             returnedRecord = (Pkfields) answer.get(3);
             assertEquals(2, returnedRecord.getId1().intValue());
             assertEquals(3, returnedRecord.getId2().intValue());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKFieldsSelectByExampleBetween() {
-        PkfieldsDAO dao = new PkfieldsDAOImpl(sqlMapClient);
+        PkfieldsDAO dao = getPkfieldsDAO();
 
         try {
             Pkfields record = new Pkfields();
@@ -954,13 +939,13 @@ public class ConditionalJava2Tests extends BaseTest {
             example.setOrderByClause("ID1, ID2");
             List answer = dao.selectByExample(example);
             assertEquals(6, answer.size());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKFieldsSelectByExampleNoCriteria() {
-        PkfieldsDAO dao = new PkfieldsDAOImpl(sqlMapClient);
+        PkfieldsDAO dao = getPkfieldsDAO();
 
         try {
             Pkfields record = new Pkfields();
@@ -1011,13 +996,13 @@ public class ConditionalJava2Tests extends BaseTest {
             example.setOrderByClause("ID1, ID2");
             List answer = dao.selectByExample(example);
             assertEquals(6, answer.size());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKFieldsSelectByExampleEscapedFields() {
-        PkfieldsDAO dao = new PkfieldsDAOImpl(sqlMapClient);
+        PkfieldsDAO dao = getPkfieldsDAO();
 
         try {
             Pkfields record = new Pkfields();
@@ -1079,13 +1064,13 @@ public class ConditionalJava2Tests extends BaseTest {
             example.setOrderByClause("ID1, ID2");
             List answer = dao.selectByExample(example);
             assertEquals(2, answer.size());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKFieldsCountByExample() {
-        PkfieldsDAO dao = new PkfieldsDAOImpl(sqlMapClient);
+        PkfieldsDAO dao = getPkfieldsDAO();
 
         try {
             Pkfields record = new Pkfields();
@@ -1111,13 +1096,13 @@ public class ConditionalJava2Tests extends BaseTest {
             example.clear();
             rows = dao.countByExample(example);
             assertEquals(2, rows);
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKBlobsInsert() {
-        PkblobsDAO dao = new PkblobsDAOImpl(sqlMapClient);
+        PkblobsDAO dao = getPkblobsDAO();
 
         try {
             Pkblobs record = new Pkblobs();
@@ -1136,13 +1121,13 @@ public class ConditionalJava2Tests extends BaseTest {
                     .getBlob1()));
             assertTrue(blobsAreEqual(record.getBlob2(), returnedRecord
                     .getBlob2()));
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKBlobsUpdateByPrimaryKeyWithBLOBs() {
-        PkblobsDAO dao = new PkblobsDAOImpl(sqlMapClient);
+        PkblobsDAO dao = getPkblobsDAO();
 
         try {
             Pkblobs record = new Pkblobs();
@@ -1163,13 +1148,13 @@ public class ConditionalJava2Tests extends BaseTest {
             assertEquals(record.getId(), newRecord.getId());
             assertTrue(blobsAreEqual(record.getBlob1(), newRecord.getBlob1()));
             assertTrue(blobsAreEqual(record.getBlob2(), newRecord.getBlob2()));
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKBlobsUpdateByPrimaryKeySelective() {
-        PkblobsDAO dao = new PkblobsDAOImpl(sqlMapClient);
+        PkblobsDAO dao = getPkblobsDAO();
 
         try {
             Pkblobs record = new Pkblobs();
@@ -1190,13 +1175,13 @@ public class ConditionalJava2Tests extends BaseTest {
                     .getBlob1()));
             assertTrue(blobsAreEqual(newRecord.getBlob2(), returnedRecord
                     .getBlob2()));
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKBlobsDeleteByPrimaryKey() {
-        PkblobsDAO dao = new PkblobsDAOImpl(sqlMapClient);
+        PkblobsDAO dao = getPkblobsDAO();
 
         try {
             Pkblobs record = new Pkblobs();
@@ -1215,13 +1200,13 @@ public class ConditionalJava2Tests extends BaseTest {
             example = new PkblobsExample();
             answer = dao.selectByExampleWithoutBLOBs(example);
             assertEquals(0, answer.size());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKBlobsDeleteByExample() {
-        PkblobsDAO dao = new PkblobsDAOImpl(sqlMapClient);
+        PkblobsDAO dao = getPkblobsDAO();
 
         try {
             Pkblobs record = new Pkblobs();
@@ -1248,13 +1233,13 @@ public class ConditionalJava2Tests extends BaseTest {
             example = new PkblobsExample();
             answer = dao.selectByExampleWithoutBLOBs(example);
             assertEquals(1, answer.size());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKBlobsSelectByPrimaryKey() {
-        PkblobsDAO dao = new PkblobsDAOImpl(sqlMapClient);
+        PkblobsDAO dao = getPkblobsDAO();
 
         try {
             Pkblobs record = new Pkblobs();
@@ -1274,13 +1259,13 @@ public class ConditionalJava2Tests extends BaseTest {
             assertEquals(record.getId(), newRecord.getId());
             assertTrue(blobsAreEqual(record.getBlob1(), newRecord.getBlob1()));
             assertTrue(blobsAreEqual(record.getBlob2(), newRecord.getBlob2()));
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKBlobsSelectByExampleWithoutBlobs() {
-        PkblobsDAO dao = new PkblobsDAOImpl(sqlMapClient);
+        PkblobsDAO dao = getPkblobsDAO();
 
         try {
             Pkblobs record = new Pkblobs();
@@ -1305,13 +1290,13 @@ public class ConditionalJava2Tests extends BaseTest {
             assertEquals(6, key.getId().intValue());
             assertNull(key.getBlob1());
             assertNull(key.getBlob2());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKBlobsSelectByExampleWithoutBlobsNoCriteria() {
-        PkblobsDAO dao = new PkblobsDAOImpl(sqlMapClient);
+        PkblobsDAO dao = getPkblobsDAO();
 
         try {
             Pkblobs record = new Pkblobs();
@@ -1331,13 +1316,13 @@ public class ConditionalJava2Tests extends BaseTest {
             List answer = dao.selectByExampleWithoutBLOBs(example);
 
             assertEquals(2, answer.size());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKBlobsSelectByExampleWithBlobs() {
-        PkblobsDAO dao = new PkblobsDAOImpl(sqlMapClient);
+        PkblobsDAO dao = getPkblobsDAO();
 
         try {
             Pkblobs record = new Pkblobs();
@@ -1362,13 +1347,13 @@ public class ConditionalJava2Tests extends BaseTest {
             assertEquals(record.getId(), newRecord.getId());
             assertTrue(blobsAreEqual(record.getBlob1(), newRecord.getBlob1()));
             assertTrue(blobsAreEqual(record.getBlob2(), newRecord.getBlob2()));
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKBlobsCountByExample() {
-        PkblobsDAO dao = new PkblobsDAOImpl(sqlMapClient);
+        PkblobsDAO dao = getPkblobsDAO();
 
         try {
             Pkblobs record = new Pkblobs();
@@ -1391,13 +1376,13 @@ public class ConditionalJava2Tests extends BaseTest {
             example.clear();
             rows = dao.countByExample(example);
             assertEquals(2, rows);
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKFieldsBlobsInsert() {
-        PkfieldsblobsDAO dao = new PkfieldsblobsDAOImpl(sqlMapClient);
+        PkfieldsblobsDAO dao = getPkfieldsblobsDAO();
 
         try {
             Pkfieldsblobs record = new Pkfieldsblobs();
@@ -1419,13 +1404,13 @@ public class ConditionalJava2Tests extends BaseTest {
             assertEquals(record.getLastname(), returnedRecord.getLastname());
             assertTrue(blobsAreEqual(record.getBlob1(), returnedRecord
                     .getBlob1()));
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKFieldsBlobsUpdateByPrimaryKeyWithBLOBs() {
-        PkfieldsblobsDAO dao = new PkfieldsblobsDAOImpl(sqlMapClient);
+        PkfieldsblobsDAO dao = getPkfieldsblobsDAO();
 
         try {
             Pkfieldsblobs record = new Pkfieldsblobs();
@@ -1456,13 +1441,13 @@ public class ConditionalJava2Tests extends BaseTest {
             assertEquals(record.getId2(), newRecord.getId2());
             assertTrue(blobsAreEqual(updateRecord.getBlob1(), newRecord
                     .getBlob1()));
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKFieldsBlobsUpdateByPrimaryKeyWithoutBLOBs() {
-        PkfieldsblobsDAO dao = new PkfieldsblobsDAOImpl(sqlMapClient);
+        PkfieldsblobsDAO dao = getPkfieldsblobsDAO();
 
         try {
             Pkfieldsblobs record = new Pkfieldsblobs();
@@ -1491,13 +1476,13 @@ public class ConditionalJava2Tests extends BaseTest {
             assertEquals(record.getId1(), newRecord.getId1());
             assertEquals(record.getId2(), newRecord.getId2());
             assertTrue(blobsAreEqual(record.getBlob1(), newRecord.getBlob1()));
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKFieldsBlobsUpdateByPrimaryKeySelective() {
-        PkfieldsblobsDAO dao = new PkfieldsblobsDAOImpl(sqlMapClient);
+        PkfieldsblobsDAO dao = getPkfieldsblobsDAO();
 
         try {
             Pkfieldsblobs record = new Pkfieldsblobs();
@@ -1527,13 +1512,13 @@ public class ConditionalJava2Tests extends BaseTest {
             assertEquals(record.getId2(), returnedRecord.getId2());
             assertTrue(blobsAreEqual(record.getBlob1(), returnedRecord
                     .getBlob1()));
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKFieldsBlobsDeleteByPrimaryKey() {
-        PkfieldsblobsDAO dao = new PkfieldsblobsDAOImpl(sqlMapClient);
+        PkfieldsblobsDAO dao = getPkfieldsblobsDAO();
 
         try {
             Pkfieldsblobs record = new Pkfieldsblobs();
@@ -1565,13 +1550,13 @@ public class ConditionalJava2Tests extends BaseTest {
             example = new PkfieldsblobsExample();
             answer = dao.selectByExampleWithoutBLOBs(example);
             assertEquals(1, answer.size());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKFieldsBlobsDeleteByExample() {
-        PkfieldsblobsDAO dao = new PkfieldsblobsDAOImpl(sqlMapClient);
+        PkfieldsblobsDAO dao = getPkfieldsblobsDAO();
 
         try {
             Pkfieldsblobs record = new Pkfieldsblobs();
@@ -1602,13 +1587,13 @@ public class ConditionalJava2Tests extends BaseTest {
             example = new PkfieldsblobsExample();
             answer = dao.selectByExampleWithoutBLOBs(example);
             assertEquals(1, answer.size());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKFieldsBlobsSelectByPrimaryKey() {
-        PkfieldsblobsDAO dao = new PkfieldsblobsDAOImpl(sqlMapClient);
+        PkfieldsblobsDAO dao = getPkfieldsblobsDAO();
 
         try {
             Pkfieldsblobs record = new Pkfieldsblobs();
@@ -1640,13 +1625,13 @@ public class ConditionalJava2Tests extends BaseTest {
             assertEquals(record.getFirstname(), newRecord.getFirstname());
             assertEquals(record.getLastname(), newRecord.getLastname());
             assertTrue(blobsAreEqual(record.getBlob1(), newRecord.getBlob1()));
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKFieldsBlobsSelectByExampleWithoutBlobs() {
-        PkfieldsblobsDAO dao = new PkfieldsblobsDAOImpl(sqlMapClient);
+        PkfieldsblobsDAO dao = getPkfieldsblobsDAO();
 
         try {
             Pkfieldsblobs record = new Pkfieldsblobs();
@@ -1676,13 +1661,13 @@ public class ConditionalJava2Tests extends BaseTest {
             assertEquals(record.getFirstname(), newRecord.getFirstname());
             assertEquals(record.getLastname(), newRecord.getLastname());
             assertNull(newRecord.getBlob1());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKFieldsBlobsSelectByExampleWithBlobs() {
-        PkfieldsblobsDAO dao = new PkfieldsblobsDAOImpl(sqlMapClient);
+        PkfieldsblobsDAO dao = getPkfieldsblobsDAO();
 
         try {
             Pkfieldsblobs record = new Pkfieldsblobs();
@@ -1712,13 +1697,13 @@ public class ConditionalJava2Tests extends BaseTest {
             assertEquals(record.getFirstname(), newRecord.getFirstname());
             assertEquals(record.getLastname(), newRecord.getLastname());
             assertTrue(blobsAreEqual(record.getBlob1(), newRecord.getBlob1()));
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKFieldsBlobsSelectByExampleWithBlobsNoCriteria() {
-        PkfieldsblobsDAO dao = new PkfieldsblobsDAOImpl(sqlMapClient);
+        PkfieldsblobsDAO dao = getPkfieldsblobsDAO();
 
         try {
             Pkfieldsblobs record = new Pkfieldsblobs();
@@ -1741,13 +1726,13 @@ public class ConditionalJava2Tests extends BaseTest {
             example.createCriteria();
             List answer = dao.selectByExampleWithBLOBs(example);
             assertEquals(2, answer.size());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKFieldsBlobsCountByExample() {
-        PkfieldsblobsDAO dao = new PkfieldsblobsDAOImpl(sqlMapClient);
+        PkfieldsblobsDAO dao = getPkfieldsblobsDAO();
 
         try {
             Pkfieldsblobs record = new Pkfieldsblobs();
@@ -1774,13 +1759,13 @@ public class ConditionalJava2Tests extends BaseTest {
             example.clear();
             rows = dao.countByExample(example);
             assertEquals(2, rows);
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testFieldsBlobsInsert() {
-        FieldsblobsDAO dao = new FieldsblobsDAOImpl(sqlMapClient);
+        FieldsblobsDAO dao = getFieldsblobsDAO();
 
         try {
             FieldsblobsWithBLOBs record = new FieldsblobsWithBLOBs();
@@ -1802,13 +1787,13 @@ public class ConditionalJava2Tests extends BaseTest {
                     .getBlob1()));
             assertTrue(blobsAreEqual(record.getBlob2(), returnedRecord
                     .getBlob2()));
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testFieldsBlobsDeleteByExample() {
-        FieldsblobsDAO dao = new FieldsblobsDAOImpl(sqlMapClient);
+        FieldsblobsDAO dao = getFieldsblobsDAO();
 
         try {
             FieldsblobsWithBLOBs record = new FieldsblobsWithBLOBs();
@@ -1837,13 +1822,13 @@ public class ConditionalJava2Tests extends BaseTest {
             example = new FieldsblobsExample();
             answer = dao.selectByExampleWithoutBLOBs(example);
             assertEquals(1, answer.size());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testFieldsBlobsSelectByExampleWithoutBlobs() {
-        FieldsblobsDAO dao = new FieldsblobsDAOImpl(sqlMapClient);
+        FieldsblobsDAO dao = getFieldsblobsDAO();
 
         try {
             FieldsblobsWithBLOBs record = new FieldsblobsWithBLOBs();
@@ -1869,13 +1854,13 @@ public class ConditionalJava2Tests extends BaseTest {
             assertFalse(newRecord instanceof FieldsblobsWithBLOBs);
             assertEquals(record.getFirstname(), newRecord.getFirstname());
             assertEquals(record.getLastname(), newRecord.getLastname());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testFieldsBlobsSelectByExampleWithBlobs() {
-        FieldsblobsDAO dao = new FieldsblobsDAOImpl(sqlMapClient);
+        FieldsblobsDAO dao = getFieldsblobsDAO();
 
         try {
             FieldsblobsWithBLOBs record = new FieldsblobsWithBLOBs();
@@ -1903,13 +1888,13 @@ public class ConditionalJava2Tests extends BaseTest {
             assertEquals(record.getLastname(), newRecord.getLastname());
             assertTrue(blobsAreEqual(record.getBlob1(), newRecord.getBlob1()));
             assertTrue(blobsAreEqual(record.getBlob2(), newRecord.getBlob2()));
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testFieldsBlobsSelectByExampleWithBlobsNoCriteria() {
-        FieldsblobsDAO dao = new FieldsblobsDAOImpl(sqlMapClient);
+        FieldsblobsDAO dao = getFieldsblobsDAO();
 
         try {
             FieldsblobsWithBLOBs record = new FieldsblobsWithBLOBs();
@@ -1930,13 +1915,13 @@ public class ConditionalJava2Tests extends BaseTest {
             example.createCriteria();
             List answer = dao.selectByExampleWithBLOBs(example);
             assertEquals(2, answer.size());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testFieldsBlobsCountByExample() {
-        FieldsblobsDAO dao = new FieldsblobsDAOImpl(sqlMapClient);
+        FieldsblobsDAO dao = getFieldsblobsDAO();
 
         try {
             FieldsblobsWithBLOBs record = new FieldsblobsWithBLOBs();
@@ -1961,13 +1946,13 @@ public class ConditionalJava2Tests extends BaseTest {
             example.clear();
             rows = dao.countByExample(example);
             assertEquals(2, rows);
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testAwfulTableInsert() {
-        AwfulTableDAO dao = new AwfulTableDAOImpl(sqlMapClient);
+        AwfulTableDAO dao = getAwfulTableDAO();
 
         try {
             AwfulTable record = new AwfulTable();
@@ -2012,13 +1997,13 @@ public class ConditionalJava2Tests extends BaseTest {
                     .getSecondFirstName());
             assertEquals(record.getThirdFirstName(), returnedRecord
                     .getThirdFirstName());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testAwfulTableUpdateByPrimaryKey() {
-        AwfulTableDAO dao = new AwfulTableDAOImpl(sqlMapClient);
+        AwfulTableDAO dao = getAwfulTableDAO();
 
         try {
             AwfulTable record = new AwfulTable();
@@ -2066,13 +2051,13 @@ public class ConditionalJava2Tests extends BaseTest {
                     .getSecondFirstName());
             assertEquals(record.getThirdFirstName(), returnedRecord
                     .getThirdFirstName());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testAwfulTableUpdateByPrimaryKeySelective() {
-        AwfulTableDAO dao = new AwfulTableDAOImpl(sqlMapClient);
+        AwfulTableDAO dao = getAwfulTableDAO();
 
         try {
             AwfulTable record = new AwfulTable();
@@ -2122,13 +2107,13 @@ public class ConditionalJava2Tests extends BaseTest {
                     .getSecondFirstName());
             assertEquals(record.getThirdFirstName(), returnedRecord
                     .getThirdFirstName());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testAwfulTableDeleteByPrimaryKey() {
-        AwfulTableDAO dao = new AwfulTableDAOImpl(sqlMapClient);
+        AwfulTableDAO dao = getAwfulTableDAO();
 
         try {
             AwfulTable record = new AwfulTable();
@@ -2154,13 +2139,13 @@ public class ConditionalJava2Tests extends BaseTest {
             AwfulTableExample example = new AwfulTableExample();
             List answer = dao.selectByExample(example);
             assertEquals(0, answer.size());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testAwfulTableDeleteByExample() {
-        AwfulTableDAO dao = new AwfulTableDAOImpl(sqlMapClient);
+        AwfulTableDAO dao = getAwfulTableDAO();
 
         try {
             AwfulTable record = new AwfulTable();
@@ -2209,13 +2194,13 @@ public class ConditionalJava2Tests extends BaseTest {
             example.clear();
             answer = dao.selectByExample(example);
             assertEquals(1, answer.size());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testAwfulTableSelectByPrimaryKey() {
-        AwfulTableDAO dao = new AwfulTableDAOImpl(sqlMapClient);
+        AwfulTableDAO dao = getAwfulTableDAO();
 
         try {
             AwfulTable record = new AwfulTable();
@@ -2275,13 +2260,13 @@ public class ConditionalJava2Tests extends BaseTest {
                     .getSecondFirstName());
             assertEquals(record.getThirdFirstName(), returnedRecord
                     .getThirdFirstName());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testAwfulTableSelectByExampleLike() {
-        AwfulTableDAO dao = new AwfulTableDAOImpl(sqlMapClient);
+        AwfulTableDAO dao = getAwfulTableDAO();
 
         try {
             AwfulTable record = new AwfulTable();
@@ -2394,13 +2379,13 @@ public class ConditionalJava2Tests extends BaseTest {
             returnedRecord = (AwfulTable) answer.get(2);
             assertEquals(111111, returnedRecord.getId1().intValue());
             assertEquals(222222, returnedRecord.getId2().intValue());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testAwfulTableSelectByExampleNotLike() {
-        AwfulTableDAO dao = new AwfulTableDAOImpl(sqlMapClient);
+        AwfulTableDAO dao = getAwfulTableDAO();
 
         try {
             AwfulTable record = new AwfulTable();
@@ -2513,13 +2498,13 @@ public class ConditionalJava2Tests extends BaseTest {
             returnedRecord = (AwfulTable) answer.get(2);
             assertEquals(111, returnedRecord.getId1().intValue());
             assertEquals(222, returnedRecord.getId2().intValue());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
     
     public void testAwfulTableSelectByExampleComplexLike() {
-        AwfulTableDAO dao = new AwfulTableDAOImpl(sqlMapClient);
+        AwfulTableDAO dao = getAwfulTableDAO();
 
         try {
             AwfulTable record = new AwfulTable();
@@ -2630,13 +2615,13 @@ public class ConditionalJava2Tests extends BaseTest {
             returnedRecord = (AwfulTable) answer.get(1);
             assertEquals(111111, returnedRecord.getId1().intValue());
             assertEquals(222222, returnedRecord.getId2().intValue());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testAwfulTableSelectByExampleIn() {
-        AwfulTableDAO dao = new AwfulTableDAOImpl(sqlMapClient);
+        AwfulTableDAO dao = getAwfulTableDAO();
 
         try {
             AwfulTable record = new AwfulTable();
@@ -2751,13 +2736,13 @@ public class ConditionalJava2Tests extends BaseTest {
             returnedRecord = (AwfulTable) answer.get(1);
             assertEquals(11, returnedRecord.getId1().intValue());
             assertEquals(22, returnedRecord.getId2().intValue());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testAwfulTableSelectByExampleBetween() {
-        AwfulTableDAO dao = new AwfulTableDAOImpl(sqlMapClient);
+        AwfulTableDAO dao = getAwfulTableDAO();
 
         try {
             AwfulTable record = new AwfulTable();
@@ -2860,13 +2845,13 @@ public class ConditionalJava2Tests extends BaseTest {
             example.createCriteria().andId1Between(1, 1000);
             List answer = dao.selectByExample(example);
             assertEquals(3, answer.size());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testAwfulTableSelectByExampleNoCriteria() {
-        AwfulTableDAO dao = new AwfulTableDAOImpl(sqlMapClient);
+        AwfulTableDAO dao = getAwfulTableDAO();
 
         try {
             AwfulTable record = new AwfulTable();
@@ -2983,13 +2968,13 @@ public class ConditionalJava2Tests extends BaseTest {
             assertEquals(11, returnedRecord.getId1().intValue());
             returnedRecord = (AwfulTable) answer.get(5);
             assertEquals(1, returnedRecord.getId1().intValue());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testAwfulTableCountByExample() {
-        AwfulTableDAO dao = new AwfulTableDAOImpl(sqlMapClient);
+        AwfulTableDAO dao = getAwfulTableDAO();
 
         try {
             AwfulTable record = new AwfulTable();
@@ -3034,7 +3019,7 @@ public class ConditionalJava2Tests extends BaseTest {
             example.clear();
             rows = dao.countByExample(example);
             assertEquals(2, rows);
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }

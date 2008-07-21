@@ -38,11 +38,11 @@ import com.ibatis.sqlmap.client.SqlMapClientBuilder;
  */
 public abstract class BaseTest extends TestCase {
 
-    protected static SqlMapClient sqlMapClient;
+    private SqlMapClient sqlMapClient;
     private static DateFormat dateOnlyFormat = SimpleDateFormat.getDateInstance();
     private static DateFormat timeOnlyFormat = SimpleDateFormat.getTimeInstance();
 
-    protected static void initSqlMapClient(String configFile, Properties props) throws Exception {
+    protected void initSqlMapClient(String configFile, Properties props) throws Exception {
         Reader reader = Resources.getResourceAsReader(configFile);
         sqlMapClient = SqlMapClientBuilder.buildSqlMapClient(reader, props);
         reader.close();
@@ -130,5 +130,9 @@ public abstract class BaseTest extends TestCase {
         
         return timeOnlyFormat.format(date1).equals(timeOnlyFormat.format(date2));
         
+    }
+
+    protected SqlMapClient getSqlMapClient() {
+        return sqlMapClient;
     }
 }

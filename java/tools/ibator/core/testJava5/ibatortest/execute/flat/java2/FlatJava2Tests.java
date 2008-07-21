@@ -16,27 +16,13 @@
 
 package ibatortest.execute.flat.java2;
 
-import java.math.BigDecimal;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import ibatortest.BaseTest;
 import ibatortest.generated.flat.java2.dao.AwfulTableDAO;
-import ibatortest.generated.flat.java2.dao.AwfulTableDAOImpl;
 import ibatortest.generated.flat.java2.dao.FieldsblobsDAO;
-import ibatortest.generated.flat.java2.dao.FieldsblobsDAOImpl;
 import ibatortest.generated.flat.java2.dao.FieldsonlyDAO;
-import ibatortest.generated.flat.java2.dao.FieldsonlyDAOImpl;
 import ibatortest.generated.flat.java2.dao.PkblobsDAO;
-import ibatortest.generated.flat.java2.dao.PkblobsDAOImpl;
 import ibatortest.generated.flat.java2.dao.PkfieldsDAO;
-import ibatortest.generated.flat.java2.dao.PkfieldsDAOImpl;
 import ibatortest.generated.flat.java2.dao.PkfieldsblobsDAO;
-import ibatortest.generated.flat.java2.dao.PkfieldsblobsDAOImpl;
 import ibatortest.generated.flat.java2.dao.PkonlyDAO;
-import ibatortest.generated.flat.java2.dao.PkonlyDAOImpl;
 import ibatortest.generated.flat.java2.model.AwfulTable;
 import ibatortest.generated.flat.java2.model.AwfulTableExample;
 import ibatortest.generated.flat.java2.model.Fieldsblobs;
@@ -52,19 +38,20 @@ import ibatortest.generated.flat.java2.model.PkfieldsblobsExample;
 import ibatortest.generated.flat.java2.model.Pkonly;
 import ibatortest.generated.flat.java2.model.PkonlyExample;
 
+import java.math.BigDecimal;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 /**
  * @author Jeff Butler
  * 
  */
-public class FlatJava2Tests extends BaseTest {
-
-    protected void setUp() throws Exception {
-        super.setUp();
-        initSqlMapClient("ibatortest/execute/flat/java2/SqlMapConfig.xml", null);
-    }
+public class FlatJava2Tests extends BaseFlatJava2Test {
 
     public void testFieldsOnlyInsert() {
-        FieldsonlyDAO dao = new FieldsonlyDAOImpl(sqlMapClient);
+        FieldsonlyDAO dao = getFieldsonlyDAO();
 
         try {
             Fieldsonly record = new Fieldsonly();
@@ -91,7 +78,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testFieldsOnlySelectByExample() {
-        FieldsonlyDAO dao = new FieldsonlyDAOImpl(sqlMapClient);
+        FieldsonlyDAO dao = getFieldsonlyDAO();
 
         try {
             Fieldsonly record = new Fieldsonly();
@@ -127,7 +114,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testFieldsOnlySelectByExampleNoCriteria() {
-        FieldsonlyDAO dao = new FieldsonlyDAOImpl(sqlMapClient);
+        FieldsonlyDAO dao = getFieldsonlyDAO();
 
         try {
             Fieldsonly record = new Fieldsonly();
@@ -159,7 +146,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testFieldsOnlyDeleteByExample() {
-        FieldsonlyDAO dao = new FieldsonlyDAOImpl(sqlMapClient);
+        FieldsonlyDAO dao = getFieldsonlyDAO();
 
         try {
             Fieldsonly record = new Fieldsonly();
@@ -195,7 +182,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testFieldsOnlyCountByExample() {
-        FieldsonlyDAO dao = new FieldsonlyDAOImpl(sqlMapClient);
+        FieldsonlyDAO dao = getFieldsonlyDAO();
 
         try {
             Fieldsonly record = new Fieldsonly();
@@ -231,7 +218,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testPKOnlyInsert() {
-        PkonlyDAO dao = new PkonlyDAOImpl(sqlMapClient);
+        PkonlyDAO dao = getPkonlyDAO();
 
         try {
             Pkonly key = new Pkonly();
@@ -252,7 +239,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testPKOnlyDeleteByPrimaryKey() {
-        PkonlyDAO dao = new PkonlyDAOImpl(sqlMapClient);
+        PkonlyDAO dao = getPkonlyDAO();
 
         try {
             Pkonly key = new Pkonly();
@@ -280,7 +267,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testPKOnlyDeleteByExample() {
-        PkonlyDAO dao = new PkonlyDAOImpl(sqlMapClient);
+        PkonlyDAO dao = getPkonlyDAO();
 
         try {
             Pkonly key = new Pkonly();
@@ -312,7 +299,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testPKOnlySelectByExample() {
-        PkonlyDAO dao = new PkonlyDAOImpl(sqlMapClient);
+        PkonlyDAO dao = getPkonlyDAO();
 
         try {
             Pkonly key = new Pkonly();
@@ -340,7 +327,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testPKOnlySelectByExampleNoCriteria() {
-        PkonlyDAO dao = new PkonlyDAOImpl(sqlMapClient);
+        PkonlyDAO dao = getPkonlyDAO();
 
         try {
             Pkonly key = new Pkonly();
@@ -368,7 +355,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testPKOnlyCountByExample() {
-        PkonlyDAO dao = new PkonlyDAOImpl(sqlMapClient);
+        PkonlyDAO dao = getPkonlyDAO();
 
         try {
             Pkonly key = new Pkonly();
@@ -400,7 +387,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testPKFieldsInsert() {
-        PkfieldsDAO dao = new PkfieldsDAOImpl(sqlMapClient);
+        PkfieldsDAO dao = getPkfieldsDAO();
 
         try {
             Pkfields record = new Pkfields();
@@ -445,7 +432,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testPKFieldsUpdateByPrimaryKey() {
-        PkfieldsDAO dao = new PkfieldsDAOImpl(sqlMapClient);
+        PkfieldsDAO dao = getPkfieldsDAO();
 
         try {
             Pkfields record = new Pkfields();
@@ -474,7 +461,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testPKFieldsUpdateByPrimaryKeySelective() {
-        PkfieldsDAO dao = new PkfieldsDAOImpl(sqlMapClient);
+        PkfieldsDAO dao = getPkfieldsDAO();
 
         try {
             Pkfields record = new Pkfields();
@@ -522,7 +509,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testPKfieldsDeleteByPrimaryKey() {
-        PkfieldsDAO dao = new PkfieldsDAOImpl(sqlMapClient);
+        PkfieldsDAO dao = getPkfieldsDAO();
 
         try {
             Pkfields record = new Pkfields();
@@ -545,7 +532,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testPKFieldsDeleteByExample() {
-        PkfieldsDAO dao = new PkfieldsDAOImpl(sqlMapClient);
+        PkfieldsDAO dao = getPkfieldsDAO();
 
         try {
             Pkfields record = new Pkfields();
@@ -581,7 +568,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testPKFieldsSelectByPrimaryKey() {
-        PkfieldsDAO dao = new PkfieldsDAOImpl(sqlMapClient);
+        PkfieldsDAO dao = getPkfieldsDAO();
 
         try {
             Pkfields record = new Pkfields();
@@ -611,7 +598,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testPKFieldsSelectByExampleLike() {
-        PkfieldsDAO dao = new PkfieldsDAOImpl(sqlMapClient);
+        PkfieldsDAO dao = getPkfieldsDAO();
 
         try {
             Pkfields record = new Pkfields();
@@ -676,7 +663,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testPKFieldsSelectByExampleNotLike() {
-        PkfieldsDAO dao = new PkfieldsDAOImpl(sqlMapClient);
+        PkfieldsDAO dao = getPkfieldsDAO();
 
         try {
             Pkfields record = new Pkfields();
@@ -741,7 +728,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testPKFieldsSelectByExampleComplexLike() {
-        PkfieldsDAO dao = new PkfieldsDAOImpl(sqlMapClient);
+        PkfieldsDAO dao = getPkfieldsDAO();
 
         try {
             Pkfields record = new Pkfields();
@@ -805,7 +792,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testPKFieldsSelectByExampleIn() {
-        PkfieldsDAO dao = new PkfieldsDAOImpl(sqlMapClient);
+        PkfieldsDAO dao = getPkfieldsDAO();
 
         try {
             Pkfields record = new Pkfields();
@@ -878,7 +865,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testPKFieldsSelectByExampleBetween() {
-        PkfieldsDAO dao = new PkfieldsDAOImpl(sqlMapClient);
+        PkfieldsDAO dao = getPkfieldsDAO();
 
         try {
             Pkfields record = new Pkfields();
@@ -935,7 +922,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testPKFieldsSelectByExampleNoCriteria() {
-        PkfieldsDAO dao = new PkfieldsDAOImpl(sqlMapClient);
+        PkfieldsDAO dao = getPkfieldsDAO();
 
         try {
             Pkfields record = new Pkfields();
@@ -992,7 +979,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testPKFieldsSelectByExampleEscapedFields() {
-        PkfieldsDAO dao = new PkfieldsDAOImpl(sqlMapClient);
+        PkfieldsDAO dao = getPkfieldsDAO();
 
         try {
             Pkfields record = new Pkfields();
@@ -1060,7 +1047,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testPKFieldsCountByExample() {
-        PkfieldsDAO dao = new PkfieldsDAOImpl(sqlMapClient);
+        PkfieldsDAO dao = getPkfieldsDAO();
 
         try {
             Pkfields record = new Pkfields();
@@ -1092,7 +1079,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testPKBlobsInsert() {
-        PkblobsDAO dao = new PkblobsDAOImpl(sqlMapClient);
+        PkblobsDAO dao = getPkblobsDAO();
 
         try {
             Pkblobs record = new Pkblobs();
@@ -1117,7 +1104,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testPKBlobsUpdateByPrimaryKeyWithBLOBs() {
-        PkblobsDAO dao = new PkblobsDAOImpl(sqlMapClient);
+        PkblobsDAO dao = getPkblobsDAO();
 
         try {
             Pkblobs record = new Pkblobs();
@@ -1145,7 +1132,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testPKBlobsUpdateByPrimaryKeySelective() {
-        PkblobsDAO dao = new PkblobsDAOImpl(sqlMapClient);
+        PkblobsDAO dao = getPkblobsDAO();
 
         try {
             Pkblobs record = new Pkblobs();
@@ -1172,7 +1159,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testPKBlobsDeleteByPrimaryKey() {
-        PkblobsDAO dao = new PkblobsDAOImpl(sqlMapClient);
+        PkblobsDAO dao = getPkblobsDAO();
 
         try {
             Pkblobs record = new Pkblobs();
@@ -1197,7 +1184,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testPKBlobsDeleteByExample() {
-        PkblobsDAO dao = new PkblobsDAOImpl(sqlMapClient);
+        PkblobsDAO dao = getPkblobsDAO();
 
         try {
             Pkblobs record = new Pkblobs();
@@ -1230,7 +1217,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testPKBlobsSelectByPrimaryKey() {
-        PkblobsDAO dao = new PkblobsDAOImpl(sqlMapClient);
+        PkblobsDAO dao = getPkblobsDAO();
 
         try {
             Pkblobs record = new Pkblobs();
@@ -1256,7 +1243,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testPKBlobsSelectByExampleWithoutBlobs() {
-        PkblobsDAO dao = new PkblobsDAOImpl(sqlMapClient);
+        PkblobsDAO dao = getPkblobsDAO();
 
         try {
             Pkblobs record = new Pkblobs();
@@ -1287,7 +1274,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testPKBlobsSelectByExampleWithoutBlobsNoCriteria() {
-        PkblobsDAO dao = new PkblobsDAOImpl(sqlMapClient);
+        PkblobsDAO dao = getPkblobsDAO();
 
         try {
             Pkblobs record = new Pkblobs();
@@ -1313,7 +1300,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testPKBlobsSelectByExampleWithBlobs() {
-        PkblobsDAO dao = new PkblobsDAOImpl(sqlMapClient);
+        PkblobsDAO dao = getPkblobsDAO();
 
         try {
             Pkblobs record = new Pkblobs();
@@ -1344,7 +1331,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testPKBlobsCountByExample() {
-        PkblobsDAO dao = new PkblobsDAOImpl(sqlMapClient);
+        PkblobsDAO dao = getPkblobsDAO();
 
         try {
             Pkblobs record = new Pkblobs();
@@ -1373,7 +1360,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testPKFieldsBlobsInsert() {
-        PkfieldsblobsDAO dao = new PkfieldsblobsDAOImpl(sqlMapClient);
+        PkfieldsblobsDAO dao = getPkfieldsblobsDAO();
 
         try {
             Pkfieldsblobs record = new Pkfieldsblobs();
@@ -1401,7 +1388,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testPKFieldsBlobsUpdateByPrimaryKeyWithBLOBs() {
-        PkfieldsblobsDAO dao = new PkfieldsblobsDAOImpl(sqlMapClient);
+        PkfieldsblobsDAO dao = getPkfieldsblobsDAO();
 
         try {
             Pkfieldsblobs record = new Pkfieldsblobs();
@@ -1435,7 +1422,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testPKFieldsBlobsUpdateByPrimaryKeyWithoutBLOBs() {
-        PkfieldsblobsDAO dao = new PkfieldsblobsDAOImpl(sqlMapClient);
+        PkfieldsblobsDAO dao = getPkfieldsblobsDAO();
 
         try {
             Pkfieldsblobs record = new Pkfieldsblobs();
@@ -1467,7 +1454,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testPKFieldsBlobsUpdateByPrimaryKeySelective() {
-        PkfieldsblobsDAO dao = new PkfieldsblobsDAOImpl(sqlMapClient);
+        PkfieldsblobsDAO dao = getPkfieldsblobsDAO();
 
         try {
             Pkfieldsblobs record = new Pkfieldsblobs();
@@ -1500,7 +1487,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testPKFieldsBlobsDeleteByPrimaryKey() {
-        PkfieldsblobsDAO dao = new PkfieldsblobsDAOImpl(sqlMapClient);
+        PkfieldsblobsDAO dao = getPkfieldsblobsDAO();
 
         try {
             Pkfieldsblobs record = new Pkfieldsblobs();
@@ -1535,7 +1522,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testPKFieldsBlobsDeleteByExample() {
-        PkfieldsblobsDAO dao = new PkfieldsblobsDAOImpl(sqlMapClient);
+        PkfieldsblobsDAO dao = getPkfieldsblobsDAO();
 
         try {
             Pkfieldsblobs record = new Pkfieldsblobs();
@@ -1572,7 +1559,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testPKFieldsBlobsSelectByPrimaryKey() {
-        PkfieldsblobsDAO dao = new PkfieldsblobsDAOImpl(sqlMapClient);
+        PkfieldsblobsDAO dao = getPkfieldsblobsDAO();
 
         try {
             Pkfieldsblobs record = new Pkfieldsblobs();
@@ -1607,7 +1594,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testPKFieldsBlobsSelectByExampleWithoutBlobs() {
-        PkfieldsblobsDAO dao = new PkfieldsblobsDAOImpl(sqlMapClient);
+        PkfieldsblobsDAO dao = getPkfieldsblobsDAO();
 
         try {
             Pkfieldsblobs record = new Pkfieldsblobs();
@@ -1643,7 +1630,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testPKFieldsBlobsSelectByExampleWithBlobs() {
-        PkfieldsblobsDAO dao = new PkfieldsblobsDAOImpl(sqlMapClient);
+        PkfieldsblobsDAO dao = getPkfieldsblobsDAO();
 
         try {
             Pkfieldsblobs record = new Pkfieldsblobs();
@@ -1679,7 +1666,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testPKFieldsBlobsSelectByExampleWithBlobsNoCriteria() {
-        PkfieldsblobsDAO dao = new PkfieldsblobsDAOImpl(sqlMapClient);
+        PkfieldsblobsDAO dao = getPkfieldsblobsDAO();
 
         try {
             Pkfieldsblobs record = new Pkfieldsblobs();
@@ -1708,7 +1695,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testPKFieldsBlobsCountByExample() {
-        PkfieldsblobsDAO dao = new PkfieldsblobsDAOImpl(sqlMapClient);
+        PkfieldsblobsDAO dao = getPkfieldsblobsDAO();
 
         try {
             Pkfieldsblobs record = new Pkfieldsblobs();
@@ -1741,7 +1728,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testFieldsBlobsInsert() {
-        FieldsblobsDAO dao = new FieldsblobsDAOImpl(sqlMapClient);
+        FieldsblobsDAO dao = getFieldsblobsDAO();
 
         try {
             Fieldsblobs record = new Fieldsblobs();
@@ -1768,7 +1755,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testFieldsBlobsDeleteByExample() {
-        FieldsblobsDAO dao = new FieldsblobsDAOImpl(sqlMapClient);
+        FieldsblobsDAO dao = getFieldsblobsDAO();
 
         try {
             Fieldsblobs record = new Fieldsblobs();
@@ -1803,7 +1790,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testFieldsBlobsSelectByExampleWithoutBlobs() {
-        FieldsblobsDAO dao = new FieldsblobsDAOImpl(sqlMapClient);
+        FieldsblobsDAO dao = getFieldsblobsDAO();
 
         try {
             Fieldsblobs record = new Fieldsblobs();
@@ -1836,7 +1823,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testFieldsBlobsSelectByExampleWithBlobs() {
-        FieldsblobsDAO dao = new FieldsblobsDAOImpl(sqlMapClient);
+        FieldsblobsDAO dao = getFieldsblobsDAO();
 
         try {
             Fieldsblobs record = new Fieldsblobs();
@@ -1869,7 +1856,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testFieldsBlobsSelectByExampleWithBlobsNoCriteria() {
-        FieldsblobsDAO dao = new FieldsblobsDAOImpl(sqlMapClient);
+        FieldsblobsDAO dao = getFieldsblobsDAO();
 
         try {
             Fieldsblobs record = new Fieldsblobs();
@@ -1896,7 +1883,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testFieldsBlobsCountByExample() {
-        FieldsblobsDAO dao = new FieldsblobsDAOImpl(sqlMapClient);
+        FieldsblobsDAO dao = getFieldsblobsDAO();
 
         try {
             Fieldsblobs record = new Fieldsblobs();
@@ -1923,7 +1910,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testAwfulTableInsert() {
-        AwfulTableDAO dao = new AwfulTableDAOImpl(sqlMapClient);
+        AwfulTableDAO dao = getAwfulTableDAO();
 
         try {
             AwfulTable record = new AwfulTable();
@@ -1974,7 +1961,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testAwfulTableUpdateByPrimaryKey() {
-        AwfulTableDAO dao = new AwfulTableDAOImpl(sqlMapClient);
+        AwfulTableDAO dao = getAwfulTableDAO();
 
         try {
             AwfulTable record = new AwfulTable();
@@ -2028,7 +2015,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testAwfulTableUpdateByPrimaryKeySelective() {
-        AwfulTableDAO dao = new AwfulTableDAOImpl(sqlMapClient);
+        AwfulTableDAO dao = getAwfulTableDAO();
 
         try {
             AwfulTable record = new AwfulTable();
@@ -2084,7 +2071,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testAwfulTableDeleteByPrimaryKey() {
-        AwfulTableDAO dao = new AwfulTableDAOImpl(sqlMapClient);
+        AwfulTableDAO dao = getAwfulTableDAO();
 
         try {
             AwfulTable record = new AwfulTable();
@@ -2116,7 +2103,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testAwfulTableDeleteByExample() {
-        AwfulTableDAO dao = new AwfulTableDAOImpl(sqlMapClient);
+        AwfulTableDAO dao = getAwfulTableDAO();
 
         try {
             AwfulTable record = new AwfulTable();
@@ -2171,7 +2158,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testAwfulTableSelectByPrimaryKey() {
-        AwfulTableDAO dao = new AwfulTableDAOImpl(sqlMapClient);
+        AwfulTableDAO dao = getAwfulTableDAO();
 
         try {
             AwfulTable record = new AwfulTable();
@@ -2237,7 +2224,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testAwfulTableSelectByExampleLike() {
-        AwfulTableDAO dao = new AwfulTableDAOImpl(sqlMapClient);
+        AwfulTableDAO dao = getAwfulTableDAO();
 
         try {
             AwfulTable record = new AwfulTable();
@@ -2356,7 +2343,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testAwfulTableSelectByExampleNotLike() {
-        AwfulTableDAO dao = new AwfulTableDAOImpl(sqlMapClient);
+        AwfulTableDAO dao = getAwfulTableDAO();
 
         try {
             AwfulTable record = new AwfulTable();
@@ -2475,7 +2462,7 @@ public class FlatJava2Tests extends BaseTest {
     }
     
     public void testAwfulTableSelectByExampleComplexLike() {
-        AwfulTableDAO dao = new AwfulTableDAOImpl(sqlMapClient);
+        AwfulTableDAO dao = getAwfulTableDAO();
 
         try {
             AwfulTable record = new AwfulTable();
@@ -2592,7 +2579,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testAwfulTableSelectByExampleIn() {
-        AwfulTableDAO dao = new AwfulTableDAOImpl(sqlMapClient);
+        AwfulTableDAO dao = getAwfulTableDAO();
 
         try {
             AwfulTable record = new AwfulTable();
@@ -2713,7 +2700,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testAwfulTableSelectByExampleBetween() {
-        AwfulTableDAO dao = new AwfulTableDAOImpl(sqlMapClient);
+        AwfulTableDAO dao = getAwfulTableDAO();
 
         try {
             AwfulTable record = new AwfulTable();
@@ -2822,7 +2809,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testAwfulTableSelectByExampleNoCriteria() {
-        AwfulTableDAO dao = new AwfulTableDAOImpl(sqlMapClient);
+        AwfulTableDAO dao = getAwfulTableDAO();
 
         try {
             AwfulTable record = new AwfulTable();
@@ -2945,7 +2932,7 @@ public class FlatJava2Tests extends BaseTest {
     }
 
     public void testAwfulTableCountByExample() {
-        AwfulTableDAO dao = new AwfulTableDAOImpl(sqlMapClient);
+        AwfulTableDAO dao = getAwfulTableDAO();
 
         try {
             AwfulTable record = new AwfulTable();

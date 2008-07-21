@@ -69,7 +69,7 @@
       <property name="enableSubPackages" value="true" />
     </sqlMapGenerator>
 
-    <daoGenerator type="GENERIC-CI" targetPackage="ibatortest.generated.flat.java2.dao"  targetProject="${generated.source.dir.java5}">
+    <daoGenerator type="GENERIC-SI" targetPackage="ibatortest.generated.flat.java2.dao"  targetProject="${generated.source.dir.java5}">
       <property name="enableSubPackages" value="true" />
     </daoGenerator>
 
@@ -108,7 +108,7 @@
       <property name="enableSubPackages" value="true" />
     </sqlMapGenerator>
 
-    <daoGenerator type="GENERIC-CI" targetPackage="ibatortest.generated.hierarchical.java5.dao"  targetProject="${generated.source.dir.java5}">
+    <daoGenerator type="SPRING" targetPackage="ibatortest.generated.hierarchical.java5.dao"  targetProject="${generated.source.dir.java5}">
       <property name="enableSubPackages" value="true" />
     </daoGenerator>
 
@@ -189,7 +189,7 @@
       <property name="enableSubPackages" value="true" />
     </sqlMapGenerator>
 
-    <daoGenerator type="GENERIC-CI" targetPackage="ibatortest.generated.conditional.java5.dao"  targetProject="${generated.source.dir.java5}">
+    <daoGenerator type="GENERIC-SI" targetPackage="ibatortest.generated.conditional.java5.dao"  targetProject="${generated.source.dir.java5}">
       <property name="enableSubPackages" value="true" />
     </daoGenerator>
 
@@ -230,7 +230,7 @@
       <property name="enableSubPackages" value="true" />
     </sqlMapGenerator>
 
-    <daoGenerator type="GENERIC-CI" targetPackage="ibatortest.generated.conditional.java2.dao"  targetProject="${generated.source.dir.java5}">
+    <daoGenerator type="SPRING" targetPackage="ibatortest.generated.conditional.java2.dao"  targetProject="${generated.source.dir.java5}">
       <property name="enableSubPackages" value="true" />
     </daoGenerator>
 

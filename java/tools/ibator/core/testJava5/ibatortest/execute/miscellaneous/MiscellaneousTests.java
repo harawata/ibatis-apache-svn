@@ -31,27 +31,23 @@ package ibatortest.execute.miscellaneous;
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+import ibatortest.generated.miscellaneous.dao.MyObjectDAO;
+import ibatortest.generated.miscellaneous.dao.RegexrenameDAO;
+import ibatortest.generated.miscellaneous.model.MyObject;
+import ibatortest.generated.miscellaneous.model.MyObjectExample;
+import ibatortest.generated.miscellaneous.model.MyObjectKey;
+import ibatortest.generated.miscellaneous.model.Regexrename;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import ibatortest.BaseTest;
-import ibatortest.generated.miscellaneous.dao.MyObjectDAO;
-import ibatortest.generated.miscellaneous.dao.MyObjectDAOImpl;
-import ibatortest.generated.miscellaneous.dao.RegexrenameDAO;
-import ibatortest.generated.miscellaneous.dao.RegexrenameDAOImpl;
-import ibatortest.generated.miscellaneous.model.MyObject;
-import ibatortest.generated.miscellaneous.model.MyObjectExample;
-import ibatortest.generated.miscellaneous.model.MyObjectKey;
-import ibatortest.generated.miscellaneous.model.Regexrename;
-import ibatortest.execute.miscellaneous.FirstName;
-
 /**
  * @author Jeff Butler
  * 
  */
-public class MiscellaneousTests extends BaseTest {
+public class MiscellaneousTests extends BaseMiscellaneousTest {
 
     protected void setUp() throws Exception {
         super.setUp();
@@ -60,7 +56,7 @@ public class MiscellaneousTests extends BaseTest {
     }
 
     public void testMyObjectinsertMyObject() {
-        MyObjectDAO dao = new MyObjectDAOImpl(sqlMapClient);
+        MyObjectDAO dao = getMyObjectDAO();
 
         try {
             MyObject record = new MyObject();
@@ -112,7 +108,7 @@ public class MiscellaneousTests extends BaseTest {
     }
 
     public void testMyObjectUpdateByPrimaryKey() {
-        MyObjectDAO dao = new MyObjectDAOImpl(sqlMapClient);
+        MyObjectDAO dao = getMyObjectDAO();
 
         try {
             MyObject record = new MyObject();
@@ -149,7 +145,7 @@ public class MiscellaneousTests extends BaseTest {
     }
 
     public void testMyObjectUpdateByPrimaryKeySelective() {
-        MyObjectDAO dao = new MyObjectDAOImpl(sqlMapClient);
+        MyObjectDAO dao = getMyObjectDAO();
 
         try {
             MyObject record = new MyObject();
@@ -206,7 +202,7 @@ public class MiscellaneousTests extends BaseTest {
     }
 
     public void testMyObjectDeleteByPrimaryKey() {
-        MyObjectDAO dao = new MyObjectDAOImpl(sqlMapClient);
+        MyObjectDAO dao = getMyObjectDAO();
 
         try {
             MyObject record = new MyObject();
@@ -235,7 +231,7 @@ public class MiscellaneousTests extends BaseTest {
     }
 
     public void testMyObjectDeleteByExample() {
-        MyObjectDAO dao = new MyObjectDAOImpl(sqlMapClient);
+        MyObjectDAO dao = getMyObjectDAO();
 
         try {
             MyObject record = new MyObject();
@@ -275,7 +271,7 @@ public class MiscellaneousTests extends BaseTest {
     }
 
     public void testMyObjectSelectByPrimaryKey() {
-        MyObjectDAO dao = new MyObjectDAOImpl(sqlMapClient);
+        MyObjectDAO dao = getMyObjectDAO();
 
         try {
             MyObject record = new MyObject();
@@ -312,7 +308,7 @@ public class MiscellaneousTests extends BaseTest {
     }
 
     public void testMyObjectSelectByExampleLike() {
-        MyObjectDAO dao = new MyObjectDAOImpl(sqlMapClient);
+        MyObjectDAO dao = getMyObjectDAO();
 
         try {
             MyObject record = new MyObject();
@@ -391,7 +387,7 @@ public class MiscellaneousTests extends BaseTest {
     }
 
     public void testMyObjectSelectByExampleNotLike() {
-        MyObjectDAO dao = new MyObjectDAOImpl(sqlMapClient);
+        MyObjectDAO dao = getMyObjectDAO();
 
         try {
             MyObject record = new MyObject();
@@ -470,7 +466,7 @@ public class MiscellaneousTests extends BaseTest {
     }
 
     public void testMyObjectSelectByExampleComplexLike() {
-        MyObjectDAO dao = new MyObjectDAOImpl(sqlMapClient);
+        MyObjectDAO dao = getMyObjectDAO();
 
         try {
             MyObject record = new MyObject();
@@ -550,7 +546,7 @@ public class MiscellaneousTests extends BaseTest {
     }
 
     public void testMyObjectSelectByExampleIn() {
-        MyObjectDAO dao = new MyObjectDAOImpl(sqlMapClient);
+        MyObjectDAO dao = getMyObjectDAO();
 
         try {
             MyObject record = new MyObject();
@@ -642,7 +638,7 @@ public class MiscellaneousTests extends BaseTest {
     }
 
     public void testMyObjectSelectByExampleBetween() {
-        MyObjectDAO dao = new MyObjectDAOImpl(sqlMapClient);
+        MyObjectDAO dao = getMyObjectDAO();
 
         try {
             MyObject record = new MyObject();
@@ -711,7 +707,7 @@ public class MiscellaneousTests extends BaseTest {
     }
 
     public void testMyObjectSelectByExampleTimeEquals() {
-        MyObjectDAO dao = new MyObjectDAOImpl(sqlMapClient);
+        MyObjectDAO dao = getMyObjectDAO();
 
         try {
             MyObject record = new MyObject();
@@ -771,7 +767,7 @@ public class MiscellaneousTests extends BaseTest {
     }
 
     public void testMyObjectUpdateByExampleSelective() {
-        MyObjectDAO dao = new MyObjectDAOImpl(sqlMapClient);
+        MyObjectDAO dao = getMyObjectDAO();
 
         try {
             MyObject record = new MyObject();
@@ -818,7 +814,7 @@ public class MiscellaneousTests extends BaseTest {
     }
 
     public void testMyObjectUpdateByExample() {
-        MyObjectDAO dao = new MyObjectDAOImpl(sqlMapClient);
+        MyObjectDAO dao = getMyObjectDAO();
 
         try {
             MyObject record = new MyObject();
@@ -867,7 +863,7 @@ public class MiscellaneousTests extends BaseTest {
     }
     
     public void testRegexRenameInsert() {
-        RegexrenameDAO dao = new RegexrenameDAOImpl(sqlMapClient);
+        RegexrenameDAO dao = getRegexrenameDAO();
         
         try {
             Regexrename record = new Regexrename();

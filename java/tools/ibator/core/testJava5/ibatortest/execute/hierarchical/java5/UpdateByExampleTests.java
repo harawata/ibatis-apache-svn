@@ -16,24 +16,13 @@
 
 package ibatortest.execute.hierarchical.java5;
 
-import java.sql.SQLException;
-import java.util.List;
-
-import ibatortest.BaseTest;
 import ibatortest.generated.hierarchical.java5.dao.AwfulTableDAO;
-import ibatortest.generated.hierarchical.java5.dao.AwfulTableDAOImpl;
 import ibatortest.generated.hierarchical.java5.dao.FieldsblobsDAO;
-import ibatortest.generated.hierarchical.java5.dao.FieldsblobsDAOImpl;
 import ibatortest.generated.hierarchical.java5.dao.FieldsonlyDAO;
-import ibatortest.generated.hierarchical.java5.dao.FieldsonlyDAOImpl;
 import ibatortest.generated.hierarchical.java5.dao.PkblobsDAO;
-import ibatortest.generated.hierarchical.java5.dao.PkblobsDAOImpl;
 import ibatortest.generated.hierarchical.java5.dao.PkfieldsDAO;
-import ibatortest.generated.hierarchical.java5.dao.PkfieldsDAOImpl;
 import ibatortest.generated.hierarchical.java5.dao.PkfieldsblobsDAO;
-import ibatortest.generated.hierarchical.java5.dao.PkfieldsblobsDAOImpl;
 import ibatortest.generated.hierarchical.java5.dao.PkonlyDAO;
-import ibatortest.generated.hierarchical.java5.dao.PkonlyDAOImpl;
 import ibatortest.generated.hierarchical.java5.model.AwfulTable;
 import ibatortest.generated.hierarchical.java5.model.AwfulTableExample;
 import ibatortest.generated.hierarchical.java5.model.Fieldsblobs;
@@ -52,22 +41,17 @@ import ibatortest.generated.hierarchical.java5.model.PkfieldsblobsWithBLOBs;
 import ibatortest.generated.hierarchical.java5.model.PkonlyExample;
 import ibatortest.generated.hierarchical.java5.model.PkonlyKey;
 
+import java.util.List;
+
 /**
  * 
  * @author Jeff Butler
  *
  */
-public class UpdateByExampleTests extends BaseTest {
-
-    protected void setUp() throws Exception {
-        super.setUp();
-        initSqlMapClient(
-                "ibatortest/execute/hierarchical/java5/SqlMapConfig.xml",
-                null);
-    }
+public class UpdateByExampleTests extends BaseHierarchicalJava5Test {
 
     public void testFieldsOnlyUpdateByExampleSelective() {
-        FieldsonlyDAO dao = new FieldsonlyDAOImpl(sqlMapClient);
+        FieldsonlyDAO dao = getFieldsonlyDAO();
 
         try {
             Fieldsonly record = new Fieldsonly();
@@ -122,13 +106,13 @@ public class UpdateByExampleTests extends BaseTest {
             assertEquals(record.getDoublefield(), 99d);
             assertEquals(record.getFloatfield(), 100.111);
             assertEquals(record.getIntegerfield().intValue(), 9);
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testFieldsOnlyUpdateByExample() {
-        FieldsonlyDAO dao = new FieldsonlyDAOImpl(sqlMapClient);
+        FieldsonlyDAO dao = getFieldsonlyDAO();
 
         try {
             Fieldsonly record = new Fieldsonly();
@@ -165,13 +149,13 @@ public class UpdateByExampleTests extends BaseTest {
             assertNull(record.getDoublefield());
             assertNull(record.getFloatfield());
             assertEquals(record.getIntegerfield().intValue(), 22);
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKOnlyUpdateByExampleSelective() {
-        PkonlyDAO dao = new PkonlyDAOImpl(sqlMapClient);
+        PkonlyDAO dao = getPkonlyDAO();
 
         try {
             PkonlyKey key = new PkonlyKey();
@@ -211,13 +195,13 @@ public class UpdateByExampleTests extends BaseTest {
             
             rows = dao.countByExample(example);
             assertEquals(1, rows);
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKOnlyUpdateByExample() {
-        PkonlyDAO dao = new PkonlyDAOImpl(sqlMapClient);
+        PkonlyDAO dao = getPkonlyDAO();
 
         try {
             PkonlyKey key = new PkonlyKey();
@@ -251,13 +235,13 @@ public class UpdateByExampleTests extends BaseTest {
             
             rows = dao.countByExample(example);
             assertEquals(1, rows);
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKFieldsUpdateByExampleSelective() {
-        PkfieldsDAO dao = new PkfieldsDAOImpl(sqlMapClient);
+        PkfieldsDAO dao = getPkfieldsDAO();
     
         try {
             Pkfields record = new Pkfields();
@@ -291,13 +275,13 @@ public class UpdateByExampleTests extends BaseTest {
     
             rows = dao.countByExample(example);
             assertEquals(1, rows);
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKFieldsUpdateByExample() {
-        PkfieldsDAO dao = new PkfieldsDAOImpl(sqlMapClient);
+        PkfieldsDAO dao = getPkfieldsDAO();
     
         try {
             Pkfields record = new Pkfields();
@@ -336,13 +320,13 @@ public class UpdateByExampleTests extends BaseTest {
     
             rows = dao.countByExample(example);
             assertEquals(1, rows);
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKBlobsUpdateByExampleSelective() {
-        PkblobsDAO dao = new PkblobsDAOImpl(sqlMapClient);
+        PkblobsDAO dao = getPkblobsDAO();
     
         try {
             PkblobsWithBLOBs record = new PkblobsWithBLOBs();
@@ -373,13 +357,13 @@ public class UpdateByExampleTests extends BaseTest {
             assertEquals(6, returnedRecord.getId().intValue());
             assertTrue(blobsAreEqual(newRecord.getBlob1(), returnedRecord.getBlob1()));
             assertTrue(blobsAreEqual(record.getBlob2(), returnedRecord.getBlob2()));
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKBlobsUpdateByExampleWithoutBLOBs() {
-        PkblobsDAO dao = new PkblobsDAOImpl(sqlMapClient);
+        PkblobsDAO dao = getPkblobsDAO();
     
         try {
             PkblobsWithBLOBs record = new PkblobsWithBLOBs();
@@ -410,13 +394,13 @@ public class UpdateByExampleTests extends BaseTest {
             assertEquals(8, returnedRecord.getId().intValue());
             assertTrue(blobsAreEqual(record.getBlob1(), returnedRecord.getBlob1()));
             assertTrue(blobsAreEqual(record.getBlob2(), returnedRecord.getBlob2()));
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKBlobsUpdateByExampleWithBLOBs() {
-        PkblobsDAO dao = new PkblobsDAOImpl(sqlMapClient);
+        PkblobsDAO dao = getPkblobsDAO();
     
         try {
             PkblobsWithBLOBs record = new PkblobsWithBLOBs();
@@ -447,13 +431,13 @@ public class UpdateByExampleTests extends BaseTest {
             assertEquals(8, returnedRecord.getId().intValue());
             assertNull(returnedRecord.getBlob1());
             assertNull(returnedRecord.getBlob2());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKFieldsBlobsUpdateByExampleSelective() {
-        PkfieldsblobsDAO dao = new PkfieldsblobsDAOImpl(sqlMapClient);
+        PkfieldsblobsDAO dao = getPkfieldsblobsDAO();
     
         try {
             PkfieldsblobsWithBLOBs record = new PkfieldsblobsWithBLOBs();
@@ -490,13 +474,13 @@ public class UpdateByExampleTests extends BaseTest {
             assertEquals(record.getLastname(), returnedRecord.getLastname());
             assertTrue(blobsAreEqual(record.getBlob1(), returnedRecord.getBlob1()));
             
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKFieldsBlobsUpdateByExampleWithoutBLOBs() {
-        PkfieldsblobsDAO dao = new PkfieldsblobsDAOImpl(sqlMapClient);
+        PkfieldsblobsDAO dao = getPkfieldsblobsDAO();
     
         try {
             PkfieldsblobsWithBLOBs record = new PkfieldsblobsWithBLOBs();
@@ -535,13 +519,13 @@ public class UpdateByExampleTests extends BaseTest {
             assertNull(returnedRecord.getLastname());
             assertTrue(blobsAreEqual(record.getBlob1(), returnedRecord.getBlob1()));
             
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKFieldsBlobsUpdateByExampleWithBLOBs() {
-        PkfieldsblobsDAO dao = new PkfieldsblobsDAOImpl(sqlMapClient);
+        PkfieldsblobsDAO dao = getPkfieldsblobsDAO();
     
         try {
             PkfieldsblobsWithBLOBs record = new PkfieldsblobsWithBLOBs();
@@ -580,13 +564,13 @@ public class UpdateByExampleTests extends BaseTest {
             assertNull(returnedRecord.getLastname());
             assertNull(returnedRecord.getBlob1());
             
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testFieldsBlobsUpdateByExampleSelective() {
-        FieldsblobsDAO dao = new FieldsblobsDAOImpl(sqlMapClient);
+        FieldsblobsDAO dao = getFieldsblobsDAO();
     
         try {
             FieldsblobsWithBLOBs record = new FieldsblobsWithBLOBs();
@@ -619,13 +603,13 @@ public class UpdateByExampleTests extends BaseTest {
             assertEquals(newRecord.getLastname(), returnedRecord.getLastname());
             assertTrue(blobsAreEqual(record.getBlob1(), returnedRecord.getBlob1()));
             assertTrue(blobsAreEqual(record.getBlob2(), returnedRecord.getBlob2()));
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testFieldsBlobsUpdateByExampleWithoutBLOBs() {
-        FieldsblobsDAO dao = new FieldsblobsDAOImpl(sqlMapClient);
+        FieldsblobsDAO dao = getFieldsblobsDAO();
     
         try {
             FieldsblobsWithBLOBs record = new FieldsblobsWithBLOBs();
@@ -659,13 +643,13 @@ public class UpdateByExampleTests extends BaseTest {
             assertEquals(newRecord.getLastname(), returnedRecord.getLastname());
             assertTrue(blobsAreEqual(record.getBlob1(), returnedRecord.getBlob1()));
             assertTrue(blobsAreEqual(record.getBlob2(), returnedRecord.getBlob2()));
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testFieldsBlobsUpdateByExampleWithBLOBs() {
-        FieldsblobsDAO dao = new FieldsblobsDAOImpl(sqlMapClient);
+        FieldsblobsDAO dao = getFieldsblobsDAO();
     
         try {
             FieldsblobsWithBLOBs record = new FieldsblobsWithBLOBs();
@@ -699,13 +683,13 @@ public class UpdateByExampleTests extends BaseTest {
             assertEquals(newRecord.getLastname(), returnedRecord.getLastname());
             assertNull(returnedRecord.getBlob1());
             assertNull(returnedRecord.getBlob2());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testAwfulTableUpdateByExampleSelective() {
-        AwfulTableDAO dao = new AwfulTableDAOImpl(sqlMapClient);
+        AwfulTableDAO dao = getAwfulTableDAO();
     
         try {
             AwfulTable record = new AwfulTable();
@@ -769,13 +753,13 @@ public class UpdateByExampleTests extends BaseTest {
             assertEquals(record.getSecondFirstName(), returnedRecord.getSecondFirstName());
             assertEquals(record.getThirdFirstName(), returnedRecord.getThirdFirstName());
             
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testAwfulTableUpdateByExample() {
-        AwfulTableDAO dao = new AwfulTableDAOImpl(sqlMapClient);
+        AwfulTableDAO dao = getAwfulTableDAO();
     
         try {
             AwfulTable record = new AwfulTable();
@@ -846,7 +830,7 @@ public class UpdateByExampleTests extends BaseTest {
             assertNull(returnedRecord.getSecondCustomerId());
             assertNull(returnedRecord.getSecondFirstName());
             assertNull(returnedRecord.getThirdFirstName());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
