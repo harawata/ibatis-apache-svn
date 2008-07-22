@@ -1,25 +1,12 @@
 package ibatortest.java2.execute.conditional.java2;
 
-import java.math.BigDecimal;
-import java.sql.SQLException;
-import java.util.Date;
-import java.util.List;
-
-import ibatortest.java2.BaseTest;
 import ibatortest.java2.generated.conditional.java2.dao.AwfulTableDAO;
-import ibatortest.java2.generated.conditional.java2.dao.AwfulTableDAOImpl;
 import ibatortest.java2.generated.conditional.java2.dao.FieldsblobsDAO;
-import ibatortest.java2.generated.conditional.java2.dao.FieldsblobsDAOImpl;
 import ibatortest.java2.generated.conditional.java2.dao.FieldsonlyDAO;
-import ibatortest.java2.generated.conditional.java2.dao.FieldsonlyDAOImpl;
 import ibatortest.java2.generated.conditional.java2.dao.PkblobsDAO;
-import ibatortest.java2.generated.conditional.java2.dao.PkblobsDAOImpl;
 import ibatortest.java2.generated.conditional.java2.dao.PkfieldsDAO;
-import ibatortest.java2.generated.conditional.java2.dao.PkfieldsDAOImpl;
 import ibatortest.java2.generated.conditional.java2.dao.PkfieldsblobsDAO;
-import ibatortest.java2.generated.conditional.java2.dao.PkfieldsblobsDAOImpl;
 import ibatortest.java2.generated.conditional.java2.dao.PkonlyDAO;
-import ibatortest.java2.generated.conditional.java2.dao.PkonlyDAOImpl;
 import ibatortest.java2.generated.conditional.java2.model.AwfulTable;
 import ibatortest.java2.generated.conditional.java2.model.FieldsblobsExample;
 import ibatortest.java2.generated.conditional.java2.model.FieldsblobsWithBLOBs;
@@ -34,17 +21,14 @@ import ibatortest.java2.generated.conditional.java2.model.PkfieldsblobsExample;
 import ibatortest.java2.generated.conditional.java2.model.PkonlyExample;
 import ibatortest.java2.generated.conditional.java2.model.PkonlyKey;
 
-public class InsertTests extends BaseTest {
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
 
-    protected void setUp() throws Exception {
-        super.setUp();
-        initSqlMapClient(
-                "ibatortest/java2/execute/conditional/java2/SqlMapConfig.xml",
-                null);
-    }
+public class InsertTests extends BaseConditionalJava2Test {
 
     public void testFieldsOnlyInsert() {
-        FieldsonlyDAO dao = new FieldsonlyDAOImpl(sqlMapClient);
+        FieldsonlyDAO dao = getFieldsonlyDAO();
     
         try {
             Fieldsonly record = new Fieldsonly();
@@ -65,13 +49,13 @@ public class InsertTests extends BaseTest {
             assertEquals(record.getDoublefield(), returnedRecord
                     .getDoublefield());
             assertEquals(record.getFloatfield(), returnedRecord.getFloatfield());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKOnlyInsert() {
-        PkonlyDAO dao = new PkonlyDAOImpl(sqlMapClient);
+        PkonlyDAO dao = getPkonlyDAO();
     
         try {
             PkonlyKey key = new PkonlyKey();
@@ -86,13 +70,13 @@ public class InsertTests extends BaseTest {
             PkonlyKey returnedRecord = (PkonlyKey) answer.get(0);
             assertEquals(key.getId(), returnedRecord.getId());
             assertEquals(key.getSeqNum(), returnedRecord.getSeqNum());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKFieldsInsert() {
-        PkfieldsDAO dao = new PkfieldsDAOImpl(sqlMapClient);
+        PkfieldsDAO dao = getPkfieldsDAO();
     
         try {
             Pkfields record = new Pkfields();
@@ -135,13 +119,13 @@ public class InsertTests extends BaseTest {
                     .getTimefield()));
             assertEquals(record.getTimestampfield(), returnedRecord
                     .getTimestampfield());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKBlobsInsert() {
-        PkblobsDAO dao = new PkblobsDAOImpl(sqlMapClient);
+        PkblobsDAO dao = getPkblobsDAO();
     
         try {
             Pkblobs record = new Pkblobs();
@@ -160,13 +144,13 @@ public class InsertTests extends BaseTest {
                     .getBlob1()));
             assertTrue(blobsAreEqual(record.getBlob2(), returnedRecord
                     .getBlob2()));
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKFieldsBlobsInsert() {
-        PkfieldsblobsDAO dao = new PkfieldsblobsDAOImpl(sqlMapClient);
+        PkfieldsblobsDAO dao = getPkfieldsblobsDAO();
     
         try {
             Pkfieldsblobs record = new Pkfieldsblobs();
@@ -188,13 +172,13 @@ public class InsertTests extends BaseTest {
             assertEquals(record.getLastname(), returnedRecord.getLastname());
             assertTrue(blobsAreEqual(record.getBlob1(), returnedRecord
                     .getBlob1()));
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testFieldsBlobsInsert() {
-        FieldsblobsDAO dao = new FieldsblobsDAOImpl(sqlMapClient);
+        FieldsblobsDAO dao = getFieldsblobsDAO();
     
         try {
             FieldsblobsWithBLOBs record = new FieldsblobsWithBLOBs();
@@ -216,13 +200,13 @@ public class InsertTests extends BaseTest {
                     .getBlob1()));
             assertTrue(blobsAreEqual(record.getBlob2(), returnedRecord
                     .getBlob2()));
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testAwfulTableInsert() {
-        AwfulTableDAO dao = new AwfulTableDAOImpl(sqlMapClient);
+        AwfulTableDAO dao = getAwfulTableDAO();
     
         try {
             AwfulTable record = new AwfulTable();
@@ -267,9 +251,8 @@ public class InsertTests extends BaseTest {
                     .getSecondFirstName());
             assertEquals(record.getThirdFirstName(), returnedRecord
                     .getThirdFirstName());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
-
 }

@@ -16,24 +16,13 @@
 
 package ibatortest.java2.execute.flat.java2;
 
-import java.sql.SQLException;
-import java.util.List;
-
-import ibatortest.java2.BaseTest;
 import ibatortest.java2.generated.flat.java2.dao.AwfulTableDAO;
-import ibatortest.java2.generated.flat.java2.dao.AwfulTableDAOImpl;
 import ibatortest.java2.generated.flat.java2.dao.FieldsblobsDAO;
-import ibatortest.java2.generated.flat.java2.dao.FieldsblobsDAOImpl;
 import ibatortest.java2.generated.flat.java2.dao.FieldsonlyDAO;
-import ibatortest.java2.generated.flat.java2.dao.FieldsonlyDAOImpl;
 import ibatortest.java2.generated.flat.java2.dao.PkblobsDAO;
-import ibatortest.java2.generated.flat.java2.dao.PkblobsDAOImpl;
 import ibatortest.java2.generated.flat.java2.dao.PkfieldsDAO;
-import ibatortest.java2.generated.flat.java2.dao.PkfieldsDAOImpl;
 import ibatortest.java2.generated.flat.java2.dao.PkfieldsblobsDAO;
-import ibatortest.java2.generated.flat.java2.dao.PkfieldsblobsDAOImpl;
 import ibatortest.java2.generated.flat.java2.dao.PkonlyDAO;
-import ibatortest.java2.generated.flat.java2.dao.PkonlyDAOImpl;
 import ibatortest.java2.generated.flat.java2.model.AwfulTable;
 import ibatortest.java2.generated.flat.java2.model.AwfulTableExample;
 import ibatortest.java2.generated.flat.java2.model.Fieldsblobs;
@@ -49,22 +38,18 @@ import ibatortest.java2.generated.flat.java2.model.PkfieldsblobsExample;
 import ibatortest.java2.generated.flat.java2.model.Pkonly;
 import ibatortest.java2.generated.flat.java2.model.PkonlyExample;
 
+import java.sql.SQLException;
+import java.util.List;
+
 /**
  * 
  * @author Jeff Butler
  *
  */
-public class UpdateByExampleTests extends BaseTest {
-
-    protected void setUp() throws Exception {
-        super.setUp();
-        initSqlMapClient(
-                "ibatortest/java2/execute/flat/java2/SqlMapConfig.xml",
-                null);
-    }
+public class UpdateByExampleTests extends BaseFlatJava2Test {
 
     public void testFieldsOnlyUpdateByExampleSelective() {
-        FieldsonlyDAO dao = new FieldsonlyDAOImpl(sqlMapClient);
+        FieldsonlyDAO dao = getFieldsonlyDAO();
 
         try {
             Fieldsonly record = new Fieldsonly();
@@ -125,7 +110,7 @@ public class UpdateByExampleTests extends BaseTest {
     }
 
     public void testFieldsOnlyUpdateByExample() {
-        FieldsonlyDAO dao = new FieldsonlyDAOImpl(sqlMapClient);
+        FieldsonlyDAO dao = getFieldsonlyDAO();
 
         try {
             Fieldsonly record = new Fieldsonly();
@@ -168,7 +153,7 @@ public class UpdateByExampleTests extends BaseTest {
     }
 
     public void testPKOnlyUpdateByExampleSelective() {
-        PkonlyDAO dao = new PkonlyDAOImpl(sqlMapClient);
+        PkonlyDAO dao = getPkonlyDAO();
 
         try {
             Pkonly key = new Pkonly();
@@ -214,7 +199,7 @@ public class UpdateByExampleTests extends BaseTest {
     }
 
     public void testPKOnlyUpdateByExample() {
-        PkonlyDAO dao = new PkonlyDAOImpl(sqlMapClient);
+        PkonlyDAO dao = getPkonlyDAO();
 
         try {
             Pkonly key = new Pkonly();
@@ -254,7 +239,7 @@ public class UpdateByExampleTests extends BaseTest {
     }
 
     public void testPKFieldsUpdateByExampleSelective() {
-        PkfieldsDAO dao = new PkfieldsDAOImpl(sqlMapClient);
+        PkfieldsDAO dao = getPkfieldsDAO();
     
         try {
             Pkfields record = new Pkfields();
@@ -294,7 +279,7 @@ public class UpdateByExampleTests extends BaseTest {
     }
 
     public void testPKFieldsUpdateByExample() {
-        PkfieldsDAO dao = new PkfieldsDAOImpl(sqlMapClient);
+        PkfieldsDAO dao = getPkfieldsDAO();
     
         try {
             Pkfields record = new Pkfields();
@@ -339,7 +324,7 @@ public class UpdateByExampleTests extends BaseTest {
     }
 
     public void testPKBlobsUpdateByExampleSelective() {
-        PkblobsDAO dao = new PkblobsDAOImpl(sqlMapClient);
+        PkblobsDAO dao = getPkblobsDAO();
     
         try {
             Pkblobs record = new Pkblobs();
@@ -376,7 +361,7 @@ public class UpdateByExampleTests extends BaseTest {
     }
 
     public void testPKBlobsUpdateByExampleWithoutBLOBs() {
-        PkblobsDAO dao = new PkblobsDAOImpl(sqlMapClient);
+        PkblobsDAO dao = getPkblobsDAO();
     
         try {
             Pkblobs record = new Pkblobs();
@@ -413,7 +398,7 @@ public class UpdateByExampleTests extends BaseTest {
     }
 
     public void testPKBlobsUpdateByExampleWithBLOBs() {
-        PkblobsDAO dao = new PkblobsDAOImpl(sqlMapClient);
+        PkblobsDAO dao = getPkblobsDAO();
     
         try {
             Pkblobs record = new Pkblobs();
@@ -450,7 +435,7 @@ public class UpdateByExampleTests extends BaseTest {
     }
 
     public void testPKFieldsBlobsUpdateByExampleSelective() {
-        PkfieldsblobsDAO dao = new PkfieldsblobsDAOImpl(sqlMapClient);
+        PkfieldsblobsDAO dao = getPkfieldsblobsDAO();
     
         try {
             Pkfieldsblobs record = new Pkfieldsblobs();
@@ -493,7 +478,7 @@ public class UpdateByExampleTests extends BaseTest {
     }
 
     public void testPKFieldsBlobsUpdateByExampleWithoutBLOBs() {
-        PkfieldsblobsDAO dao = new PkfieldsblobsDAOImpl(sqlMapClient);
+        PkfieldsblobsDAO dao = getPkfieldsblobsDAO();
     
         try {
             Pkfieldsblobs record = new Pkfieldsblobs();
@@ -538,7 +523,7 @@ public class UpdateByExampleTests extends BaseTest {
     }
 
     public void testPKFieldsBlobsUpdateByExampleWithBLOBs() {
-        PkfieldsblobsDAO dao = new PkfieldsblobsDAOImpl(sqlMapClient);
+        PkfieldsblobsDAO dao = getPkfieldsblobsDAO();
     
         try {
             Pkfieldsblobs record = new Pkfieldsblobs();
@@ -583,7 +568,7 @@ public class UpdateByExampleTests extends BaseTest {
     }
 
     public void testFieldsBlobsUpdateByExampleSelective() {
-        FieldsblobsDAO dao = new FieldsblobsDAOImpl(sqlMapClient);
+        FieldsblobsDAO dao = getFieldsblobsDAO();
     
         try {
             Fieldsblobs record = new Fieldsblobs();
@@ -622,7 +607,7 @@ public class UpdateByExampleTests extends BaseTest {
     }
 
     public void testFieldsBlobsUpdateByExampleWithoutBLOBs() {
-        FieldsblobsDAO dao = new FieldsblobsDAOImpl(sqlMapClient);
+        FieldsblobsDAO dao = getFieldsblobsDAO();
     
         try {
             Fieldsblobs record = new Fieldsblobs();
@@ -662,7 +647,7 @@ public class UpdateByExampleTests extends BaseTest {
     }
 
     public void testFieldsBlobsUpdateByExampleWithBLOBs() {
-        FieldsblobsDAO dao = new FieldsblobsDAOImpl(sqlMapClient);
+        FieldsblobsDAO dao = getFieldsblobsDAO();
     
         try {
             Fieldsblobs record = new Fieldsblobs();
@@ -702,7 +687,7 @@ public class UpdateByExampleTests extends BaseTest {
     }
 
     public void testAwfulTableUpdateByExampleSelective() {
-        AwfulTableDAO dao = new AwfulTableDAOImpl(sqlMapClient);
+        AwfulTableDAO dao = getAwfulTableDAO();
     
         try {
             AwfulTable record = new AwfulTable();
@@ -772,7 +757,7 @@ public class UpdateByExampleTests extends BaseTest {
     }
 
     public void testAwfulTableUpdateByExample() {
-        AwfulTableDAO dao = new AwfulTableDAOImpl(sqlMapClient);
+        AwfulTableDAO dao = getAwfulTableDAO();
     
         try {
             AwfulTable record = new AwfulTable();

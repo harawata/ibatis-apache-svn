@@ -1,19 +1,10 @@
 package ibatortest.java2.execute.conditional.java2;
 
-import java.sql.SQLException;
-import java.util.List;
-
-import ibatortest.java2.BaseTest;
 import ibatortest.java2.generated.conditional.java2.dao.AwfulTableDAO;
-import ibatortest.java2.generated.conditional.java2.dao.AwfulTableDAOImpl;
 import ibatortest.java2.generated.conditional.java2.dao.PkblobsDAO;
-import ibatortest.java2.generated.conditional.java2.dao.PkblobsDAOImpl;
 import ibatortest.java2.generated.conditional.java2.dao.PkfieldsDAO;
-import ibatortest.java2.generated.conditional.java2.dao.PkfieldsDAOImpl;
 import ibatortest.java2.generated.conditional.java2.dao.PkfieldsblobsDAO;
-import ibatortest.java2.generated.conditional.java2.dao.PkfieldsblobsDAOImpl;
 import ibatortest.java2.generated.conditional.java2.dao.PkonlyDAO;
-import ibatortest.java2.generated.conditional.java2.dao.PkonlyDAOImpl;
 import ibatortest.java2.generated.conditional.java2.model.AwfulTable;
 import ibatortest.java2.generated.conditional.java2.model.AwfulTableExample;
 import ibatortest.java2.generated.conditional.java2.model.Pkblobs;
@@ -27,17 +18,12 @@ import ibatortest.java2.generated.conditional.java2.model.PkfieldsblobsKey;
 import ibatortest.java2.generated.conditional.java2.model.PkonlyExample;
 import ibatortest.java2.generated.conditional.java2.model.PkonlyKey;
 
-public class DeleteByPrimaryKeyTests extends BaseTest {
+import java.util.List;
 
-    protected void setUp() throws Exception {
-        super.setUp();
-        initSqlMapClient(
-                "ibatortest/java2/execute/conditional/java2/SqlMapConfig.xml",
-                null);
-    }
+public class DeleteByPrimaryKeyTests extends BaseConditionalJava2Test {
 
     public void testPKOnlyDeleteByPrimaryKey() {
-        PkonlyDAO dao = new PkonlyDAOImpl(sqlMapClient);
+        PkonlyDAO dao = getPkonlyDAO();
     
         try {
             PkonlyKey key = new PkonlyKey();
@@ -62,13 +48,13 @@ public class DeleteByPrimaryKeyTests extends BaseTest {
     
             answer = dao.selectByExample(example);
             assertEquals(1, answer.size());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKfieldsDeleteByPrimaryKey() {
-        PkfieldsDAO dao = new PkfieldsDAOImpl(sqlMapClient);
+        PkfieldsDAO dao = getPkfieldsDAO();
     
         try {
             Pkfields record = new Pkfields();
@@ -89,13 +75,13 @@ public class DeleteByPrimaryKeyTests extends BaseTest {
             PkfieldsExample example = new PkfieldsExample();
             List answer = dao.selectByExample(example);
             assertEquals(0, answer.size());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKBlobsDeleteByPrimaryKey() {
-        PkblobsDAO dao = new PkblobsDAOImpl(sqlMapClient);
+        PkblobsDAO dao = getPkblobsDAO();
     
         try {
             Pkblobs record = new Pkblobs();
@@ -114,13 +100,13 @@ public class DeleteByPrimaryKeyTests extends BaseTest {
             example = new PkblobsExample();
             answer = dao.selectByExampleWithoutBLOBs(example);
             assertEquals(0, answer.size());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKFieldsBlobsDeleteByPrimaryKey() {
-        PkfieldsblobsDAO dao = new PkfieldsblobsDAOImpl(sqlMapClient);
+        PkfieldsblobsDAO dao = getPkfieldsblobsDAO();
     
         try {
             Pkfieldsblobs record = new Pkfieldsblobs();
@@ -152,13 +138,13 @@ public class DeleteByPrimaryKeyTests extends BaseTest {
             example = new PkfieldsblobsExample();
             answer = dao.selectByExampleWithoutBLOBs(example);
             assertEquals(1, answer.size());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testAwfulTableDeleteByPrimaryKey() {
-        AwfulTableDAO dao = new AwfulTableDAOImpl(sqlMapClient);
+        AwfulTableDAO dao = getAwfulTableDAO();
     
         try {
             AwfulTable record = new AwfulTable();
@@ -184,9 +170,8 @@ public class DeleteByPrimaryKeyTests extends BaseTest {
             AwfulTableExample example = new AwfulTableExample();
             List answer = dao.selectByExample(example);
             assertEquals(0, answer.size());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
-
 }

@@ -1,16 +1,9 @@
 package ibatortest.java2.execute.conditional.java2;
 
-import java.sql.SQLException;
-
-import ibatortest.java2.BaseTest;
 import ibatortest.java2.generated.conditional.java2.dao.AwfulTableDAO;
-import ibatortest.java2.generated.conditional.java2.dao.AwfulTableDAOImpl;
 import ibatortest.java2.generated.conditional.java2.dao.PkblobsDAO;
-import ibatortest.java2.generated.conditional.java2.dao.PkblobsDAOImpl;
 import ibatortest.java2.generated.conditional.java2.dao.PkfieldsDAO;
-import ibatortest.java2.generated.conditional.java2.dao.PkfieldsDAOImpl;
 import ibatortest.java2.generated.conditional.java2.dao.PkfieldsblobsDAO;
-import ibatortest.java2.generated.conditional.java2.dao.PkfieldsblobsDAOImpl;
 import ibatortest.java2.generated.conditional.java2.model.AwfulTable;
 import ibatortest.java2.generated.conditional.java2.model.Pkblobs;
 import ibatortest.java2.generated.conditional.java2.model.Pkfields;
@@ -18,17 +11,10 @@ import ibatortest.java2.generated.conditional.java2.model.PkfieldsKey;
 import ibatortest.java2.generated.conditional.java2.model.Pkfieldsblobs;
 import ibatortest.java2.generated.conditional.java2.model.PkfieldsblobsKey;
 
-public class UpdateByPrimaryKeyTests extends BaseTest {
-
-    protected void setUp() throws Exception {
-        super.setUp();
-        initSqlMapClient(
-                "ibatortest/java2/execute/conditional/java2/SqlMapConfig.xml",
-                null);
-    }
+public class UpdateByPrimaryKeyTests extends BaseConditionalJava2Test {
 
     public void testPKFieldsUpdateByPrimaryKey() {
-        PkfieldsDAO dao = new PkfieldsDAOImpl(sqlMapClient);
+        PkfieldsDAO dao = getPkfieldsDAO();
     
         try {
             Pkfields record = new Pkfields();
@@ -55,13 +41,13 @@ public class UpdateByPrimaryKeyTests extends BaseTest {
             assertEquals(record.getLastname(), record2.getLastname());
             assertEquals(record.getId1(), record2.getId1());
             assertEquals(record.getId2(), record2.getId2());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKFieldsUpdateByPrimaryKeySelective() {
-        PkfieldsDAO dao = new PkfieldsDAOImpl(sqlMapClient);
+        PkfieldsDAO dao = getPkfieldsDAO();
     
         try {
             Pkfields record = new Pkfields();
@@ -107,13 +93,13 @@ public class UpdateByPrimaryKeyTests extends BaseTest {
                     .getTimefield()));
             assertEquals(record.getTimestampfield(), returnedRecord
                     .getTimestampfield());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKBlobsUpdateByPrimaryKeyWithBLOBs() {
-        PkblobsDAO dao = new PkblobsDAOImpl(sqlMapClient);
+        PkblobsDAO dao = getPkblobsDAO();
     
         try {
             Pkblobs record = new Pkblobs();
@@ -134,13 +120,13 @@ public class UpdateByPrimaryKeyTests extends BaseTest {
             assertEquals(record.getId(), newRecord.getId());
             assertTrue(blobsAreEqual(record.getBlob1(), newRecord.getBlob1()));
             assertTrue(blobsAreEqual(record.getBlob2(), newRecord.getBlob2()));
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKBlobsUpdateByPrimaryKeySelective() {
-        PkblobsDAO dao = new PkblobsDAOImpl(sqlMapClient);
+        PkblobsDAO dao = getPkblobsDAO();
     
         try {
             Pkblobs record = new Pkblobs();
@@ -161,13 +147,13 @@ public class UpdateByPrimaryKeyTests extends BaseTest {
                     .getBlob1()));
             assertTrue(blobsAreEqual(newRecord.getBlob2(), returnedRecord
                     .getBlob2()));
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKFieldsBlobsUpdateByPrimaryKeyWithBLOBs() {
-        PkfieldsblobsDAO dao = new PkfieldsblobsDAOImpl(sqlMapClient);
+        PkfieldsblobsDAO dao = getPkfieldsblobsDAO();
     
         try {
             Pkfieldsblobs record = new Pkfieldsblobs();
@@ -198,13 +184,13 @@ public class UpdateByPrimaryKeyTests extends BaseTest {
             assertEquals(record.getId2(), newRecord.getId2());
             assertTrue(blobsAreEqual(updateRecord.getBlob1(), newRecord
                     .getBlob1()));
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKFieldsBlobsUpdateByPrimaryKeyWithoutBLOBs() {
-        PkfieldsblobsDAO dao = new PkfieldsblobsDAOImpl(sqlMapClient);
+        PkfieldsblobsDAO dao = getPkfieldsblobsDAO();
     
         try {
             Pkfieldsblobs record = new Pkfieldsblobs();
@@ -233,13 +219,13 @@ public class UpdateByPrimaryKeyTests extends BaseTest {
             assertEquals(record.getId1(), newRecord.getId1());
             assertEquals(record.getId2(), newRecord.getId2());
             assertTrue(blobsAreEqual(record.getBlob1(), newRecord.getBlob1()));
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKFieldsBlobsUpdateByPrimaryKeySelective() {
-        PkfieldsblobsDAO dao = new PkfieldsblobsDAOImpl(sqlMapClient);
+        PkfieldsblobsDAO dao = getPkfieldsblobsDAO();
     
         try {
             Pkfieldsblobs record = new Pkfieldsblobs();
@@ -269,13 +255,13 @@ public class UpdateByPrimaryKeyTests extends BaseTest {
             assertEquals(record.getId2(), returnedRecord.getId2());
             assertTrue(blobsAreEqual(record.getBlob1(), returnedRecord
                     .getBlob1()));
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testAwfulTableUpdateByPrimaryKey() {
-        AwfulTableDAO dao = new AwfulTableDAOImpl(sqlMapClient);
+        AwfulTableDAO dao = getAwfulTableDAO();
     
         try {
             AwfulTable record = new AwfulTable();
@@ -323,13 +309,13 @@ public class UpdateByPrimaryKeyTests extends BaseTest {
                     .getSecondFirstName());
             assertEquals(record.getThirdFirstName(), returnedRecord
                     .getThirdFirstName());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testAwfulTableUpdateByPrimaryKeySelective() {
-        AwfulTableDAO dao = new AwfulTableDAOImpl(sqlMapClient);
+        AwfulTableDAO dao = getAwfulTableDAO();
     
         try {
             AwfulTable record = new AwfulTable();
@@ -379,9 +365,8 @@ public class UpdateByPrimaryKeyTests extends BaseTest {
                     .getSecondFirstName());
             assertEquals(record.getThirdFirstName(), returnedRecord
                     .getThirdFirstName());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
-
 }

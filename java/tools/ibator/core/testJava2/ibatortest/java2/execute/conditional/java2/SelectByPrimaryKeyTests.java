@@ -1,17 +1,9 @@
 package ibatortest.java2.execute.conditional.java2;
 
-import java.sql.SQLException;
-import java.util.List;
-
-import ibatortest.java2.BaseTest;
 import ibatortest.java2.generated.conditional.java2.dao.AwfulTableDAO;
-import ibatortest.java2.generated.conditional.java2.dao.AwfulTableDAOImpl;
 import ibatortest.java2.generated.conditional.java2.dao.PkblobsDAO;
-import ibatortest.java2.generated.conditional.java2.dao.PkblobsDAOImpl;
 import ibatortest.java2.generated.conditional.java2.dao.PkfieldsDAO;
-import ibatortest.java2.generated.conditional.java2.dao.PkfieldsDAOImpl;
 import ibatortest.java2.generated.conditional.java2.dao.PkfieldsblobsDAO;
-import ibatortest.java2.generated.conditional.java2.dao.PkfieldsblobsDAOImpl;
 import ibatortest.java2.generated.conditional.java2.model.AwfulTable;
 import ibatortest.java2.generated.conditional.java2.model.Pkblobs;
 import ibatortest.java2.generated.conditional.java2.model.Pkfields;
@@ -20,17 +12,12 @@ import ibatortest.java2.generated.conditional.java2.model.Pkfieldsblobs;
 import ibatortest.java2.generated.conditional.java2.model.PkfieldsblobsExample;
 import ibatortest.java2.generated.conditional.java2.model.PkfieldsblobsKey;
 
-public class SelectByPrimaryKeyTests extends BaseTest {
+import java.util.List;
 
-    protected void setUp() throws Exception {
-        super.setUp();
-        initSqlMapClient(
-                "ibatortest/java2/execute/conditional/java2/SqlMapConfig.xml",
-                null);
-    }
+public class SelectByPrimaryKeyTests extends BaseConditionalJava2Test {
 
     public void testPKFieldsSelectByPrimaryKey() {
-        PkfieldsDAO dao = new PkfieldsDAOImpl(sqlMapClient);
+        PkfieldsDAO dao = getPkfieldsDAO();
     
         try {
             Pkfields record = new Pkfields();
@@ -57,13 +44,13 @@ public class SelectByPrimaryKeyTests extends BaseTest {
             assertEquals(record.getLastname(), newRecord.getLastname());
             assertEquals(record.getId1(), newRecord.getId1());
             assertEquals(record.getId2(), newRecord.getId2());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKBlobsSelectByPrimaryKey() {
-        PkblobsDAO dao = new PkblobsDAOImpl(sqlMapClient);
+        PkblobsDAO dao = getPkblobsDAO();
     
         try {
             Pkblobs record = new Pkblobs();
@@ -83,13 +70,13 @@ public class SelectByPrimaryKeyTests extends BaseTest {
             assertEquals(record.getId(), newRecord.getId());
             assertTrue(blobsAreEqual(record.getBlob1(), newRecord.getBlob1()));
             assertTrue(blobsAreEqual(record.getBlob2(), newRecord.getBlob2()));
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKFieldsBlobsSelectByPrimaryKey() {
-        PkfieldsblobsDAO dao = new PkfieldsblobsDAOImpl(sqlMapClient);
+        PkfieldsblobsDAO dao = getPkfieldsblobsDAO();
     
         try {
             Pkfieldsblobs record = new Pkfieldsblobs();
@@ -121,13 +108,13 @@ public class SelectByPrimaryKeyTests extends BaseTest {
             assertEquals(record.getFirstname(), newRecord.getFirstname());
             assertEquals(record.getLastname(), newRecord.getLastname());
             assertTrue(blobsAreEqual(record.getBlob1(), newRecord.getBlob1()));
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testAwfulTableSelectByPrimaryKey() {
-        AwfulTableDAO dao = new AwfulTableDAOImpl(sqlMapClient);
+        AwfulTableDAO dao = getAwfulTableDAO();
     
         try {
             AwfulTable record = new AwfulTable();
@@ -187,9 +174,8 @@ public class SelectByPrimaryKeyTests extends BaseTest {
                     .getSecondFirstName());
             assertEquals(record.getThirdFirstName(), returnedRecord
                     .getThirdFirstName());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
-
 }

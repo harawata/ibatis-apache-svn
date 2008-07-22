@@ -334,6 +334,12 @@
       	<pathelement location="${generated.bin.dir.java2}"/>
 		<pathelement location="${basedir}/../devlib/ibatis-2.3.3.720.jar" />
 		<pathelement location="${basedir}/../devlib/hsqldb1.8.0.7.jar" />
+		<pathelement location="${basedir}/../devlib/commons-logging-1.1.1.jar" />
+		<pathelement location="${basedir}/../devlib/spring-beans-2.5.5.jar" />
+		<pathelement location="${basedir}/../devlib/spring-core-2.5.5.jar" />
+		<pathelement location="${basedir}/../devlib/spring-jdbc-2.5.5.jar" />
+		<pathelement location="${basedir}/../devlib/spring-orm-2.5.5.jar" />
+		<pathelement location="${basedir}/../devlib/spring-tx-2.5.5.jar" />
       </classpath>
     </junit>
   </target>

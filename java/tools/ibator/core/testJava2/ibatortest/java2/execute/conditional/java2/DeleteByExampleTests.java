@@ -1,23 +1,12 @@
 package ibatortest.java2.execute.conditional.java2;
 
-import java.sql.SQLException;
-import java.util.List;
-
-import ibatortest.java2.BaseTest;
 import ibatortest.java2.generated.conditional.java2.dao.AwfulTableDAO;
-import ibatortest.java2.generated.conditional.java2.dao.AwfulTableDAOImpl;
 import ibatortest.java2.generated.conditional.java2.dao.FieldsblobsDAO;
-import ibatortest.java2.generated.conditional.java2.dao.FieldsblobsDAOImpl;
 import ibatortest.java2.generated.conditional.java2.dao.FieldsonlyDAO;
-import ibatortest.java2.generated.conditional.java2.dao.FieldsonlyDAOImpl;
 import ibatortest.java2.generated.conditional.java2.dao.PkblobsDAO;
-import ibatortest.java2.generated.conditional.java2.dao.PkblobsDAOImpl;
 import ibatortest.java2.generated.conditional.java2.dao.PkfieldsDAO;
-import ibatortest.java2.generated.conditional.java2.dao.PkfieldsDAOImpl;
 import ibatortest.java2.generated.conditional.java2.dao.PkfieldsblobsDAO;
-import ibatortest.java2.generated.conditional.java2.dao.PkfieldsblobsDAOImpl;
 import ibatortest.java2.generated.conditional.java2.dao.PkonlyDAO;
-import ibatortest.java2.generated.conditional.java2.dao.PkonlyDAOImpl;
 import ibatortest.java2.generated.conditional.java2.model.AwfulTable;
 import ibatortest.java2.generated.conditional.java2.model.AwfulTableExample;
 import ibatortest.java2.generated.conditional.java2.model.FieldsblobsExample;
@@ -33,17 +22,12 @@ import ibatortest.java2.generated.conditional.java2.model.PkfieldsblobsExample;
 import ibatortest.java2.generated.conditional.java2.model.PkonlyExample;
 import ibatortest.java2.generated.conditional.java2.model.PkonlyKey;
 
-public class DeleteByExampleTests extends BaseTest {
+import java.util.List;
 
-    protected void setUp() throws Exception {
-        super.setUp();
-        initSqlMapClient(
-                "ibatortest/java2/execute/conditional/java2/SqlMapConfig.xml",
-                null);
-    }
+public class DeleteByExampleTests extends BaseConditionalJava2Test {
 
     public void testFieldsOnlyDeleteByExample() {
-        FieldsonlyDAO dao = new FieldsonlyDAOImpl(sqlMapClient);
+        FieldsonlyDAO dao = getFieldsonlyDAO();
     
         try {
             Fieldsonly record = new Fieldsonly();
@@ -73,13 +57,13 @@ public class DeleteByExampleTests extends BaseTest {
             example = new FieldsonlyExample();
             List answer = dao.selectByExample(example);
             assertEquals(1, answer.size());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKOnlyDeleteByExample() {
-        PkonlyDAO dao = new PkonlyDAOImpl(sqlMapClient);
+        PkonlyDAO dao = getPkonlyDAO();
     
         try {
             PkonlyKey key = new PkonlyKey();
@@ -105,13 +89,13 @@ public class DeleteByExampleTests extends BaseTest {
             example = new PkonlyExample();
             List answer = dao.selectByExample(example);
             assertEquals(1, answer.size());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKFieldsDeleteByExample() {
-        PkfieldsDAO dao = new PkfieldsDAOImpl(sqlMapClient);
+        PkfieldsDAO dao = getPkfieldsDAO();
     
         try {
             Pkfields record = new Pkfields();
@@ -141,13 +125,13 @@ public class DeleteByExampleTests extends BaseTest {
             example = new PkfieldsExample();
             answer = dao.selectByExample(example);
             assertEquals(1, answer.size());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKBlobsDeleteByExample() {
-        PkblobsDAO dao = new PkblobsDAOImpl(sqlMapClient);
+        PkblobsDAO dao = getPkblobsDAO();
     
         try {
             Pkblobs record = new Pkblobs();
@@ -174,13 +158,13 @@ public class DeleteByExampleTests extends BaseTest {
             example = new PkblobsExample();
             answer = dao.selectByExampleWithoutBLOBs(example);
             assertEquals(1, answer.size());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKFieldsBlobsDeleteByExample() {
-        PkfieldsblobsDAO dao = new PkfieldsblobsDAOImpl(sqlMapClient);
+        PkfieldsblobsDAO dao = getPkfieldsblobsDAO();
     
         try {
             Pkfieldsblobs record = new Pkfieldsblobs();
@@ -211,13 +195,13 @@ public class DeleteByExampleTests extends BaseTest {
             example = new PkfieldsblobsExample();
             answer = dao.selectByExampleWithoutBLOBs(example);
             assertEquals(1, answer.size());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testFieldsBlobsDeleteByExample() {
-        FieldsblobsDAO dao = new FieldsblobsDAOImpl(sqlMapClient);
+        FieldsblobsDAO dao = getFieldsblobsDAO();
     
         try {
             FieldsblobsWithBLOBs record = new FieldsblobsWithBLOBs();
@@ -246,13 +230,13 @@ public class DeleteByExampleTests extends BaseTest {
             example = new FieldsblobsExample();
             answer = dao.selectByExampleWithoutBLOBs(example);
             assertEquals(1, answer.size());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testAwfulTableDeleteByExample() {
-        AwfulTableDAO dao = new AwfulTableDAOImpl(sqlMapClient);
+        AwfulTableDAO dao = getAwfulTableDAO();
     
         try {
             AwfulTable record = new AwfulTable();
@@ -301,9 +285,8 @@ public class DeleteByExampleTests extends BaseTest {
             example.clear();
             answer = dao.selectByExample(example);
             assertEquals(1, answer.size());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
-
 }

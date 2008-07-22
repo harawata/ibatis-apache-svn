@@ -1,22 +1,12 @@
 package ibatortest.java2.execute.conditional.java2;
 
-import java.sql.SQLException;
-
-import ibatortest.java2.BaseTest;
 import ibatortest.java2.generated.conditional.java2.dao.AwfulTableDAO;
-import ibatortest.java2.generated.conditional.java2.dao.AwfulTableDAOImpl;
 import ibatortest.java2.generated.conditional.java2.dao.FieldsblobsDAO;
-import ibatortest.java2.generated.conditional.java2.dao.FieldsblobsDAOImpl;
 import ibatortest.java2.generated.conditional.java2.dao.FieldsonlyDAO;
-import ibatortest.java2.generated.conditional.java2.dao.FieldsonlyDAOImpl;
 import ibatortest.java2.generated.conditional.java2.dao.PkblobsDAO;
-import ibatortest.java2.generated.conditional.java2.dao.PkblobsDAOImpl;
 import ibatortest.java2.generated.conditional.java2.dao.PkfieldsDAO;
-import ibatortest.java2.generated.conditional.java2.dao.PkfieldsDAOImpl;
 import ibatortest.java2.generated.conditional.java2.dao.PkfieldsblobsDAO;
-import ibatortest.java2.generated.conditional.java2.dao.PkfieldsblobsDAOImpl;
 import ibatortest.java2.generated.conditional.java2.dao.PkonlyDAO;
-import ibatortest.java2.generated.conditional.java2.dao.PkonlyDAOImpl;
 import ibatortest.java2.generated.conditional.java2.model.AwfulTable;
 import ibatortest.java2.generated.conditional.java2.model.AwfulTableExample;
 import ibatortest.java2.generated.conditional.java2.model.FieldsblobsExample;
@@ -32,17 +22,10 @@ import ibatortest.java2.generated.conditional.java2.model.PkfieldsblobsExample;
 import ibatortest.java2.generated.conditional.java2.model.PkonlyExample;
 import ibatortest.java2.generated.conditional.java2.model.PkonlyKey;
 
-public class CountByExampleTests extends BaseTest {
-
-    protected void setUp() throws Exception {
-        super.setUp();
-        initSqlMapClient(
-                "ibatortest/java2/execute/conditional/java2/SqlMapConfig.xml",
-                null);
-    }
+public class CountByExampleTests extends BaseConditionalJava2Test {
 
     public void testFieldsOnlyCountByExample() {
-        FieldsonlyDAO dao = new FieldsonlyDAOImpl(sqlMapClient);
+        FieldsonlyDAO dao = getFieldsonlyDAO();
     
         try {
             Fieldsonly record = new Fieldsonly();
@@ -72,13 +55,13 @@ public class CountByExampleTests extends BaseTest {
             example.clear();
             rows = dao.countByExample(example);
             assertEquals(3, rows);
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKOnlyCountByExample() {
-        PkonlyDAO dao = new PkonlyDAOImpl(sqlMapClient);
+        PkonlyDAO dao = getPkonlyDAO();
     
         try {
             PkonlyKey key = new PkonlyKey();
@@ -104,13 +87,13 @@ public class CountByExampleTests extends BaseTest {
             example.clear();
             rows = dao.countByExample(example);
             assertEquals(3, rows);
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKFieldsBlobsCountByExample() {
-        PkfieldsblobsDAO dao = new PkfieldsblobsDAOImpl(sqlMapClient);
+        PkfieldsblobsDAO dao = getPkfieldsblobsDAO();
     
         try {
             Pkfieldsblobs record = new Pkfieldsblobs();
@@ -137,13 +120,13 @@ public class CountByExampleTests extends BaseTest {
             example.clear();
             rows = dao.countByExample(example);
             assertEquals(2, rows);
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKFieldsCountByExample() {
-        PkfieldsDAO dao = new PkfieldsDAOImpl(sqlMapClient);
+        PkfieldsDAO dao = getPkfieldsDAO();
     
         try {
             Pkfields record = new Pkfields();
@@ -169,13 +152,13 @@ public class CountByExampleTests extends BaseTest {
             example.clear();
             rows = dao.countByExample(example);
             assertEquals(2, rows);
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testPKBlobsCountByExample() {
-        PkblobsDAO dao = new PkblobsDAOImpl(sqlMapClient);
+        PkblobsDAO dao = getPkblobsDAO();
     
         try {
             Pkblobs record = new Pkblobs();
@@ -198,13 +181,13 @@ public class CountByExampleTests extends BaseTest {
             example.clear();
             rows = dao.countByExample(example);
             assertEquals(2, rows);
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testFieldsBlobsCountByExample() {
-        FieldsblobsDAO dao = new FieldsblobsDAOImpl(sqlMapClient);
+        FieldsblobsDAO dao = getFieldsblobsDAO();
     
         try {
             FieldsblobsWithBLOBs record = new FieldsblobsWithBLOBs();
@@ -229,13 +212,13 @@ public class CountByExampleTests extends BaseTest {
             example.clear();
             rows = dao.countByExample(example);
             assertEquals(2, rows);
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     public void testAwfulTableCountByExample() {
-        AwfulTableDAO dao = new AwfulTableDAOImpl(sqlMapClient);
+        AwfulTableDAO dao = getAwfulTableDAO();
     
         try {
             AwfulTable record = new AwfulTable();
@@ -280,7 +263,7 @@ public class CountByExampleTests extends BaseTest {
             example.clear();
             rows = dao.countByExample(example);
             assertEquals(2, rows);
-        } catch (SQLException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
