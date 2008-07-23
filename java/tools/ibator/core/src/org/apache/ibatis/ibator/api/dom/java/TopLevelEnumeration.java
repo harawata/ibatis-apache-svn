@@ -47,7 +47,7 @@ public class TopLevelEnumeration extends InnerEnum implements CompilationUnit {
      * @see org.apache.ibatis.ibator.api.dom.java.CompilationUnit#getFormattedContent()
      */
     public String getFormattedContent() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
 
         for (String fileCommentLine : fileCommentLines) {
             sb.append(fileCommentLine);

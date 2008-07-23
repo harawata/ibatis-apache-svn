@@ -48,7 +48,7 @@ public class JavaBeansUtil {
      * @return the getter method name
      */
 	public static String getGetterMethodName(String property, FullyQualifiedJavaType fullyQualifiedJavaType) {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 
 		sb.append(property);
 		if (Character.isLowerCase(sb.charAt(0))) {
@@ -83,7 +83,7 @@ public class JavaBeansUtil {
      * @return the setter method name
      */
 	public static String getSetterMethodName(String property) {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 
 		sb.append(property);
 		if (Character.isLowerCase(sb.charAt(0))) {
@@ -99,7 +99,7 @@ public class JavaBeansUtil {
 
 	public static String getCamelCaseString(String inputString,
 			boolean firstCharacterUppercase) {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 
 		boolean nextUpperCase = false;
 		for (int i = 0; i < inputString.length(); i++) {

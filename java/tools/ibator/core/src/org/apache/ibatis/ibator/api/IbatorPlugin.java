@@ -241,6 +241,23 @@ public interface IbatorPlugin {
     boolean daoInsertMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable);
     
     /**
+     * This method is called when the insert selective method has been
+     * generated in the DAO implementation class.
+     * 
+     * @param method the generated insert method
+     * @param topLevelClass the partially implemented DAO implementation
+     *   class.  You can add additional imported classes to the 
+     *   implementation class if necessary.
+     * @param introspectedTable ibator's class containing information
+     *   about the table as introspected from the database
+     * @return true if the method should be generated, false
+     *   if the generated method should be ignored.  In the case
+     *   of multiple plugins, the first plugin returning false
+     *   will disable the calling of further plugins.
+     */
+    boolean daoInsertSelectiveMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable);
+    
+    /**
      * This method is called when the selectByExampleWithBLOBs method has been
      * generated in the DAO implementation class.
      * 
@@ -460,6 +477,23 @@ public interface IbatorPlugin {
      *   will disable the calling of further plugins.
      */
     boolean daoInsertMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable);
+    
+    /**
+     * This method is called when the insert selective method has been
+     * generated in the DAO interface class.
+     * 
+     * @param method the generated insert method
+     * @param interfaze the partially implemented DAO interface
+     *   class.  You can add additional imported classes to the 
+     *   interface class if necessary.
+     * @param introspectedTable ibator's class containing information
+     *   about the table as introspected from the database
+     * @return true if the method should be generated, false
+     *   if the generated method should be ignored.  In the case
+     *   of multiple plugins, the first plugin returning false
+     *   will disable the calling of further plugins.
+     */
+    boolean daoInsertSelectiveMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable);
     
     /**
      * This method is called when the selectByExampleWithBLOBs method has been
@@ -861,6 +895,19 @@ public interface IbatorPlugin {
      *   will disable the calling of further plugins.
      */
     boolean sqlMapInsertElementGenerated(XmlElement element, IntrospectedTable introspectedTable);
+
+    /**
+     * This method is called when the insert selective element is generated.
+     * 
+     * @param element the generated &lt;insert&gt; element
+     * @param introspectedTable ibator's class containing information
+     *   about the table as introspected from the database
+     * @return true if the element should be generated, false
+     *   if the generated element should be ignored.  In the case
+     *   of multiple plugins, the first plugin returning false
+     *   will disable the calling of further plugins.
+     */
+    boolean sqlMapInsertSelectiveElementGenerated(XmlElement element, IntrospectedTable introspectedTable);
 
     /**
      * This method is called when the resultMap with BLOBs element is

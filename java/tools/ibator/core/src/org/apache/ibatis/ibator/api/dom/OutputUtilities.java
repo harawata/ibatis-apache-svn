@@ -41,11 +41,11 @@ public class OutputUtilities {
      * (four spaces per indent level).
      * 
      * @param sb
-     *            a StringBuffer to append to
+     *            a StringBuilder to append to
      * @param indentLevel
      *            the required indent level
      */
-    public static void javaIndent(StringBuffer sb, int indentLevel) {
+    public static void javaIndent(StringBuilder sb, int indentLevel) {
         for (int i = 0; i < indentLevel; i++) {
             sb.append("    "); //$NON-NLS-1$
         }
@@ -56,23 +56,23 @@ public class OutputUtilities {
      * (two spaces per indent level).
      * 
      * @param sb
-     *            a StringBuffer to append to
+     *            a StringBuilder to append to
      * @param indentLevel
      *            the required indent level
      */
-    public static void xmlIndent(StringBuffer sb, int indentLevel) {
+    public static void xmlIndent(StringBuilder sb, int indentLevel) {
         for (int i = 0; i < indentLevel; i++) {
             sb.append("  "); //$NON-NLS-1$
         }
     }
 
     /**
-     * Utility method. Adds a newline character to a StringBuffer.
+     * Utility method. Adds a newline character to a StringBuilder.
      * 
      * @param sb
-     *            the StringBuffer to be appended to
+     *            the StringBuilder to be appended to
      */
-    public static void newLine(StringBuffer sb) {
+    public static void newLine(StringBuilder sb) {
         sb.append(lineSeparator);
     }
 }

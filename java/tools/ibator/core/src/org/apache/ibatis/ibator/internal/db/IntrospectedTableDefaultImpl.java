@@ -165,7 +165,7 @@ public class IntrospectedTableDefaultImpl implements IntrospectedTable {
     }
 
     public FullyQualifiedJavaType getPrimaryKeyType() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append(getJavaModelPackage());
         sb.append('.');
         sb.append(fullyQualifiedTable.getDomainObjectName());
@@ -177,7 +177,7 @@ public class IntrospectedTableDefaultImpl implements IntrospectedTable {
     }
 
     public FullyQualifiedJavaType getBaseRecordType() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append(getJavaModelPackage());
         sb.append('.');
         sb.append(fullyQualifiedTable.getDomainObjectName());
@@ -188,7 +188,7 @@ public class IntrospectedTableDefaultImpl implements IntrospectedTable {
     }
 
     public FullyQualifiedJavaType getRecordWithBLOBsType() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append(getJavaModelPackage());
         sb.append('.');
         sb.append(fullyQualifiedTable.getDomainObjectName());
@@ -200,7 +200,7 @@ public class IntrospectedTableDefaultImpl implements IntrospectedTable {
     }
 
     public FullyQualifiedJavaType getExampleType() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append(getJavaModelPackage());
         sb.append('.');
         sb.append(fullyQualifiedTable.getDomainObjectName());
@@ -223,7 +223,7 @@ public class IntrospectedTableDefaultImpl implements IntrospectedTable {
      * @return the name of the SqlMap file
      */
     public String getSqlMapFileName() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append(fullyQualifiedTable.getSqlMapNamespace());
         sb.append("_SqlMap.xml"); //$NON-NLS-1$
 
@@ -238,7 +238,7 @@ public class IntrospectedTableDefaultImpl implements IntrospectedTable {
     public String getSqlMapPackage() {
         SqlMapGeneratorConfiguration config = ibatorContext.getSqlMapGeneratorConfiguration();
         
-        StringBuffer sb = new StringBuffer(config.getTargetPackage());
+        StringBuilder sb = new StringBuilder(config.getTargetPackage());
         if (StringUtility.isTrue(config.getProperty(PropertyRegistry.ANY_ENABLE_SUB_PACKAGES))) {
             sb.append(fullyQualifiedTable.getSubPackage());
         }
@@ -247,7 +247,7 @@ public class IntrospectedTableDefaultImpl implements IntrospectedTable {
     }
 
     public FullyQualifiedJavaType getDAOImplementationType() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append(getDAOPackage());
         sb.append('.');
         sb.append(fullyQualifiedTable.getDomainObjectName());
@@ -259,7 +259,7 @@ public class IntrospectedTableDefaultImpl implements IntrospectedTable {
     }
 
     public FullyQualifiedJavaType getDAOInterfaceType() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append(getDAOPackage());
         sb.append('.');
         sb.append(fullyQualifiedTable.getDomainObjectName());
@@ -277,7 +277,7 @@ public class IntrospectedTableDefaultImpl implements IntrospectedTable {
     protected String getDAOPackage() {
         DAOGeneratorConfiguration config = ibatorContext.getDaoGeneratorConfiguration();
         
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append(config.getTargetPackage());
         if (StringUtility.isTrue(config.getProperty(PropertyRegistry.ANY_ENABLE_SUB_PACKAGES))) {
             sb.append(fullyQualifiedTable.getSubPackage());
@@ -289,7 +289,7 @@ public class IntrospectedTableDefaultImpl implements IntrospectedTable {
     protected String getJavaModelPackage() {
         JavaModelGeneratorConfiguration config = ibatorContext.getJavaModelGeneratorConfiguration();
 
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append(config.getTargetPackage());
         if (StringUtility.isTrue(config.getProperty(PropertyRegistry.ANY_ENABLE_SUB_PACKAGES))) {
             sb.append(fullyQualifiedTable.getSubPackage());

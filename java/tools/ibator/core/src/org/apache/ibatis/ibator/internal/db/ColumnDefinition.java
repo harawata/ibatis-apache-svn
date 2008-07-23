@@ -115,7 +115,7 @@ public class ColumnDefinition {
 	 */
     @Override
     public String toString() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
 
         sb.append("Actual Column Name: "); //$NON-NLS-1$
         sb.append(actualColumnName);
@@ -184,7 +184,7 @@ public class ColumnDefinition {
             return javaProperty;
         }
         
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append(prefix);
         sb.append(javaProperty);
         
@@ -212,7 +212,7 @@ public class ColumnDefinition {
      */
     public String getRenamedColumnNameForResultMap() {
         if (StringUtility.stringHasValue(tableAlias)) {
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             
             sb.append(tableAlias);
             sb.append('_');
@@ -232,7 +232,7 @@ public class ColumnDefinition {
      */
     public String getSelectListPhrase() {
         if (StringUtility.stringHasValue(tableAlias)) {
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             
             sb.append(getAliasedEscapedColumnName());
             sb.append(" as "); //$NON-NLS-1$
@@ -266,7 +266,7 @@ public class ColumnDefinition {
     }
     
     public String getIbatisFormattedParameterClause(String prefix) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         
         sb.append('#');
         sb.append(getJavaProperty(prefix));
@@ -296,7 +296,7 @@ public class ColumnDefinition {
     
     private String escapeStringForIbatis(String s) {
         StringTokenizer st = new StringTokenizer(s, "$#", true); //$NON-NLS-1$
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         while (st.hasMoreTokens()) {
             String token = st.nextToken();
             if ("$".equals(token)) { //$NON-NLS-1$
@@ -316,7 +316,7 @@ public class ColumnDefinition {
     }
 
     public String getEscapedColumnName() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append(escapeStringForIbatis(actualColumnName));
         
         if (isColumnNameDelimited) {
@@ -340,7 +340,7 @@ public class ColumnDefinition {
      * @return the aliased column name
      */
     public String getAliasedActualColumnName() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         if (StringUtility.stringHasValue(tableAlias)) {
             sb.append(tableAlias);
             sb.append('.');
@@ -366,7 +366,7 @@ public class ColumnDefinition {
      */
     public String getAliasedEscapedColumnName() {
         if (StringUtility.stringHasValue(tableAlias)) {
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             
             sb.append(tableAlias);
             sb.append('.');

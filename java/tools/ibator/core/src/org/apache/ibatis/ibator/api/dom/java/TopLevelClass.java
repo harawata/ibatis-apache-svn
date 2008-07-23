@@ -56,7 +56,7 @@ public class TopLevelClass extends InnerClass implements CompilationUnit {
     }
 
     public String getFormattedContent() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
 
         for (String fileCommentLine : fileCommentLines) {
             sb.append(fileCommentLine);

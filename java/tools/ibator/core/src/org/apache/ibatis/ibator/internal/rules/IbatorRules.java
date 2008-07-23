@@ -55,6 +55,17 @@ public abstract class IbatorRules {
     }
 
     /**
+     * Implements the rule for generating the insert selective SQL Map element and DAO
+     * method. If the insert statement is allowed, then generate the element and
+     * method.
+     * 
+     * @return true if the element and method should be generated
+     */
+    public boolean generateInsertSelective() {
+        return tableConfiguration.isInsertStatementEnabled();
+    }
+    
+    /**
      * Calculates the class that contains all fields.  This class is used
      * as the insert statement parameter, as well as the returned value
      * from the select by primary key method.  The actual class depends

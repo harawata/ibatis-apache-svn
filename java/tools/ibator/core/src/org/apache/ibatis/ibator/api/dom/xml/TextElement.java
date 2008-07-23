@@ -61,7 +61,7 @@ public class TextElement extends Element {
     private static String formatLongString(String s, int maxLineLength,
             int indentLevel) {
 
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         OutputUtilities.xmlIndent(sb, indentLevel);
         sb.append(s);
         if (sb.length() <= maxLineLength || s.indexOf(' ') == -1) {

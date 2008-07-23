@@ -45,7 +45,7 @@ public class Attribute {
     }
     
     public String getFormattedContent() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append(name);
         sb.append("=\""); //$NON-NLS-1$
         sb.append(value);

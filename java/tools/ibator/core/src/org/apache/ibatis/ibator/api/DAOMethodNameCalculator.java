@@ -34,6 +34,14 @@ public interface DAOMethodNameCalculator {
     String getInsertMethodName(IntrospectedTable introspectedTable);
     
     /**
+     * Calculates and returns a name for the insert selective method.
+     * 
+     * @param introspectedTable
+     * @return the calculated name
+     */
+    String getInsertSelectiveMethodName(IntrospectedTable introspectedTable);
+    
+    /**
      * Calculates and returns a name for the update by primary key without BLOBs
      * method.
      * 

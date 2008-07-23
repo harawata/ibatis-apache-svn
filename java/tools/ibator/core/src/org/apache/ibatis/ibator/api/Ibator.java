@@ -287,7 +287,7 @@ public class Ibator {
         File answer = null;
         
         // try up to 1000 times to generate a unique file name
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (int i = 1; i < 1000; i++) {
             sb.setLength(0);
             sb.append(fileName);

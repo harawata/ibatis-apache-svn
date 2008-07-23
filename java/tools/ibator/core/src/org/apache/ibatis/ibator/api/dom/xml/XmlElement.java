@@ -80,7 +80,7 @@ public class XmlElement extends Element {
      */
     @Override
     public String getFormattedContent(int indentLevel) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
 
         OutputUtilities.xmlIndent(sb, indentLevel);
         sb.append('<');

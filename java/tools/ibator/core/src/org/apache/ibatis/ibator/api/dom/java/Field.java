@@ -76,7 +76,7 @@ public class Field extends JavaElement {
     }
     
     public String getFormattedContent(int indentLevel) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
 
         addFormattedJavadoc(sb, indentLevel);
         addFormattedAnnotations(sb, indentLevel);

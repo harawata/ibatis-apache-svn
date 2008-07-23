@@ -154,4 +154,8 @@ public class DefaultDAOMethodNameCalculator implements DAOMethodNameCalculator {
             return "updateByExampleWithoutBLOBs"; //$NON-NLS-1$
         }
     }
+
+    public String getInsertSelectiveMethodName(IntrospectedTable introspectedTable) {
+        return "insertSelective"; //$NON-NLS-1$
+    }
 }

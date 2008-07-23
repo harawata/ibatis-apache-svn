@@ -4,6 +4,7 @@ Version 1.2.0:  Renamed to ibator
 Bugs:
 1. Fixed the JavaTypeResolver so that an unsupported data type can be
    overridden by configuration.
+2. Fixed IBATIS-523 - bug in EqualsHashCodePlugin
 
 Enhancements:
 1. Ibator now includes a plugin machanism that you can use to extend or
@@ -17,6 +18,7 @@ Enhancements:
    patch!
 3. Added abiliy to configure an implementation of IntrospectedTable interface.
    This to allow overriding of many default behaviors of ibator.
+4. New method - insertSelective
    
    
 Changes:

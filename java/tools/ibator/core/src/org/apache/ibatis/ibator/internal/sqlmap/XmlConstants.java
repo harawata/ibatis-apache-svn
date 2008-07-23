@@ -30,7 +30,7 @@ public class XmlConstants {
     }
     
     static {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
 
         sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
         sb.append("countByExample"); //$NON-NLS-1$
@@ -50,6 +50,11 @@ public class XmlConstants {
         sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
         sb.append("insert"); //$NON-NLS-1$
         INSERT_STATEMENT_ID = sb.toString();
+        
+        sb.setLength(0);
+        sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
+        sb.append("insertSelective"); //$NON-NLS-1$
+        INSERT_SELECTIVE_STATEMENT_ID = sb.toString();
         
         sb.setLength(0);
         sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
@@ -126,6 +131,8 @@ public class XmlConstants {
     public static final String DELETE_BY_PRIMARY_KEY_STATEMENT_ID;
     
     public static final String INSERT_STATEMENT_ID;
+    
+    public static final String INSERT_SELECTIVE_STATEMENT_ID;
     
     public static final String SELECT_BY_EXAMPLE_STATEMENT_ID;
     

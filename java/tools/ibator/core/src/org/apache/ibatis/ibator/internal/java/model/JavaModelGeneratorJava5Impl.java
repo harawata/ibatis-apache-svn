@@ -224,7 +224,7 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
         method.setName("isValid"); //$NON-NLS-1$
         method.setReturnType(FullyQualifiedJavaType.getBooleanPrimitiveInstance());
         Iterator<String> strIter = criteriaLists.iterator();
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("return "); //$NON-NLS-1$
         sb.append(strIter.next());
         sb.append(".size() > 0"); //$NON-NLS-1$
@@ -579,7 +579,7 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
                     .getFullyQualifiedJavaType());
         }
         method.addParameter(new Parameter(type, "values")); //$NON-NLS-1$
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append(cd.getJavaProperty());
         sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
         sb.insert(0, "and"); //$NON-NLS-1$
@@ -632,7 +632,7 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
     private List<String> addtypeHandledObjectsAndMethods(ColumnDefinition cd,
             Method constructor, InnerClass innerClass) {
         List<String> answer = new ArrayList<String>();
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
 
         // add new private fields and public accessors in the class
         FullyQualifiedJavaType innerMapType = FullyQualifiedJavaType

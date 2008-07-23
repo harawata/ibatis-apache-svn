@@ -238,6 +238,15 @@ public class BaseDAOGenerator implements DAOGenerator {
             }
         }
 
+        if (rules.generateInsertSelective()) {
+            method = getInsertSelectiveMethod(introspectedTable, false, answer);
+            if (method != null) {
+                if (plugins.daoInsertSelectiveMethodGenerated(method, answer, introspectedTable)) {
+                    answer.addMethod(method);
+                }
+            }
+        }
+
         if (rules.generateUpdateByPrimaryKeyWithoutBLOBs()) {
             method = getUpdateByPrimaryKeyWithoutBLOBsMethod(introspectedTable, false, answer);
             if (method != null) {
@@ -390,6 +399,15 @@ public class BaseDAOGenerator implements DAOGenerator {
             method = getInsertMethod(introspectedTable, true, answer);
             if (method != null) {
                 if (plugins.daoInsertMethodGenerated(method, answer, introspectedTable)) {
+                    answer.addMethod(method);
+                }
+            }
+        }
+
+        if (rules.generateInsertSelective()) {
+            method = getInsertSelectiveMethod(introspectedTable, true, answer);
+            if (method != null) {
+                if (plugins.daoInsertSelectiveMethodGenerated(method, answer, introspectedTable)) {
                     answer.addMethod(method);
                 }
             }
@@ -551,7 +569,7 @@ public class BaseDAOGenerator implements DAOGenerator {
         
         if (!interfaceMethod) {
             // generate the implementation method
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
 
             if (returnType != null) {
                 sb.append("Object newKey = "); //$NON-NLS-1$
@@ -559,6 +577,89 @@ public class BaseDAOGenerator implements DAOGenerator {
 
             sb.append(daoTemplate.getInsertMethod(table.getSqlMapNamespace(), 
                     XmlConstants.INSERT_STATEMENT_ID,
+                    "record")); //$NON-NLS-1$
+            method.addBodyLine(sb.toString());
+
+            if (returnType != null) {
+                if ("Object".equals(returnType.getShortName())) { //$NON-NLS-1$
+                    // no need to cast if the return type is Object
+                    method.addBodyLine("return newKey;"); //$NON-NLS-1$
+                } else {
+                    sb.setLength(0);
+
+                    if (returnType.isPrimitive()) {
+                        PrimitiveTypeWrapper ptw = returnType
+                                .getPrimitiveTypeWrapper();
+                        sb.append("return (("); //$NON-NLS-1$
+                        sb.append(ptw.getShortName());
+                        sb.append(") newKey"); //$NON-NLS-1$
+                        sb.append(")."); //$NON-NLS-1$
+                        sb.append(ptw.getToPrimitiveMethod());
+                        sb.append(';');
+                    } else {
+                        sb.append("return ("); //$NON-NLS-1$
+                        sb.append(returnType.getShortName());
+                        sb.append(") newKey;"); //$NON-NLS-1$
+                    }
+
+                    method.addBodyLine(sb.toString());
+                }
+            }
+        }
+
+        return method;
+    }
+
+    protected Method getInsertSelectiveMethod(IntrospectedTable introspectedTable,
+            boolean interfaceMethod, CompilationUnit compilationUnit) {
+
+        FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
+        Method method = new Method();
+
+        FullyQualifiedJavaType returnType;
+        if (introspectedTable.getGeneratedKey() != null) {
+            ColumnDefinition cd = introspectedTable.getColumn(
+                            introspectedTable.getGeneratedKey().getColumn());
+            if (cd == null) {
+                // the specified column doesn't exist, so don't do the generated
+                // key
+                // (the warning has already been reported)
+                returnType = null;
+            } else {
+                returnType = cd.getResolvedJavaType()
+                        .getFullyQualifiedJavaType();
+                compilationUnit.addImportedType(returnType);
+            }
+        } else {
+            returnType = null;
+        }
+        method.setReturnType(returnType);
+        method.setVisibility(JavaVisibility.PUBLIC);
+        method.setName(methodNameCalculator.getInsertSelectiveMethodName(introspectedTable));
+
+        FullyQualifiedJavaType parameterType =
+            introspectedTable.getRules().calculateAllFieldsClass();
+        
+        compilationUnit.addImportedType(parameterType);
+        method.addParameter(new Parameter(parameterType, "record")); //$NON-NLS-1$
+
+        for (FullyQualifiedJavaType fqjt : daoTemplate.getCheckedExceptions()) {
+            method.addException(fqjt);
+            compilationUnit.addImportedType(fqjt);
+        }
+
+        ibatorContext.getCommentGenerator().addGeneralMethodComment(method, table);
+        
+        if (!interfaceMethod) {
+            // generate the implementation method
+            StringBuilder sb = new StringBuilder();
+
+            if (returnType != null) {
+                sb.append("Object newKey = "); //$NON-NLS-1$
+            }
+
+            sb.append(daoTemplate.getInsertMethod(table.getSqlMapNamespace(), 
+                    XmlConstants.INSERT_SELECTIVE_STATEMENT_ID,
                     "record")); //$NON-NLS-1$
             method.addBodyLine(sb.toString());
 
@@ -616,7 +717,7 @@ public class BaseDAOGenerator implements DAOGenerator {
 
         if (!interfaceMethod) {
             // generate the implementation method
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
 
             sb.append("int rows = "); //$NON-NLS-1$
             sb.append(daoTemplate.getUpdateMethod(table.getSqlMapNamespace(),
@@ -660,7 +761,7 @@ public class BaseDAOGenerator implements DAOGenerator {
         
         if (!interfaceMethod) {
             // generate the implementation method
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
 
             sb.append("int rows = "); //$NON-NLS-1$
             sb.append(daoTemplate.getUpdateMethod(table.getSqlMapNamespace(),
@@ -704,7 +805,7 @@ public class BaseDAOGenerator implements DAOGenerator {
 
         if (!interfaceMethod) {
             // generate the implementation method
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
 
             sb.append("int rows = "); //$NON-NLS-1$
             sb.append(daoTemplate.getUpdateMethod(table.getSqlMapNamespace(),
@@ -770,7 +871,7 @@ public class BaseDAOGenerator implements DAOGenerator {
                 method.addSuppressTypeWarningsAnnotation();
             }
             
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             sb.append(returnType.getShortName());
             sb.append(" list = "); //$NON-NLS-1$
             sb.append(daoTemplate.getQueryForListMethod(table.getSqlMapNamespace(),
@@ -832,7 +933,7 @@ public class BaseDAOGenerator implements DAOGenerator {
                 method.addSuppressTypeWarningsAnnotation();
             }
             
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             sb.append(returnType.getShortName());
             sb.append(" list = "); //$NON-NLS-1$
             sb.append(daoTemplate.getQueryForListMethod(table.getSqlMapNamespace(),
@@ -882,7 +983,7 @@ public class BaseDAOGenerator implements DAOGenerator {
 
         if (!interfaceMethod) {
             // generate the implementation method
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
 
             if (!introspectedTable.getRules().generatePrimaryKeyClass()) {
                 // no primary key class, but primary key is enabled.  Primary
@@ -950,7 +1051,7 @@ public class BaseDAOGenerator implements DAOGenerator {
 
         if (!interfaceMethod) {
             // generate the implementation method
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
 
             sb.append("int rows = "); //$NON-NLS-1$
             sb.append(daoTemplate.getDeleteMethod(table.getSqlMapNamespace(),
@@ -995,7 +1096,7 @@ public class BaseDAOGenerator implements DAOGenerator {
 
         if (!interfaceMethod) {
             // generate the implementation method
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
 
             if (!introspectedTable.getRules().generatePrimaryKeyClass()) {
                 // no primary key class, but primary key is enabled.  Primary
@@ -1060,7 +1161,7 @@ public class BaseDAOGenerator implements DAOGenerator {
 
         if (!interfaceMethod) {
             // generate the implementation method
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
 
             sb.append("Integer count = (Integer)  "); //$NON-NLS-1$
             sb.append(daoTemplate.getQueryForObjectMethod(table.getSqlMapNamespace(),
@@ -1121,7 +1222,7 @@ public class BaseDAOGenerator implements DAOGenerator {
             // generate the implementation method
             method.addBodyLine("UpdateByExampleParms parms = new UpdateByExampleParms(record, example);"); //$NON-NLS-1$
             
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             
             sb.append("int rows = "); //$NON-NLS-1$
             
@@ -1214,7 +1315,7 @@ public class BaseDAOGenerator implements DAOGenerator {
             // generate the implementation method
             method.addBodyLine("UpdateByExampleParms parms = new UpdateByExampleParms(record, example);"); //$NON-NLS-1$
             
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
 
             sb.append("int rows = "); //$NON-NLS-1$
             sb.append(daoTemplate.getUpdateMethod(table.getSqlMapNamespace(),
@@ -1264,7 +1365,7 @@ public class BaseDAOGenerator implements DAOGenerator {
             // generate the implementation method
             method.addBodyLine("UpdateByExampleParms parms = new UpdateByExampleParms(record, example);"); //$NON-NLS-1$
             
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
 
             sb.append("int rows = "); //$NON-NLS-1$
             sb.append(daoTemplate.getUpdateMethod(table.getSqlMapNamespace(),

@@ -140,7 +140,7 @@ public class FullyQualifiedTable {
 	}
 
     public String getFullyQualifiedTableNameAtRuntime() {
-        StringBuffer localCatalog = new StringBuffer();
+        StringBuilder localCatalog = new StringBuilder();
         if (!ignoreQualifiersAtRuntime) {
             if (StringUtility.stringHasValue(runtimeCatalog)) {
                 localCatalog.append(runtimeCatalog);
@@ -152,7 +152,7 @@ public class FullyQualifiedTable {
             addDelimiters(localCatalog);
         }
         
-        StringBuffer localSchema = new StringBuffer();
+        StringBuilder localSchema = new StringBuilder();
         if (!ignoreQualifiersAtRuntime) {
             if (StringUtility.stringHasValue(runtimeSchema)) {
                 localSchema.append(runtimeSchema);
@@ -164,7 +164,7 @@ public class FullyQualifiedTable {
             addDelimiters(localSchema);
         }
         
-        StringBuffer localTableName = new StringBuffer();
+        StringBuilder localTableName = new StringBuilder();
         if (StringUtility.stringHasValue(runtimeTableName)) {
             localTableName.append(runtimeTableName);
         } else {
@@ -180,7 +180,7 @@ public class FullyQualifiedTable {
     }
 
     public String getAliasedFullyQualifiedTableNameAtRuntime() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
 
         sb.append(getFullyQualifiedTableNameAtRuntime());
         
@@ -268,7 +268,7 @@ public class FullyQualifiedTable {
      * @return the subpackage for this table
      */
     public String getSubPackage() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         if (!ignoreQualifiersAtRuntime) {
             if (StringUtility.stringHasValue(runtimeCatalog)) {
                 sb.append('.');
@@ -291,7 +291,7 @@ public class FullyQualifiedTable {
         return sb.toString();
     }
     
-    private void addDelimiters(StringBuffer sb) {
+    private void addDelimiters(StringBuilder sb) {
         if (StringUtility.stringHasValue(beginningDelimiter)) {
             sb.insert(0, beginningDelimiter);
         }

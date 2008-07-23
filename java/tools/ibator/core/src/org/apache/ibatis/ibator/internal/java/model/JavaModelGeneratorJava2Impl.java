@@ -124,7 +124,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         boolean trimStrings = StringUtility.isTrue(properties
                 .getProperty(PropertyRegistry.MODEL_GENERATOR_TRIM_STRINGS));
 
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         Field field;
         Method method;
 
@@ -397,7 +397,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         method.setVisibility(JavaVisibility.PUBLIC);
         method.addParameter(new Parameter(cd.getResolvedJavaType()
                 .getFullyQualifiedJavaType(), "value")); //$NON-NLS-1$
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append(cd.getJavaProperty());
         sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
         sb.insert(0, "and"); //$NON-NLS-1$
@@ -450,7 +450,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
                 method.addSuppressTypeWarningsAnnotation();
             }
         }
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append(cd.getJavaProperty());
         sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
         sb.insert(0, "and"); //$NON-NLS-1$
@@ -483,7 +483,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         
         method.addParameter(new Parameter(type, "value1")); //$NON-NLS-1$
         method.addParameter(new Parameter(type, "value2")); //$NON-NLS-1$
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append(cd.getJavaProperty());
         sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
         sb.insert(0, "and"); //$NON-NLS-1$
@@ -717,7 +717,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setName("isValid"); //$NON-NLS-1$
         method.setReturnType(FullyQualifiedJavaType.getBooleanPrimitiveInstance());
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         Iterator<String> strIter = criteriaLists.iterator();
         sb.append("return "); //$NON-NLS-1$
         sb.append(strIter.next());
@@ -1070,7 +1070,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         FullyQualifiedJavaType type = FullyQualifiedJavaType
                 .getNewListInstance();
         method.addParameter(new Parameter(type, "values")); //$NON-NLS-1$
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append(cd.getJavaProperty());
         sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
         sb.insert(0, "and"); //$NON-NLS-1$
@@ -1123,7 +1123,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
     private List<String> addtypeHandledObjectsAndMethods(ColumnDefinition cd,
             Method constructor, InnerClass innerClass) {
         List<String> answer = new ArrayList<String>();
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
 
         // add new private fields and public accessors in the class
         FullyQualifiedJavaType listOfMaps = FullyQualifiedJavaType

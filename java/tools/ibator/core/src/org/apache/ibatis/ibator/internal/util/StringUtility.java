@@ -36,7 +36,7 @@ public class StringUtility {
 
     public static String composeFullyQualifiedTableName(String catalog, String schema,
             String tableName, char separator) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
 
         if (stringHasValue(catalog)) {
             sb.append(catalog);
@@ -63,7 +63,7 @@ public class StringUtility {
 
     public static String escapeStringForJava(String s) {
         StringTokenizer st = new StringTokenizer(s, "\"", true); //$NON-NLS-1$
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         while (st.hasMoreTokens()) {
             String token = st.nextToken();
             if ("\"".equals(token)) { //$NON-NLS-1$
@@ -78,7 +78,7 @@ public class StringUtility {
 
     public static String escapeStringForXml(String s) {
         StringTokenizer st = new StringTokenizer(s, "\"", true); //$NON-NLS-1$
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         while (st.hasMoreTokens()) {
             String token = st.nextToken();
             if ("\"".equals(token)) { //$NON-NLS-1$

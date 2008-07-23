@@ -362,7 +362,7 @@ public class DatabaseIntrospector {
         if (tc.isWildcardEscapingEnabled()) {
             String escapeString = databaseMetaData.getSearchStringEscape();
             
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             StringTokenizer st;
             if (localSchema != null) {
                 st = new StringTokenizer(localSchema, "_%", true); //$NON-NLS-1$

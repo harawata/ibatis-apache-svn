@@ -899,4 +899,46 @@ public final class IbatorPluginAggregator implements IbatorPlugin {
 
         return rc;
     }
+
+    public boolean sqlMapInsertSelectiveElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
+        boolean rc = true;
+
+        for (IbatorPlugin plugin : plugins) {
+            if (!plugin
+                    .sqlMapInsertSelectiveElementGenerated(element, introspectedTable)) {
+                rc = false;
+                break;
+            }
+        }
+
+        return rc;
+    }
+
+    public boolean daoInsertSelectiveMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable) {
+        boolean rc = true;
+
+        for (IbatorPlugin plugin : plugins) {
+            if (!plugin.daoInsertSelectiveMethodGenerated(method, interfaze,
+                    introspectedTable)) {
+                rc = false;
+                break;
+            }
+        }
+
+        return rc;
+    }
+
+    public boolean daoInsertSelectiveMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
+        boolean rc = true;
+
+        for (IbatorPlugin plugin : plugins) {
+            if (!plugin.daoInsertSelectiveMethodGenerated(method, topLevelClass,
+                    introspectedTable)) {
+                rc = false;
+                break;
+            }
+        }
+
+        return rc;
+    }
 }

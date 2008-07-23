@@ -81,7 +81,7 @@ public abstract class JavaElement {
         addAnnotation("@SuppressWarnings(\"unchecked\")"); //$NON-NLS-1$
     }
     
-    public void addFormattedJavadoc(StringBuffer sb, int indentLevel) {
+    public void addFormattedJavadoc(StringBuilder sb, int indentLevel) {
         for (String javaDocLine : javaDocLines) {
             OutputUtilities.javaIndent(sb, indentLevel);
             sb.append(javaDocLine);
@@ -89,7 +89,7 @@ public abstract class JavaElement {
         }
     }
 
-    public void addFormattedAnnotations(StringBuffer sb, int indentLevel) {
+    public void addFormattedAnnotations(StringBuilder sb, int indentLevel) {
         for (String annotation : annotations) {
             OutputUtilities.javaIndent(sb, indentLevel);
             sb.append(annotation);

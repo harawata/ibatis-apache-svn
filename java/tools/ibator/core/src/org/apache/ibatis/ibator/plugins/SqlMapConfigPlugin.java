@@ -92,7 +92,7 @@ public class SqlMapConfigPlugin extends IbatorPluginAdapter {
         root.addElement(new TextElement(
             "    to this file before it is usable by iBATIS.")); //$NON-NLS-1$
 
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("  This file was generated on "); //$NON-NLS-1$
         sb.append(new Date());
         sb.append('.');
@@ -129,7 +129,7 @@ public class SqlMapConfigPlugin extends IbatorPluginAdapter {
      */
     @Override
     public boolean sqlMapGenerated(GeneratedXmlFile sqlMap, IntrospectedTable introspectedTable) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append(sqlMap.getTargetPackage());
         sb.append('.');
         String temp = sb.toString();

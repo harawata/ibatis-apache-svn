@@ -258,7 +258,7 @@ public class FullyQualifiedJavaType implements Comparable<FullyQualifiedJavaType
     public void addTypeArgument(FullyQualifiedJavaType type) {
         typeArguments.add(type);
         
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append(baseShortName);
         sb.append('<');
         

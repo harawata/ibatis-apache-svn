@@ -34,7 +34,7 @@ public class ExtendedDAOMethodNameCalculator implements DAOMethodNameCalculator 
     }
 
     public String getInsertMethodName(IntrospectedTable introspectedTable) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("insert"); //$NON-NLS-1$
         sb.append(introspectedTable.getFullyQualifiedTable().getDomainObjectName());
         
@@ -50,7 +50,7 @@ public class ExtendedDAOMethodNameCalculator implements DAOMethodNameCalculator 
      * 3. Else the method name should be updateByPrimaryKeyWithoutBLOBs
      */
     public String getUpdateByPrimaryKeyWithoutBLOBsMethodName(IntrospectedTable introspectedTable) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
 
         sb.append("update"); //$NON-NLS-1$
         sb.append(introspectedTable.getFullyQualifiedTable().getDomainObjectName());
@@ -77,7 +77,7 @@ public class ExtendedDAOMethodNameCalculator implements DAOMethodNameCalculator 
      * 3. Else the method name should be updateByPrimaryKeyWithBLOBs
      */
     public String getUpdateByPrimaryKeyWithBLOBsMethodName(IntrospectedTable introspectedTable) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("update"); //$NON-NLS-1$
         sb.append(introspectedTable.getFullyQualifiedTable().getDomainObjectName());
         
@@ -95,7 +95,7 @@ public class ExtendedDAOMethodNameCalculator implements DAOMethodNameCalculator 
     }
 
     public String getDeleteByExampleMethodName(IntrospectedTable introspectedTable) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("delete"); //$NON-NLS-1$
         sb.append(introspectedTable.getFullyQualifiedTable().getDomainObjectName());
         sb.append("ByExample"); //$NON-NLS-1$
@@ -104,7 +104,7 @@ public class ExtendedDAOMethodNameCalculator implements DAOMethodNameCalculator 
     }
 
     public String getDeleteByPrimaryKeyMethodName(IntrospectedTable introspectedTable) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("delete"); //$NON-NLS-1$
         sb.append(introspectedTable.getFullyQualifiedTable().getDomainObjectName());
         sb.append("ByPrimaryKey"); //$NON-NLS-1$
@@ -118,7 +118,7 @@ public class ExtendedDAOMethodNameCalculator implements DAOMethodNameCalculator 
      * 2. Else the method name should be selectByExampleWithoutBLOBs
      */
     public String getSelectByExampleWithoutBLOBsMethodName(IntrospectedTable introspectedTable) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("select"); //$NON-NLS-1$
         sb.append(introspectedTable.getFullyQualifiedTable().getDomainObjectName());
         sb.append("ByExample"); //$NON-NLS-1$
@@ -138,7 +138,7 @@ public class ExtendedDAOMethodNameCalculator implements DAOMethodNameCalculator 
      * 2. Else the method name should be selectByExampleWithBLOBs
      */
     public String getSelectByExampleWithBLOBsMethodName(IntrospectedTable introspectedTable) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("select"); //$NON-NLS-1$
         sb.append(introspectedTable.getFullyQualifiedTable().getDomainObjectName());
         sb.append("ByExample"); //$NON-NLS-1$
@@ -153,7 +153,7 @@ public class ExtendedDAOMethodNameCalculator implements DAOMethodNameCalculator 
     }
 
     public String getSelectByPrimaryKeyMethodName(IntrospectedTable introspectedTable) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("select"); //$NON-NLS-1$
         sb.append(introspectedTable.getFullyQualifiedTable().getDomainObjectName());
         sb.append("ByPrimaryKey"); //$NON-NLS-1$
@@ -163,7 +163,7 @@ public class ExtendedDAOMethodNameCalculator implements DAOMethodNameCalculator 
 
 
     public String getUpdateByPrimaryKeySelectiveMethodName(IntrospectedTable introspectedTable) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("update"); //$NON-NLS-1$
         sb.append(introspectedTable.getFullyQualifiedTable().getDomainObjectName());
         sb.append("ByPrimaryKeySelective"); //$NON-NLS-1$
@@ -172,7 +172,7 @@ public class ExtendedDAOMethodNameCalculator implements DAOMethodNameCalculator 
     }
 
     public String getCountByExampleMethodName(IntrospectedTable introspectedTable) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("count"); //$NON-NLS-1$
         sb.append(introspectedTable.getFullyQualifiedTable().getDomainObjectName());
         sb.append("ByExample"); //$NON-NLS-1$
@@ -181,7 +181,7 @@ public class ExtendedDAOMethodNameCalculator implements DAOMethodNameCalculator 
     }
 
     public String getUpdateByExampleSelectiveMethodName(IntrospectedTable introspectedTable) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("update"); //$NON-NLS-1$
         sb.append(introspectedTable.getFullyQualifiedTable().getDomainObjectName());
         sb.append("ByExampleSelective"); //$NON-NLS-1$
@@ -190,7 +190,7 @@ public class ExtendedDAOMethodNameCalculator implements DAOMethodNameCalculator 
     }
 
     public String getUpdateByExampleWithBLOBsMethodName(IntrospectedTable introspectedTable) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("update"); //$NON-NLS-1$
         sb.append(introspectedTable.getFullyQualifiedTable().getDomainObjectName());
         
@@ -208,7 +208,7 @@ public class ExtendedDAOMethodNameCalculator implements DAOMethodNameCalculator 
     }
 
     public String getUpdateByExampleWithoutBLOBsMethodName(IntrospectedTable introspectedTable) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
 
         sb.append("update"); //$NON-NLS-1$
         sb.append(introspectedTable.getFullyQualifiedTable().getDomainObjectName());
@@ -222,6 +222,15 @@ public class ExtendedDAOMethodNameCalculator implements DAOMethodNameCalculator 
         } else {
             sb.append("ByExampleWithoutBLOBs"); //$NON-NLS-1$
         }
+        
+        return sb.toString();
+    }
+
+    public String getInsertSelectiveMethodName(IntrospectedTable introspectedTable) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("insert"); //$NON-NLS-1$
+        sb.append(introspectedTable.getFullyQualifiedTable().getDomainObjectName());
+        sb.append("Selective"); //$NON-NLS-1$
         
         return sb.toString();
     }

@@ -56,7 +56,7 @@ public class DefaultShellCallback implements ShellCallback {
                     targetProject));
         }
         
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         StringTokenizer st = new StringTokenizer(targetPackage, "."); //$NON-NLS-1$
         while (st.hasMoreTokens()) {
             sb.append(st.nextToken());

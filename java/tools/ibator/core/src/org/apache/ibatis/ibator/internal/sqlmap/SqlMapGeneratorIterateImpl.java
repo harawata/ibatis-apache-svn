@@ -213,6 +213,15 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
             }
         }
 
+        if (rules.generateInsertSelective()) {
+            element = getInsertSelectiveElement(introspectedTable);
+            if (element != null) {
+                if (plugins.sqlMapInsertSelectiveElementGenerated(element, introspectedTable)) {
+                    answer.addElement(element);
+                }
+            }
+        }
+
         if (rules.generateUpdateByPrimaryKeyWithBLOBs()) {
             element = getUpdateByPrimaryKeyWithBLOBs(introspectedTable);
             if (element != null) {
@@ -368,7 +377,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         answer.addAttribute(new Attribute("class", //$NON-NLS-1$
                 returnType.getFullyQualifiedName()));
 
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append(table.getSqlMapNamespace());
         sb.append('.');
         sb.append(XmlConstants.BASE_RESULT_MAP_ID);
@@ -441,8 +450,8 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
             }
         }
 
-        StringBuffer insertClause = new StringBuffer();
-        StringBuffer valuesClause = new StringBuffer();
+        StringBuilder insertClause = new StringBuilder();
+        StringBuilder valuesClause = new StringBuilder();
 
         insertClause.append("insert into "); //$NON-NLS-1$
         insertClause.append(table.getFullyQualifiedTableNameAtRuntime());
@@ -487,6 +496,91 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
     }
 
     /**
+     * This method should return an XmlElement which is the insert 
+     * selective statement.
+     * 
+     * @param introspectedTable
+     * @return the insert element
+     */
+    protected XmlElement getInsertSelectiveElement(IntrospectedTable introspectedTable) {
+        
+        XmlElement answer = new XmlElement("insert"); //$NON-NLS-1$
+
+        FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
+        answer.addAttribute(new Attribute("id", XmlConstants.INSERT_SELECTIVE_STATEMENT_ID)); //$NON-NLS-1$
+        
+        FullyQualifiedJavaType parameterType =
+            introspectedTable.getRules().calculateAllFieldsClass();
+        
+        answer.addAttribute(new Attribute("parameterClass", //$NON-NLS-1$
+                parameterType.getFullyQualifiedName()));
+
+        ibatorContext.getCommentGenerator().addComment(answer);
+
+        GeneratedKey gk = introspectedTable.getGeneratedKey();
+
+        if (gk != null && gk.isBeforeInsert()) {
+            ColumnDefinition cd = introspectedTable.getColumn(gk.getColumn());
+            // if the column is null, then it's a configuration error. The
+            // warning has already been reported
+            if (cd != null) {
+                // pre-generated key
+                answer.addElement(getSelectKey(cd, gk));
+            }
+        }
+        
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("insert into "); //$NON-NLS-1$
+        sb.append(table.getFullyQualifiedTableNameAtRuntime());
+        answer.addElement(new TextElement(sb.toString()));
+        
+        XmlElement insertElement = new XmlElement("dynamic");
+        insertElement.addAttribute(new Attribute("prepend", "("));
+        answer.addElement(insertElement);
+        
+        answer.addElement(new TextElement("values"));
+
+        XmlElement valuesElement = new XmlElement("dynamic");
+        valuesElement.addAttribute(new Attribute("prepend", "("));
+        answer.addElement(valuesElement);
+        
+        for (ColumnDefinition cd : introspectedTable.getAllColumns()) {
+            if (cd.isIdentity()) {
+                // cannot set values on identity fields
+                continue;
+            }
+            
+            XmlElement insertNotNullElement = new XmlElement("isNotNull");
+            insertNotNullElement.addAttribute(new Attribute("prepend", ","));
+            insertNotNullElement.addAttribute(new Attribute("property", cd.getJavaProperty()));
+            insertNotNullElement.addElement(new TextElement(cd.getEscapedColumnName()));
+            insertElement.addElement(insertNotNullElement);
+            
+            XmlElement valuesNotNullElement = new XmlElement("isNotNull");
+            valuesNotNullElement.addAttribute(new Attribute("prepend", ","));
+            valuesNotNullElement.addAttribute(new Attribute("property", cd.getJavaProperty()));
+            valuesNotNullElement.addElement(new TextElement(cd.getIbatisFormattedParameterClause()));
+            valuesElement.addElement(valuesNotNullElement);
+        }
+        
+        insertElement.addElement(new TextElement(")"));
+        valuesElement.addElement(new TextElement(")"));
+        
+        if (gk != null && !gk.isBeforeInsert()) {
+            ColumnDefinition cd = introspectedTable.getColumn(gk.getColumn());
+            // if the column is null, then it's a configuration error. The
+            // warning has already been reported
+            if (cd != null) {
+                // pre-generated key
+                answer.addElement(getSelectKey(cd, gk));
+            }
+        }
+
+        return answer;
+    }
+
+    /**
      * This method should return an XmlElement for the update by primary key
      * statement that updates all fields in the table (including BLOB fields).
      * 
@@ -514,7 +608,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
 
         ibatorContext.getCommentGenerator().addComment(answer);
 
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
 
         sb.append("update "); //$NON-NLS-1$
         sb.append(table.getFullyQualifiedTableNameAtRuntime());
@@ -583,7 +677,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
 
         ibatorContext.getCommentGenerator().addComment(answer);
 
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("update "); //$NON-NLS-1$
         sb.append(table.getFullyQualifiedTableNameAtRuntime());
         answer.addElement(new TextElement(sb.toString()));
@@ -657,7 +751,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
 
         ibatorContext.getCommentGenerator().addComment(answer);
 
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("delete from "); //$NON-NLS-1$
         sb.append(table.getFullyQualifiedTableNameAtRuntime());
         answer.addElement(new TextElement(sb.toString()));
@@ -703,7 +797,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
 
         ibatorContext.getCommentGenerator().addComment(answer);
 
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("delete from "); //$NON-NLS-1$
         sb.append(table.getAliasedFullyQualifiedTableNameAtRuntime());
         answer.addElement(new TextElement(sb.toString()));
@@ -745,7 +839,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
 
         ibatorContext.getCommentGenerator().addComment(answer);
 
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("select count(*) from "); //$NON-NLS-1$
         sb.append(table.getAliasedFullyQualifiedTableNameAtRuntime());
         answer.addElement(new TextElement(sb.toString()));
@@ -800,7 +894,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
 
         ibatorContext.getCommentGenerator().addComment(answer);
 
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("select "); //$NON-NLS-1$
 
         boolean comma = false;
@@ -880,7 +974,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
      * @return the name of the example where clause element
      */
     protected String getExampleWhereClauseId() {
-        StringBuffer sb = new StringBuffer(MergeConstants.NEW_XML_ELEMENT_PREFIX);
+        StringBuilder sb = new StringBuilder(MergeConstants.NEW_XML_ELEMENT_PREFIX);
         sb.append("Example_Where_Clause"); //$NON-NLS-1$
 
         return sb.toString();
@@ -974,8 +1068,8 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
             if (StringUtility.stringHasValue(cd.getTypeHandler())) {
                 // name the property based on the column name, then
                 // add the type handler to the parameter declaration
-                StringBuffer sb1 = new StringBuffer();
-                StringBuffer sb2 = new StringBuffer();
+                StringBuilder sb1 = new StringBuilder();
+                StringBuilder sb2 = new StringBuilder();
                 innerIterateElement = new XmlElement("iterate"); //$NON-NLS-1$
                 innerIterateElement.addAttribute(new Attribute("prepend", "and")); //$NON-NLS-1$ //$NON-NLS-2$
                 
@@ -1108,7 +1202,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
 
         ibatorContext.getCommentGenerator().addComment(answer);
 
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("select "); //$NON-NLS-1$
 
         boolean comma = false;
@@ -1176,7 +1270,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
 
         ibatorContext.getCommentGenerator().addComment(answer);
 
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("select "); //$NON-NLS-1$
 
         boolean comma = false;
@@ -1261,7 +1355,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
 
         ibatorContext.getCommentGenerator().addComment(answer);
 
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
 
         sb.append("update "); //$NON-NLS-1$
         sb.append(table.getFullyQualifiedTableNameAtRuntime());
@@ -1326,7 +1420,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
 
         ibatorContext.getCommentGenerator().addComment(answer);
 
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
 
         sb.append("update "); //$NON-NLS-1$
         sb.append(table.getAliasedFullyQualifiedTableNameAtRuntime());
@@ -1371,7 +1465,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
 
         ibatorContext.getCommentGenerator().addComment(answer);
 
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("update "); //$NON-NLS-1$
         sb.append(table.getAliasedFullyQualifiedTableNameAtRuntime());
         answer.addElement(new TextElement(sb.toString()));
@@ -1422,7 +1516,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
 
         ibatorContext.getCommentGenerator().addComment(answer);
 
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("update "); //$NON-NLS-1$
         sb.append(table.getAliasedFullyQualifiedTableNameAtRuntime());
         answer.addElement(new TextElement(sb.toString()));

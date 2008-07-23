@@ -73,7 +73,7 @@ public class Method extends JavaElement {
     }
     
     public String getFormattedContent(int indentLevel, boolean interfaceMethod) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
 
         addFormattedJavadoc(sb, indentLevel);
         addFormattedAnnotations(sb, indentLevel);

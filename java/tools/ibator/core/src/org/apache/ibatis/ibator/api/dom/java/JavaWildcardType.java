@@ -37,7 +37,7 @@ public class JavaWildcardType extends FullyQualifiedJavaType {
 
     @Override
     public String getShortName() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         if (extendsType) {
             sb.append("? extends "); //$NON-NLS-1$
         } else {

@@ -1935,6 +1935,55 @@ public class FlatJava5Tests extends BaseFlatJava5Test {
         }
     }
 
+    public void testAwfulTableInsertSelective() {
+        AwfulTableDAO dao = getAwfulTableDAO();
+
+        try {
+            AwfulTable record = new AwfulTable();
+
+            record.seteMail("fred@fred.com");
+            record.setEmailaddress("alsofred@fred.com");
+            record.setFourthFirstName("fred4");
+            record.setFrom("from field");
+            record.setId1(1);
+            record.setId2(2);
+            record.setId5(5);
+            record.setId6(6);
+            record.setId7(7);
+            record.setSecondCustomerId(567);
+            record.setSecondFirstName("fred2");
+            record.setThirdFirstName("fred3");
+
+            Integer generatedCustomerId = dao.insertSelective(record);
+            assertEquals(57, generatedCustomerId.intValue());
+
+            AwfulTable returnedRecord = dao
+                    .selectByPrimaryKey(generatedCustomerId);
+
+            assertEquals(generatedCustomerId, returnedRecord.getCustomerId());
+            assertEquals(record.geteMail(), returnedRecord.geteMail());
+            assertEquals(record.getEmailaddress(), returnedRecord
+                    .getEmailaddress());
+            assertEquals("Mabel", returnedRecord.getFirstFirstName());
+            assertEquals(record.getFourthFirstName(), returnedRecord
+                    .getFourthFirstName());
+            assertEquals(record.getFrom(), returnedRecord.getFrom());
+            assertEquals(record.getId1(), returnedRecord.getId1());
+            assertEquals(record.getId2(), returnedRecord.getId2());
+            assertEquals(record.getId5(), returnedRecord.getId5());
+            assertEquals(record.getId6(), returnedRecord.getId6());
+            assertEquals(record.getId7(), returnedRecord.getId7());
+            assertEquals(record.getSecondCustomerId(), returnedRecord
+                    .getSecondCustomerId());
+            assertEquals(record.getSecondFirstName(), returnedRecord
+                    .getSecondFirstName());
+            assertEquals(record.getThirdFirstName(), returnedRecord
+                    .getThirdFirstName());
+        } catch (SQLException e) {
+            fail(e.getMessage());
+        }
+    }
+    
     public void testAwfulTableUpdateByPrimaryKey() {
         AwfulTableDAO dao = getAwfulTableDAO();
 

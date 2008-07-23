@@ -64,7 +64,7 @@ public class Interface extends JavaElement implements CompilationUnit {
     }
 
     public String getFormattedContent() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
 
         for (String commentLine : fileCommentLines) {
             sb.append(commentLine);

@@ -141,7 +141,7 @@ public class EqualsHashCodePlugin extends IbatorPluginAdapter {
         method.addBodyLine("return true;"); //$NON-NLS-1$
         method.addBodyLine("}"); //$NON-NLS-1$
 
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("if (!(that instanceof "); //$NON-NLS-1$
         sb.append(topLevelClass.getType().getShortName());
         sb.append(")) {"); //$NON-NLS-1$
@@ -231,7 +231,7 @@ public class EqualsHashCodePlugin extends IbatorPluginAdapter {
 
         method.addBodyLine("int hash = 23;"); //$NON-NLS-1$
 
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         boolean valueDeclared = false;
 
         Iterator<ColumnDefinition> iter = columnDefinitions.iterator();

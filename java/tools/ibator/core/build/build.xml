@@ -401,7 +401,7 @@
       <fileset dir="${reports.junit}">
         <include name="TEST-*.xml"/>
       </fileset>
-	      <report format="frames" todir="${reports.junit}"/>
+      <report format="frames" todir="${reports.junit}"/>
     </junitreport>
   </target>
 	
