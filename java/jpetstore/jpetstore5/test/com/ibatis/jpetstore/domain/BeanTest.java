@@ -1,8 +1,5 @@
 package com.ibatis.jpetstore.domain;
 
-import com.ibatis.common.beans.ClassInfo;
-import com.ibatis.common.beans.Probe;
-import com.ibatis.common.beans.ProbeFactory;
 import com.ibatis.jpetstore.presentation.AccountBean;
 import com.ibatis.jpetstore.presentation.CartBean;
 import com.ibatis.jpetstore.presentation.CatalogBean;
@@ -35,15 +32,15 @@ public class BeanTest extends TestCase {
     try {
       for (int i=0; i < classes.length; i++) {
         Object object = classes[i].newInstance();
-        ClassInfo info = ClassInfo.getInstance(classes[i]);
-        List writeables = Arrays.asList(info.getWriteablePropertyNames());
-        List readables = Arrays.asList(info.getReadablePropertyNames());
+        ClassIntrospector introspector = ClassIntrospector.getInstance(classes[i]);
+        List writeables = Arrays.asList(introspector.getWriteablePropertyNames());
+        List readables = Arrays.asList(introspector.getReadablePropertyNames());
         for (int j=0; j < writeables.size(); j++) {
           String writeable = (String)writeables.get(j);
           if (readables.contains(writeable)) {
-            Class type = info.getGetterType(writeable);
+            Class type = introspector.getGetterType(writeable);
             Object sample = getSampleFor(type);
-            Probe probe = ProbeFactory.getProbe(object);
+            BeanIntrospector probe = new BeanIntrospector();
             probe.setObject(object, writeable, sample);
             assertEquals(sample,probe.getObject(object, writeable));
           }
