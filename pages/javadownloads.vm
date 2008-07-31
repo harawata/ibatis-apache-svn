@@ -17,7 +17,7 @@
           we have enough feedback from users that the sofware is working as intended, then we promote the status of the build to "General Availability".  The 
           software does not change between Beta and General Availability release status.
           <br/><br/>            
-          As the development team, we can only release Beta status software.  YOU must get it promoted to General Availability by responding to the [ANNOUNCE]
+          As the development team, we can only release Beta status software.  YOU must get it promoted to General Availability by responding to the "ANNOUNCE"
           email on the Mailing list with your vote of confidence and your experience having deployed it to your production environment.  
           <br/><br/>
           Please download this version and test it in the most production-like way possible and post your experience to the release announcement thread.   
