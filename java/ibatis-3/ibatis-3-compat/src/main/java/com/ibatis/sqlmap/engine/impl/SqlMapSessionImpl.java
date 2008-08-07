@@ -267,7 +267,6 @@ public class SqlMapSessionImpl implements SqlMapSession {
     return "__" + parentId + "-SelectKey";
   }
 
-  //TODO:  This is a temporary implementation to get a green bar.  To be improved.
   private int getKey(String id, final Object parameterObject) throws SQLException {
     final MappedStatement keyStatement = configuration.getMappedStatement(selectKeyIdFor(id));
     int key = Integer.MIN_VALUE;
