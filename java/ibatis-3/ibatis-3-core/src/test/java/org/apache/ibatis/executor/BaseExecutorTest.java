@@ -2,7 +2,6 @@ package org.apache.ibatis.executor;
 
 import domain.blog.*;
 import org.apache.ibatis.BaseDataTest;
-import org.apache.ibatis.mapping.Configuration;
 import org.apache.ibatis.jdbc.SimpleDataSource;
 import org.apache.ibatis.mapping.*;
 import org.junit.*;

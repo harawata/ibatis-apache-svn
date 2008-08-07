@@ -3,8 +3,7 @@ package org.apache.ibatis;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.SimpleDataSource;
 import org.apache.ibatis.migration.ScriptRunner;
-
-import org.junit.*;
+import org.junit.Test;
 
 import javax.sql.DataSource;
 import java.io.*;

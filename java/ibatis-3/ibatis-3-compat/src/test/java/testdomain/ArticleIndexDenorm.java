@@ -53,5 +53,5 @@ public class ArticleIndexDenorm implements Serializable {
    */
   public void setTopicTitle(String topicTitle) {
     this.topicTitle = topicTitle;
-	}
+  }
 }

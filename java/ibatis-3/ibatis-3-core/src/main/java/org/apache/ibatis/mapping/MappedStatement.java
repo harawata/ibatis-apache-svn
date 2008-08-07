@@ -1,7 +1,6 @@
 package org.apache.ibatis.mapping;
 
 import org.apache.ibatis.cache.Cache;
-import org.apache.ibatis.mapping.Configuration;
 
 import java.util.*;
 

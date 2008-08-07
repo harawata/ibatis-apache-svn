@@ -1,7 +1,6 @@
 package org.apache.ibatis.executor.resultset;
 
 import org.apache.ibatis.cache.CacheKey;
-import org.apache.ibatis.mapping.Configuration;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.loader.*;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
@@ -459,12 +458,15 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 
   private static class Reference<T> {
     private T value;
+
     private Reference(T value) {
       this.value = value;
     }
+
     public T get() {
       return value;
     }
+
     public void set(T value) {
       this.value = value;
     }

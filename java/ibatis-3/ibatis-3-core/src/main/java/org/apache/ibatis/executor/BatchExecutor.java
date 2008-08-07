@@ -1,6 +1,5 @@
 package org.apache.ibatis.executor;
 
-import org.apache.ibatis.mapping.Configuration;
 import org.apache.ibatis.executor.result.ResultHandler;
 import org.apache.ibatis.executor.statement.StatementHandler;
 import org.apache.ibatis.mapping.*;

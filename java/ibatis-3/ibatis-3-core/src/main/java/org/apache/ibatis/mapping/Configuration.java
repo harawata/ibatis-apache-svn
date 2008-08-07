@@ -6,7 +6,6 @@ import org.apache.ibatis.executor.parameter.*;
 import org.apache.ibatis.executor.result.ResultHandler;
 import org.apache.ibatis.executor.resultset.*;
 import org.apache.ibatis.executor.statement.*;
-import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.plugin.*;
 import org.apache.ibatis.reflection.*;
 import org.apache.ibatis.type.*;

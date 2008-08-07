@@ -4,7 +4,7 @@ package com.ibatis.sqlmap;
 import com.ibatis.sqlmap.engine.transaction.TransactionException;
 import testdomain.Account;
 
-import java.sql.*;
+import java.sql.SQLException;
 
 public class TransactionTest extends BaseSqlMapTest {
 

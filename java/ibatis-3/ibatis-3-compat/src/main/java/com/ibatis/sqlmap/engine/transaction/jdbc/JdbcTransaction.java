@@ -1,8 +1,8 @@
 package com.ibatis.sqlmap.engine.transaction.jdbc;
 
 import com.ibatis.sqlmap.engine.transaction.*;
-import org.apache.ibatis.mapping.Configuration;
 import org.apache.ibatis.executor.Executor;
+import org.apache.ibatis.mapping.Configuration;
 
 import javax.sql.DataSource;
 import java.sql.*;

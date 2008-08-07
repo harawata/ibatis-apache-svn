@@ -3,7 +3,6 @@ package com.ibatis.sqlmap.engine.builder;
 import com.ibatis.sqlmap.engine.mapping.sql.SqlText;
 import com.ibatis.sqlmap.engine.mapping.sql.dynamic.DynamicSql;
 import com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements.*;
-import org.apache.ibatis.mapping.Configuration;
 import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.xml.NodeletContext;
 import org.w3c.dom.*;

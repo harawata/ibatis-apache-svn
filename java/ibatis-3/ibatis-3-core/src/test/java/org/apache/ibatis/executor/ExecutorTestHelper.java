@@ -4,7 +4,6 @@ import domain.blog.*;
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.decorators.*;
 import org.apache.ibatis.cache.impl.PerpetualCache;
-import org.apache.ibatis.mapping.Configuration;
 import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.type.*;
 

@@ -3,8 +3,8 @@ package com.ibatis.sqlmap.engine.transaction;
 import com.ibatis.sqlmap.client.SqlMapException;
 import com.ibatis.sqlmap.engine.builder.Ibatis2Configuration;
 import com.ibatis.sqlmap.engine.transaction.user.UserProvidedTransaction;
-import org.apache.ibatis.mapping.Configuration;
 import org.apache.ibatis.executor.Executor;
+import org.apache.ibatis.mapping.Configuration;
 
 import java.sql.*;
 
