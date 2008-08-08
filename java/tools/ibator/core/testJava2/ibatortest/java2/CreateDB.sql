@@ -74,6 +74,7 @@ create table "awful table" (
   id7$$ int not null,
   EmailAddress varchar(30),
   "from" varchar(30),
+  active bit not null,
   primary key("CuStOmEr iD")
 );
 

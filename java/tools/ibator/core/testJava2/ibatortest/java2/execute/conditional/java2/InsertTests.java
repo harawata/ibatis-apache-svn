@@ -224,6 +224,7 @@ public class InsertTests extends BaseConditionalJava2Test {
             record.setSecondCustomerId(new Integer(567));
             record.setSecondFirstName("fred2");
             record.setThirdFirstName("fred3");
+            record.setActive(true);
     
             Integer generatedCustomerId = dao.insert(record);
             assertEquals(57, generatedCustomerId.intValue());
@@ -251,6 +252,8 @@ public class InsertTests extends BaseConditionalJava2Test {
                     .getSecondFirstName());
             assertEquals(record.getThirdFirstName(), returnedRecord
                     .getThirdFirstName());
+            assertEquals(record.isActive(), returnedRecord
+                    .isActive());
         } catch (Exception e) {
             fail(e.getMessage());
         }

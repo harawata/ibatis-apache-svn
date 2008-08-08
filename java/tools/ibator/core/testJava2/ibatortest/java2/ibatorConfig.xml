@@ -45,6 +45,7 @@
       <columnOverride column="first_name" property="thirdFirstName" />
       <columnOverride column="firstName" property="fourthFirstName" />
       <columnOverride column="from" delimitedColumnName="true" />
+      <columnOverride column="active" javaType="boolean" />
     </table>
   </ibatorContext>
 
@@ -84,6 +85,7 @@
       <columnOverride column="first_name" property="thirdFirstName" />
       <columnOverride column="firstName" property="fourthFirstName" />
       <columnOverride column="from" delimitedColumnName="true" />
+      <columnOverride column="active" javaType="boolean" />
     </table>
   </ibatorContext>
 
@@ -123,6 +125,7 @@
       <columnOverride column="first_name" property="thirdFirstName" />
       <columnOverride column="firstName" property="fourthFirstName" />
       <columnOverride column="from" delimitedColumnName="true" />
+      <columnOverride column="active" javaType="boolean" />
     </table>
   </ibatorContext>
 
