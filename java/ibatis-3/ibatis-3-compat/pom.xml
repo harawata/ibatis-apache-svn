@@ -21,15 +21,34 @@
           <target>1.5</target>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
     <resources>
       <resource>
         <directory>src/main/java</directory>
+        <excludes>
+          <exclude>*.java</exclude>
+        </excludes>
       </resource>
     </resources>
     <testResources>
       <testResource>
         <directory>src/test/java</directory>
+        <excludes>
+          <exclude>*.java</exclude>
+        </excludes>
       </testResource>
     </testResources>
   </build>
@@ -47,9 +66,9 @@
       <scope>compile</scope>
     </dependency>
     <dependency>
-      <groupId>jta</groupId>
+      <groupId>javax.transaction</groupId>
       <artifactId>jta</artifactId>
-      <version>1.1.1</version>
+      <version>1.0.1B</version>
       <scope>compile</scope>
     </dependency>
     <!-- Test Dependencies -->
@@ -71,6 +90,13 @@
       <version>10.3.2.1</version>
       <scope>test</scope>
     </dependency>
-
   </dependencies>
+  <repositories>
+    <repository>
+      <id>maven2-repository.dev.java.net</id>
+      <name>Java.net Repository for Maven</name>
+      <url>http://download.java.net/maven/2/</url>
+      <layout>default</layout>
+    </repository>
+  </repositories>
 </project>
