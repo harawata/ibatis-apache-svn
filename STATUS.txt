@@ -11,21 +11,24 @@ Announcements: http://ibatis.apache.org/archive.html
 Status File: http://svn.apache.org/repos/asf/ibatis/trunk/STATUS.txt
 
 PMC Members
-* Clinton Begin (cbegin) (ASF)
+* Clinton Begin (cbegin) [Chair] (ASF)
 * Gilles Bayon (gbayon)
-* Ted Husted (husted) [Chair] (ASF)
+* Ted Husted (husted) (ASF)
 * Brandon Goodin (bgoodin)
 * Larry Meadors (lmeadors)
-* Robert Rabe (roberto)
 * Ron Grabowski (rgrabowski)
 
 Other Committers:
-* Sven Boden (sboden)
 * Nathan Maves (nmaves)
 * Jeff Butler (jgbutler)
-* Brice Ruth (bdruth)
-* Jon Tirsen (bdruth)
+* Michael Schall (schallm)
 
+Emeritus:
+* Robert Rabe (roberto)
+* Sven Boden (sboden)
+* Brice Ruth (bdruth)
+* Jon Tirsen (tirsen)
+				
 (ASF) = Also ASF Member
 
 ----
