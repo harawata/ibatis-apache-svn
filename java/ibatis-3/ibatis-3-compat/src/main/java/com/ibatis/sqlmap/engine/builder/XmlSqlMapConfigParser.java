@@ -8,6 +8,7 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.reflection.*;
 import org.apache.ibatis.type.*;
 import org.apache.ibatis.xml.*;
+import org.apache.ibatis.mapping.ExecutorType;
 
 import java.io.Reader;
 import java.util.*;
@@ -94,10 +95,14 @@ public class XmlSqlMapConfigParser {
     config.setEnhancementEnabled(enhancementEnabled);
 
     boolean statementCachingEnabled = context.getBooleanAttribute("statementCachingEnabled", true);
-    config.setStatementCachingEnabled(statementCachingEnabled);
+    if (statementCachingEnabled) {
+      config.setDefaultExecutorType(ExecutorType.REUSE);
+    }
 
     boolean batchUpdatesEnabled = context.getBooleanAttribute("batchUpdatesEnabled", true);
-    config.setBatchUpdatesEnabled(batchUpdatesEnabled);
+    if (batchUpdatesEnabled) {
+      config.setDefaultExecutorType(ExecutorType.BATCH);
+    }
 
     boolean cacheModelsEnabled = context.getBooleanAttribute("cacheModelsEnabled", true);
     config.setCacheEnabled(cacheModelsEnabled);

@@ -22,9 +22,7 @@ public class Configuration {
   private boolean useColumnLabel = true;
   private boolean cacheEnabled;
 
-  //TODO:  Make enum for reuse/batch/simple executors
-  private boolean statementCachingEnabled;
-  private boolean batchUpdatesEnabled;
+  private ExecutorType defaultExecutorType = ExecutorType.SIMPLE;
 
   private Properties variables = new Properties();
   private ObjectFactory objectFactory = new DefaultObjectFactory();
@@ -70,20 +68,12 @@ public class Configuration {
     this.generatedKeysEnabled = generatedKeysEnabled;
   }
 
-  public boolean isStatementCachingEnabled() {
-    return statementCachingEnabled;
+  public ExecutorType getDefaultExecutorType() {
+    return defaultExecutorType;
   }
 
-  public void setStatementCachingEnabled(boolean statementCachingEnabled) {
-    this.statementCachingEnabled = statementCachingEnabled;
-  }
-
-  public boolean isBatchUpdatesEnabled() {
-    return batchUpdatesEnabled;
-  }
-
-  public void setBatchUpdatesEnabled(boolean batchUpdatesEnabled) {
-    this.batchUpdatesEnabled = batchUpdatesEnabled;
+  public void setDefaultExecutorType(ExecutorType defaultExecutorType) {
+    this.defaultExecutorType = defaultExecutorType;
   }
 
   public boolean isCacheEnabled() {
@@ -153,10 +143,16 @@ public class Configuration {
   }
 
   public Executor newExecutor(Connection conn) {
+    return newExecutor(conn,defaultExecutorType);
+  }
+  
+  public Executor newExecutor(Connection conn, ExecutorType executorType) {
+    executorType = executorType == null ? defaultExecutorType : executorType;
+    executorType = executorType == null ? ExecutorType.SIMPLE : executorType;
     Executor executor;
-    if (batchUpdatesEnabled) {
+    if (ExecutorType.BATCH == executorType) {
       executor = new BatchExecutor(conn);
-    } else if (statementCachingEnabled) {
+    } else if (ExecutorType.REUSE == executorType) {
       executor = new ReuseExecutor(conn);
     } else {
       executor = new SimpleExecutor(conn);
