@@ -6,7 +6,7 @@ import org.junit.*;
 
 public class SoftCacheTest {
 
-  @Test
+  @Test @Ignore("Until we can find a reliable way to test it on all machines.")
   public void shouldDemonstrateObjectsBeingCollectedAsNeeded() throws Exception {
     SoftCache cache = new SoftCache();
     int n = 100000;
