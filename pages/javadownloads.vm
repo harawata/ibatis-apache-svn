@@ -63,28 +63,28 @@
 
 	  <ul>
 		  <li>        
-		    <a href="http://svn.apache.org/repos/asf/ibatis/trunk/java/docs/en/" target="_new">English</a>
+		    <a href="http://svn.apache.org/repos/asf/ibatis/trunk/java/ibatis-2/ibatis-2-docs/en/" target="_new">English</a>
 		  </li>        
 		  <li>        
-		    <a href="http://svn.apache.org/repos/asf/ibatis/trunk/java/docs/de/" target="_new">German</a>
+		    <a href="http://svn.apache.org/repos/asf/ibatis/trunk/java/ibatis-2/ibatis-2-docs/de/" target="_new">German</a>
 		  </li>
 		  <li>        
-		    <a href="http://svn.apache.org/repos/asf/ibatis/trunk/java/docs/cn/" target="_new">Chinese</a>
+		    <a href="http://svn.apache.org/repos/asf/ibatis/trunk/java/ibatis-2/ibatis-2-docs/cn/" target="_new">Chinese</a>
 		  </li>        
 		  <li>        
-		    <a href="http://svn.apache.org/repos/asf/ibatis/trunk/java/docs/ko/" target="_new">Korean</a>
+		    <a href="http://svn.apache.org/repos/asf/ibatis/trunk/java/ibatis-2/ibatis-2-docs/ko/" target="_new">Korean</a>
 		  </li>        
 		  <li>        
-		    <a href="http://svn.apache.org/repos/asf/ibatis/trunk/java/docs/ja/" target="_new">Japanese</a>
+		    <a href="http://svn.apache.org/repos/asf/ibatis/trunk/java/ibatis-2/ibatis-2-docs/ja/" target="_new">Japanese</a>
 		  </li>        
 		  <li>        
-		    <a href="http://svn.apache.org/repos/asf/ibatis/trunk/java/docs/fr/" target="_new">French (tutorial)</a>
+		    <a href="http://svn.apache.org/repos/asf/ibatis/trunk/java/ibatis-2/ibatis-2-docs/fr/" target="_new">French (tutorial)</a>
 		  </li>        
 		  <li>        
-		    <a href="http://svn.apache.org/repos/asf/ibatis/trunk/java/docs/it/" target="_new">Italian (tutorial)</a>
+		    <a href="http://svn.apache.org/repos/asf/ibatis/trunk/java/ibatis-2/ibatis-2-docs/it/" target="_new">Italian (tutorial)</a>
 		  </li>        
 		  <li>        
-		    <a href="http://svn.apache.org/repos/asf/ibatis/trunk/java/docs/es/" target="_new">Spanish (tutorial)</a>
+		    <a href="http://svn.apache.org/repos/asf/ibatis/trunk/java/ibatis-2/ibatis-2-docs/es/" target="_new">Spanish (tutorial)</a>
 		  </li>        
 	  </ul>
 	  
