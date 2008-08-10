@@ -1,7 +1,3 @@
-This product includes software developed by
-The Apache Software Foundation (http://www.apache.org/).
-
-OGNL
 //--------------------------------------------------------------------------
 //  Copyright (c) 2004, Drew Davidson and Luke Blanshard
 //  All rights reserved.
@@ -32,3 +28,23 @@ OGNL
 //  THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 //  DAMAGE.
 //--------------------------------------------------------------------------
+package org.apache.ibatis.ognl.util;
+
+public class EnhancedClassLoader extends ClassLoader
+{
+	/*===================================================================
+		Constructors
+	  ===================================================================*/
+    public EnhancedClassLoader(ClassLoader parentClassLoader)
+    {
+        super(parentClassLoader);
+    }
+
+	/*===================================================================
+		Overridden methods
+	  ===================================================================*/
+    public Class defineClass(String enhancedClassName, byte[] byteCode)
+    {
+        return defineClass(enhancedClassName, byteCode, 0, byteCode.length);
+    }
+}

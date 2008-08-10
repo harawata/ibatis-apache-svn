@@ -1,9 +1,5 @@
-This product includes software developed by
-The Apache Software Foundation (http://www.apache.org/).
-
-OGNL
 //--------------------------------------------------------------------------
-//  Copyright (c) 2004, Drew Davidson and Luke Blanshard
+//	Copyright (c) 1998-2004, Drew Davidson and Luke Blanshard
 //  All rights reserved.
 //
 //  Redistribution and use in source and binary forms, with or without
@@ -32,3 +28,29 @@ OGNL
 //  THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 //  DAMAGE.
 //--------------------------------------------------------------------------
+package org.apache.ibatis.ognl;
+
+import java.security.*;
+
+/**
+ * BasicPermission subclass that defines a permission token for invoking
+ * methods within OGNL.  This does not override any methods (except
+ * constructors) and does not implement actions.  It is similar in spirit
+ * to the {@link java.lang.reflect.ReflectPermission} class in that it
+ * guards access to methods.
+ * @author Luke Blanshard (blanshlu@netscape.net)
+ * @author Drew Davidson (drew@ognl.org)
+ */
+public class OgnlInvokePermission extends BasicPermission
+{
+    public OgnlInvokePermission(String name)
+    {
+        super(name);
+    }
+
+    public OgnlInvokePermission(String name, String actions)
+    {
+        super(name, actions);
+    }
+}
+

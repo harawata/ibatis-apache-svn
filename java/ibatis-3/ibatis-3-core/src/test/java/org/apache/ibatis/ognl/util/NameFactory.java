@@ -1,7 +1,3 @@
-This product includes software developed by
-The Apache Software Foundation (http://www.apache.org/).
-
-OGNL
 //--------------------------------------------------------------------------
 //  Copyright (c) 2004, Drew Davidson and Luke Blanshard
 //  All rights reserved.
@@ -32,3 +28,35 @@ OGNL
 //  THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 //  DAMAGE.
 //--------------------------------------------------------------------------
+package org.apache.ibatis.ognl.util;
+
+public class NameFactory extends Object
+{
+    private String      classBaseName;
+    private int         classNameCounter = 0;
+    private String      variableBaseName;
+    private int         variableNameCounter = 0;
+
+	/*===================================================================
+		Constructors
+	  ===================================================================*/
+    public NameFactory(String classBaseName, String variableBaseName)
+    {
+        super();
+        this.classBaseName = classBaseName;
+        this.variableBaseName = variableBaseName;
+    }
+
+	/*===================================================================
+		Public methods
+	  ===================================================================*/
+    public String getNewClassName()
+    {
+        return classBaseName + classNameCounter++;
+    }
+
+    public String getNewVariableName()
+    {
+        return variableBaseName + variableNameCounter++;
+    }
+}

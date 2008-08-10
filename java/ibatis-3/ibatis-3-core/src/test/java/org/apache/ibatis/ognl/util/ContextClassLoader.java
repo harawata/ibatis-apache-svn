@@ -1,7 +1,3 @@
-This product includes software developed by
-The Apache Software Foundation (http://www.apache.org/).
-
-OGNL
 //--------------------------------------------------------------------------
 //  Copyright (c) 2004, Drew Davidson and Luke Blanshard
 //  All rights reserved.
@@ -32,3 +28,32 @@ OGNL
 //  THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 //  DAMAGE.
 //--------------------------------------------------------------------------
+package org.apache.ibatis.ognl.util;
+
+import org.apache.ibatis.ognl.OgnlContext;
+
+public class ContextClassLoader extends ClassLoader
+{
+    private OgnlContext         context;
+
+    /*===================================================================
+        Constructors
+      ===================================================================*/
+    public ContextClassLoader(ClassLoader parentClassLoader, OgnlContext context)
+    {
+        super(parentClassLoader);
+        this.context = context;
+    }
+
+    /*===================================================================
+        Overridden methods
+      ===================================================================*/
+    protected Class findClass(String name) throws ClassNotFoundException
+    {
+        if ((context != null) && (context.getClassResolver() != null)) {
+            return context.getClassResolver().classForName(name, context);
+        }
+        return super.findClass(name);
+    }
+
+}
