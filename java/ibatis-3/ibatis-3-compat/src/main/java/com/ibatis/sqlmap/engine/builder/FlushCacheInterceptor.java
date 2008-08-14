@@ -18,10 +18,12 @@ public class FlushCacheInterceptor implements Interceptor {
 
   public Object intercept(Invocation invocation) throws Throwable {
     MappedStatement statement = (MappedStatement) invocation.getArgs()[0];
-    Set<Cache> cachesToFlush = flushCacheMap.get(statement.getId());
-    if (cachesToFlush != null) {
-      for (Cache c : cachesToFlush) {
-        c.clear();
+    if (statement != null) {
+      Set<Cache> cachesToFlush = flushCacheMap.get(statement.getId());
+      if (cachesToFlush != null) {
+        for (Cache c : cachesToFlush) {
+          c.clear();
+        }
       }
     }
     return invocation.proceed();

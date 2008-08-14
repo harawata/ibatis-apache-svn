@@ -2,7 +2,7 @@ package com.ibatis.sqlmap;
 
 import testdomain.*;
 
-import java.util.List;
+import java.util.*;
 
 public class RepeatingGroupMappingTest extends BaseSqlMapTest {
 
@@ -10,6 +10,11 @@ public class RepeatingGroupMappingTest extends BaseSqlMapTest {
     initSqlMap("com/ibatis/sqlmap/maps/SqlMapConfig.xml", null);
     initScript("scripts/jpetstore-hsqldb-schema.sql");
     initScript("scripts/jpetstore-hsqldb-dataload.sql");
+  }
+
+  public void testShouldRetrieveTwoPeerLists() throws Exception {
+    List categories = sqlMap.queryForList("getAllCategoriesMap");
+    System.out.println(categories);
   }
 
   public void testGroupBy() throws Exception {

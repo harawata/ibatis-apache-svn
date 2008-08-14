@@ -39,24 +39,26 @@ public class CachingExecutor implements Executor {
   }
 
   public List query(MappedStatement ms, Object parameterObject, int offset, int limit, ResultHandler resultHandler) throws SQLException {
-    Cache cache = ms.getCache();
-    if (cache != null) {
-      synchronized (cache) {
-        CacheKey key = createCacheKey(ms, parameterObject, offset, limit);
-        if (cache.hasKey(key)) {
-          return (List) cache.getObject(key);
-        } else {
-          List list = delegate.query(ms, parameterObject, offset, limit, resultHandler);
-          if (cacheEntries == null) {
-            cacheEntries = new ArrayList<CacheEntry>();
+    if (ms != null) {
+      Cache cache = ms.getCache();
+      if (cache != null) {
+        synchronized (cache) {
+          CacheKey key = createCacheKey(ms, parameterObject, offset, limit);
+          if (cache.hasKey(key)) {
+            return (List) cache.getObject(key);
+          } else {
+            List list = delegate.query(ms, parameterObject, offset, limit, resultHandler);
+            if (cacheEntries == null) {
+              cacheEntries = new ArrayList<CacheEntry>();
+            }
+            cacheEntries.add(new CacheEntry(cache, key, list));
+            return list;
           }
-          cacheEntries.add(new CacheEntry(cache, key, list));
-          return list;
         }
       }
-    } else {
-      return delegate.query(ms, parameterObject, offset, limit, resultHandler);
     }
+    return delegate.query(ms, parameterObject, offset, limit, resultHandler);
+
   }
 
   public List flushStatements() throws SQLException {

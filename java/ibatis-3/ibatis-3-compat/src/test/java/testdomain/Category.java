@@ -9,6 +9,7 @@ public class Category implements Serializable {
   private Category parentCategory;
   private String name;
   private String description;
+  private List itemList;
   private List productList;
 
   public String getCategoryId() {
@@ -45,6 +46,14 @@ public class Category implements Serializable {
 
   public Category getParentCategory() {
     return parentCategory;
+  }
+
+  public List getItemList() {
+    return itemList;
+  }
+
+  public void setItemList(List itemList) {
+    this.itemList = itemList;
   }
 
   public void setParentCategory(Category parentCategory) {
