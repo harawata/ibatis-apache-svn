@@ -7,8 +7,8 @@
   </parent>  
   <modelVersion>4.0.0</modelVersion>
   <artifactId>ibatis-3-compat</artifactId>
-  <packaging>jar</packaging>
   <name>ibatis-3-compat</name>
+  <packaging>jar</packaging>
   <url>http://maven.apache.org</url>
   <build>
     <plugins>
@@ -78,7 +78,7 @@
       <version>4.3.1</version>
       <scope>test</scope>
     </dependency>
-        <dependency>
+    <dependency>
       <groupId>hsqldb</groupId>
       <artifactId>hsqldb</artifactId>
       <version>1.8.0.1</version>

@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.apache.ibatis</groupId>
@@ -7,6 +8,6 @@
   <modules>
     <module>ibatis-3-core</module>
     <module>ibatis-3-compat</module>
+    <module>ibatis-3-monarch</module>
   </modules>
 </project>
-
