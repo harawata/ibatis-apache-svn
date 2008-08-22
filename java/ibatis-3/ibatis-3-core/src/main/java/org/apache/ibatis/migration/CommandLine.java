@@ -13,13 +13,14 @@ public class CommandLine {
   private static final String PATH_PREFIX = "--path=";
   private static final String ENV_PREFIX = "--env=";
   private static final String FORCE = "--force";
+  private static final String CHANGELOG = "changelog";
   private static final String INIT = "init";
   private static final String NEW = "new";
   private static final String RUN = "run";
   private static final String VERSION = "version";
   private static final String UNDO = "undo";
   private static final Set<String> KNOWN_COMMANDS = Collections.unmodifiableSet(
-      new HashSet<String>(Arrays.asList(INIT, NEW, RUN, VERSION, UNDO)));
+      new HashSet<String>(Arrays.asList(INIT, NEW, RUN, VERSION, UNDO, CHANGELOG)));
 
   private String repository;
   private String environment;
@@ -84,6 +85,8 @@ public class CommandLine {
       migrator.initialize();
     } else if (NEW.equals(command)) {
       migrator.newMigration(params);
+    } else if (CHANGELOG.equals(command)) {
+      migrator.printChangelog();
     } else if (RUN.equals(command)) {
       migrator.runPendingMigrations();
     } else if (VERSION.equals(command)) {
@@ -123,6 +126,7 @@ public class CommandLine {
     out.println("  init               Creates (if necessary) and initializes a migration path.");
     out.println("  new <description>  Creates a new migration with the provided description.");
     out.println("  run                Run all unapplied migrations.");
+    out.println("  changelog          Prints the changelog from the database.");
     out.println("  version <version>  Migrates the database up or down to the specified version.");
     out.println("  undo               Undoes the last migration applied to the database.");
     out.println();

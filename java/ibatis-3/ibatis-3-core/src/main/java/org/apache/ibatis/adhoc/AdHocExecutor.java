@@ -19,6 +19,19 @@ public class AdHocExecutor {
     this.forceGeneratedKeySupport = forceGeneratedKeySupport;
   }
 
+  public AdHocExecutor(String driver, String url, String username, String password, boolean forceGeneratedKeySupport) {
+    try {
+      Class driverType = Class.forName(driver);
+      DriverManager.registerDriver((Driver) driverType.newInstance());
+      connection = DriverManager.getConnection(url, username, password);
+      this.connection = connection;
+      this.typeHandlerRegistry = new TypeHandlerRegistry();
+      this.forceGeneratedKeySupport = forceGeneratedKeySupport;
+    } catch (Exception e) {
+      throw new RuntimeException("Error configuring AdHocExecutor.  Cause: " + e, e);
+    }
+  }
+
   public AdHocExecutor(Connection connection) {
     this(connection, false);
   }
