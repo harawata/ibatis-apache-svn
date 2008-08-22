@@ -1,0 +1,9 @@
+#!/bin/sh
+
+IBATIS_LIB=/home/clinton/Development/ibatis-3/ibatis-3-core/target/classes
+CURDIR=$(dirname $0)
+JARS=$CURDIR/drivers/
+MYCP=$(ls $JARS/ | sed "s#^#$JARS&#" | sed "s/$/:/" | xargs echo | sed 's/: */:/')
+MYCP="$MYCP:$IBATIS_LIB"
+
+java -cp $MYCP org.apache.ibatis.migration.Migrator $*

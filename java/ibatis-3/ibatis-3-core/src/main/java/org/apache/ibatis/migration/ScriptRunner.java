@@ -69,7 +69,11 @@ public class ScriptRunner {
         try {
           configureAutoCommitAndRun(reader);
         } finally {
-          connection.close();
+          try {
+            connection.close();
+          } finally {
+            connection = null;
+          }
         }
       } else if (connection != null) {
         configureAutoCommitAndRun(reader);
@@ -93,6 +97,8 @@ public class ScriptRunner {
       throw e;
     } catch (Exception e) {
       throw new RuntimeException("Error running script.  Cause: " + e, e);
+    } finally {
+      flush();
     }
   }
 
@@ -120,19 +126,17 @@ public class ScriptRunner {
       throws IOException, SQLException {
     StringBuffer command = null;
     try {
-      LineNumberReader lineReader = new LineNumberReader(reader);
+      BufferedReader lineReader = new BufferedReader(reader);
       String line;
       while ((line = lineReader.readLine()) != null) {
         if (command == null) {
           command = new StringBuffer();
         }
         String trimmedLine = line.trim();
-        if (trimmedLine.startsWith("--")) {
+        if (trimmedLine.length() < 1) {
+          // do nothing
+        } else if (trimmedLine.startsWith("//") || trimmedLine.startsWith("--")) {
           println(trimmedLine);
-        } else if (trimmedLine.length() < 1 || trimmedLine.startsWith("//")) {
-          //Do nothing
-        } else if (trimmedLine.length() < 1 || trimmedLine.startsWith("--")) {
-          //Do nothing
         } else if (!fullLineDelimiter && trimmedLine.endsWith(getDelimiter())
             || fullLineDelimiter && trimmedLine.equals(getDelimiter())) {
           command.append(line.substring(0, line.lastIndexOf(getDelimiter())));
@@ -158,21 +162,23 @@ public class ScriptRunner {
             conn.commit();
           }
 
-          ResultSet rs = statement.getResultSet();
-          if (hasResults && rs != null) {
-            ResultSetMetaData md = rs.getMetaData();
-            int cols = md.getColumnCount();
-            for (int i = 0; i < cols; i++) {
-              String name = md.getColumnLabel(i + 1);
-              print(name + "\t");
-            }
-            println("");
-            while (rs.next()) {
+          if (hasResults) {
+            ResultSet rs = statement.getResultSet();
+            if (rs != null) {
+              ResultSetMetaData md = rs.getMetaData();
+              int cols = md.getColumnCount();
               for (int i = 0; i < cols; i++) {
-                String value = rs.getString(i + 1);
-                print(value + "\t");
+                String name = md.getColumnLabel(i + 1);
+                print(name + "\t");
               }
               println("");
+              while (rs.next()) {
+                for (int i = 0; i < cols; i++) {
+                  String value = rs.getString(i + 1);
+                  print(value + "\t");
+                }
+                println("");
+              }
             }
           }
 
@@ -213,7 +219,7 @@ public class ScriptRunner {
 
   private void print(Object o) {
     if (logWriter != null) {
-      System.out.print(o);
+      logWriter.print(o);
     }
   }
 
