@@ -5,9 +5,6 @@ import javax.sql.DataSource;
 import java.io.*;
 import java.sql.*;
 
-/**
- * Utility to run database scripts
- */
 public class ScriptRunner {
 
   private static final String DEFAULT_DELIMITER = ";";
