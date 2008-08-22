@@ -16,6 +16,7 @@ public class Migrator {
   private File repository;
   private String environment;
   private boolean force;
+  private PrintStream out = System.out;
 
   public Migrator(String repository, String environment, boolean force) {
     this.repository = new File(repository);
@@ -28,13 +29,13 @@ public class Migrator {
   }
 
   public void initialize() {
-    createIfNecessary(repository);
-    ensureEmpty(repository);
-    System.out.println("Initializing: " + repository);
-    copyResourceTo("org/apache/ibatis/migration/template_environment.properties", environmentFile(environment));
-    copyResourceTo("org/apache/ibatis/migration/template_changelog.sql", repositoryFile(getTimestamp() + "_create_changelog.sql"));
-    copyResourceTo("org/apache/ibatis/migration/template_migration.sql", repositoryFile(getTimestamp() + "_first_migration.sql"));
-    System.out.println("Done!");
+    createDirectoryIfNecessary(repository);
+    ensureDirectoryIsEmpty(repository);
+    out.println("Initializing: " + repository);
+    copyResourceTo("org/apache/ibatis/migration/template_environment.properties", environmentFile());
+    copyResourceTo("org/apache/ibatis/migration/template_changelog.sql", repositoryFile(getTimestampAsString() + "_create_changelog.sql"));
+    copyResourceTo("org/apache/ibatis/migration/template_migration.sql", repositoryFile(getTimestampAsString() + "_first_migration.sql"));
+    out.println("Done!");
   }
 
   public void newMigration(String description) {
@@ -43,10 +44,10 @@ public class Migrator {
     }
     Map<String, String> variables = new HashMap<String, String>();
     variables.put("description", description);
-    ensureEnvironment(environment);
-    String filename = getTimestamp() + "_" + description.replace(' ', '_') + ".sql";
+    existingEnvironmentFile();
+    String filename = getTimestampAsString() + "_" + description.replace(' ', '_') + ".sql";
     copyResourceTo("org/apache/ibatis/migration/template_migration.sql", repositoryFile(filename), variables);
-    System.out.println("Done!");
+    out.println("Done!");
   }
 
   public void runPendingMigrations() {
@@ -55,7 +56,7 @@ public class Migrator {
       Arrays.sort(filenames);
       for (String filename : filenames) {
         if (filename.endsWith(".sql")) {
-          System.out.println(horizontalLine("Applying: " + filename, 80));
+          out.println(horizontalLine("Applying: " + filename, 80));
           ScriptRunner runner = getScriptRunner();
           runner.runScript(new MigrationReader(new FileReader(repositoryFile(filename)), false));
           Change change = parseChangeFromFilename(filename);
@@ -68,33 +69,28 @@ public class Migrator {
   }
 
   public void migrateToVersion(BigInteger version) {
-    getChangelog();
-  }
-
-  public void printChangelog() {
-    List<Change> changelog = getChangelog();
-    System.out.println("ID             TIMESTAMP             DESCRIPTION");
-    System.out.println(horizontalLine("",60));
-    for (Change change : changelog) {
-      System.out.println(change);
-    }
+    out.println("not implemented");
   }
 
   public void undoLastMigration() {
     try {
       String[] filenames = repository.list();
-      Arrays.sort(filenames, new Comparator() {
-        public int compare(Object o1, Object o2) {
-          return ((Comparable) o2).compareTo(o1);
-        }
-      });
+      reverse(filenames);
+      Change lastChange = getLastChange();
       for (String filename : filenames) {
         if (filename.endsWith(".sql")) {
-          System.out.println(horizontalLine("Undoing: " + filename, 80));
-          ScriptRunner runner = getScriptRunner();
-          runner.runScript(new MigrationReader(new FileReader(repositoryFile(filename)), true));
           Change change = parseChangeFromFilename(filename);
-          deleteChange(change);
+          if (change.getId().equals(lastChange.getId())) {
+            out.println(horizontalLine("Undoing: " + filename, 80));
+            ScriptRunner runner = getScriptRunner();
+            runner.runScript(new MigrationReader(new FileReader(repositoryFile(filename)), true));
+            if (changelogExists()) {
+              deleteChange(change);
+            } else {
+              out.println("Changelog doesn't exist. No further migrations will be undone (normal for the last migration).");
+            }
+            break;            
+          }
         }
       }
     } catch (Exception e) {
@@ -102,66 +98,104 @@ public class Migrator {
     }
   }
 
+  public void printStatus() {
+    if (changelogExists()) {
+      List<Change> changelog = getChangelog();
+      out.println("ID             TIMESTAMP             DESCRIPTION");
+      out.println(horizontalLine("", 60));
+      for (Change change : changelog) {
+        out.println(change);
+      }
+    } else {
+      out.println("Changelog does not exist.");
+    }
+  }
+
+  private void reverse(Comparable[] comparable) {
+    Arrays.sort(comparable, new Comparator() {
+      public int compare(Object o1, Object o2) {
+        return ((Comparable) o2).compareTo(o1);
+      }
+    });
+  }
+
   private void insertChangelog(Change change) {
+    AdHocExecutor executor = getAdHocExecutor();
     try {
-      AdHocExecutor executor = getAdHocExecutor();
       executor.insert("insert into CHANGELOG (ID, DESCRIPTION) values (?,?)", change.getId(), change.getDescription());
     } catch (SQLException e) {
       throw new MigrationException("Error querying last applied migration.  Cause: " + e, e);
+    } finally {
+      executor.closeConnection();
     }
   }
 
   private void deleteChange(Change change) {
+    AdHocExecutor executor = getAdHocExecutor();
     try {
-      AdHocExecutor executor = getAdHocExecutor();
       executor.delete("delete from CHANGELOG where id = ?", change.getId());
     } catch (SQLException e) {
       throw new MigrationException("Error querying last applied migration.  Cause: " + e, e);
+    } finally {
+      executor.closeConnection();
     }
   }
 
   private Change parseChangeFromFilename(String filename) {
-    Change change = new Change();
-    String[] parts = filename.split("\\.")[0].split("_");
-    change.setId(new BigDecimal(parts[0]));
-    StringBuilder builder = new StringBuilder();
-    for (int i=1; i < parts.length; i++) {
-      if (i > 1) builder.append(" ");
-      builder.append(parts[i]);
+    try {
+      Change change = new Change();
+      String[] parts = filename.split("\\.")[0].split("_");
+      change.setId(new BigDecimal(parts[0]));
+      StringBuilder builder = new StringBuilder();
+      for (int i = 1; i < parts.length; i++) {
+        if (i > 1) builder.append(" ");
+        builder.append(parts[i]);
+      }
+      change.setDescription(builder.toString());
+      return change;
+    } catch (Exception e) {
+      throw new MigrationException("Error parsing change from file.  Cause: " + e, e);
     }
-    change.setDescription(builder.toString());
-    return change;
   }
 
-  private List<Change>getChangelog() {
+  private List<Change> getChangelog() {
+    AdHocExecutor executor = getAdHocExecutor();
     try {
-      AdHocExecutor executor = getAdHocExecutor();
-      List<Map<String,Object>> changelog = executor.selectAll("select ID, DESCRIPTION from CHANGELOG order by id");
+      List<Map<String, Object>> changelog = executor.selectAll("select ID, DESCRIPTION from CHANGELOG order by id");
       List<Change> changes = new ArrayList<Change>();
-      for(Map<String,Object> change : changelog) {
-        changes.add(new Change(new BigDecimal(change.get("ID").toString()),change.get("DESCRIPTION").toString()));
+      for (Map<String, Object> change : changelog) {
+        changes.add(new Change(new BigDecimal(change.get("ID").toString()), change.get("DESCRIPTION").toString()));
       }
       return changes;
     } catch (SQLException e) {
       throw new MigrationException("Error querying last applied migration.  Cause: " + e, e);
+    } finally {
+      executor.closeConnection();
     }
   }
 
-  private AdHocExecutor getAdHocExecutor() {
-    Properties props = getEnvironmentProperties();
-    String driver = props.getProperty("driver");
-    String url = props.getProperty("url");
-    String username = props.getProperty("username");
-    String password = props.getProperty("password");
-    AdHocExecutor executor = new AdHocExecutor(driver, url, username, password, false);
-    return executor;
+  private Change getLastChange() {
+    List<Change> changelog = getChangelog();
+    return changelog.get(changelog.size() - 1);
+  }
+
+  private boolean changelogExists() {
+    AdHocExecutor executor = getAdHocExecutor();
+    try {
+      executor.selectAll("select ID, DESCRIPTION from CHANGELOG");
+      return true;
+    } catch (SQLException e) {
+      return false;
+    } finally {
+      executor.closeConnection();
+    }
   }
 
   private String horizontalLine(String caption, int length) {
     StringBuilder builder = new StringBuilder();
     builder.append("==========");
     if (caption.length() > 0) {
-      caption = " "+caption+" ";
+      caption = " " + caption + " ";
       builder.append(caption);
     }
     for (int i = 0; i < length - caption.length(); i++) {
@@ -170,7 +204,7 @@ public class Migrator {
     return builder.toString();
   }
 
-  private String getTimestamp() {
+  private String getTimestampAsString() {
     try {
       // Ensure that two subsequent calls are less likely to return the same value.
       Thread.sleep(1000);
@@ -189,7 +223,7 @@ public class Migrator {
   }
 
   private void copyResourceTo(String resource, File toFile, Map<String, String> variables) {
-    System.out.println("Creating: " + toFile.getName());
+    out.println("Creating: " + toFile.getName());
     try {
       LineNumberReader reader = new LineNumberReader(Resources.getResourceAsReader(this.getClass().getClassLoader(), resource));
       try {
@@ -211,7 +245,7 @@ public class Migrator {
     }
   }
 
-  private void ensureEmpty(File path) {
+  private void ensureDirectoryIsEmpty(File path) {
     String[] list = path.list();
     if (list.length != 0) {
       for (String entry : list) {
@@ -222,21 +256,10 @@ public class Migrator {
     }
   }
 
-  private void ensureEnvironment(String environment) {
-    File envFile = environmentFile(environment);
-    if (!envFile.exists()) {
-      throw new MigrationException("Environment file missing: " + envFile.getAbsolutePath());
-    }
-  }
-
-  private File environmentFile(String environment) {
-    return repositoryFile(environment + ".properties");
-  }
-
-  private void createIfNecessary(File path) {
+  private void createDirectoryIfNecessary(File path) {
     if (!path.exists()) {
       File parent = new File(path.getParent());
-      createIfNecessary(parent);
+      createDirectoryIfNecessary(parent);
       if (!path.mkdir()) {
         throw new MigrationException("Could not create directory path for an unknown reason. Make sure you have access to the directory.");
       }
@@ -268,6 +291,16 @@ public class Migrator {
     return newString;
   }
 
+  private AdHocExecutor getAdHocExecutor() {
+    Properties props = getEnvironmentProperties();
+    String driver = props.getProperty("driver");
+    String url = props.getProperty("url");
+    String username = props.getProperty("username");
+    String password = props.getProperty("password");
+    AdHocExecutor executor = new AdHocExecutor(driver, url, username, password, false);
+    return executor;
+  }
+
   private ScriptRunner getScriptRunner() {
     try {
       Properties props = getEnvironmentProperties();
@@ -281,13 +314,22 @@ public class Migrator {
     }
   }
 
+  private File environmentFile() {
+    return repositoryFile(environment + ".properties");
+  }
+
+  private File existingEnvironmentFile() {
+    File envFile = environmentFile();
+    if (!envFile.exists()) {
+      throw new MigrationException("Environment file missing: " + envFile.getAbsolutePath());
+    }
+    return envFile;
+  }
+
   private Properties getEnvironmentProperties() {
     try {
+      File file = existingEnvironmentFile();
       Properties props = new Properties();
-      File file = environmentFile(environment);
-      if (!file.exists()) {
-        throw new MigrationException("Could not find environment properties file: " + file.getAbsolutePath());
-      }
       props.load(new FileInputStream(file));
       return props;
     } catch (IOException e) {

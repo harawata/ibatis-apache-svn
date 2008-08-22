@@ -168,6 +168,14 @@ public class AdHocExecutor {
     }
   }
 
+  public void closeConnection() {
+    try {
+      connection.close();
+    } catch (SQLException e) {
+      //ignore
+    }
+  }
+
   private void setParameters(PreparedStatement ps, Object... args) throws SQLException {
     for (int i = 0, n = args.length; i < n; i++) {
       if (args[i] == null) {
