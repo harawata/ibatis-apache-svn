@@ -13,17 +13,6 @@ import java.util.*;
 public class ScriptRunnerTest extends BaseDataTest {
 
   @Test
-  public void shouldRunScriptsUsingDataSource() throws Exception {
-    SimpleDataSource ds = createSimpleDataSource(JPETSTORE_PROPERTIES);
-    ScriptRunner runner = new ScriptRunner(ds, true, false);
-    runner.setDelimiter(";", false);
-    runner.setLogWriter(null);
-    runner.setErrorLogWriter(null);
-    runJPetStoreScripts(runner);
-    assertProductsTableExistsAndLoaded();
-  }
-
-  @Test
   public void shouldRunScriptsUsingConnection() throws Exception {
     SimpleDataSource ds = createSimpleDataSource(JPETSTORE_PROPERTIES);
     Connection conn = ds.getConnection();

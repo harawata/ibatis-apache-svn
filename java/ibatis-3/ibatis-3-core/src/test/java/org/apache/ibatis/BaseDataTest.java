@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import javax.sql.DataSource;
 import java.io.*;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Properties;
 
 public class BaseDataTest {
@@ -31,9 +31,14 @@ public class BaseDataTest {
   }
 
   public static void runScript(DataSource ds, String resource) throws IOException, SQLException {
-    ScriptRunner runner = new ScriptRunner(ds, true, false);
-    runner.setLogWriter(null);
-    runScript(runner, resource);
+    Connection connection = ds.getConnection();
+    try {
+      ScriptRunner runner = new ScriptRunner(connection, true, false);
+      runner.setLogWriter(null);
+      runScript(runner, resource);
+    } finally {
+      connection.close();
+    }
   }
 
   public static void runScript(ScriptRunner runner, String resource) throws IOException, SQLException {

@@ -11,12 +11,19 @@ public class InitializeCommand extends BaseCommand {
   }
 
   public void execute(String... args) {
-    createDirectoryIfNecessary(repository);
-    ensureDirectoryIsEmpty(repository);
-    out.println("Initializing: " + repository);
+    out.println("Initializing: " + basePath);
+
+    createDirectoryIfNecessary(basePath);
+    ensureDirectoryIsEmpty(basePath);
+
+    createDirectoryIfNecessary(envPath);
+    createDirectoryIfNecessary(scriptPath);
+    createDirectoryIfNecessary(driverPath);
+    
+    copyResourceTo("org/apache/ibatis/migration/template_README", baseFile("README"));
     copyResourceTo("org/apache/ibatis/migration/template_environment.properties", environmentFile());
-    copyResourceTo("org/apache/ibatis/migration/template_changelog.sql", repositoryFile(getTimestampAsString() + "_create_changelog.sql"));
-    copyResourceTo("org/apache/ibatis/migration/template_migration.sql", repositoryFile(getTimestampAsString() + "_first_migration.sql"));
+    copyResourceTo("org/apache/ibatis/migration/template_changelog.sql", scriptFile(getTimestampAsString() + "_create_changelog.sql"));
+    copyResourceTo("org/apache/ibatis/migration/template_migration.sql", scriptFile(getTimestampAsString() + "_first_migration.sql"));
     out.println("Done!");
   }
 
@@ -35,6 +42,7 @@ public class InitializeCommand extends BaseCommand {
     if (!path.exists()) {
       File parent = new File(path.getParent());
       createDirectoryIfNecessary(parent);
+      out.println("Creating: " + path.getName());      
       if (!path.mkdir()) {
         throw new MigrationException("Could not create directory path for an unknown reason. Make sure you have access to the directory.");
       }

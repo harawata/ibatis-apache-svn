@@ -19,7 +19,7 @@ public class RunCommand extends BaseCommand {
 
   public void execute(String... params) {
     try {
-      String[] filenames = repository.list();
+      String[] filenames = scriptPath.list();
       Arrays.sort(filenames);
       Change lastChange = null; 
       if (changelogExists()) {
@@ -31,7 +31,7 @@ public class RunCommand extends BaseCommand {
           if (lastChange == null || change.getId().compareTo(lastChange.getId()) > 0) {
             out.println(horizontalLine("Applying: " + filename, 80));
             ScriptRunner runner = getScriptRunner();
-            runner.runScript(new MigrationReader(new FileReader(repositoryFile(filename)), false));
+            runner.runScript(new MigrationReader(new FileReader(scriptFile(filename)), false));
             insertChangelog(change);
           }
         }

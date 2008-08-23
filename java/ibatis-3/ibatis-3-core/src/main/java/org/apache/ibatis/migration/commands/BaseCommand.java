@@ -11,21 +11,28 @@ import java.sql.*;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.io.*;
+import java.net.*;
 
 public abstract class BaseCommand implements Command {
 
   protected static final PrintStream out = System.out;
 
-  protected File repository;
+  protected File basePath;
+  protected File envPath;
+  protected File scriptPath;
+  protected File driverPath;
   protected String environment;
   protected boolean force;
+  private ClassLoader driverClassLoader;
 
   protected BaseCommand(File repository, String environment, boolean force) {
-    this.repository = repository;
+    this.basePath = repository;
+    this.envPath = subdirectory(repository, "environments");
+    this.scriptPath = subdirectory(repository, "scripts");
+    this.driverPath = subdirectory(repository, "drivers");
     this.environment = environment;
     this.force = force;
   }
-
 
   protected Change parseChangeFromFilename(String filename) {
     try {
@@ -128,23 +135,28 @@ public abstract class BaseCommand implements Command {
   }
 
   protected AdHocExecutor getAdHocExecutor() {
+    lazyInitializeDrivers();
+
     Properties props = getEnvironmentProperties();
     String driver = props.getProperty("driver");
     String url = props.getProperty("url");
     String username = props.getProperty("username");
     String password = props.getProperty("password");
-    return new AdHocExecutor(driver, url, username, password, false);
+    return new AdHocExecutor(driver, url, username, password, false, driverClassLoader);
   }
 
   protected ScriptRunner getScriptRunner() {
     try {
+      lazyInitializeDrivers();
+
       Properties props = getEnvironmentProperties();
       String driver = props.getProperty("driver");
       String url = props.getProperty("url");
       String username = props.getProperty("username");
       String password = props.getProperty("password");
-      ScriptRunner scriptRunner = new ScriptRunner(driver, url, username, password, false, !force);
       PrintWriter outWriter = new PrintWriter(out);
+      ScriptRunner scriptRunner = new ScriptRunner(driver, url, username, password, false, !force);
+      scriptRunner.setDriverClassLoader(driverClassLoader);
       scriptRunner.setLogWriter(outWriter);
       scriptRunner.setErrorLogWriter(outWriter);
       return scriptRunner;
@@ -153,12 +165,24 @@ public abstract class BaseCommand implements Command {
     }
   }
 
-  protected File repositoryFile(String fileName) {
-    return new File(repository.getAbsolutePath() + File.separator + fileName);
+  protected File baseFile(String fileName) {
+    return new File(basePath.getAbsolutePath() + File.separator + fileName);
+  }
+
+  protected File environmentFile(String fileName) {
+    return new File(envPath.getAbsolutePath() + File.separator + fileName);
+  }
+
+  protected File scriptFile(String fileName) {
+    return new File(scriptPath.getAbsolutePath() + File.separator + fileName);
+  }
+
+  protected File driverFile(String fileName) {
+    return new File(driverPath.getAbsolutePath() + File.separator + fileName);
   }
 
   protected File environmentFile() {
-    return repositoryFile(environment + ".properties");
+    return environmentFile(environment + ".properties");
   }
 
   protected File existingEnvironmentFile() {
@@ -167,6 +191,26 @@ public abstract class BaseCommand implements Command {
       throw new MigrationException("Environment file missing: " + envFile.getAbsolutePath());
     }
     return envFile;
+  }
+
+  private void lazyInitializeDrivers() {
+    try {
+      if (driverClassLoader == null) {
+        List<URL> urlList = new ArrayList<URL>();
+        for (File file : driverPath.listFiles()) {
+          URL url = new URL("jar:file:/" + file.getAbsolutePath() + "!/");
+          urlList.add(url);
+        }
+        URL[] urls = urlList.toArray(new URL[urlList.size()]);
+        driverClassLoader = new URLClassLoader(urls);
+      }
+    } catch (IOException e) {
+      throw new MigrationException("Error loading JDBC drivers. Cause: " + e, e);
+    }
+  }
+
+  private File subdirectory(File base, String sub) {
+    return new File(base.getAbsoluteFile() + File.separator + sub);
   }
 
   private Properties getEnvironmentProperties() {

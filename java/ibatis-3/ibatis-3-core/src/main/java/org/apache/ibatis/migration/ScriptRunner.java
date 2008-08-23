@@ -1,15 +1,14 @@
 package org.apache.ibatis.migration;
 
 
-import javax.sql.DataSource;
 import java.io.*;
 import java.sql.*;
+import java.util.Properties;
 
 public class ScriptRunner {
 
   private static final String DEFAULT_DELIMITER = ";";
 
-  private DataSource dataSource;
   private Connection connection;
   private String driver;
   private String url;
@@ -24,12 +23,7 @@ public class ScriptRunner {
 
   private String delimiter = DEFAULT_DELIMITER;
   private boolean fullLineDelimiter = false;
-
-  public ScriptRunner(DataSource dataSource, boolean autoCommit, boolean stopOnError) {
-    this.dataSource = dataSource;
-    this.autoCommit = autoCommit;
-    this.stopOnError = stopOnError;
-  }
+  private ClassLoader driverClassLoader;
 
   public ScriptRunner(Connection connection, boolean autoCommit, boolean stopOnError) {
     this.connection = connection;
@@ -44,6 +38,10 @@ public class ScriptRunner {
     this.password = password;
     this.autoCommit = autoCommit;
     this.stopOnError = stopOnError;
+  }
+
+  public void setDriverClassLoader(ClassLoader loader) {
+    driverClassLoader = loader;
   }
 
   public void setDelimiter(String delimiter, boolean fullLineDelimiter) {
@@ -61,23 +59,10 @@ public class ScriptRunner {
 
   public void runScript(Reader reader) throws IOException, SQLException {
     try {
-      if (dataSource != null) {
-        connection = dataSource.getConnection();
-        try {
-          configureAutoCommitAndRun(reader);
-        } finally {
-          try {
-            connection.close();
-          } finally {
-            connection = null;
-          }
-        }
-      } else if (connection != null) {
+      if (connection != null) {
         configureAutoCommitAndRun(reader);
       } else {
-        Class driverType = Class.forName(driver);
-        DriverManager.registerDriver((Driver) driverType.newInstance());
-        connection = DriverManager.getConnection(url, username, password);
+        initConnection();
         try {
           configureAutoCommitAndRun(reader);
         } finally {
@@ -97,6 +82,18 @@ public class ScriptRunner {
     } finally {
       flush();
     }
+  }
+
+  private void initConnection() throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException {
+    Class driverType;
+    if (driverClassLoader != null) {
+      driverType = Class.forName(driver, true, driverClassLoader);
+    } else {
+      driverType = Class.forName(driver);
+    }
+    Driver driverInstance = (Driver) driverType.newInstance();
+    DriverManager.registerDriver(new DriverProxy(driverInstance));
+    connection = DriverManager.getConnection(url, username, password);
   }
 
   private void configureAutoCommitAndRun(Reader reader) throws SQLException, IOException {
@@ -241,5 +238,29 @@ public class ScriptRunner {
     }
   }
 
+  private static class DriverProxy implements Driver {
+    private Driver driver;
+    DriverProxy(Driver d) {
+      this.driver = d;
+    }
+    public boolean acceptsURL(String u) throws SQLException {
+      return this.driver.acceptsURL(u);
+    }
+    public Connection connect(String u, Properties p) throws SQLException {
+      return this.driver.connect(u, p);
+    }
+    public int getMajorVersion() {
+      return this.driver.getMajorVersion();
+    }
+    public int getMinorVersion() {
+      return this.driver.getMinorVersion();
+    }
+    public DriverPropertyInfo[] getPropertyInfo(String u, Properties p) throws SQLException {
+      return this.driver.getPropertyInfo(u, p);
+    }
+    public boolean jdbcCompliant() {
+      return this.driver.jdbcCompliant();
+    }
+  }
 
 }

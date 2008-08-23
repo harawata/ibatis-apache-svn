@@ -13,27 +13,41 @@ public class AdHocExecutor {
   private TypeHandlerRegistry typeHandlerRegistry;
   private boolean forceGeneratedKeySupport = false;
 
+  public AdHocExecutor(Connection connection) {
+    this(connection, false);
+  }
+
   public AdHocExecutor(Connection connection, boolean forceGeneratedKeySupport) {
     this.connection = connection;
     this.typeHandlerRegistry = new TypeHandlerRegistry();
     this.forceGeneratedKeySupport = forceGeneratedKeySupport;
   }
 
+  public AdHocExecutor(String driver, String url, String username, String password) {
+    this(driver,url,username,password,false,null);  
+  }
+
   public AdHocExecutor(String driver, String url, String username, String password, boolean forceGeneratedKeySupport) {
+    this(driver,url,username,password,forceGeneratedKeySupport,null);
+  }
+
+  public AdHocExecutor(String driver, String url, String username, String password, boolean forceGeneratedKeySupport, ClassLoader driverClassLoader) {
     try {
-      Class driverType = Class.forName(driver);
-      DriverManager.registerDriver((Driver) driverType.newInstance());
+      Class driverType;
+      if (driverClassLoader != null) {
+        driverType = Class.forName(driver, true, driverClassLoader);
+      } else {
+        driverType = Class.forName(driver);
+      }
+      Driver driverInstance = (Driver) driverType.newInstance();
+      DriverProxy driverProxy = new DriverProxy(driverInstance);
+      DriverManager.registerDriver(driverProxy);
       connection = DriverManager.getConnection(url, username, password);
-      this.connection = connection;
       this.typeHandlerRegistry = new TypeHandlerRegistry();
       this.forceGeneratedKeySupport = forceGeneratedKeySupport;
     } catch (Exception e) {
       throw new RuntimeException("Error configuring AdHocExecutor.  Cause: " + e, e);
     }
-  }
-
-  public AdHocExecutor(Connection connection) {
-    this(connection, false);
   }
 
   /**
@@ -231,4 +245,29 @@ public class AdHocExecutor {
     }
   }
 
+  private static class DriverProxy implements Driver {
+    private Driver driver;
+    DriverProxy(Driver d) {
+      this.driver = d;
+    }
+    public boolean acceptsURL(String u) throws SQLException {
+      return this.driver.acceptsURL(u);
+    }
+    public Connection connect(String u, Properties p) throws SQLException {
+      return this.driver.connect(u, p);
+    }
+    public int getMajorVersion() {
+      return this.driver.getMajorVersion();
+    }
+    public int getMinorVersion() {
+      return this.driver.getMinorVersion();
+    }
+    public DriverPropertyInfo[] getPropertyInfo(String u, Properties p) throws SQLException {
+      return this.driver.getPropertyInfo(u, p);
+    }
+    public boolean jdbcCompliant() {
+      return this.driver.jdbcCompliant();
+    }
+  }
+  
 }

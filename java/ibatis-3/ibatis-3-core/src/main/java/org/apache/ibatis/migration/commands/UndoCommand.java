@@ -20,7 +20,7 @@ public class UndoCommand extends BaseCommand {
 
   public void execute(String... params) {
     try {
-      String[] filenames = repository.list();
+      String[] filenames = scriptPath.list();
       reverse(filenames);
       Change lastChange = getLastChange();
       for (String filename : filenames) {
@@ -29,7 +29,7 @@ public class UndoCommand extends BaseCommand {
           if (change.getId().equals(lastChange.getId())) {
             out.println(horizontalLine("Undoing: " + filename, 80));
             ScriptRunner runner = getScriptRunner();
-            runner.runScript(new MigrationReader(new FileReader(repositoryFile(filename)), true));
+            runner.runScript(new MigrationReader(new FileReader(scriptFile(filename)), true));
             if (changelogExists()) {
               deleteChange(change);
             } else {
