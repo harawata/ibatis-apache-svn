@@ -25,9 +25,4 @@ public class NewCommand extends BaseCommand {
     out.println("Done!");
   }
 
-  protected boolean paramsEmpty(String... params) {
-    return params == null || params.length < 1 || params[0] == null || params[0].length() < 1;
-  }
-  
-
 }

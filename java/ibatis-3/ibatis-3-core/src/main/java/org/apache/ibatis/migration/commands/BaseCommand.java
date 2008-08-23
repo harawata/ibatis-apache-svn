@@ -34,6 +34,18 @@ public abstract class BaseCommand implements Command {
     this.force = force;
   }
 
+  protected void reverse(Comparable[] comparable) {
+    Arrays.sort(comparable, new Comparator() {
+      public int compare(Object o1, Object o2) {
+        return ((Comparable) o2).compareTo(o1);
+      }
+    });
+  }
+  
+  protected boolean paramsEmpty(String... params) {
+    return params == null || params.length < 1 || params[0] == null || params[0].length() < 1;
+  }
+
   protected Change parseChangeFromFilename(String filename) {
     try {
       Change change = new Change();
@@ -67,7 +79,7 @@ public abstract class BaseCommand implements Command {
     }
   }
 
-  protected Change getLastChange() {
+  protected Change getLastAppliedChange() {
     List<Change> changelog = getChangelog();
     return changelog.get(changelog.size() - 1);
   }

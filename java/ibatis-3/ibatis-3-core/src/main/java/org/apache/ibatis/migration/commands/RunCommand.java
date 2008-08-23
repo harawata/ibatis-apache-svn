@@ -13,8 +13,15 @@ import java.sql.SQLException;
 
 public class RunCommand extends BaseCommand {
 
+  private boolean runOneStepOnly = false;
+
   public RunCommand(File repository, String environment, boolean force) {
+    super(repository,environment,force);
+  }
+
+  public RunCommand(File repository, String environment, boolean force, boolean runOneStepOnly) {
     super(repository, environment, force);
+    this.runOneStepOnly = runOneStepOnly;
   }
 
   public void execute(String... params) {
@@ -23,7 +30,7 @@ public class RunCommand extends BaseCommand {
       Arrays.sort(filenames);
       Change lastChange = null; 
       if (changelogExists()) {
-        lastChange = getLastChange();
+        lastChange = getLastAppliedChange();
       }
       for (String filename : filenames) {
         if (filename.endsWith(".sql")) {
@@ -33,6 +40,9 @@ public class RunCommand extends BaseCommand {
             ScriptRunner runner = getScriptRunner();
             runner.runScript(new MigrationReader(new FileReader(scriptFile(filename)), false));
             insertChangelog(change);
+            if (runOneStepOnly) {
+              break;
+            }
           }
         }
       }

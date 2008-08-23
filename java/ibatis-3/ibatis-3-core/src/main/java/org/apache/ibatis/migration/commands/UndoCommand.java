@@ -22,7 +22,7 @@ public class UndoCommand extends BaseCommand {
     try {
       String[] filenames = scriptPath.list();
       reverse(filenames);
-      Change lastChange = getLastChange();
+      Change lastChange = getLastAppliedChange();
       for (String filename : filenames) {
         if (filename.endsWith(".sql")) {
           Change change = parseChangeFromFilename(filename);
