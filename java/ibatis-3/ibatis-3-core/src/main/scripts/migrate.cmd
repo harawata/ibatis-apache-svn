@@ -1,5 +1,7 @@
 @ECHO off
 
-set IBATIS_LIB=D:\Development\ibatis-3\ibatis-3-core\target\classes
+set CURDIR=%~dp0
+set JARS=%CURDIR%lib\
+for /F %%a in ('dir %JARS% /a /b /-p /o') do set MYCP=%JARS%%%a
 
-java -cp %IBATIS_LIB% org.apache.ibatis.migration.Migrator %*
+java -cp %MYCP% org.apache.ibatis.migration.Migrator %*

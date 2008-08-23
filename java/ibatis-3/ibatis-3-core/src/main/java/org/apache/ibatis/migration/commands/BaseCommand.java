@@ -207,7 +207,7 @@ public abstract class BaseCommand implements Command {
 
   private void lazyInitializeDrivers() {
     try {
-      if (driverClassLoader == null) {
+      if (driverClassLoader == null && driverPath.exists()) {
         List<URL> urlList = new ArrayList<URL>();
         for (File file : driverPath.listFiles()) {
           URL url = new URL("jar:file:/" + file.getAbsolutePath() + "!/");
