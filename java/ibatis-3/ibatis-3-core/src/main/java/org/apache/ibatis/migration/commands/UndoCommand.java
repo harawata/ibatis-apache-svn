@@ -40,7 +40,7 @@ public class UndoCommand extends BaseCommand {
         }
       }
     } catch (Exception e) {
-      throw new RuntimeException("<Description>.  Cause: " + e, e);
+      throw new MigrationException("Error undoing last migration.  Cause: " + e, e);
     }
   }
 

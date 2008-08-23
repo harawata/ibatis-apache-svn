@@ -141,8 +141,8 @@ public class CommandLine {
     out.println("  init               Creates (if necessary) and initializes a migration path.");
     out.println("  new <description>  Creates a new migration with the provided description.");
     out.println("  run                Run all unapplied migrations.");
-    out.println("  version <version>  Migrates the database up or down to the specified version.");
     out.println("  undo               Undoes the last migration applied to the database.");
+    out.println("  version <version>  Migrates the database up or down to the specified version.");
     out.println("  status             Prints the changelog from the database if the changelog table exists.");
     out.println();
     out.flush();

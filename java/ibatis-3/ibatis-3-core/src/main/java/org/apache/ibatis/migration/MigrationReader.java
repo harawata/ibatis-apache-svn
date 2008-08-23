@@ -18,7 +18,7 @@ public class MigrationReader extends Reader {
       String line;
       while ((line = reader.readLine()) != null) {
         if (line != null) {
-          if (line.trim().startsWith("--//@UNDO")) {
+          if (line.trim().startsWith("--//") && line.contains("@UNDO")) {
             currentBuilder = undoBuilder;
           }
           currentBuilder.append(line);
