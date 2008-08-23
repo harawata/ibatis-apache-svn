@@ -1,7 +1,13 @@
 #!/bin/sh
 
-CURDIR=$(dirname $0)
-JARS=$CURDIR/lib/
-MYCP=$(ls $JARS/ | sed "s#^#$JARS&#" | sed "s/$/:/" | xargs echo | sed 's/: */:/')
+WORKING_DIR=`pwd -P`
+SCRIPT_PATH=$(dirname $0)
 
-java -cp $MYCP org.apache.ibatis.migration.Migrator $*
+cd $SCRIPT_PATH
+SCRIPT_PATH=`pwd -P`
+cd $WORKING_DIR
+
+LIB=$SCRIPT_PATH/lib/
+MIGRATOR_CP=$(ls $LIB/ | sed "s#^#$LIB&#" | sed "s/$/:/" | xargs echo | sed 's/: */:/')
+
+java -cp $MIGRATOR_CP org.apache.ibatis.migration.Migrator $*

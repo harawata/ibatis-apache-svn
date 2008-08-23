@@ -210,8 +210,12 @@ public abstract class BaseCommand implements Command {
       if (driverClassLoader == null && driverPath.exists()) {
         List<URL> urlList = new ArrayList<URL>();
         for (File file : driverPath.listFiles()) {
-          URL url = new URL("jar:file:/" + file.getAbsolutePath() + "!/");
-          urlList.add(url);
+          String filename = file.getCanonicalPath();
+          if (!filename.startsWith("/")) {
+            filename = "/" + filename;
+          }
+          urlList.add(new URL("jar:file:" + filename + "!/"));
+          urlList.add(new URL("file:" + filename));
         }
         URL[] urls = urlList.toArray(new URL[urlList.size()]);
         driverClassLoader = new URLClassLoader(urls);

@@ -1,7 +1,7 @@
 @ECHO off
 
-set CURDIR=%~dp0
-set JARS=%CURDIR%lib\
-for /F %%a in ('dir %JARS% /a /b /-p /o') do set MYCP=%JARS%%%a
+set WORKING_DIR=%~dp0
+set LIB=%WORKING_DIR%lib\
+for /F %%a in ('dir %LIB% /a /b /-p /o') do set MIGRATOR_CP=%LIB%%%a
 
-java -cp %MYCP% org.apache.ibatis.migration.Migrator %*
+java -cp %MIGRATOR_CP% org.apache.ibatis.migration.Migrator %*
