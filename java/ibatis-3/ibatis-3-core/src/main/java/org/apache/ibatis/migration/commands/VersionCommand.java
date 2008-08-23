@@ -45,9 +45,8 @@ public class VersionCommand extends BaseCommand {
   }
 
   private void ensureNumericParam(String... params) {
-    BigDecimal id;
     try {
-      id = new BigDecimal(params[0]);
+      new BigDecimal(params[0]);
     } catch (Exception e) {
       throw new MigrationException("The version number must be a numeric integer.  " + e, e);
     }
