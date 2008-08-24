@@ -6,12 +6,14 @@ public class Change {
 
   private BigDecimal id;
   private String description;
+  private String appliedTimestamp;
 
   public Change() {
   }
 
-  public Change(BigDecimal id, String description) {
+  public Change(BigDecimal id, String appliedTimestamp, String description) {
     this.id = id;
+    this.appliedTimestamp = appliedTimestamp;
     this.description = description;
   }
 
@@ -31,13 +33,25 @@ public class Change {
     this.description = description;
   }
 
+  public String getAppliedTimestamp() {
+    return appliedTimestamp;
+  }
+
+  public void setAppliedTimestamp(String appliedTimestamp) {
+    this.appliedTimestamp = appliedTimestamp;
+  }
+
   public String toString() {
-    StringBuilder idstring = new StringBuilder(id.toString());
-    idstring.insert(12,":");
-    idstring.insert(10,":");
-    idstring.insert(8," ");
-    idstring.insert(6,"-");
-    idstring.insert(4,"-");
-    return id + " [" + idstring + "] " + description;
+    return id + " " + appliedTimestamp + " " + description;
+  }
+
+  private String formattedId() {
+    StringBuilder idString = new StringBuilder(id.toString());
+    idString.insert(12,":");
+    idString.insert(10,":");
+    idString.insert(8," ");
+    idString.insert(6,"-");
+    idString.insert(4,"-");
+    return idString.toString();
   }
 }

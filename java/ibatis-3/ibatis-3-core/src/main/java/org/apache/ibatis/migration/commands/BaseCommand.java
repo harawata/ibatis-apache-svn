@@ -66,10 +66,13 @@ public abstract class BaseCommand implements Command {
   protected List<Change> getChangelog() {
     AdHocExecutor executor = getAdHocExecutor();
     try {
-      List<Map<String, Object>> changelog = executor.selectAll("select ID, DESCRIPTION from CHANGELOG order by id");
+      List<Map<String, Object>> changelog = executor.selectAll("select ID, APPLIED_AT, DESCRIPTION from CHANGELOG order by id");
       List<Change> changes = new ArrayList<Change>();
       for (Map<String, Object> change : changelog) {
-        changes.add(new Change(new BigDecimal(change.get("ID").toString()), change.get("DESCRIPTION").toString()));
+        String id = change.get("ID") == null ? null : change.get("ID").toString();
+        String appliedAt = change.get("APPLIED_AT") == null ? null : change.get("APPLIED_AT").toString();
+        String description = change.get("DESCRIPTION") == null ? null : change.get("DESCRIPTION").toString();
+        changes.add(new Change(new BigDecimal(id), appliedAt, description));
       }
       return changes;
     } catch (SQLException e) {
@@ -109,7 +112,7 @@ public abstract class BaseCommand implements Command {
     return builder.toString();
   }
 
-  protected String getTimestampAsString() {
+  protected String getNextIDAsString() {
     try {
       // Ensure that two subsequent calls are less likely to return the same value.
       Thread.sleep(1000);

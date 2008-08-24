@@ -20,7 +20,7 @@ public class NewCommand extends BaseCommand {
     Map<String, String> variables = new HashMap<String, String>();
     variables.put("description", description);
     existingEnvironmentFile();
-    String filename = getTimestampAsString() + "_" + description.replace(' ', '_') + ".sql";
+    String filename = getNextIDAsString() + "_" + description.replace(' ', '_') + ".sql";
     copyResourceTo("org/apache/ibatis/migration/template_migration.sql", scriptFile(filename), variables);
     out.println("Done!");
   }

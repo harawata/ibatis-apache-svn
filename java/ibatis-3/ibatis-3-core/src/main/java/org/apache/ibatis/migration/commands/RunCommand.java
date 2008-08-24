@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.Arrays;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 
 public class RunCommand extends BaseCommand {
 
@@ -53,13 +54,18 @@ public class RunCommand extends BaseCommand {
 
   protected void insertChangelog(Change change) {
     AdHocExecutor executor = getAdHocExecutor();
+    change.setAppliedTimestamp(getAppliedTimestampAsString());
     try {
-      executor.insert("insert into CHANGELOG (ID, DESCRIPTION) values (?,?)", change.getId(), change.getDescription());
+      executor.insert("insert into CHANGELOG (ID, APPLIED_AT, DESCRIPTION) values (?,?,?)", change.getId(), change.getAppliedTimestamp(), change.getDescription());
     } catch (SQLException e) {
       throw new MigrationException("Error querying last applied migration.  Cause: " + e, e);
     } finally {
       executor.closeConnection();
     }
-  }  
+  }
+
+  protected String getAppliedTimestampAsString() {
+    return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.sql.Date(System.currentTimeMillis()));
+  }
 
 }
