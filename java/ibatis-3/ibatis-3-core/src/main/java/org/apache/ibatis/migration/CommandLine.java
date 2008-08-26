@@ -19,14 +19,15 @@ public class CommandLine {
   private static final String HELP = "--help";
 
   private static final String INIT = "init";
+  private static final String BOOTSTRAP = "bootstrap";
   private static final String NEW = "new";
-  private static final String RUN = "run";
+  private static final String UP = "up";
+  private static final String DOWN = "down";
   private static final String VERSION = "version";
-  private static final String UNDO = "undo";
   private static final String STATUS = "status";
 
   private static final Set<String> KNOWN_COMMANDS = Collections.unmodifiableSet(
-      new HashSet<String>(Arrays.asList(INIT, NEW, RUN, VERSION, UNDO, STATUS)));
+      new HashSet<String>(Arrays.asList(INIT, NEW, UP, VERSION, DOWN, STATUS, BOOTSTRAP)));
 
   private File repository;
   private String environment;
@@ -66,16 +67,18 @@ public class CommandLine {
   private void runCommand() {
     if (INIT.equals(command)) {
      new InitializeCommand(repository,environment,force).execute(params);
+    } else if (BOOTSTRAP.equals(command)) {
+      new BootstrapCommand(repository,environment,force).execute(params);
     } else if (NEW.equals(command)) {
       new NewCommand(repository,environment,force).execute(params);
     } else if (STATUS.equals(command)) {
       new StatusCommand(repository,environment,force).execute(params);
-    } else if (RUN.equals(command)) {
-      new RunCommand(repository,environment,force).execute(params);
+    } else if (UP.equals(command)) {
+      new UpCommand(repository,environment,force).execute(params);
     } else if (VERSION.equals(command)) {
       new VersionCommand(repository,environment,force).execute(params);
-    } else if (UNDO.equals(command)) {
-      new UndoCommand(repository,environment,force).execute(params);
+    } else if (DOWN.equals(command)) {
+      new DownCommand(repository,environment,force).execute(params);
     } else {
       throw new RuntimeException("Attempt to execute unkown command.");
     }
@@ -139,9 +142,10 @@ public class CommandLine {
     out.println();
     out.println("Commands:");
     out.println("  init               Creates (if necessary) and initializes a migration path.");
+    out.println("  bootstrap          Runs the bootstrap SQL script (see scripts/bootstrap.sql for more).");
     out.println("  new <description>  Creates a new migration with the provided description.");
-    out.println("  run                Run all unapplied migrations.");
-    out.println("  undo               Undoes the last migration applied to the database.");
+    out.println("  up                 Run all unapplied migrations.");
+    out.println("  down               Undoes the last migration applied to the database.");
     out.println("  version <version>  Migrates the database up or down to the specified version.");
     out.println("  status             Prints the changelog from the database if the changelog table exists.");
     out.println();

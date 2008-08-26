@@ -8,35 +8,31 @@ import org.apache.ibatis.adhoc.AdHocExecutor;
 
 import java.io.File;
 import java.io.FileReader;
-import java.util.Arrays;
-import java.util.Comparator;
+import java.util.*;
 import java.sql.SQLException;
 
-public class UndoCommand extends BaseCommand {
+public class DownCommand extends BaseCommand {
 
-  public UndoCommand(File repository, String environment, boolean force) {
+  public DownCommand(File repository, String environment, boolean force) {
     super(repository, environment, force);
   }
 
   public void execute(String... params) {
-    try {
-      String[] filenames = scriptPath.list();
-      reverse(filenames);
+    try {     
       Change lastChange = getLastAppliedChange();
-      for (String filename : filenames) {
-        if (filename.endsWith(".sql")) {
-          Change change = parseChangeFromFilename(filename);
-          if (change.getId().equals(lastChange.getId())) {
-            out.println(horizontalLine("Undoing: " + filename, 80));
-            ScriptRunner runner = getScriptRunner();
-            runner.runScript(new MigrationReader(new FileReader(scriptFile(filename)), true));
-            if (changelogExists()) {
-              deleteChange(change);
-            } else {
-              out.println("Changelog doesn't exist. No further migrations will be undone (normal for the last migration).");
-            }
-            break;
+      List<Change> migrations = getMigrations();
+      Collections.reverse(migrations);
+      for (Change change : migrations) {
+        if (change.getId().equals(lastChange.getId())) {
+          out.println(horizontalLine("Undoing: " + change.getFilename(), 80));
+          ScriptRunner runner = getScriptRunner();
+          runner.runScript(new MigrationReader(new FileReader(scriptFile(change.getFilename())), true, getEnvironmentProperties()));
+          if (changelogExists()) {
+            deleteChange(change);
+          } else {
+            out.println("Changelog doesn't exist. No further migrations will be undone (normal for the last migration).");
           }
+          break;
         }
       }
     } catch (Exception e) {

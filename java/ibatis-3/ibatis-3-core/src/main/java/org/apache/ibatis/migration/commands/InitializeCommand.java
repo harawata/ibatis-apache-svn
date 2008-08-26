@@ -3,7 +3,7 @@ package org.apache.ibatis.migration.commands;
 import org.apache.ibatis.migration.MigrationException;
 
 import java.io.File;
-import java.util.HashMap;
+import java.util.*;
 
 public class InitializeCommand extends BaseCommand {
 
@@ -25,7 +25,7 @@ public class InitializeCommand extends BaseCommand {
     copyResourceTo("org/apache/ibatis/migration/template_environment.properties", environmentFile());
     copyResourceTo("org/apache/ibatis/migration/template_changelog.sql", scriptFile(getNextIDAsString() + "_create_changelog.sql"));
     copyResourceTo("org/apache/ibatis/migration/template_migration.sql", scriptFile(getNextIDAsString() + "_first_migration.sql"),
-        new HashMap<String,String>(){{put("description","First migration.");}});
+        new Properties(){{setProperty("description","First migration.");}});
     out.println("Done!");
   }
 

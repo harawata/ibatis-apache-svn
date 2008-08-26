@@ -4,6 +4,7 @@ import org.apache.ibatis.migration.*;
 
 import java.io.File;
 import java.math.BigDecimal;
+import java.util.List;
 
 public class VersionCommand extends BaseCommand {
 
@@ -21,16 +22,16 @@ public class VersionCommand extends BaseCommand {
     Change change = getLastAppliedChange();
     if (version.compareTo(change.getId()) > 0) {
       out.println("Upgrading to: " + version);  
-      Command run = new RunCommand(basePath,environment,force,true);
+      Command up = new UpCommand(basePath,environment,force,true);
       while (!version.equals(change.getId())) {
-        run.execute();
+        up.execute();
         change = getLastAppliedChange();
       }
     } else if (version.compareTo(change.getId()) < 0) {
       out.println("Downgrading to: " + version);
-      Command undo = new UndoCommand(basePath,environment,force);
+      Command down = new DownCommand(basePath,environment,force);
       while (!version.equals(change.getId())) {
-        undo.execute();
+        down.execute();
         change = getLastAppliedChange();
       }
     } else {
@@ -53,17 +54,8 @@ public class VersionCommand extends BaseCommand {
   }
 
   private void ensureVersionExists(String... params) {
-    String[] filenames = scriptPath.list();
-    reverse(filenames);
-    boolean found = false;
-    String prefix = params[0] + "_";
-    for (String filename : filenames) {
-      if (filename.startsWith(prefix)) {
-        found = true;
-        break;
-      }
-    }
-    if (!found) {
+    List<Change> migrations = getMigrations();
+    if (!migrations.contains(new Change(new BigDecimal(params[0])))) {
       throw new MigrationException("A migration for the specified version number does not exist.");
     }
   }

@@ -2,13 +2,18 @@ package org.apache.ibatis.migration;
 
 import java.math.BigDecimal;
 
-public class Change {
+public class Change implements Comparable {
 
   private BigDecimal id;
   private String description;
   private String appliedTimestamp;
+  private String filename;
 
   public Change() {
+  }
+
+  public Change(BigDecimal id) {
+    this.id = id;
   }
 
   public Change(BigDecimal id, String appliedTimestamp, String description) {
@@ -41,17 +46,34 @@ public class Change {
     this.appliedTimestamp = appliedTimestamp;
   }
 
-  public String toString() {
-    return id + " " + appliedTimestamp + " " + description;
+  public String getFilename() {
+    return filename;
   }
 
-  private String formattedId() {
-    StringBuilder idString = new StringBuilder(id.toString());
-    idString.insert(12,":");
-    idString.insert(10,":");
-    idString.insert(8," ");
-    idString.insert(6,"-");
-    idString.insert(4,"-");
-    return idString.toString();
+  public void setFilename(String filename) {
+    this.filename = filename;
+  }
+
+  public String toString() {
+    return id + " " + (appliedTimestamp == null ? "pending            " : appliedTimestamp) + " " + description;
+  }
+
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    Change change = (Change) o;
+
+    if (!id.equals(change.id)) return false;
+
+    return true;
+  }
+
+  public int hashCode() {
+    return id.hashCode();
+  }
+
+  public int compareTo(Object o) {
+    return id.compareTo(((Change)o).getId());
   }
 }

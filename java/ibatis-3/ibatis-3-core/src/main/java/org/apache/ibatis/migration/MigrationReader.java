@@ -4,12 +4,13 @@ import java.io.Reader;
 import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.StringReader;
+import java.util.*;
 
 public class MigrationReader extends Reader {
 
   private Reader target;
 
-  public MigrationReader(Reader source, boolean undo) throws IOException {
+  public MigrationReader(Reader source, boolean undo, Properties variables) throws IOException {
     try {
       BufferedReader reader = new BufferedReader(source);
       StringBuilder doBuilder = new StringBuilder();
@@ -26,9 +27,9 @@ public class MigrationReader extends Reader {
         }
       }
       if (undo) {
-        target = new StringReader(undoBuilder.toString());
+        target = new StringReader(PropertyParser.parse(undoBuilder.toString(),variables));
       } else {
-        target = new StringReader(doBuilder.toString());
+        target = new StringReader(PropertyParser.parse(doBuilder.toString(),variables));
       }
     } finally {
       source.close();

@@ -2,7 +2,7 @@ package org.apache.ibatis.migration.commands;
 
 import org.apache.ibatis.migration.Change;
 
-import java.util.List;
+import java.util.*;
 import java.io.File;
 
 public class StatusCommand extends BaseCommand {
@@ -12,16 +12,28 @@ public class StatusCommand extends BaseCommand {
   }
 
   public void execute(String... params) {
+    out.println("ID             Applied At          Description");
+    out.println(horizontalLine("", 60));
+    List<Change> merged = new ArrayList<Change>();
+    List<Change> migrations = getMigrations();
     if (changelogExists()) {
       List<Change> changelog = getChangelog();
-      out.println("ID             Applied At          Description");
-      out.println(horizontalLine("", 60));
-      for (Change change : changelog) {
-        out.println(change);
+      for (Change change : migrations) {
+        int index = changelog.indexOf(change);
+        if (index > -1) {
+          merged.add(changelog.get(index));
+        } else {
+          merged.add(change);
+        }
       }
+      Collections.sort(merged);
     } else {
-      out.println("Changelog does not exist.");
+      merged.addAll(migrations);
+    }
+    for(Change change : merged) {
+      out.println(change);
     }
   }
+
 
 }

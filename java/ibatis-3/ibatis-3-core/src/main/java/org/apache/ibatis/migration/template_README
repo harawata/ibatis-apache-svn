@@ -29,8 +29,8 @@ that contain your DDL to both upgrade and downgrade your database
 structure.  By default, the directory will contain the script to
 create the changelog table, plus one empty "first" migration script.
 To create a new migration script, use the "new" command.  To run
-all pending migrations, use the "run" command.  To undo the last
-migration applied, use the "undo" command etc.
+all pending migrations, use the "up" command.  To undo the last
+migration applied, use the "down" command etc.
 
 For more information about commands and options, run the ibatis
 migration script with the --help option.

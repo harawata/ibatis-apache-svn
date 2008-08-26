@@ -1,8 +1,6 @@
 package org.apache.ibatis.migration.commands;
 
-import org.apache.ibatis.migration.Change;
-import org.apache.ibatis.migration.MigrationException;
-import org.apache.ibatis.migration.ScriptRunner;
+import org.apache.ibatis.migration.*;
 import org.apache.ibatis.adhoc.AdHocExecutor;
 import org.apache.ibatis.io.Resources;
 
@@ -33,34 +31,22 @@ public abstract class BaseCommand implements Command {
     this.environment = environment;
     this.force = force;
   }
-
-  protected void reverse(Comparable[] comparable) {
-    Arrays.sort(comparable, new Comparator() {
-      public int compare(Object o1, Object o2) {
-        return ((Comparable) o2).compareTo(o1);
-      }
-    });
-  }
   
   protected boolean paramsEmpty(String... params) {
     return params == null || params.length < 1 || params[0] == null || params[0].length() < 1;
   }
 
-  protected Change parseChangeFromFilename(String filename) {
-    try {
-      Change change = new Change();
-      String[] parts = filename.split("\\.")[0].split("_");
-      change.setId(new BigDecimal(parts[0]));
-      StringBuilder builder = new StringBuilder();
-      for (int i = 1; i < parts.length; i++) {
-        if (i > 1) builder.append(" ");
-        builder.append(parts[i]);
+  protected List<Change> getMigrations() {
+    String[] filenames = scriptPath.list();
+    Arrays.sort(filenames);
+    List<Change> migrations = new ArrayList<Change>();
+    for(String filename : filenames) {
+      if (filename.endsWith(".sql") && !"bootstrap.sql".equals(filename)) {
+        Change change = parseChangeFromFilename(filename);
+        migrations.add(change);
       }
-      change.setDescription(builder.toString());
-      return change;
-    } catch (Exception e) {
-      throw new MigrationException("Error parsing change from file.  Cause: " + e, e);
     }
+    return migrations;
   }
 
   protected List<Change> getChangelog() {
@@ -126,7 +112,7 @@ public abstract class BaseCommand implements Command {
     copyResourceTo(resource, toFile, null);
   }
 
-  protected void copyResourceTo(String resource, File toFile, Map<String, String> variables) {
+  protected void copyResourceTo(String resource, File toFile, Properties variables) {
     out.println("Creating: " + toFile.getName());
     try {
       LineNumberReader reader = new LineNumberReader(Resources.getResourceAsReader(this.getClass().getClassLoader(), resource));
@@ -135,7 +121,7 @@ public abstract class BaseCommand implements Command {
         try {
           String line;
           while ((line = reader.readLine()) != null) {
-            line = parsePlaceholders(line, variables);
+            line = PropertyParser.parse(line, variables);
             writer.println(line);
           }
         } finally {
@@ -228,11 +214,7 @@ public abstract class BaseCommand implements Command {
     }
   }
 
-  private File subdirectory(File base, String sub) {
-    return new File(base.getAbsoluteFile() + File.separator + sub);
-  }
-
-  private Properties getEnvironmentProperties() {
+  protected Properties getEnvironmentProperties() {
     try {
       File file = existingEnvironmentFile();
       Properties props = new Properties();
@@ -243,29 +225,26 @@ public abstract class BaseCommand implements Command {
     }
   }
 
-  private String parsePlaceholders(String string, Map<String, String> variables) {
-    final String OPEN = "${";
-    final String CLOSE = "}";
-    String newString = string;
-    if (newString != null && variables != null) {
-      int start = newString.indexOf(OPEN);
-      int end = newString.indexOf(CLOSE);
+  private File subdirectory(File base, String sub) {
+    return new File(base.getAbsoluteFile() + File.separator + sub);
+  }
 
-      while (start > -1 && end > start) {
-        String prepend = newString.substring(0, start);
-        String append = newString.substring(end + CLOSE.length());
-        String propName = newString.substring(start + OPEN.length(), end);
-        String propValue = variables.get(propName);
-        if (propValue == null) {
-          newString = prepend + append;
-        } else {
-          newString = prepend + propValue + append;
-        }
-        start = newString.indexOf(OPEN);
-        end = newString.indexOf(CLOSE);
+  private Change parseChangeFromFilename(String filename) {
+    try {
+      Change change = new Change();
+      String[] parts = filename.split("\\.")[0].split("_");
+      change.setId(new BigDecimal(parts[0]));
+      StringBuilder builder = new StringBuilder();
+      for (int i = 1; i < parts.length; i++) {
+        if (i > 1) builder.append(" ");
+        builder.append(parts[i]);
       }
+      change.setDescription(builder.toString());
+      change.setFilename(filename);
+      return change;
+    } catch (Exception e) {
+      throw new MigrationException("Error parsing change from file.  Cause: " + e, e);
     }
-    return newString;
   }
 
 }

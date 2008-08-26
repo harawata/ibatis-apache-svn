@@ -3,8 +3,7 @@ package org.apache.ibatis.migration.commands;
 import org.apache.ibatis.migration.MigrationException;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class NewCommand extends BaseCommand {
 
@@ -17,8 +16,8 @@ public class NewCommand extends BaseCommand {
       throw new MigrationException("No description specified for new migration.");
     }
     String description = params[0];
-    Map<String, String> variables = new HashMap<String, String>();
-    variables.put("description", description);
+    Properties variables = new Properties();
+    variables.setProperty("description", description);
     existingEnvironmentFile();
     String filename = getNextIDAsString() + "_" + description.replace(' ', '_') + ".sql";
     copyResourceTo("org/apache/ibatis/migration/template_migration.sql", scriptFile(filename), variables);
