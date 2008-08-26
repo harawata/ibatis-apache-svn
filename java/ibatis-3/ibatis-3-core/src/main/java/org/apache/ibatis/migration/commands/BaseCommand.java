@@ -52,7 +52,7 @@ public abstract class BaseCommand implements Command {
   protected List<Change> getChangelog() {
     AdHocExecutor executor = getAdHocExecutor();
     try {
-      List<Map<String, Object>> changelog = executor.selectAll("select ID, APPLIED_AT, DESCRIPTION from CHANGELOG order by id");
+      List<Map<String, Object>> changelog = executor.selectAll("select ID, APPLIED_AT, DESCRIPTION from "+changelogTable()+" order by id");
       List<Change> changes = new ArrayList<Change>();
       for (Map<String, Object> change : changelog) {
         String id = change.get("ID") == null ? null : change.get("ID").toString();
@@ -68,6 +68,14 @@ public abstract class BaseCommand implements Command {
     }
   }
 
+  protected String changelogTable() {
+    String changelog = environmentProperties().getProperty("changelog");
+    if (changelog == null) {
+      changelog = "CHANGELOG";
+    }
+    return changelog;
+  }
+
   protected Change getLastAppliedChange() {
     List<Change> changelog = getChangelog();
     return changelog.get(changelog.size() - 1);
@@ -76,7 +84,7 @@ public abstract class BaseCommand implements Command {
   protected boolean changelogExists() {
     AdHocExecutor executor = getAdHocExecutor();
     try {
-      executor.selectAll("select ID, DESCRIPTION from CHANGELOG");
+      executor.selectAll("select ID, APPLIED_AT, DESCRIPTION from " + changelogTable());
       return true;
     } catch (SQLException e) {
       return false;
@@ -138,7 +146,7 @@ public abstract class BaseCommand implements Command {
   protected AdHocExecutor getAdHocExecutor() {
     lazyInitializeDrivers();
 
-    Properties props = getEnvironmentProperties();
+    Properties props = environmentProperties();
     String driver = props.getProperty("driver");
     String url = props.getProperty("url");
     String username = props.getProperty("username");
@@ -150,7 +158,7 @@ public abstract class BaseCommand implements Command {
     try {
       lazyInitializeDrivers();
 
-      Properties props = getEnvironmentProperties();
+      Properties props = environmentProperties();
       String driver = props.getProperty("driver");
       String url = props.getProperty("url");
       String username = props.getProperty("username");
@@ -214,7 +222,7 @@ public abstract class BaseCommand implements Command {
     }
   }
 
-  protected Properties getEnvironmentProperties() {
+  protected Properties environmentProperties() {
     try {
       File file = existingEnvironmentFile();
       Properties props = new Properties();

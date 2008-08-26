@@ -32,7 +32,7 @@ public class UpCommand extends BaseCommand {
         if (lastChange == null || change.getId().compareTo(lastChange.getId()) > 0) {
           out.println(horizontalLine("Applying: " + change.getFilename(), 80));
           ScriptRunner runner = getScriptRunner();
-          runner.runScript(new MigrationReader(new FileReader(scriptFile(change.getFilename())), false, getEnvironmentProperties()));
+          runner.runScript(new MigrationReader(new FileReader(scriptFile(change.getFilename())), false, environmentProperties()));
           insertChangelog(change);
           if (runOneStepOnly) {
             break;
@@ -48,7 +48,7 @@ public class UpCommand extends BaseCommand {
     AdHocExecutor executor = getAdHocExecutor();
     change.setAppliedTimestamp(getAppliedTimestampAsString());
     try {
-      executor.insert("insert into CHANGELOG (ID, APPLIED_AT, DESCRIPTION) values (?,?,?)", change.getId(), change.getAppliedTimestamp(), change.getDescription());
+      executor.insert("insert into " + changelogTable() + " (ID, APPLIED_AT, DESCRIPTION) values (?,?,?)", change.getId(), change.getAppliedTimestamp(), change.getDescription());
     } catch (SQLException e) {
       throw new MigrationException("Error querying last applied migration.  Cause: " + e, e);
     } finally {

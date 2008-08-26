@@ -22,7 +22,7 @@ public class DownCommand extends BaseCommand {
         if (change.getId().equals(lastChange.getId())) {
           out.println(horizontalLine("Undoing: " + change.getFilename(), 80));
           ScriptRunner runner = getScriptRunner();
-          runner.runScript(new MigrationReader(new FileReader(scriptFile(change.getFilename())), true, getEnvironmentProperties()));
+          runner.runScript(new MigrationReader(new FileReader(scriptFile(change.getFilename())), true, environmentProperties()));
           if (changelogExists()) {
             deleteChange(change);
           } else {
@@ -39,7 +39,7 @@ public class DownCommand extends BaseCommand {
   protected void deleteChange(Change change) {
     AdHocExecutor executor = getAdHocExecutor();
     try {
-      executor.delete("delete from CHANGELOG where id = ?", change.getId());
+      executor.delete("delete from " + changelogTable() + " where id = ?", change.getId());
     } catch (SQLException e) {
       throw new MigrationException("Error querying last applied migration.  Cause: " + e, e);
     } finally {

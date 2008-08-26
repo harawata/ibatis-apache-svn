@@ -9,16 +9,16 @@
 -- Be sure that ID and DESCRIPTION fields exist in
 -- BigInteger and String compatible fields respectively.
 
-CREATE TABLE CHANGELOG (
+CREATE TABLE ${changelog} (
   ID NUMERIC(20,0) NOT NULL,
   APPLIED_AT VARCHAR(25) NOT NULL,
   DESCRIPTION VARCHAR(255) NOT NULL
 );
 
-ALTER TABLE CHANGELOG
-  ADD CONSTRAINT PK_CHANGELOG
+ALTER TABLE ${changelog}
+  ADD CONSTRAINT PK_${changelog}
   PRIMARY KEY (id);
 
 --//@UNDO
 
-DROP TABLE CHANGELOG;
+DROP TABLE ${changelog};

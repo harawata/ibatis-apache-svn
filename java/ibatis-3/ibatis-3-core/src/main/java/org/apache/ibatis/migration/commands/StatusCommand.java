@@ -13,7 +13,7 @@ public class StatusCommand extends BaseCommand {
 
   public void execute(String... params) {
     out.println("ID             Applied At          Description");
-    out.println(horizontalLine("", 60));
+    out.println(horizontalLine("", 80));
     List<Change> merged = new ArrayList<Change>();
     List<Change> migrations = getMigrations();
     if (changelogExists()) {
