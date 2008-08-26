@@ -23,6 +23,7 @@ public class InitializeCommand extends BaseCommand {
     
     copyResourceTo("org/apache/ibatis/migration/template_README", baseFile("README"));
     copyResourceTo("org/apache/ibatis/migration/template_environment.properties", environmentFile());
+    copyResourceTo("org/apache/ibatis/migration/template_bootstrap.sql", scriptFile("bootstrap.sql"));
     copyResourceTo("org/apache/ibatis/migration/template_changelog.sql", scriptFile(getNextIDAsString() + "_create_changelog.sql"));
     copyResourceTo("org/apache/ibatis/migration/template_migration.sql", scriptFile(getNextIDAsString() + "_first_migration.sql"),
         new Properties(){{setProperty("description","First migration.");}});

@@ -13,8 +13,8 @@ public class BootstrapCommand extends BaseCommand {
 
   public void execute(String... params) {
     try {
-      if (changelogExists()) {
-        out.println("For your safety, the bootstrap SQL script will only run before migrations are applied (i.e. before the changelog exists).");
+      if (changelogExists() && !force) {
+        out.println("For your safety, the bootstrap SQL script will only run before migrations are applied (i.e. before the changelog exists).  If you're certain, you can run it using the --force option.");
       } else {
         File bootstrap = scriptFile("bootstrap.sql");
         if (bootstrap.exists()) {
@@ -26,7 +26,7 @@ public class BootstrapCommand extends BaseCommand {
         }
       }
     } catch (Exception e) {
-      throw new RuntimeException("<Description>.  Cause: " + e, e);
+      throw new RuntimeException("Error running bootstrapper.  Cause: " + e, e);
     }
   }
 

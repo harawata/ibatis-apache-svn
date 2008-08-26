@@ -55,7 +55,7 @@ public class Change implements Comparable {
   }
 
   public String toString() {
-    return id + " " + (appliedTimestamp == null ? "pending            " : appliedTimestamp) + " " + description;
+    return id + " " + (appliedTimestamp == null ? "   ...pending...   " : appliedTimestamp) + " " + description;
   }
 
   public boolean equals(Object o) {
