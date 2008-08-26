@@ -100,7 +100,7 @@ public abstract class BaseCommand implements Command {
       caption = " " + caption + " ";
       builder.append(caption);
     }
-    for (int i = 0; i < length - caption.length(); i++) {
+    for (int i = 0; i < length - caption.length()-10; i++) {
       builder.append("=");
     }
     return builder.toString();
