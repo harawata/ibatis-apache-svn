@@ -1,15 +1,11 @@
 package org.apache.ibatis.migration.commands;
 
-import org.apache.ibatis.migration.Change;
-import org.apache.ibatis.migration.MigrationReader;
-import org.apache.ibatis.migration.ScriptRunner;
-import org.apache.ibatis.migration.MigrationException;
 import org.apache.ibatis.adhoc.AdHocExecutor;
+import org.apache.ibatis.migration.*;
 
-import java.io.File;
-import java.io.FileReader;
-import java.util.*;
+import java.io.*;
 import java.sql.SQLException;
+import java.util.*;
 
 public class DownCommand extends BaseCommand {
 
@@ -18,7 +14,7 @@ public class DownCommand extends BaseCommand {
   }
 
   public void execute(String... params) {
-    try {     
+    try {
       Change lastChange = getLastAppliedChange();
       List<Change> migrations = getMigrations();
       Collections.reverse(migrations);
@@ -51,7 +47,6 @@ public class DownCommand extends BaseCommand {
     }
   }
 
-  
 
   protected void reverse(Comparable[] comparable) {
     Arrays.sort(comparable, new Comparator() {

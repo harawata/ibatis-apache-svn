@@ -1,10 +1,7 @@
 package org.apache.ibatis.migration;
 
-import java.io.Reader;
-import java.io.IOException;
-import java.io.BufferedReader;
-import java.io.StringReader;
-import java.util.*;
+import java.io.*;
+import java.util.Properties;
 
 public class MigrationReader extends Reader {
 
@@ -27,9 +24,9 @@ public class MigrationReader extends Reader {
         }
       }
       if (undo) {
-        target = new StringReader(PropertyParser.parse(undoBuilder.toString(),variables));
+        target = new StringReader(PropertyParser.parse(undoBuilder.toString(), variables));
       } else {
-        target = new StringReader(PropertyParser.parse(doBuilder.toString(),variables));
+        target = new StringReader(PropertyParser.parse(doBuilder.toString(), variables));
       }
     } finally {
       source.close();

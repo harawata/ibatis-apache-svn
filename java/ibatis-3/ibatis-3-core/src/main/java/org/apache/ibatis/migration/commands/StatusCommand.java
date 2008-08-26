@@ -2,8 +2,8 @@ package org.apache.ibatis.migration.commands;
 
 import org.apache.ibatis.migration.Change;
 
-import java.util.*;
 import java.io.File;
+import java.util.*;
 
 public class StatusCommand extends BaseCommand {
 
@@ -30,7 +30,7 @@ public class StatusCommand extends BaseCommand {
     } else {
       merged.addAll(migrations);
     }
-    for(Change change : merged) {
+    for (Change change : merged) {
       out.println(change);
     }
   }

@@ -2,12 +2,8 @@ package org.apache.ibatis.migration;
 
 import org.apache.ibatis.migration.commands.*;
 
-import java.io.File;
-import java.io.PrintStream;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.io.*;
+import java.util.*;
 
 public class CommandLine {
 
@@ -66,19 +62,19 @@ public class CommandLine {
 
   private void runCommand() {
     if (INIT.equals(command)) {
-     new InitializeCommand(repository,environment,force).execute(params);
+      new InitializeCommand(repository, environment, force).execute(params);
     } else if (BOOTSTRAP.equals(command)) {
-      new BootstrapCommand(repository,environment,force).execute(params);
+      new BootstrapCommand(repository, environment, force).execute(params);
     } else if (NEW.equals(command)) {
-      new NewCommand(repository,environment,force).execute(params);
+      new NewCommand(repository, environment, force).execute(params);
     } else if (STATUS.equals(command)) {
-      new StatusCommand(repository,environment,force).execute(params);
+      new StatusCommand(repository, environment, force).execute(params);
     } else if (UP.equals(command)) {
-      new UpCommand(repository,environment,force).execute(params);
+      new UpCommand(repository, environment, force).execute(params);
     } else if (VERSION.equals(command)) {
-      new VersionCommand(repository,environment,force).execute(params);
+      new VersionCommand(repository, environment, force).execute(params);
     } else if (DOWN.equals(command)) {
-      new DownCommand(repository,environment,force).execute(params);
+      new DownCommand(repository, environment, force).execute(params);
     } else {
       throw new RuntimeException("Attempt to execute unkown command.");
     }
@@ -96,7 +92,7 @@ public class CommandLine {
         help = true;
       } else if (command == null) {
         command = arg;
-      } else if (params == null){
+      } else if (params == null) {
         params = arg;
       } else {
         params += " ";

@@ -3,7 +3,7 @@ package org.apache.ibatis.migration.commands;
 import org.apache.ibatis.migration.MigrationException;
 
 import java.io.File;
-import java.util.*;
+import java.util.Properties;
 
 public class NewCommand extends BaseCommand {
 
@@ -11,7 +11,7 @@ public class NewCommand extends BaseCommand {
     super(repository, environment, force);
   }
 
-  public void execute (String... params) {
+  public void execute(String... params) {
     if (paramsEmpty(params)) {
       throw new MigrationException("No description specified for new migration.");
     }

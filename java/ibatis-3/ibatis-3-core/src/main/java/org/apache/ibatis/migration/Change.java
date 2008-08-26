@@ -74,6 +74,6 @@ public class Change implements Comparable {
   }
 
   public int compareTo(Object o) {
-    return id.compareTo(((Change)o).getId());
+    return id.compareTo(((Change) o).getId());
   }
 }

@@ -3,7 +3,7 @@ package org.apache.ibatis.migration.commands;
 import org.apache.ibatis.migration.MigrationException;
 
 import java.io.File;
-import java.util.*;
+import java.util.Properties;
 
 public class InitializeCommand extends BaseCommand {
 
@@ -20,13 +20,17 @@ public class InitializeCommand extends BaseCommand {
     createDirectoryIfNecessary(envPath);
     createDirectoryIfNecessary(scriptPath);
     createDirectoryIfNecessary(driverPath);
-    
+
     copyResourceTo("org/apache/ibatis/migration/template_README", baseFile("README"));
     copyResourceTo("org/apache/ibatis/migration/template_environment.properties", environmentFile());
     copyResourceTo("org/apache/ibatis/migration/template_bootstrap.sql", scriptFile("bootstrap.sql"));
     copyResourceTo("org/apache/ibatis/migration/template_changelog.sql", scriptFile(getNextIDAsString() + "_create_changelog.sql"));
     copyResourceTo("org/apache/ibatis/migration/template_migration.sql", scriptFile(getNextIDAsString() + "_first_migration.sql"),
-        new Properties(){{setProperty("description","First migration.");}});
+        new Properties() {
+          {
+            setProperty("description", "First migration.");
+          }
+        });
     out.println("Done!");
   }
 
@@ -45,13 +49,12 @@ public class InitializeCommand extends BaseCommand {
     if (!path.exists()) {
       File parent = new File(path.getParent());
       createDirectoryIfNecessary(parent);
-      out.println("Creating: " + path.getName());      
+      out.println("Creating: " + path.getName());
       if (!path.mkdir()) {
         throw new MigrationException("Could not create directory path for an unknown reason. Make sure you have access to the directory.");
       }
     }
   }
 
-  
 
 }

@@ -1,23 +1,19 @@
 package org.apache.ibatis.migration.commands;
 
-import org.apache.ibatis.migration.Change;
-import org.apache.ibatis.migration.MigrationReader;
-import org.apache.ibatis.migration.ScriptRunner;
-import org.apache.ibatis.migration.MigrationException;
 import org.apache.ibatis.adhoc.AdHocExecutor;
+import org.apache.ibatis.migration.*;
 
-import java.io.File;
-import java.io.FileReader;
-import java.util.*;
+import java.io.*;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 public class UpCommand extends BaseCommand {
 
   private boolean runOneStepOnly = false;
 
   public UpCommand(File repository, String environment, boolean force) {
-    super(repository,environment,force);
+    super(repository, environment, force);
   }
 
   public UpCommand(File repository, String environment, boolean force, boolean runOneStepOnly) {
@@ -27,7 +23,7 @@ public class UpCommand extends BaseCommand {
 
   public void execute(String... params) {
     try {
-      Change lastChange = null; 
+      Change lastChange = null;
       if (changelogExists()) {
         lastChange = getLastAppliedChange();
       }

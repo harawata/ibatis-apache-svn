@@ -1,6 +1,6 @@
 package org.apache.ibatis.migration;
 
-import java.util.*;
+import java.util.Properties;
 
 public class PropertyParser {
 

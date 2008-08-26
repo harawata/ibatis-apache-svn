@@ -3,7 +3,6 @@ package org.apache.ibatis.migration.commands;
 import org.apache.ibatis.migration.*;
 
 import java.io.*;
-import java.util.Arrays;
 
 public class BootstrapCommand extends BaseCommand {
 

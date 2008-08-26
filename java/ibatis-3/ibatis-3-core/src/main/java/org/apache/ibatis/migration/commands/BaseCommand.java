@@ -1,15 +1,15 @@
 package org.apache.ibatis.migration.commands;
 
-import org.apache.ibatis.migration.*;
 import org.apache.ibatis.adhoc.AdHocExecutor;
 import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.migration.*;
 
-import java.util.*;
-import java.sql.*;
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.io.*;
+import java.math.BigDecimal;
 import java.net.*;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public abstract class BaseCommand implements Command {
 
@@ -31,7 +31,7 @@ public abstract class BaseCommand implements Command {
     this.environment = environment;
     this.force = force;
   }
-  
+
   protected boolean paramsEmpty(String... params) {
     return params == null || params.length < 1 || params[0] == null || params[0].length() < 1;
   }
@@ -40,7 +40,7 @@ public abstract class BaseCommand implements Command {
     String[] filenames = scriptPath.list();
     Arrays.sort(filenames);
     List<Change> migrations = new ArrayList<Change>();
-    for(String filename : filenames) {
+    for (String filename : filenames) {
       if (filename.endsWith(".sql") && !"bootstrap.sql".equals(filename)) {
         Change change = parseChangeFromFilename(filename);
         migrations.add(change);
