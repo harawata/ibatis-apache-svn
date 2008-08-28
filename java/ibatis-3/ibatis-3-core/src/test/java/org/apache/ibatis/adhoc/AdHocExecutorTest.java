@@ -91,7 +91,7 @@ public class AdHocExecutorTest extends BaseDataTest {
   }
 
   @Test
-  public void should() throws Exception {
+  public void shouldDemonstrateDDLThroughRunMethod() throws Exception {
     SimpleDataSource ds = createSimpleDataSource(JPETSTORE_PROPERTIES);
     Connection connection = ds.getConnection();
     try {

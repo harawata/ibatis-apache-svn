@@ -38,6 +38,7 @@ public abstract class BaseCommand implements Command {
 
   protected List<Change> getMigrations() {
     String[] filenames = scriptPath.list();
+    if (filenames == null) throw new MigrationException(scriptPath + " does not exist.");
     Arrays.sort(filenames);
     List<Change> migrations = new ArrayList<Change>();
     for (String filename : filenames) {
