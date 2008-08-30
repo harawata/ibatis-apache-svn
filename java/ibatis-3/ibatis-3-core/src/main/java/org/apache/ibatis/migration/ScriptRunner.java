@@ -1,19 +1,13 @@
 package org.apache.ibatis.migration;
 
-
 import java.io.*;
 import java.sql.*;
-import java.util.Properties;
 
 public class ScriptRunner {
 
   private static final String DEFAULT_DELIMITER = ";";
 
   private Connection connection;
-  private String driver;
-  private String url;
-  private String username;
-  private String password;
 
   private boolean stopOnError;
   private boolean autoCommit;
@@ -23,30 +17,17 @@ public class ScriptRunner {
 
   private String delimiter = DEFAULT_DELIMITER;
   private boolean fullLineDelimiter = false;
-  private ClassLoader driverClassLoader;
 
-  public ScriptRunner(Connection connection, boolean autoCommit, boolean stopOnError) {
+  public ScriptRunner(Connection connection) {
     this.connection = connection;
-    this.autoCommit = autoCommit;
+  }
+
+  public void setStopOnError(boolean stopOnError) {
     this.stopOnError = stopOnError;
   }
 
-  public ScriptRunner(String driver, String url, String username, String password, boolean autoCommit, boolean stopOnError) {
-    this.driver = driver;
-    this.url = url;
-    this.username = username;
-    this.password = password;
+  public void setAutoCommit(boolean autoCommit) {
     this.autoCommit = autoCommit;
-    this.stopOnError = stopOnError;
-  }
-
-  public void setDriverClassLoader(ClassLoader loader) {
-    driverClassLoader = loader;
-  }
-
-  public void setDelimiter(String delimiter, boolean fullLineDelimiter) {
-    this.delimiter = delimiter;
-    this.fullLineDelimiter = fullLineDelimiter;
   }
 
   public void setLogWriter(PrintWriter logWriter) {
@@ -57,54 +38,27 @@ public class ScriptRunner {
     this.errorLogWriter = errorLogWriter;
   }
 
+  public void setDelimiter(String delimiter) {
+    this.delimiter = delimiter;
+  }
+
+  public void setFullLineDelimiter(boolean fullLineDelimiter) {
+    this.fullLineDelimiter = fullLineDelimiter;
+  }
+
   public void runScript(Reader reader) throws IOException, SQLException {
     try {
-      if (connection != null) {
-        configureAutoCommitAndRun(reader);
-      } else {
-        initConnection();
-        try {
-          configureAutoCommitAndRun(reader);
-        } finally {
-          try {
-            connection.close();
-          } finally {
-            connection = null;
-          }
-        }
-      }
-    } catch (IOException e) {
-      throw e;
-    } catch (SQLException e) {
-      throw e;
-    } catch (Exception e) {
-      throw new RuntimeException("Error running script.  Cause: " + e, e);
+      runScriptWithConnection(connection, reader);
     } finally {
       flush();
     }
   }
 
-  private void initConnection() throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException {
-    Class driverType;
-    if (driverClassLoader != null) {
-      driverType = Class.forName(driver, true, driverClassLoader);
-    } else {
-      driverType = Class.forName(driver);
-    }
-    Driver driverInstance = (Driver) driverType.newInstance();
-    DriverManager.registerDriver(new DriverProxy(driverInstance));
-    connection = DriverManager.getConnection(url, username, password);
-  }
-
-  private void configureAutoCommitAndRun(Reader reader) throws SQLException, IOException {
-    boolean originalAutoCommit = connection.getAutoCommit();
+  public void closeConnection() {
     try {
-      if (originalAutoCommit != this.autoCommit) {
-        connection.setAutoCommit(this.autoCommit);
-      }
-      runScriptWithConnection(connection, reader);
-    } finally {
-      connection.setAutoCommit(originalAutoCommit);
+      connection.close();
+    } catch(Exception e) {
+      // ignore
     }
   }
 
@@ -131,9 +85,9 @@ public class ScriptRunner {
           // do nothing
         } else if (trimmedLine.startsWith("//") || trimmedLine.startsWith("--")) {
           println(trimmedLine);
-        } else if (!fullLineDelimiter && trimmedLine.endsWith(getDelimiter())
-            || fullLineDelimiter && trimmedLine.equals(getDelimiter())) {
-          command.append(line.substring(0, line.lastIndexOf(getDelimiter())));
+        } else if (!fullLineDelimiter && trimmedLine.endsWith(delimiter)
+            || fullLineDelimiter && trimmedLine.equals(delimiter)) {
+          command.append(line.substring(0, line.lastIndexOf(delimiter)));
           command.append(" ");
           Statement statement = conn.createStatement();
 
@@ -188,7 +142,7 @@ public class ScriptRunner {
           command.append(" ");
         }
       }
-      if (!autoCommit) {
+      if (!autoCommit && !conn.getAutoCommit()) {
         conn.commit();
       }
     } catch (SQLException e) {
@@ -205,10 +159,6 @@ public class ScriptRunner {
       conn.rollback();
       flush();
     }
-  }
-
-  private String getDelimiter() {
-    return delimiter;
   }
 
   private void print(Object o) {
@@ -235,38 +185,6 @@ public class ScriptRunner {
     }
     if (errorLogWriter != null) {
       errorLogWriter.flush();
-    }
-  }
-
-  private static class DriverProxy implements Driver {
-    private Driver driver;
-
-    DriverProxy(Driver d) {
-      this.driver = d;
-    }
-
-    public boolean acceptsURL(String u) throws SQLException {
-      return this.driver.acceptsURL(u);
-    }
-
-    public Connection connect(String u, Properties p) throws SQLException {
-      return this.driver.connect(u, p);
-    }
-
-    public int getMajorVersion() {
-      return this.driver.getMajorVersion();
-    }
-
-    public int getMinorVersion() {
-      return this.driver.getMinorVersion();
-    }
-
-    public DriverPropertyInfo[] getPropertyInfo(String u, Properties p) throws SQLException {
-      return this.driver.getPropertyInfo(u, p);
-    }
-
-    public boolean jdbcCompliant() {
-      return this.driver.jdbcCompliant();
     }
   }
 

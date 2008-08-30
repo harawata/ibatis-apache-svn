@@ -2,7 +2,7 @@ package org.apache.ibatis.executor;
 
 import domain.blog.*;
 import org.apache.ibatis.BaseDataTest;
-import org.apache.ibatis.jdbc.SimpleDataSource;
+import org.apache.ibatis.jdbc.PooledDataSource;
 import org.apache.ibatis.mapping.*;
 import org.junit.*;
 
@@ -23,15 +23,15 @@ public abstract class BaseExecutorTest extends BaseDataTest {
     config.setDefaultStatementTimeout(5000);
   }
 
-  protected SimpleDataSource createBlogDataSource() throws IOException, SQLException {
-    SimpleDataSource ds = createSimpleDataSource(BLOG_PROPERTIES);
+  protected PooledDataSource createBlogDataSource() throws IOException, SQLException {
+    PooledDataSource ds = createPooledDataSource(BLOG_PROPERTIES);
     runScript(ds, BLOG_DDL);
     runScript(ds, BLOG_DATA);
     return ds;
   }
 
-  protected SimpleDataSource createJPetstoreDataSource() throws IOException, SQLException {
-    SimpleDataSource ds = createSimpleDataSource(JPETSTORE_PROPERTIES);
+  protected PooledDataSource createJPetstoreDataSource() throws IOException, SQLException {
+    PooledDataSource ds = createPooledDataSource(JPETSTORE_PROPERTIES);
     runScript(ds, JPETSTORE_DDL);
     runScript(ds, JPETSTORE_DATA);
     return ds;
@@ -39,7 +39,7 @@ public abstract class BaseExecutorTest extends BaseDataTest {
 
   @Test
   public void shouldInsertNewAuthor() throws Exception {
-    SimpleDataSource ds = createBlogDataSource();
+    PooledDataSource ds = createBlogDataSource();
     Connection connection = ds.getConnection();
     try {
       Executor executor = createExecutor(connection);
@@ -60,7 +60,7 @@ public abstract class BaseExecutorTest extends BaseDataTest {
 
   @Test
   public void shouldSelectAllAuthorsAutoMapped() throws Exception {
-    SimpleDataSource ds = createBlogDataSource();
+    PooledDataSource ds = createBlogDataSource();
     Connection connection = ds.getConnection();
     try {
       Executor executor = createExecutor(connection);
@@ -82,7 +82,7 @@ public abstract class BaseExecutorTest extends BaseDataTest {
 
   @Test
   public void shouldInsertNewAuthorWithAutoKey() throws Exception {
-    SimpleDataSource ds = createBlogDataSource();
+    PooledDataSource ds = createBlogDataSource();
     Connection connection = ds.getConnection();
     config.setGeneratedKeysEnabled(true);
     try {
@@ -108,7 +108,7 @@ public abstract class BaseExecutorTest extends BaseDataTest {
 
   @Test
   public void shouldInsertNewAuthorByProc() throws Exception {
-    SimpleDataSource ds = createBlogDataSource();
+    PooledDataSource ds = createBlogDataSource();
     Connection connection = ds.getConnection();
     try {
       Executor executor = createExecutor(connection);
@@ -128,7 +128,7 @@ public abstract class BaseExecutorTest extends BaseDataTest {
 
   @Test
   public void shouldInsertNewAuthorUsingSimpleNonPreparedStatements() throws Exception {
-    SimpleDataSource ds = createBlogDataSource();
+    PooledDataSource ds = createBlogDataSource();
     Connection connection = ds.getConnection();
     try {
       Executor executor = createExecutor(connection);
@@ -149,7 +149,7 @@ public abstract class BaseExecutorTest extends BaseDataTest {
 
   @Test
   public void shouldUpdateAuthor() throws Exception {
-    SimpleDataSource ds = createBlogDataSource();
+    PooledDataSource ds = createBlogDataSource();
     Connection connection = ds.getConnection();
     try {
       Executor executor = createExecutor(connection);
@@ -170,7 +170,7 @@ public abstract class BaseExecutorTest extends BaseDataTest {
 
   @Test
   public void shouldDeleteAuthor() throws Exception {
-    SimpleDataSource ds = createBlogDataSource();
+    PooledDataSource ds = createBlogDataSource();
     Connection connection = ds.getConnection();
     try {
       Executor executor = createExecutor(connection);
@@ -190,7 +190,7 @@ public abstract class BaseExecutorTest extends BaseDataTest {
 
   @Test
   public void shouldSelectDiscriminatedProduct() throws Exception {
-    SimpleDataSource ds = createJPetstoreDataSource();
+    PooledDataSource ds = createJPetstoreDataSource();
     Connection connection = ds.getConnection();
     try {
       Executor executor = createExecutor(connection);
@@ -212,7 +212,7 @@ public abstract class BaseExecutorTest extends BaseDataTest {
 
   @Test
   public void shouldSelect10DiscriminatedProducts() throws Exception {
-    SimpleDataSource ds = createJPetstoreDataSource();
+    PooledDataSource ds = createJPetstoreDataSource();
     Connection connection = ds.getConnection();
     try {
       Executor executor = createExecutor(connection);
@@ -234,7 +234,7 @@ public abstract class BaseExecutorTest extends BaseDataTest {
 
   @Test
   public void shouldSelectTwoSetsOfAuthorsViaProc() throws Exception {
-    SimpleDataSource ds = createBlogDataSource();
+    PooledDataSource ds = createBlogDataSource();
     Connection connection = ds.getConnection();
     connection.setAutoCommit(false);
     try {
@@ -261,7 +261,7 @@ public abstract class BaseExecutorTest extends BaseDataTest {
 
   @Test
   public void shouldSelectAuthorViaOutParams() throws Exception {
-    SimpleDataSource ds = createBlogDataSource();
+    PooledDataSource ds = createBlogDataSource();
     Connection connection = ds.getConnection();
     connection.setAutoCommit(false);
     try {
@@ -282,7 +282,7 @@ public abstract class BaseExecutorTest extends BaseDataTest {
 
   @Test
   public void shouldFetchPostsForBlog() throws Exception {
-    SimpleDataSource ds = createBlogDataSource();
+    PooledDataSource ds = createBlogDataSource();
     Connection connection = ds.getConnection();
     try {
       Executor executor = createExecutor(connection);
@@ -303,7 +303,7 @@ public abstract class BaseExecutorTest extends BaseDataTest {
 
   @Test
   public void shouldFetchOneOrphanedPostWithNoBlog() throws Exception {
-    SimpleDataSource ds = createBlogDataSource();
+    PooledDataSource ds = createBlogDataSource();
     Connection connection = ds.getConnection();
     try {
       Executor executor = createExecutor(connection);
@@ -324,7 +324,7 @@ public abstract class BaseExecutorTest extends BaseDataTest {
 
   @Test
   public void shouldFetchPostWithBlogWithCompositeKey() throws Exception {
-    SimpleDataSource ds = createBlogDataSource();
+    PooledDataSource ds = createBlogDataSource();
     Connection connection = ds.getConnection();
     try {
       Executor executor = createExecutor(connection);
@@ -347,7 +347,7 @@ public abstract class BaseExecutorTest extends BaseDataTest {
 
   @Test
   public void shouldFetchComplexBlogs() throws Exception {
-    SimpleDataSource ds = createBlogDataSource();
+    PooledDataSource ds = createBlogDataSource();
     Connection connection = ds.getConnection();
     try {
       Executor executor = createExecutor(connection);
@@ -370,7 +370,7 @@ public abstract class BaseExecutorTest extends BaseDataTest {
 
   @Test
   public void shouldMapConstructorResults() throws Exception {
-    SimpleDataSource ds = createBlogDataSource();
+    PooledDataSource ds = createBlogDataSource();
     Connection connection = ds.getConnection();
     try {
       Executor executor = createExecutor(connection);

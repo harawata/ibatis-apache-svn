@@ -4,7 +4,9 @@ import com.ibatis.common.resources.Resources;
 
 import java.util.*;
 
-public class SimpleDataSource extends org.apache.ibatis.jdbc.SimpleDataSource {
+import org.apache.ibatis.jdbc.PooledDataSource;
+
+public class SimpleDataSource extends PooledDataSource {
 
   // Required Properties
   private static final String PROP_JDBC_DRIVER = "JDBC.Driver";

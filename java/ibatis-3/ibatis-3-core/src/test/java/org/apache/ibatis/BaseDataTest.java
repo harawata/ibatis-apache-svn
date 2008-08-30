@@ -1,7 +1,7 @@
 package org.apache.ibatis;
 
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.SimpleDataSource;
+import org.apache.ibatis.jdbc.PooledDataSource;
 import org.apache.ibatis.migration.ScriptRunner;
 import org.junit.Test;
 
@@ -20,9 +20,9 @@ public class BaseDataTest {
   public static final String JPETSTORE_DDL = "databases/jpetstore/jpetstore-hsqldb-schema.sql";
   public static final String JPETSTORE_DATA = "databases/jpetstore/jpetstore-hsqldb-dataload.sql";
 
-  public static SimpleDataSource createSimpleDataSource(String resource) throws IOException {
+  public static PooledDataSource createPooledDataSource(String resource) throws IOException {
     Properties props = Resources.getResourceAsProperties(resource);
-    SimpleDataSource ds = new SimpleDataSource();
+    PooledDataSource ds = new PooledDataSource();
     ds.setJdbcDriver(props.getProperty("driver"));
     ds.setJdbcUrl(props.getProperty("url"));
     ds.setJdbcUsername(props.getProperty("username"));
@@ -33,7 +33,9 @@ public class BaseDataTest {
   public static void runScript(DataSource ds, String resource) throws IOException, SQLException {
     Connection connection = ds.getConnection();
     try {
-      ScriptRunner runner = new ScriptRunner(connection, true, false);
+      ScriptRunner runner = new ScriptRunner(connection);
+      runner.setAutoCommit(true);
+      runner.setStopOnError(false);
       runner.setLogWriter(null);
       runScript(runner, resource);
     } finally {

@@ -1,6 +1,6 @@
 package org.apache.ibatis.migration.commands;
 
-import org.apache.ibatis.adhoc.AdHocExecutor;
+import org.apache.ibatis.migration.SqlRunner;
 import org.apache.ibatis.migration.*;
 
 import java.io.*;
@@ -32,7 +32,11 @@ public class UpCommand extends BaseCommand {
         if (lastChange == null || change.getId().compareTo(lastChange.getId()) > 0) {
           out.println(horizontalLine("Applying: " + change.getFilename(), 80));
           ScriptRunner runner = getScriptRunner();
-          runner.runScript(new MigrationReader(new FileReader(scriptFile(change.getFilename())), false, environmentProperties()));
+          try {
+            runner.runScript(new MigrationReader(new FileReader(scriptFile(change.getFilename())), false, environmentProperties()));
+          } finally {
+            runner.closeConnection();
+          }
           insertChangelog(change);
           if (runOneStepOnly) {
             break;
@@ -45,14 +49,14 @@ public class UpCommand extends BaseCommand {
   }
 
   protected void insertChangelog(Change change) {
-    AdHocExecutor executor = getAdHocExecutor();
+    SqlRunner runner = getSqlRunner();
     change.setAppliedTimestamp(getAppliedTimestampAsString());
     try {
-      executor.insert("insert into " + changelogTable() + " (ID, APPLIED_AT, DESCRIPTION) values (?,?,?)", change.getId(), change.getAppliedTimestamp(), change.getDescription());
+      runner.insert("insert into " + changelogTable() + " (ID, APPLIED_AT, DESCRIPTION) values (?,?,?)", change.getId(), change.getAppliedTimestamp(), change.getDescription());
     } catch (SQLException e) {
       throw new MigrationException("Error querying last applied migration.  Cause: " + e, e);
     } finally {
-      executor.closeConnection();
+      runner.closeConnection();
     }
   }
 

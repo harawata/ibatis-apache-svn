@@ -19,7 +19,11 @@ public class BootstrapCommand extends BaseCommand {
         if (bootstrap.exists()) {
           out.println(horizontalLine("Applying: bootstrap.sql", 80));
           ScriptRunner runner = getScriptRunner();
-          runner.runScript(new MigrationReader(new FileReader(bootstrap), false, environmentProperties()));
+          try {
+            runner.runScript(new MigrationReader(new FileReader(bootstrap), false, environmentProperties()));
+          } finally {
+            runner.closeConnection();
+          }
         } else {
           out.println("Error, could not run bootstrap.sql.  The file does not exist.");
         }

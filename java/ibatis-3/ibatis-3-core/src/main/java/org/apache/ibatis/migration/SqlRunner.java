@@ -1,11 +1,13 @@
-package org.apache.ibatis.adhoc;
+package org.apache.ibatis.migration;
 
 import org.apache.ibatis.type.*;
+import org.apache.ibatis.migration.Null;
+import org.apache.ibatis.jdbc.UnpooledDataSource;
 
 import java.sql.*;
 import java.util.*;
 
-public class AdHocExecutor {
+public class SqlRunner {
 
   public static final int NO_GENERATED_KEY = Integer.MIN_VALUE + 1001;
 
@@ -13,41 +15,14 @@ public class AdHocExecutor {
   private TypeHandlerRegistry typeHandlerRegistry;
   private boolean forceGeneratedKeySupport = false;
 
-  public AdHocExecutor(Connection connection) {
+  public SqlRunner(Connection connection) {
     this(connection, false);
   }
 
-  public AdHocExecutor(Connection connection, boolean forceGeneratedKeySupport) {
+  public SqlRunner(Connection connection, boolean forceGeneratedKeySupport) {
     this.connection = connection;
     this.typeHandlerRegistry = new TypeHandlerRegistry();
     this.forceGeneratedKeySupport = forceGeneratedKeySupport;
-  }
-
-  public AdHocExecutor(String driver, String url, String username, String password) {
-    this(driver,url,username,password,false,null);  
-  }
-
-  public AdHocExecutor(String driver, String url, String username, String password, boolean forceGeneratedKeySupport) {
-    this(driver,url,username,password,forceGeneratedKeySupport,null);
-  }
-
-  public AdHocExecutor(String driver, String url, String username, String password, boolean forceGeneratedKeySupport, ClassLoader driverClassLoader) {
-    try {
-      Class driverType;
-      if (driverClassLoader != null) {
-        driverType = Class.forName(driver, true, driverClassLoader);
-      } else {
-        driverType = Class.forName(driver);
-      }
-      Driver driverInstance = (Driver) driverType.newInstance();
-      DriverProxy driverProxy = new DriverProxy(driverInstance);
-      DriverManager.registerDriver(driverProxy);
-      connection = DriverManager.getConnection(url, username, password);
-      this.typeHandlerRegistry = new TypeHandlerRegistry();
-      this.forceGeneratedKeySupport = forceGeneratedKeySupport;
-    } catch (Exception e) {
-      throw new RuntimeException("Error configuring AdHocExecutor.  Cause: " + e, e);
-    }
   }
 
   /**
@@ -193,13 +168,13 @@ public class AdHocExecutor {
   private void setParameters(PreparedStatement ps, Object... args) throws SQLException {
     for (int i = 0, n = args.length; i < n; i++) {
       if (args[i] == null) {
-        throw new SQLException("AdHocExecutor requires an instance of Null to represent typed null values for JDBC compatibility");
+        throw new SQLException("SqlRunner requires an instance of Null to represent typed null values for JDBC compatibility");
       } else if (args[i] instanceof Null) {
         ((Null) args[i]).getTypeHandler().setParameter(ps, i + 1, null, ((Null) args[i]).getJdbcType());
       } else {
         TypeHandler typeHandler = typeHandlerRegistry.getTypeHandler(args[i].getClass());
         if (typeHandler == null) {
-          throw new SQLException("AdHocExecutor could not find a TypeHandler instance for " + args[i].getClass());
+          throw new SQLException("SqlRunner could not find a TypeHandler instance for " + args[i].getClass());
         } else {
           typeHandler.setParameter(ps, i + 1, args[i], null);
         }
@@ -242,31 +217,6 @@ public class AdHocExecutor {
       } catch (Exception e) {
         //ignore
       }
-    }
-  }
-
-  private static class DriverProxy implements Driver {
-    private Driver driver;
-    DriverProxy(Driver d) {
-      this.driver = d;
-    }
-    public boolean acceptsURL(String u) throws SQLException {
-      return this.driver.acceptsURL(u);
-    }
-    public Connection connect(String u, Properties p) throws SQLException {
-      return this.driver.connect(u, p);
-    }
-    public int getMajorVersion() {
-      return this.driver.getMajorVersion();
-    }
-    public int getMinorVersion() {
-      return this.driver.getMinorVersion();
-    }
-    public DriverPropertyInfo[] getPropertyInfo(String u, Properties p) throws SQLException {
-      return this.driver.getPropertyInfo(u, p);
-    }
-    public boolean jdbcCompliant() {
-      return this.driver.jdbcCompliant();
     }
   }
   

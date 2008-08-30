@@ -1,6 +1,7 @@
 package org.apache.ibatis.adhoc;
 
 import org.apache.ibatis.type.*;
+import org.apache.ibatis.migration.Null;
 import org.junit.*;
 
 public class NullTest {

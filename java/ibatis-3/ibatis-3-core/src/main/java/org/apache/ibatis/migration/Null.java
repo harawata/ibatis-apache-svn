@@ -1,4 +1,4 @@
-package org.apache.ibatis.adhoc;
+package org.apache.ibatis.migration;
 
 import org.apache.ibatis.type.*;
 

@@ -1,8 +1,9 @@
 package org.apache.ibatis.migration.commands;
 
-import org.apache.ibatis.adhoc.AdHocExecutor;
+import org.apache.ibatis.migration.SqlRunner;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.migration.*;
+import org.apache.ibatis.jdbc.UnpooledDataSource;
 
 import java.io.*;
 import java.math.BigDecimal;
@@ -51,9 +52,9 @@ public abstract class BaseCommand implements Command {
   }
 
   protected List<Change> getChangelog() {
-    AdHocExecutor executor = getAdHocExecutor();
+    SqlRunner runner = getSqlRunner();
     try {
-      List<Map<String, Object>> changelog = executor.selectAll("select ID, APPLIED_AT, DESCRIPTION from "+changelogTable()+" order by id");
+      List<Map<String, Object>> changelog = runner.selectAll("select ID, APPLIED_AT, DESCRIPTION from "+changelogTable()+" order by id");
       List<Change> changes = new ArrayList<Change>();
       for (Map<String, Object> change : changelog) {
         String id = change.get("ID") == null ? null : change.get("ID").toString();
@@ -65,7 +66,7 @@ public abstract class BaseCommand implements Command {
     } catch (SQLException e) {
       throw new MigrationException("Error querying last applied migration.  Cause: " + e, e);
     } finally {
-      executor.closeConnection();
+      runner.closeConnection();
     }
   }
 
@@ -83,14 +84,14 @@ public abstract class BaseCommand implements Command {
   }
 
   protected boolean changelogExists() {
-    AdHocExecutor executor = getAdHocExecutor();
+    SqlRunner runner = getSqlRunner();
     try {
-      executor.selectAll("select ID, APPLIED_AT, DESCRIPTION from " + changelogTable());
+      runner.selectAll("select ID, APPLIED_AT, DESCRIPTION from " + changelogTable());
       return true;
     } catch (SQLException e) {
       return false;
     } finally {
-      executor.closeConnection();
+      runner.closeConnection();
     }
   }
 
@@ -144,15 +145,22 @@ public abstract class BaseCommand implements Command {
     }
   }
 
-  protected AdHocExecutor getAdHocExecutor() {
-    lazyInitializeDrivers();
+  protected SqlRunner getSqlRunner() {
+    try {
+      lazyInitializeDrivers();
 
-    Properties props = environmentProperties();
-    String driver = props.getProperty("driver");
-    String url = props.getProperty("url");
-    String username = props.getProperty("username");
-    String password = props.getProperty("password");
-    return new AdHocExecutor(driver, url, username, password, false, driverClassLoader);
+      Properties props = environmentProperties();
+      String driver = props.getProperty("driver");
+      String url = props.getProperty("url");
+      String username = props.getProperty("username");
+      String password = props.getProperty("password");
+
+      UnpooledDataSource dataSource = new UnpooledDataSource(driverClassLoader, driver, url, username, password);
+      dataSource.setAutoCommit(true);
+      return new SqlRunner(dataSource.getConnection(), false);
+    } catch (SQLException e) {
+      throw new RuntimeException("Could not create SqlRunner. Cause: " + e, e);
+    }
   }
 
   protected ScriptRunner getScriptRunner() {
@@ -165,8 +173,11 @@ public abstract class BaseCommand implements Command {
       String username = props.getProperty("username");
       String password = props.getProperty("password");
       PrintWriter outWriter = new PrintWriter(out);
-      ScriptRunner scriptRunner = new ScriptRunner(driver, url, username, password, false, !force);
-      scriptRunner.setDriverClassLoader(driverClassLoader);
+      UnpooledDataSource dataSource = new UnpooledDataSource(driverClassLoader, driver, url, username, password);
+      dataSource.setAutoCommit(false);
+      ScriptRunner scriptRunner = new ScriptRunner(dataSource.getConnection());
+      scriptRunner.setAutoCommit(true);
+      scriptRunner.setStopOnError(!force);
       scriptRunner.setLogWriter(outWriter);
       scriptRunner.setErrorLogWriter(outWriter);
       return scriptRunner;

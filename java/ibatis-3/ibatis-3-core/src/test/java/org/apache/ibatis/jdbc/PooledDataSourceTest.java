@@ -6,11 +6,11 @@ import org.junit.*;
 import java.sql.Connection;
 import java.util.*;
 
-public class SimpleDataSourceTest extends BaseDataTest {
+public class PooledDataSourceTest extends BaseDataTest {
 
   @Test
   public void shouldProperlyMaintainPoolOf3ActiveAnd2IdleConnections() throws Exception {
-    SimpleDataSource ds = createSimpleDataSource(JPETSTORE_PROPERTIES);
+    PooledDataSource ds = createPooledDataSource(JPETSTORE_PROPERTIES);
     try {
       runScript(ds, JPETSTORE_DDL);
       ds.setJdbcDefaultAutoCommit(false);
@@ -32,18 +32,18 @@ public class SimpleDataSourceTest extends BaseDataTest {
       for (int i = 0; i < 3; i++) {
         connections.add(ds.getConnection());
       }
-      Assert.assertEquals(3, ds.getActiveConnectionCount());
+      Assert.assertEquals(3, ds.getPoolState().getActiveConnectionCount());
       for (Connection c : connections) {
         c.close();
       }
-      Assert.assertEquals(2, ds.getIdleConnectionCount());
-      Assert.assertEquals(4, ds.getRequestCount());
-      Assert.assertEquals(0, ds.getBadConnectionCount());
-      Assert.assertEquals(0, ds.getHadToWaitCount());
-      Assert.assertEquals(0, ds.getAverageOverdueCheckoutTime());
-      Assert.assertEquals(0, ds.getClaimedOverdueConnectionCount());
-      Assert.assertEquals(0, ds.getAverageWaitTime());
-      Assert.assertNotNull(ds.getStatus());
+      Assert.assertEquals(2, ds.getPoolState().getIdleConnectionCount());
+      Assert.assertEquals(4, ds.getPoolState().getRequestCount());
+      Assert.assertEquals(0, ds.getPoolState().getBadConnectionCount());
+      Assert.assertEquals(0, ds.getPoolState().getHadToWaitCount());
+      Assert.assertEquals(0, ds.getPoolState().getAverageOverdueCheckoutTime());
+      Assert.assertEquals(0, ds.getPoolState().getClaimedOverdueConnectionCount());
+      Assert.assertEquals(0, ds.getPoolState().getAverageWaitTime());
+      Assert.assertNotNull(ds.getPoolState().toString());
     } finally {
       ds.forceCloseAll();
     }

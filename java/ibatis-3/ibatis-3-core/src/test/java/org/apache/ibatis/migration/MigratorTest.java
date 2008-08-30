@@ -1,8 +1,8 @@
 package org.apache.ibatis.migration;
 
 import org.apache.ibatis.BaseDataTest;
-import org.apache.ibatis.adhoc.AdHocExecutor;
-import org.apache.ibatis.jdbc.SimpleDataSource;
+import org.apache.ibatis.migration.SqlRunner;
+import org.apache.ibatis.jdbc.PooledDataSource;
 import org.apache.ibatis.io.Resources;
 import org.junit.*;
 
@@ -24,9 +24,9 @@ public class MigratorTest extends BaseDataTest {
     buffer = new StringOutputStream();
     System.setOut(new PrintStream(buffer));
 
-    SimpleDataSource ds = createSimpleDataSource(BLOG_PROPERTIES);
+    PooledDataSource ds = createPooledDataSource(BLOG_PROPERTIES);
     Connection conn = ds.getConnection();
-    AdHocExecutor executor = new AdHocExecutor(conn);
+    SqlRunner executor = new SqlRunner(conn);
     safeRun(executor, "DROP TABLE comment");
     safeRun(executor, "DROP TABLE post_tag");
     safeRun(executor, "DROP TABLE tag");
@@ -82,8 +82,6 @@ public class MigratorTest extends BaseDataTest {
     Migrator.main(args("--path="+f.getAbsolutePath(),"--help"));
     Assert.assertTrue(buffer.toString().contains("--help"));
     buffer.clear();
-
-
   }
 
 
@@ -117,6 +115,7 @@ public class MigratorTest extends BaseDataTest {
     Assert.assertTrue(f.mkdir());
     Assert.assertTrue(f.exists());
     Assert.assertTrue(f.isDirectory());
+    f.deleteOnExit();
     return f;
   }
 
@@ -135,7 +134,7 @@ public class MigratorTest extends BaseDataTest {
     }
   }
 
-  private static void safeRun(AdHocExecutor executor, String sql) {
+  private static void safeRun(SqlRunner executor, String sql) {
     try {
       executor.run(sql);
     } catch (Exception e) {

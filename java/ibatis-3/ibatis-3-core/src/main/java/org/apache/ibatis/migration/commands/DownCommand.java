@@ -1,6 +1,6 @@
 package org.apache.ibatis.migration.commands;
 
-import org.apache.ibatis.adhoc.AdHocExecutor;
+import org.apache.ibatis.migration.SqlRunner;
 import org.apache.ibatis.migration.*;
 
 import java.io.*;
@@ -22,7 +22,11 @@ public class DownCommand extends BaseCommand {
         if (change.getId().equals(lastChange.getId())) {
           out.println(horizontalLine("Undoing: " + change.getFilename(), 80));
           ScriptRunner runner = getScriptRunner();
-          runner.runScript(new MigrationReader(new FileReader(scriptFile(change.getFilename())), true, environmentProperties()));
+          try {
+            runner.runScript(new MigrationReader(new FileReader(scriptFile(change.getFilename())), true, environmentProperties()));
+          } finally {
+            runner.closeConnection();
+          }
           if (changelogExists()) {
             deleteChange(change);
           } else {
@@ -37,13 +41,13 @@ public class DownCommand extends BaseCommand {
   }
 
   protected void deleteChange(Change change) {
-    AdHocExecutor executor = getAdHocExecutor();
+    SqlRunner runner = getSqlRunner();
     try {
-      executor.delete("delete from " + changelogTable() + " where id = ?", change.getId());
+      runner.delete("delete from " + changelogTable() + " where id = ?", change.getId());
     } catch (SQLException e) {
       throw new MigrationException("Error querying last applied migration.  Cause: " + e, e);
     } finally {
-      executor.closeConnection();
+      runner.closeConnection();
     }
   }
 
