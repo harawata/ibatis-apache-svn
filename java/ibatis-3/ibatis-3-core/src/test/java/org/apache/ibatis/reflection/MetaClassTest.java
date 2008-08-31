@@ -1,6 +1,7 @@
 package org.apache.ibatis.reflection;
 
 import domain.misc.RichType;
+import domain.misc.generics.GenericConcrete;
 import org.junit.*;
 
 import java.util.*;
@@ -14,14 +15,20 @@ public class MetaClassTest {
     }
   };
 
-  private MetaClass meta = MetaClass.forClass(RichType.class);
-
   public MetaClassTest() {
     rich.setRichType(new RichType());
   }
 
   @Test
+  public void shouldTestDataTypeOfGenericMethod() {
+    MetaClass meta = MetaClass.forClass(GenericConcrete.class);
+    Assert.assertEquals(Long.class, meta.getGetterType("id"));
+    Assert.assertEquals(Long.class, meta.getSetterType("id"));
+  }
+
+  @Test
   public void shouldCheckGetterExistance() {
+    MetaClass meta = MetaClass.forClass(RichType.class);
     Assert.assertTrue(meta.hasGetter("richField"));
     Assert.assertTrue(meta.hasGetter("richProperty"));
     Assert.assertTrue(meta.hasGetter("richList"));
@@ -40,6 +47,7 @@ public class MetaClassTest {
 
   @Test
   public void shouldCheckSetterExistance() {
+    MetaClass meta = MetaClass.forClass(RichType.class);
     Assert.assertTrue(meta.hasSetter("richField"));
     Assert.assertTrue(meta.hasSetter("richProperty"));
     Assert.assertTrue(meta.hasSetter("richList"));
@@ -58,6 +66,7 @@ public class MetaClassTest {
 
   @Test
   public void shouldCheckTypeForEachGetter() {
+    MetaClass meta = MetaClass.forClass(RichType.class);
     Assert.assertEquals(String.class, meta.getGetterType("richField"));
     Assert.assertEquals(String.class, meta.getGetterType("richProperty"));
     Assert.assertEquals(List.class, meta.getGetterType("richList"));
@@ -74,6 +83,7 @@ public class MetaClassTest {
 
   @Test
   public void shouldCheckTypeForEachSetter() {
+    MetaClass meta = MetaClass.forClass(RichType.class);
     Assert.assertEquals(String.class, meta.getSetterType("richField"));
     Assert.assertEquals(String.class, meta.getSetterType("richProperty"));
     Assert.assertEquals(List.class, meta.getSetterType("richList"));
@@ -90,12 +100,14 @@ public class MetaClassTest {
 
   @Test
   public void shouldCheckGetterAndSetterNames() {
+    MetaClass meta = MetaClass.forClass(RichType.class);
     Assert.assertEquals(5, meta.getGetterNames().length);
     Assert.assertEquals(5, meta.getSetterNames().length);
   }
 
   @Test
   public void shouldFindPropertyName() {
+    MetaClass meta = MetaClass.forClass(RichType.class);
     Assert.assertEquals("richField", meta.findProperty("RICHfield"));
   }
 
