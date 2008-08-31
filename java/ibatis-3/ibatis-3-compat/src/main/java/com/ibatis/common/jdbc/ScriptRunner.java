@@ -2,10 +2,9 @@ package com.ibatis.common.jdbc;
 
 import org.apache.ibatis.jdbc.UnpooledDataSource;
 
-import javax.sql.DataSource;
 import java.sql.*;
 
-public class ScriptRunner extends org.apache.ibatis.migration.ScriptRunner {
+public class ScriptRunner extends org.apache.ibatis.jdbc.ScriptRunner {
 
   public ScriptRunner(Connection connection, boolean autoCommit, boolean stopOnError) {
     super(connection);

@@ -1,9 +1,10 @@
 package org.apache.ibatis.migration.commands;
 
-import org.apache.ibatis.migration.SqlRunner;
+import org.apache.ibatis.jdbc.SqlRunner;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.migration.*;
 import org.apache.ibatis.jdbc.UnpooledDataSource;
+import org.apache.ibatis.jdbc.ScriptRunner;
 
 import java.io.*;
 import java.math.BigDecimal;
@@ -157,7 +158,7 @@ public abstract class BaseCommand implements Command {
 
       UnpooledDataSource dataSource = new UnpooledDataSource(driverClassLoader, driver, url, username, password);
       dataSource.setAutoCommit(true);
-      return new SqlRunner(dataSource.getConnection(), false);
+      return new SqlRunner(dataSource.getConnection());
     } catch (SQLException e) {
       throw new RuntimeException("Could not create SqlRunner. Cause: " + e, e);
     }

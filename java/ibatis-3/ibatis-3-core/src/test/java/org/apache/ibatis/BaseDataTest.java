@@ -2,7 +2,7 @@ package org.apache.ibatis;
 
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.PooledDataSource;
-import org.apache.ibatis.migration.ScriptRunner;
+import org.apache.ibatis.jdbc.ScriptRunner;
 import org.junit.Test;
 
 import javax.sql.DataSource;

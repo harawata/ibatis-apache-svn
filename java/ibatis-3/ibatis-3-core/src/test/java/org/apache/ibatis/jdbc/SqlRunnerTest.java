@@ -1,14 +1,15 @@
-package org.apache.ibatis.adhoc;
+package org.apache.ibatis.jdbc;
 
 import org.apache.ibatis.BaseDataTest;
-import org.apache.ibatis.migration.*;
 import org.apache.ibatis.jdbc.PooledDataSource;
+import org.apache.ibatis.jdbc.Null;
+import org.apache.ibatis.jdbc.SqlRunner;
 import org.junit.*;
 
 import java.sql.Connection;
 import java.util.*;
 
-public class AdHocExecutorTest extends BaseDataTest {
+public class SqlRunnerTest extends BaseDataTest {
 
   @Test
   public void shouldSelectOne() throws Exception {
@@ -46,7 +47,8 @@ public class AdHocExecutorTest extends BaseDataTest {
     runScript(ds, BLOG_DDL);
     Connection connection = ds.getConnection();
     try {
-      SqlRunner exec = new SqlRunner(connection, true);
+      SqlRunner exec = new SqlRunner(connection);
+      exec.setForceGeneratedKeySupport(true);
       int id = exec.insert("INSERT INTO author (username, password, email, bio) VALUES (?,?,?,?)", "someone", "******", "someone@apache.org", Null.LONGVARCHAR);
       Map row = exec.selectOne("SELECT * FROM author WHERE username = ?", "someone");
       connection.rollback();

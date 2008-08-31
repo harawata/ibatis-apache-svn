@@ -1,7 +1,7 @@
 package org.apache.ibatis.migration;
 
 import org.apache.ibatis.BaseDataTest;
-import org.apache.ibatis.migration.SqlRunner;
+import org.apache.ibatis.jdbc.SqlRunner;
 import org.apache.ibatis.jdbc.PooledDataSource;
 import org.apache.ibatis.io.Resources;
 import org.junit.*;

@@ -1,8 +1,7 @@
-package org.apache.ibatis.migration;
+package org.apache.ibatis.jdbc;
 
 import org.apache.ibatis.type.*;
-import org.apache.ibatis.migration.Null;
-import org.apache.ibatis.jdbc.UnpooledDataSource;
+import org.apache.ibatis.jdbc.Null;
 
 import java.sql.*;
 import java.util.*;
@@ -13,15 +12,14 @@ public class SqlRunner {
 
   private Connection connection;
   private TypeHandlerRegistry typeHandlerRegistry;
-  private boolean forceGeneratedKeySupport = false;
+  private boolean forceGeneratedKeySupport;
 
   public SqlRunner(Connection connection) {
-    this(connection, false);
-  }
-
-  public SqlRunner(Connection connection, boolean forceGeneratedKeySupport) {
     this.connection = connection;
     this.typeHandlerRegistry = new TypeHandlerRegistry();
+  }
+
+  public void setForceGeneratedKeySupport(boolean forceGeneratedKeySupport) {
     this.forceGeneratedKeySupport = forceGeneratedKeySupport;
   }
 

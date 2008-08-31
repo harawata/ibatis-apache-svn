@@ -1,6 +1,7 @@
 package org.apache.ibatis.migration.commands;
 
 import org.apache.ibatis.migration.*;
+import org.apache.ibatis.jdbc.ScriptRunner;
 
 import java.io.*;
 

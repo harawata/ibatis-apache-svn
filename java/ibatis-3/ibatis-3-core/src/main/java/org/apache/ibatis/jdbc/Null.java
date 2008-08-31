@@ -1,4 +1,4 @@
-package org.apache.ibatis.migration;
+package org.apache.ibatis.jdbc;
 
 import org.apache.ibatis.type.*;
 
