@@ -47,11 +47,27 @@ public class MetaObjectTest {
   }
 
   @Test
+  public void shouldGetAndSetMapPairUsingArraySyntax() {
+    RichType rich = new RichType();
+    MetaObject meta = MetaObject.forObject(rich);
+    meta.setValue("richMap[key]", "foo");
+    Assert.assertEquals("foo", meta.getValue("richMap[key]"));
+  }
+
+  @Test
   public void shouldGetAndSetNestedMapPair() {
     RichType rich = new RichType();
     MetaObject meta = MetaObject.forObject(rich);
     meta.setValue("richType.richMap.key", "foo");
     Assert.assertEquals("foo", meta.getValue("richType.richMap.key"));
+  }
+
+  @Test
+  public void shouldGetAndSetNestedMapPairUsingArraySyntax() {
+    RichType rich = new RichType();
+    MetaObject meta = MetaObject.forObject(rich);
+    meta.setValue("richType.richMap[key]", "foo");
+    Assert.assertEquals("foo", meta.getValue("richType.richMap[key]"));
   }
 
   @Test

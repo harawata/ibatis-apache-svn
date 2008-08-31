@@ -37,17 +37,20 @@ public class MetaObject {
   }
 
   public String findProperty(String propName) {
-    if (object instanceof Map) return propName;
+    if (object instanceof Map)
+      return propName;
     return metaClass.findProperty(propName);
   }
 
   public String[] getGetterNames() {
-    if (object instanceof Map) return (String[]) ((Map) object).keySet().toArray(new String[((Map) object).size()]);
+    if (object instanceof Map)
+      return (String[]) ((Map) object).keySet().toArray(new String[((Map) object).size()]);
     return metaClass.getGetterNames();
   }
 
   public String[] getSetterNames() {
-    if (object instanceof Map) return (String[]) ((Map) object).keySet().toArray(new String[((Map) object).size()]);
+    if (object instanceof Map)
+      return (String[]) ((Map) object).keySet().toArray(new String[((Map) object).size()]);
     return metaClass.getSetterNames();
   }
 
@@ -84,7 +87,8 @@ public class MetaObject {
   }
 
   public boolean hasSetter(String name) {
-    if (object instanceof Map) return true;
+    if (object instanceof Map)
+      return true;
     PropertyTokenizer prop = new PropertyTokenizer(name);
     if (prop.hasNext()) {
       MetaObject metaValue = metaObjectForProperty(prop.getIndexedName());
@@ -99,7 +103,8 @@ public class MetaObject {
   }
 
   public boolean hasGetter(String name) {
-    if (object instanceof Map) return true;
+    if (object instanceof Map)
+      return true;
     PropertyTokenizer prop = new PropertyTokenizer(name);
     if (prop.hasNext()) {
       MetaObject metaValue = metaObjectForProperty(prop.getIndexedName());
@@ -123,7 +128,7 @@ public class MetaObject {
         return metaValue.getValue(prop.getChildren());
       }
     } else {
-      return getProperty(object, prop);
+      return getProperty(prop, object);
     }
   }
 
@@ -139,7 +144,7 @@ public class MetaObject {
           try {
             Object newObject = objectFactory.create(type);
             metaValue = MetaObject.forObject(newObject);
-            setProperty(object, prop, newObject);
+            setProperty(prop, object, newObject);
           } catch (Exception e) {
             throw new RuntimeException("Cannot set value of property '" + name + "' because '" + name + "' is null and cannot be instantiated on instance of " + type.getName() + ". Cause:" + e.toString(), e);
           }
@@ -147,38 +152,38 @@ public class MetaObject {
       }
       metaValue.setValue(prop.getChildren(), value);
     } else {
-      setProperty(object, prop, value);
+      setProperty(prop, object, value);
     }
 
   }
 
-  private Object getProperty(Object object, PropertyTokenizer prop) {
+  private Object getProperty(PropertyTokenizer prop, Object object) {
     if (prop.getIndex() != null) {
-      return getIndexedProperty(object, prop);
+      return getIndexedProperty(prop, object);
     } else {
-      return getBeanOrMapProperty(object, prop);
+      return getBeanOrMapProperty(prop, object);
     }
   }
 
-  private Object getBeanOrMapProperty(Object object, PropertyTokenizer prop) {
+  private Object getBeanOrMapProperty(PropertyTokenizer prop, Object object) {
     if (object instanceof Map) {
       return ((Map) object).get(prop.getName());
     } else {
-      return getBeanProperty(object, prop);
+      return getBeanProperty(prop, object);
     }
   }
 
-  private void setProperty(Object object, PropertyTokenizer prop, Object value) {
+  private void setProperty(PropertyTokenizer prop, Object object, Object value) {
     if (prop.getIndex() != null) {
-      setIndexedProperty(object, prop, value);
+      setIndexedProperty(prop, object, value);
     } else if (object instanceof Map) {
       ((Map) object).put(prop.getName(), value);
     } else {
-      setBeanProperty(object, prop, value);
+      setBeanProperty(prop, object, value);
     }
   }
 
-  private Object getBeanProperty(Object object, PropertyTokenizer prop) {
+  private Object getBeanProperty(PropertyTokenizer prop, Object object) {
     try {
       Invoker method = metaClass.getGetInvoker(prop.getName());
       try {
@@ -193,7 +198,7 @@ public class MetaObject {
     }
   }
 
-  private void setBeanProperty(Object object, PropertyTokenizer prop, Object value) {
+  private void setBeanProperty(PropertyTokenizer prop, Object object, Object value) {
     try {
       Invoker method = metaClass.getSetInvoker(prop.getName());
       Object[] params = {value};
@@ -207,83 +212,82 @@ public class MetaObject {
     }
   }
 
-  private Object getIndexedProperty(Object object, PropertyTokenizer prop) {
-    Object value;
-    try {
-      int i = Integer.parseInt(prop.getIndex());
-      Object list;
-      if ("".equals(prop.getName())) {
-        list = object;
-      } else {
-        list = getBeanOrMapProperty(object, prop);
-      }
-      if (list instanceof List) {
-        value = ((List) list).get(i);
-      } else if (list instanceof Object[]) {
-        value = ((Object[]) list)[i];
-      } else if (list instanceof char[]) {
-        value = ((char[]) list)[i];
-      } else if (list instanceof boolean[]) {
-        value = ((boolean[]) list)[i];
-      } else if (list instanceof byte[]) {
-        value = ((byte[]) list)[i];
-      } else if (list instanceof double[]) {
-        value = ((double[]) list)[i];
-      } else if (list instanceof float[]) {
-        value = ((float[]) list)[i];
-      } else if (list instanceof int[]) {
-        value = ((int[]) list)[i];
-      } else if (list instanceof long[]) {
-        value = ((long[]) list)[i];
-      } else if (list instanceof short[]) {
-        value = ((short[]) list)[i];
-      } else {
-        throw new RuntimeException("The '" + prop.getName() + "' property of " + object + " is not a List or Array.");
-      }
-    } catch (RuntimeException e) {
-      throw e;
-    } catch (Exception e) {
-      throw new RuntimeException("Error getting ordinal list from JavaBean. Cause " + e, e);
+  private Object resolveCollection(PropertyTokenizer prop, Object object) {
+    if ("".equals(prop.getName())) {
+      return object;
+    } else {
+      return getBeanOrMapProperty(prop, object);
     }
-    return value;
   }
 
-  private void setIndexedProperty(Object object, PropertyTokenizer prop, Object value) {
-    try {
-      int i = Integer.parseInt(prop.getIndex());
-      Object list;
-      if ("".equals(prop.getName())) {
-        list = object;
-      } else {
-        list = getBeanOrMapProperty(object, prop);
-      }
-      if (list instanceof List) {
-        ((List) list).set(i, value);
-      } else if (list instanceof Object[]) {
-        ((Object[]) list)[i] = value;
-      } else if (list instanceof char[]) {
-        ((char[]) list)[i] = (Character) value;
-      } else if (list instanceof boolean[]) {
-        ((boolean[]) list)[i] = (Boolean) value;
-      } else if (list instanceof byte[]) {
-        ((byte[]) list)[i] = (Byte) value;
-      } else if (list instanceof double[]) {
-        ((double[]) list)[i] = (Double) value;
-      } else if (list instanceof float[]) {
-        ((float[]) list)[i] = (Float) value;
-      } else if (list instanceof int[]) {
-        ((int[]) list)[i] = (Integer) value;
-      } else if (list instanceof long[]) {
-        ((long[]) list)[i] = (Long) value;
-      } else if (list instanceof short[]) {
-        ((short[]) list)[i] = (Short) value;
-      } else {
-        throw new RuntimeException("The '" + prop.getName() + "' property of " + object + " is not a List or Array.");
-      }
-    } catch (RuntimeException e) {
-      throw e;
-    } catch (Exception e) {
-      throw new RuntimeException("Error getting ordinal value from JavaBean. Cause " + e, e);
+  private Object getIndexedProperty(PropertyTokenizer prop, Object object) {
+    Object collection = resolveCollection(prop, object);
+    if (collection instanceof Map) {
+      return ((Map)collection).get(prop.getIndex());
+    }
+    return getListValue(prop, collection);
+  }
+
+  private Object getListValue(PropertyTokenizer prop, Object list) {
+    int i = Integer.parseInt(prop.getIndex());
+    if (list instanceof List) {
+      return ((List) list).get(i);
+    } else if (list instanceof Object[]) {
+      return ((Object[]) list)[i];
+    } else if (list instanceof char[]) {
+      return ((char[]) list)[i];
+    } else if (list instanceof boolean[]) {
+      return ((boolean[]) list)[i];
+    } else if (list instanceof byte[]) {
+      return ((byte[]) list)[i];
+    } else if (list instanceof double[]) {
+      return ((double[]) list)[i];
+    } else if (list instanceof float[]) {
+      return ((float[]) list)[i];
+    } else if (list instanceof int[]) {
+      return ((int[]) list)[i];
+    } else if (list instanceof long[]) {
+      return ((long[]) list)[i];
+    } else if (list instanceof short[]) {
+      return ((short[]) list)[i];
+    } else {
+      throw new RuntimeException("The '" + prop.getName() + "' property of " + list + " is not a List or Array.");
+    }
+  }
+
+  private void setIndexedProperty(PropertyTokenizer prop, Object object, Object value) {
+    Object collection = resolveCollection(prop, object);
+    if (collection instanceof Map) {
+      ((Map)collection).put(prop.getIndex(),value);
+    } else {
+      setListValue(prop, collection, value);
+    }    
+  }
+
+  private void setListValue(PropertyTokenizer prop, Object list, Object value) {
+    int i = Integer.parseInt(prop.getIndex());
+    if (list instanceof List) {
+      ((List) list).set(i, value);
+    } else if (list instanceof Object[]) {
+      ((Object[]) list)[i] = value;
+    } else if (list instanceof char[]) {
+      ((char[]) list)[i] = (Character) value;
+    } else if (list instanceof boolean[]) {
+      ((boolean[]) list)[i] = (Boolean) value;
+    } else if (list instanceof byte[]) {
+      ((byte[]) list)[i] = (Byte) value;
+    } else if (list instanceof double[]) {
+      ((double[]) list)[i] = (Double) value;
+    } else if (list instanceof float[]) {
+      ((float[]) list)[i] = (Float) value;
+    } else if (list instanceof int[]) {
+      ((int[]) list)[i] = (Integer) value;
+    } else if (list instanceof long[]) {
+      ((long[]) list)[i] = (Long) value;
+    } else if (list instanceof short[]) {
+      ((short[]) list)[i] = (Short) value;
+    } else {
+      throw new RuntimeException("The '" + prop.getName() + "' property of " + list + " is not a List or Array.");
     }
   }
 
