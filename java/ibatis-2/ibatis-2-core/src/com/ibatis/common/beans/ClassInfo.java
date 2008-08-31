@@ -99,7 +99,7 @@ public class ClassInfo {
   }
 
   private void addGetMethods(Class cls) {
-    Method[] methods = getAllMethodsForClass(cls);
+    Method[] methods = getClassMethods(cls);
     for (int i = 0; i < methods.length; i++) {
       Method method = methods[i];
       String name = method.getName();
@@ -124,7 +124,7 @@ public class ClassInfo {
 
   private void addSetMethods(Class cls) {
     Map conflictingSetters = new HashMap();
-    Method[] methods = getAllMethodsForClass(cls);
+    Method[] methods = getClassMethods(cls);
     for (int i = 0; i < methods.length; i++) {
       Method method = methods[i];
       String name = method.getName();
@@ -225,19 +225,6 @@ public class ClassInfo {
     getTypes.put(field.getName(), field.getType());
   }
 
-  private Method[] getAllMethodsForClass(Class cls) {
-    if (cls.isInterface()) {
-      // interfaces only have public methods - so the
-      // simple call is all we need (this will also get superinterface methods)
-      return cls.getMethods();
-    } else {
-      // need to get all the declared methods in this class
-      // and any super-class - then need to set access appropriatly
-      // for private methods
-      return getClassMethods(cls);
-    }
-  }
-
   /**
    * This method returns an array containing all methods
    * declared in this class and any superclass.
@@ -269,22 +256,23 @@ public class ClassInfo {
   }
 
   private void addUniqueMethods(HashMap uniqueMethods, Method[] methods) {
-    for (int i = 0; i < methods.length; i++) {
-      Method currentMethod = methods[i];
-      String signature = getSignature(currentMethod);
-      // check to see if the method is already known
-      // if it is known, then an extended class must have
-      // overridden a method
-      if (!uniqueMethods.containsKey(signature)) {
-        if (canAccessPrivateMethods()) {
-          try {
-            currentMethod.setAccessible(true);
-          } catch (Exception e) {
-            // Ignored. This is only a final precaution, nothing we can do.
+    for (Method currentMethod : methods) {
+      if (!currentMethod.isBridge()) {
+        String signature = getSignature(currentMethod);
+        // check to see if the method is already known
+        // if it is known, then an extended class must have
+        // overridden a method
+        if (!uniqueMethods.containsKey(signature)) {
+          if (canAccessPrivateMethods()) {
+            try {
+              currentMethod.setAccessible(true);
+            } catch (Exception e) {
+              // Ignored. This is only a final precaution, nothing we can do.
+            }
           }
-        }
 
-        uniqueMethods.put(signature, currentMethod);
+          uniqueMethods.put(signature, currentMethod);
+        }
       }
     }
   }
