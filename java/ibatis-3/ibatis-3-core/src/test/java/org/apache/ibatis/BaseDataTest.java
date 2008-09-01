@@ -23,10 +23,10 @@ public class BaseDataTest {
   public static PooledDataSource createPooledDataSource(String resource) throws IOException {
     Properties props = Resources.getResourceAsProperties(resource);
     PooledDataSource ds = new PooledDataSource();
-    ds.setJdbcDriver(props.getProperty("driver"));
-    ds.setJdbcUrl(props.getProperty("url"));
-    ds.setJdbcUsername(props.getProperty("username"));
-    ds.setJdbcPassword(props.getProperty("password"));
+    ds.setDriver(props.getProperty("driver"));
+    ds.setUrl(props.getProperty("url"));
+    ds.setUsername(props.getProperty("username"));
+    ds.setPassword(props.getProperty("password"));
     return ds;
   }
 

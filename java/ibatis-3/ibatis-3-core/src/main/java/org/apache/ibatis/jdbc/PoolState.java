@@ -66,10 +66,10 @@ public class PoolState {
   public synchronized String toString() {
     StringBuffer buffer = new StringBuffer();
     buffer.append("\n===CONFINGURATION==============================================");
-    buffer.append("\n jdbcDriver                     ").append(dataSource.getJdbcDriver());
-    buffer.append("\n jdbcUrl                        ").append(dataSource.getJdbcUrl());
-    buffer.append("\n jdbcUsername                   ").append(dataSource.getJdbcUsername());
-    buffer.append("\n jdbcPassword                   ").append((dataSource.getJdbcPassword() == null ? "NULL" : "************"));
+    buffer.append("\n jdbcDriver                     ").append(dataSource.getDriver());
+    buffer.append("\n jdbcUrl                        ").append(dataSource.getUrl());
+    buffer.append("\n jdbcUsername                   ").append(dataSource.getUsername());
+    buffer.append("\n jdbcPassword                   ").append((dataSource.getPassword() == null ? "NULL" : "************"));
     buffer.append("\n poolMaxActiveConnections       ").append(dataSource.poolMaximumActiveConnections);
     buffer.append("\n poolMaxIdleConnections         ").append(dataSource.poolMaximumIdleConnections);
     buffer.append("\n poolMaxCheckoutTime            ").append(dataSource.poolMaximumCheckoutTime);

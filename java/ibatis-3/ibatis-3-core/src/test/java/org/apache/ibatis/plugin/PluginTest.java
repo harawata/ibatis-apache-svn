@@ -31,6 +31,9 @@ public class PluginTest {
     public Object plugin(Object target) {
       return Plugin.wrap(target, this);
     }
+
+    public void setProperties(Properties properties) {
+    }
   }
 
 }

@@ -46,10 +46,10 @@ public class SimpleDataSource extends PooledDataSource {
         throw new RuntimeException("SimpleDataSource: Some properties were not set.");
       }
 
-      setJdbcDriver((String) props.get(PROP_JDBC_DRIVER));
-      setJdbcUrl((String) props.get(PROP_JDBC_URL));
-      setJdbcUsername((String) props.get(PROP_JDBC_USERNAME));
-      setJdbcPassword((String) props.get(PROP_JDBC_PASSWORD));
+      setDriver((String) props.get(PROP_JDBC_DRIVER));
+      setUrl((String) props.get(PROP_JDBC_URL));
+      setUsername((String) props.get(PROP_JDBC_USERNAME));
+      setPassword((String) props.get(PROP_JDBC_PASSWORD));
 
       setPoolMaximumActiveConnections(
           props.containsKey(PROP_POOL_MAX_ACTIVE_CONN)
@@ -85,13 +85,13 @@ public class SimpleDataSource extends PooledDataSource {
               ? Integer.parseInt((String) props.get(PROP_POOL_PING_CONN_NOT_USED_FOR))
               : 0);
 
-      setJdbcDefaultAutoCommit(
+      setDefaultAutoCommit(
           props.containsKey(PROP_JDBC_DEFAULT_AUTOCOMMIT)
               && Boolean.valueOf((String) props.get(PROP_JDBC_DEFAULT_AUTOCOMMIT)).booleanValue());
 
       Properties driverProps = new Properties();
-      driverProps.setProperty("user", getJdbcUsername());
-      driverProps.setProperty("password", getJdbcPassword());
+      driverProps.setProperty("user", getUsername());
+      driverProps.setProperty("password", getPassword());
       for (Map.Entry entry : (Set<Map.Entry>) props.entrySet()) {
         String name = (String) entry.getKey();
         String value = (String) entry.getValue();
@@ -99,9 +99,9 @@ public class SimpleDataSource extends PooledDataSource {
           driverProps.put(name.substring(ADD_DRIVER_PROPS_PREFIX_LENGTH), value);
         }
       }
-      setJdbcDriverProperties(driverProps);
+      setDriverProperties(driverProps);
 
-      Resources.classForName(getJdbcDriver()).newInstance();
+      Resources.classForName(getDriver()).newInstance();
 
       if (isPoolPingEnabled() && (!props.containsKey(PROP_POOL_PING_QUERY) ||
           getPoolPingQuery().trim().length() == 0)) {

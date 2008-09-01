@@ -2,7 +2,7 @@ package org.apache.ibatis.xml;
 
 import org.w3c.dom.*;
 
-import java.util.Properties;
+import java.util.*;
 
 public class NodeletContext {
 
@@ -170,6 +170,29 @@ public class NodeletContext {
     } else {
       return Float.parseFloat(value);
     }
+  }
+
+  public List<NodeletContext> getChildren() {
+    List<NodeletContext> children = new ArrayList<NodeletContext>();
+    NodeList nodeList = node.getChildNodes();
+    if (nodeList != null) {
+      for (int i=0,n=nodeList.getLength(); i < n; i++) {
+        children.add(new NodeletContext(nodeList.item(i),variables));
+      }
+    }
+    return children;
+  }
+
+  public Properties getChildrenAsProperties() {
+    Properties properties = new Properties();
+    for(NodeletContext child : getChildren()) {
+      String name = child.getStringAttribute("name");
+      String value = child.getStringAttribute("value");
+      if (name != null && value != null) {
+        properties.setProperty(name, value);
+      }
+    }
+    return properties;
   }
 
   private Properties parseAttributes(Node n) {

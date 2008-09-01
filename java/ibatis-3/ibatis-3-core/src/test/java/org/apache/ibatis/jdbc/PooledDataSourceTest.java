@@ -13,8 +13,8 @@ public class PooledDataSourceTest extends BaseDataTest {
     PooledDataSource ds = createPooledDataSource(JPETSTORE_PROPERTIES);
     try {
       runScript(ds, JPETSTORE_DDL);
-      ds.setJdbcDefaultAutoCommit(false);
-      ds.setJdbcDriverProperties(new Properties() {
+      ds.setDefaultAutoCommit(false);
+      ds.setDriverProperties(new Properties() {
         {
           setProperty("username", "sa");
           setProperty("password", "");

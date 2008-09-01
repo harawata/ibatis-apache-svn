@@ -14,7 +14,7 @@ public class DefaultObjectFactory implements ObjectFactory {
     return instantiateClass(classToCreate, constructorArgTypes, constructorArgs);
   }
 
-  public void setProperty(String name, String value) {
+  public void setProperties(Properties properties) {
     // no props for default
   }
 

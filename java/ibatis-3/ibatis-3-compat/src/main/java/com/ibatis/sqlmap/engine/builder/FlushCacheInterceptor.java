@@ -33,6 +33,9 @@ public class FlushCacheInterceptor implements Interceptor {
     return Plugin.wrap(target, this);
   }
 
+  public void setProperties(Properties properties) {
+  }
+
   public void addFlushOnExecute(String statementId, Cache cache) {
     Set<Cache> cachesToFlush = flushCacheMap.get(statementId);
     if (cachesToFlush == null) {

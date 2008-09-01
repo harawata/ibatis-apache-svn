@@ -1,6 +1,6 @@
 package org.apache.ibatis.reflection;
 
-import java.util.List;
+import java.util.*;
 
 public interface ObjectFactory {
 
@@ -8,6 +8,6 @@ public interface ObjectFactory {
 
   Object create(Class type, List<Class> constructorArgTypes, List<Object> constructorArgs);
 
-  void setProperty(String name, String value);
+  void setProperties(Properties properties);
 
 }

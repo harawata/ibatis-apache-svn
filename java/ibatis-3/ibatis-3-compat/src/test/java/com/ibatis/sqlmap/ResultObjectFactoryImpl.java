@@ -3,7 +3,7 @@ package com.ibatis.sqlmap;
 import org.apache.ibatis.reflection.ObjectFactory;
 import testdomain.*;
 
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Jeff Butler
@@ -39,6 +39,6 @@ public class ResultObjectFactoryImpl implements ObjectFactory {
     return create(type);
   }
 
-  public void setProperty(String name, String value) {
+  public void setProperties(Properties properties) {
   }
 }

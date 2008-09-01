@@ -190,16 +190,11 @@ public class XmlSqlMapConfigParser {
     String type = context.getStringAttribute("type");
     Class factoryClass = Class.forName(type);
     ObjectFactory factory = (ObjectFactory) factoryClass.newInstance();
+    Properties props = context.getChildrenAsProperties();
+    factory.setProperties(props);
     config.setObjectFactory(factory);
   }
-
-  @Nodelet("/sqlMapConfig/resultObjectFactory/property")
-  public void sqlMapConfigresultObjectFactoryproperty(NodeletContext context) throws Exception {
-    String name = context.getStringAttribute("name");
-    String value = context.getStringAttribute("value");
-    config.getObjectFactory().setProperty(name, value);
-  }
-
+  
   @Nodelet("/sqlMapConfig/sqlMap")
   public void sqlMapConfigsqlMap(NodeletContext context) throws Exception {
     String resource = context.getStringAttribute("resource");

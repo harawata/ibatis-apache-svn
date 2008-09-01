@@ -73,32 +73,32 @@ public class PooledDataSource implements DataSource {
     return DriverManager.getLogWriter();
   }
 
-  public void setJdbcDriver(String jdbcDriver) {
-    dataSource.setDriver(jdbcDriver);
+  public void setDriver(String driver) {
+    dataSource.setDriver(driver);
     forceCloseAll();
   }
 
-  public void setJdbcUrl(String jdbcUrl) {
-    dataSource.setUrl(jdbcUrl);
+  public void setUrl(String url) {
+    dataSource.setUrl(url);
     forceCloseAll();
   }
 
-  public void setJdbcUsername(String jdbcUsername) {
-    dataSource.setUsername(jdbcUsername);
+  public void setUsername(String username) {
+    dataSource.setUsername(username);
     forceCloseAll();
   }
 
-  public void setJdbcPassword(String jdbcPassword) {
-    dataSource.setPassword(jdbcPassword);
+  public void setPassword(String password) {
+    dataSource.setPassword(password);
     forceCloseAll();
   }
 
-  public void setJdbcDefaultAutoCommit(boolean jdbcDefaultAutoCommit) {
-    dataSource.setAutoCommit(jdbcDefaultAutoCommit);
+  public void setDefaultAutoCommit(boolean defaultAutoCommit) {
+    dataSource.setAutoCommit(defaultAutoCommit);
     forceCloseAll();
   }
 
-  public void setJdbcDriverProperties(Properties driverProps) {
+  public void setDriverProperties(Properties driverProps) {
     dataSource.setDriverProperties(driverProps);
     forceCloseAll();
   }
@@ -175,27 +175,27 @@ public class PooledDataSource implements DataSource {
     forceCloseAll();
   }
 
-  public String getJdbcDriver() {
+  public String getDriver() {
     return dataSource.getDriver();
   }
 
-  public String getJdbcUrl() {
+  public String getUrl() {
     return dataSource.getUrl();
   }
 
-  public String getJdbcUsername() {
+  public String getUsername() {
     return dataSource.getUsername();
   }
 
-  public String getJdbcPassword() {
+  public String getPassword() {
     return dataSource.getPassword();
   }
 
-  public boolean isJdbcDefaultAutoCommit() {
+  public boolean isAutoCommit() {
     return dataSource.isAutoCommit();
   }
 
-  public Properties getJdbcDriverProperties() {
+  public Properties getDriverProperties() {
     return dataSource.getDriverProperties();
   }
 

@@ -18,9 +18,9 @@ public class Configuration {
   private boolean lazyLoadingEnabled = true;
   private boolean enhancementEnabled = false;
   private boolean multipleResultSetsEnabled = true;
-  private boolean generatedKeysEnabled = true;
+  private boolean generatedKeysEnabled = false;
   private boolean useColumnLabel = true;
-  private boolean cacheEnabled;
+  private boolean cacheEnabled = true;
 
   private ExecutorType defaultExecutorType = ExecutorType.SIMPLE;
 
