@@ -15,6 +15,13 @@
     </discriminator>
   </resultMap>
 
+  <parameterMap id="" type="">
+    <param property="id" javaType="" jdbcType="" typeHandler=""
+           mode="" scale="" resultMap=""/>
+    <param property="dept" javaType="" jdbcType="" typeHandler=""
+           mode="" scale="" resultMap=""/>
+  </parameterMap>
+
   <select id="selectAllPeople" cacheType="" cacheDomain=""
           flushCache="" parameterType="" resultType="" resultMap="">
     select * from PERSON order by
@@ -24,10 +31,6 @@
   <select id="selectPersonInDept" cacheType="" cacheDomain=""
           flushCache="" parameterType="" resultType=""
           resultMap="">
-    <param property="id" javaType="" jdbcType="" typeHandler=""
-           mode="" scale="" resultMap=""/>
-    <param property="dept" javaType="" jdbcType="" typeHandler=""
-           mode="" scale="" resultMap=""/>
     select * from PERSON
     where PERSON_ID = #param.id --or #{params.id}
     <!-- if(expr) foreach(x,expr) dynamic() propavail(name)

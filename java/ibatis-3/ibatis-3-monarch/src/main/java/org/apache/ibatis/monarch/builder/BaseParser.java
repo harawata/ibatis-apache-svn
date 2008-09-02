@@ -3,6 +3,8 @@ package org.apache.ibatis.monarch.builder;
 import org.apache.ibatis.type.*;
 import org.apache.ibatis.xml.NodeletParser;
 import org.apache.ibatis.mapping.Configuration;
+import org.apache.ibatis.mapping.ResultSetType;
+import org.apache.ibatis.mapping.ParameterMode;
 
 import java.io.Reader;
 import java.util.Properties;
@@ -41,7 +43,25 @@ public class BaseParser {
     try {
       return JdbcType.valueOf(resolveAlias(alias));
     } catch (IllegalArgumentException e) {
-      throw new RuntimeException("Error resolving JDBC type. Cause: " + e, e);
+      throw new RuntimeException("Error resolving JdbcType. Cause: " + e, e);
+    }
+  }
+
+  protected ResultSetType resolveResultSetType(String alias) {
+    if (alias == null) return null;
+    try {
+      return ResultSetType.valueOf(resolveAlias(alias));
+    } catch (IllegalArgumentException e) {
+      throw new RuntimeException("Error resolving ResultSetType. Cause: " + e, e);
+    }
+  }
+
+  protected ParameterMode resolveParameterMode(String alias) {
+    if (alias == null) return null;
+    try {
+      return ParameterMode.valueOf(resolveAlias(alias));
+    } catch (IllegalArgumentException e) {
+      throw new RuntimeException("Error resolving ParameterMode. Cause: " + e, e);
     }
   }
 
