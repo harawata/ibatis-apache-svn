@@ -1,4 +1,5 @@
 <mapper type="com.domain.PersonMapper">
+
   <defaultCache cacheType="MyLRU" cacheDomain="PersonMapper"/>
 
   <resultMap id="" type="" extends="">
@@ -20,6 +21,7 @@
     select * from PERSON order by
     ${opts.order,javaType="",jdbcType="",typeHandler="",mode="",scale="",resultMap=""}
   </select>
+  
   <select id="selectPersonInDept" cacheType="" cacheDomain=""
           flushCache="" parameterType="" resultType=""
           resultMap="">

@@ -37,6 +37,7 @@ public class BaseParser {
   }
 
   protected JdbcType resolveJdbcType(String alias) {
+    if (alias == null) return null;
     try {
       return JdbcType.valueOf(resolveAlias(alias));
     } catch (IllegalArgumentException e) {
@@ -45,10 +46,21 @@ public class BaseParser {
   }
 
   protected Class resolveClass(String alias) {
+    if (alias == null) return null;
     try {
       return Class.forName(resolveAlias(alias));
     } catch (ClassNotFoundException e) {
       throw new RuntimeException("Error resolving class . Cause: " + e, e);
+    }
+  }
+
+  protected Object resolveInstance(String alias) {
+    if (alias == null) return null;
+    try {
+      Class type = resolveClass(alias);
+      return type.newInstance();
+    } catch (Exception e) {
+      throw new RuntimeException("Error instantiating class. Cause: " + e, e);
     }
   }
 
