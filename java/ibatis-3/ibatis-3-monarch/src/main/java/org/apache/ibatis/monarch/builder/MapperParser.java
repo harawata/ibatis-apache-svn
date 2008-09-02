@@ -160,10 +160,43 @@ public class MapperParser extends BaseParser {
     configuration.addResultMap(resultMapBuilder.build());
   }
 
-  //  <select id="selectAllPeople" cacheType="" cacheDomain=""
-  //          flushCache="" parameterType="" resultType="" resultMap="">
+  //  <select ...>
   @Nodelet("/mapper/select")
   public void selectElement(NodeletContext context) throws Exception {
+    buildStatement(context, StatementType.PREPARED);
+  }
+
+  //  <insert ...>
+  @Nodelet("/mapper/insert")
+  public void insertElement(NodeletContext context) throws Exception {
+    buildStatement(context, StatementType.PREPARED);
+  }
+
+  //  <update ...>
+  @Nodelet("/mapper/update")
+  public void updateElement(NodeletContext context) throws Exception {
+    buildStatement(context, StatementType.PREPARED);
+  }
+
+  //  <delete ...>
+  @Nodelet("/mapper/delete")
+  public void deleteElement(NodeletContext context) throws Exception {
+    buildStatement(context, StatementType.PREPARED);
+  }
+
+  //  <procedure ...>
+  @Nodelet("/mapper/procedure")
+  public void procedureElement(NodeletContext context) throws Exception {
+    buildStatement(context,StatementType.CALLABLE);
+  }
+
+  //  <procedure ...>
+  @Nodelet("/mapper/statement")
+  public void statementElement(NodeletContext context) throws Exception {
+    buildStatement(context,StatementType.STATEMENT);
+  }
+
+  private void buildStatement(NodeletContext context, StatementType statementType) {
     String id = context.getStringAttribute("id");
     String sql = context.getStringBody();
     SqlSource sqlSource = new BasicSqlSource(sql);
@@ -171,12 +204,15 @@ public class MapperParser extends BaseParser {
     MappedStatement.Builder statementBuilder = new MappedStatement.Builder(configuration, id, sqlSource);
     Integer fetchSize = context.getIntAttribute("fetchSize", null);
     statementBuilder.fetchSize(fetchSize);
-    statementBuilder.statementType(StatementType.PREPARED);
+    statementBuilder.statementType(statementType);
     setStatementTimeout(context, statementBuilder);
 
     setStatementParameterMap(context, statementBuilder);
     setStatementResultMap(context, statementBuilder);
     setStatementCache(context, statementBuilder);
+
+    MappedStatement statement = statementBuilder.build();
+    configuration.addMappedStatement(statement);
   }
 
   private void setStatementCache(NodeletContext context, MappedStatement.Builder statementBuilder) {
