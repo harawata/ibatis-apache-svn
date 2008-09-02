@@ -12,7 +12,6 @@
     <discriminator column="" javaType="" jdbcType="">
       <case value="" resultMap=""/>
       <case value="" resultMap=""/>
-      <default value="" resultMap=""/>
     </discriminator>
   </resultMap>
 

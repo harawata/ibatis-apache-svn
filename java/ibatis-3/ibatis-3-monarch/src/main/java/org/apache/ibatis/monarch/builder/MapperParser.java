@@ -13,6 +13,9 @@ public class MapperParser extends BaseParser {
   private ResultMap.Builder resultMapBuilder;
   private List<ResultMapping> resultMappings;
 
+  private Discriminator.Builder discriminatorBuilder;
+  private HashMap<String, String> discriminatorMap;
+
   public MapperParser(Reader reader, MonarchConfiguration configuration) {
     this.reader = reader;
 
@@ -88,10 +91,33 @@ public class MapperParser extends BaseParser {
   }
 
   //  <collection property="" column="" javaType="" select="" resultMap=""/>
-  @Nodelet("/mapper/resultMap/result")
+  @Nodelet("/mapper/resultMap/collection")
   public void resultMapCollectionElement(NodeletContext context) throws Exception {
     ResultMapping.Builder builder = buildMappingFromContext(context);
     resultMappings.add(builder.build());
+  }
+
+  //  <discriminator column="" javaType="" jdbcType="">
+  @Nodelet("/mapper/resultMap/discriminator")
+  public void resultMapDiscriminatorElement(NodeletContext context) throws Exception {
+    ResultMapping.Builder resultMappingBuilder = buildMappingFromContext(context);
+    discriminatorMap = new HashMap<String,String>();
+    discriminatorBuilder = new Discriminator.Builder(resultMappingBuilder.build(),discriminatorMap);
+  }
+
+  //  <discriminator column="" javaType="" jdbcType="">
+  //    <case value="" resultMap=""/>
+  @Nodelet("/mapper/resultMap/discriminator/case")
+  public void resultMapDiscriminatorCaseElement(NodeletContext context) throws Exception {
+    String value = context.getStringAttribute("value");
+    String resultMap = context.getStringAttribute("resultMap");
+    discriminatorMap.put(value,resultMap);
+  }
+
+  //  </discriminator>
+  @Nodelet("/mapper/resultMap/discriminator/end()")
+  public void resultMapDiscriminatorClosingElement(NodeletContext context) throws Exception {
+    resultMapBuilder.discriminator(discriminatorBuilder.build());
   }
 
   //  </resultMap>
