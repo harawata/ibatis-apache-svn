@@ -1,5 +1,7 @@
 package org.apache.ibatis.migration;
 
+import org.apache.ibatis.xml.PropertyParser;
+
 import java.io.*;
 import java.util.Properties;
 

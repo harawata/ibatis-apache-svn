@@ -201,37 +201,11 @@ public class NodeletContext {
     if (attributeNodes != null) {
       for (int i = 0; i < attributeNodes.getLength(); i++) {
         Node attribute = attributeNodes.item(i);
-        String value = parsePropertyTokens(attribute.getNodeValue());
+        String value = PropertyParser.parse(attribute.getNodeValue(),variables);
         attributes.put(attribute.getNodeName(), value);
       }
     }
     return attributes;
-  }
-
-  private String parsePropertyTokens(String string) {
-    final String OPEN = "${";
-    final String CLOSE = "}";
-
-    String newString = string;
-    if (newString != null && variables != null) {
-      int start = newString.indexOf(OPEN);
-      int end = newString.indexOf(CLOSE);
-
-      while (start > -1 && end > start) {
-        String prepend = newString.substring(0, start);
-        String append = newString.substring(end + CLOSE.length());
-        String propName = newString.substring(start + OPEN.length(), end);
-        String propValue = variables.getProperty(propName);
-        if (propValue == null) {
-          newString = prepend + propName + append;
-        } else {
-          newString = prepend + propValue + append;
-        }
-        start = newString.indexOf(OPEN);
-        end = newString.indexOf(CLOSE);
-      }
-    }
-    return newString;
   }
 
   private String parseBody(Node node) {
@@ -251,7 +225,7 @@ public class NodeletContext {
     if (child.getNodeType() == Node.CDATA_SECTION_NODE
         || child.getNodeType() == Node.TEXT_NODE) {
       String data = ((CharacterData) child).getData();
-      data = parsePropertyTokens(data);
+      data = PropertyParser.parse(data,variables);
       return data;
     }
     return null;

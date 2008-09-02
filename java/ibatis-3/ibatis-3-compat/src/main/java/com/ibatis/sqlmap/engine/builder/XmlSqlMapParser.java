@@ -173,7 +173,7 @@ public class XmlSqlMapParser {
     }
 
     resultMappingList = new ArrayList<ResultMapping>();
-    resultMapBuilder = new ResultMap.Builder(id, resultClass, resultMappingList);
+    resultMapBuilder = new ResultMap.Builder(config, id, resultClass, resultMappingList);
 
     if (extendedId != null) {
       ResultMap extendedResultMap = config.getResultMap(extendedId);
@@ -234,13 +234,13 @@ public class XmlSqlMapParser {
     }
 
 
-    ResultMapping.Builder resultMappingBuilder = new ResultMapping.Builder(columnName, columnName, typeHandler);
+    ResultMapping.Builder resultMappingBuilder = new ResultMapping.Builder(config, columnName, columnName, typeHandler);
     resultMappingBuilder.javaType(javaClass);
     resultMappingBuilder.jdbcType(jdbcTypeEnum);
     ResultMapping resultMapping = resultMappingBuilder.build();
 
     discriminatorSubMap = new HashMap<String, String>();
-    discriminatorBuilder = new Discriminator.Builder(resultMapping, discriminatorSubMap);
+    discriminatorBuilder = new Discriminator.Builder(config, resultMapping, discriminatorSubMap);
 
   }
 
@@ -344,7 +344,7 @@ public class XmlSqlMapParser {
       columnName = first.getColumn();
     }
 
-    ResultMapping.Builder resultMappingBuilder = new ResultMapping.Builder(propertyName, columnName, typeHandler);
+    ResultMapping.Builder resultMappingBuilder = new ResultMapping.Builder(config, propertyName, columnName, typeHandler);
     resultMappingBuilder.javaType(javaClass);
     resultMappingBuilder.nestedQueryId(statementName);
     resultMappingBuilder.nestedResultMapId(resultMapName);
@@ -366,7 +366,7 @@ public class XmlSqlMapParser {
         while (parser.hasMoreTokens()) {
           String property = parser.nextToken();
           String column = parser.nextToken();
-          ResultMapping.Builder complexBuilder = new ResultMapping.Builder(property, column, config.getTypeHandlerRegistry().getUnkownTypeHandler());
+          ResultMapping.Builder complexBuilder = new ResultMapping.Builder(config, property, column, config.getTypeHandlerRegistry().getUnkownTypeHandler());
           composites.add(complexBuilder.build());
         }
       }
@@ -386,7 +386,7 @@ public class XmlSqlMapParser {
     parameterClassName = config.getTypeAliasRegistry().resolveAlias(parameterClassName);
     Class parameterClass = Resources.classForName(parameterClassName);
     parameterMappingList = new ArrayList<ParameterMapping>();
-    parameterMapBuilder = new ParameterMap.Builder(id, parameterClass, parameterMappingList);
+    parameterMapBuilder = new ParameterMap.Builder(config, id, parameterClass, parameterMappingList);
   }
 
   @Nodelet("/sqlMap/parameterMap/parameter")
@@ -461,7 +461,7 @@ public class XmlSqlMapParser {
       numericScale = new Integer(numericScaleProp);
     }
 
-    ParameterMapping.Builder parameterMappingBuilder = new ParameterMapping.Builder(propertyName, typeHandler);
+    ParameterMapping.Builder parameterMappingBuilder = new ParameterMapping.Builder(config, propertyName, typeHandler);
     parameterMappingBuilder.javaType(javaClass);
     parameterMappingBuilder.jdbcType(jdbcTypeEnum);
     parameterMappingBuilder.mode(paramModeEnum);

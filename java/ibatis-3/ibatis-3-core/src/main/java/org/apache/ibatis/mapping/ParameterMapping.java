@@ -4,6 +4,8 @@ import org.apache.ibatis.type.*;
 
 public class ParameterMapping {
 
+  private Configuration configuration;
+
   private String property;
   private ParameterMode mode;
   private Class javaType = Object.class;
@@ -18,9 +20,17 @@ public class ParameterMapping {
   public static class Builder {
     private ParameterMapping parameterMapping = new ParameterMapping();
 
-    public Builder(String property, TypeHandler typeHandler) {
+    public Builder(Configuration configuration, String property, TypeHandler typeHandler) {
+      parameterMapping.configuration = configuration;
       parameterMapping.property = property;
       parameterMapping.typeHandler = typeHandler;
+      parameterMapping.mode = ParameterMode.IN;
+    }
+
+    public Builder(Configuration configuration, String property, Class javaType) {
+      parameterMapping.configuration = configuration;
+      parameterMapping.property = property;
+      parameterMapping.javaType = javaType;
       parameterMapping.mode = ParameterMode.IN;
     }
 
@@ -55,8 +65,20 @@ public class ParameterMapping {
     }
 
     public ParameterMapping build() {
+      resolveTypeHandler();
       return parameterMapping;
     }
+
+    private void resolveTypeHandler() {
+      if (parameterMapping.typeHandler == null) {
+        if (parameterMapping.javaType != null) {
+          Configuration configuration = parameterMapping.configuration;
+          TypeHandlerRegistry typeHandlerRegistry = configuration.getTypeHandlerRegistry();
+          parameterMapping.typeHandler = typeHandlerRegistry.getTypeHandler(parameterMapping.javaType, parameterMapping.jdbcType);
+        }
+      }
+    }
+
 
   }
 

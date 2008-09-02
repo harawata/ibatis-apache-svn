@@ -16,6 +16,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 
   private static final Object NO_VALUE = new Object();
 
+  private Configuration configuration;
   private final Executor executor;
   private final ObjectFactory objectFactory;
   private final TypeHandlerRegistry typeHandlerRegistry;
@@ -31,7 +32,8 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 
   private Reference<Boolean> foundValues;
 
-  public DefaultResultSetHandler(Executor executor, MappedStatement mappedStatement, ParameterHandler parameterHandler, int rowOffset, int rowLimit, ResultHandler resultHandler) {
+  public DefaultResultSetHandler(Configuration configuration, Executor executor, MappedStatement mappedStatement, ParameterHandler parameterHandler, int rowOffset, int rowLimit, ResultHandler resultHandler) {
+    this.configuration = configuration;
     this.executor = executor;
     this.objectFactory = mappedStatement.getConfiguration().getObjectFactory();
     this.typeHandlerRegistry = mappedStatement.getConfiguration().getTypeHandlerRegistry();
@@ -158,7 +160,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         propSet.add(propName);
         Class javaType = metaResultObject.getSetterType(propName);
         TypeHandler typeHandler = typeHandlerRegistry.getTypeHandler(javaType);
-        ResultMapping resultMapping = new ResultMapping.Builder(propName, columnLabel, typeHandler)
+        ResultMapping resultMapping = new ResultMapping.Builder(configuration, propName, columnLabel, typeHandler)
             .javaType(javaType).build();
         autoMappings.put(propName, resultMapping);
       }

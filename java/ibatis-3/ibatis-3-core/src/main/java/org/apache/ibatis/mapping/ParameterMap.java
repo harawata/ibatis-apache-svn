@@ -4,8 +4,6 @@ import java.util.*;
 
 public class ParameterMap {
 
-  public static final ParameterMap EMPTY = new Builder("defaultParameterMap", Object.class, new ArrayList<ParameterMapping>()).build();
-
   private String id;
   private Class type;
   private List<ParameterMapping> parameterMappings;
@@ -16,7 +14,7 @@ public class ParameterMap {
   public static class Builder {
     private ParameterMap parameterMap = new ParameterMap();
 
-    public Builder(String id, Class type, List<ParameterMapping> parameterMappings) {
+    public Builder(Configuration configuration, String id, Class type, List<ParameterMapping> parameterMappings) {
       parameterMap.id = id;
       parameterMap.type = type;
       parameterMap.parameterMappings = parameterMappings;

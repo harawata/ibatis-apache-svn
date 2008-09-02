@@ -13,7 +13,7 @@ public class Discriminator {
   public static class Builder {
     private Discriminator discriminator = new Discriminator();
 
-    public Builder(ResultMapping resultMapping, Map<String, String> discriminatorMap) {
+    public Builder(Configuration configuration, ResultMapping resultMapping, Map<String, String> discriminatorMap) {
       discriminator.resultMapping = resultMapping;
       discriminator.discriminatorMap = discriminatorMap;
     }

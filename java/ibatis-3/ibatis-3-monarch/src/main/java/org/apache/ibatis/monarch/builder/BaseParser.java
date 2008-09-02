@@ -1,30 +1,12 @@
 package org.apache.ibatis.monarch.builder;
 
 import org.apache.ibatis.type.*;
-import org.apache.ibatis.xml.NodeletParser;
-import org.apache.ibatis.mapping.Configuration;
-import org.apache.ibatis.mapping.ResultSetType;
-import org.apache.ibatis.mapping.ParameterMode;
-
-import java.io.Reader;
-import java.util.Properties;
+import org.apache.ibatis.mapping.*;
 
 public class BaseParser {
-
-  protected Reader reader;
-  protected NodeletParser parser;
   protected MonarchConfiguration configuration;
   protected TypeAliasRegistry typeAliasRegistry;
   protected TypeHandlerRegistry typeHandlerRegistry;
-
-  public void parse() {
-    assert reader != null;
-    assert parser != null;
-    assert configuration != null;
-    assert typeAliasRegistry != null;
-    assert typeHandlerRegistry != null;
-    parser.parse(reader);
-  }
 
   protected String stringValueOf(String value, String defaultValue) {
     return value == null ? defaultValue : value;
@@ -87,5 +69,4 @@ public class BaseParser {
   protected String resolveAlias(String alias) {
     return typeAliasRegistry.resolveAlias(alias);
   }
-
 }

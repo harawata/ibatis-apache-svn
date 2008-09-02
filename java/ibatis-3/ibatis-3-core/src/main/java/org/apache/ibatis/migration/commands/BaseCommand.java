@@ -5,6 +5,7 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.migration.*;
 import org.apache.ibatis.jdbc.UnpooledDataSource;
 import org.apache.ibatis.jdbc.ScriptRunner;
+import org.apache.ibatis.xml.PropertyParser;
 
 import java.io.*;
 import java.math.BigDecimal;

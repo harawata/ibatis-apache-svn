@@ -15,6 +15,9 @@ import java.util.*;
 
 public class MapperConfigParser extends BaseParser {
 
+  protected Reader reader;
+  protected NodeletParser parser;
+
   private Environment.Builder environmentBuilder;
 
   public MapperConfigParser(Reader reader, Properties props) {
@@ -29,6 +32,15 @@ public class MapperConfigParser extends BaseParser {
     this.parser.addNodeletHandler(this);
     this.parser.setVariables(props);
     this.parser.setEntityResolver(new MapperEntityResolver());
+  }
+
+  public void parse() {
+    assert reader != null;
+    assert parser != null;
+    assert configuration != null;
+    assert typeAliasRegistry != null;
+    assert typeHandlerRegistry != null;
+    parser.parse(reader);
   }
 
   public MonarchConfiguration getConfiguration() {

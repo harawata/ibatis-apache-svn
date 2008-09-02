@@ -6,6 +6,7 @@ import java.util.*;
 
 public class ResultMapping {
 
+  private Configuration configuration;
   private String property;
   private String column;
   private Class javaType;
@@ -22,10 +23,27 @@ public class ResultMapping {
   public static class Builder {
     private ResultMapping resultMapping = new ResultMapping();
 
-    public Builder(String property, String column, TypeHandler typeHandler) {
+    public Builder(Configuration configuration, String property, String column, TypeHandler typeHandler) {
+      resultMapping.configuration = configuration;
       resultMapping.property = property;
       resultMapping.column = column;
       resultMapping.typeHandler = typeHandler;
+      resultMapping.flags = new ArrayList<ResultFlag>();
+      resultMapping.composites = new ArrayList<ResultMapping>();
+    }
+
+    public Builder(Configuration configuration, String property, String column, Class javaType) {
+      resultMapping.configuration = configuration;
+      resultMapping.property = property;
+      resultMapping.column = column;
+      resultMapping.javaType = javaType;
+      resultMapping.flags = new ArrayList<ResultFlag>();
+      resultMapping.composites = new ArrayList<ResultMapping>();
+    }
+
+    public Builder(Configuration configuration, String property) {
+      resultMapping.configuration = configuration;
+      resultMapping.property = property;
       resultMapping.flags = new ArrayList<ResultFlag>();
       resultMapping.composites = new ArrayList<ResultMapping>();
     }
@@ -55,17 +73,34 @@ public class ResultMapping {
       return this;
     }
 
-    public ResultMapping build() {
-      //lock down collections
-      resultMapping.flags = Collections.unmodifiableList(resultMapping.flags);
-      resultMapping.composites = Collections.unmodifiableList(resultMapping.composites);
-      return resultMapping;
+    public Builder typeHandler(TypeHandler typeHandler) {
+      resultMapping.typeHandler = typeHandler;
+      return this;
     }
 
     public Builder composites(List<ResultMapping> composites) {
       resultMapping.composites = composites;
       return this;
     }
+
+    public ResultMapping build() {
+      //lock down collections
+      resultMapping.flags = Collections.unmodifiableList(resultMapping.flags);
+      resultMapping.composites = Collections.unmodifiableList(resultMapping.composites);
+      resolveTypeHandler();
+      return resultMapping;
+    }
+
+    private void resolveTypeHandler() {
+      if (resultMapping.typeHandler == null) {
+        if (resultMapping.javaType != null) {
+          Configuration configuration = resultMapping.configuration;
+          TypeHandlerRegistry typeHandlerRegistry = configuration.getTypeHandlerRegistry();
+          resultMapping.typeHandler = typeHandlerRegistry.getTypeHandler(resultMapping.javaType, resultMapping.jdbcType);
+        }
+      }
+    }
+
   }
 
   public String getProperty() {

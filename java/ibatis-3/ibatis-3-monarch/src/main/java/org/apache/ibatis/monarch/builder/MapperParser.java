@@ -10,6 +10,9 @@ import java.util.*;
 
 public class MapperParser extends BaseParser {
 
+  protected Reader reader;
+  protected NodeletParser parser;
+
   private ParameterMap.Builder parameterMapBuilder;
   private List<ParameterMapping> parameterMappings;
 
@@ -32,6 +35,15 @@ public class MapperParser extends BaseParser {
     this.parser.setEntityResolver(new MapperEntityResolver());
   }
 
+  public void parse() {
+    assert reader != null;
+    assert parser != null;
+    assert configuration != null;
+    assert typeAliasRegistry != null;
+    assert typeHandlerRegistry != null;
+    parser.parse(reader);
+  }
+
   //  <parameterMap id="" type="">
   @Nodelet("/mapper/parameterMap")
   public void parameterMapElement(NodeletContext context) throws Exception {
@@ -39,7 +51,7 @@ public class MapperParser extends BaseParser {
     String type = context.getStringAttribute("type");
     Class parameterClass = resolveClass(type);
     parameterMappings = new ArrayList<ParameterMapping>();
-    parameterMapBuilder = new ParameterMap.Builder(id, parameterClass, parameterMappings);
+    parameterMapBuilder = new ParameterMap.Builder(configuration, id, parameterClass, parameterMappings);
   }
 
   //  <parameterMap id="" type="">
@@ -67,7 +79,7 @@ public class MapperParser extends BaseParser {
     Class typeClass = resolveClass(type);
 
     resultMappings = new ArrayList<ResultMapping>();
-    resultMapBuilder = new ResultMap.Builder(id, typeClass, resultMappings);
+    resultMapBuilder = new ResultMap.Builder(configuration, id, typeClass, resultMappings);
 
     if (extend != null) {
       ResultMap resultMap = configuration.getResultMap(extend);
@@ -136,7 +148,7 @@ public class MapperParser extends BaseParser {
   public void resultMapDiscriminatorElement(NodeletContext context) throws Exception {
     ResultMapping.Builder resultMappingBuilder = buildResultMappingFromContext(context);
     discriminatorMap = new HashMap<String, String>();
-    discriminatorBuilder = new Discriminator.Builder(resultMappingBuilder.build(), discriminatorMap);
+    discriminatorBuilder = new Discriminator.Builder(configuration, resultMappingBuilder.build(), discriminatorMap);
   }
 
   //  <discriminator column="" javaType="" jdbcType="">
@@ -232,6 +244,7 @@ public class MapperParser extends BaseParser {
       List<ParameterMapping> parameterMappings = new ArrayList<ParameterMapping>();
       Class parameterTypeClass = resolveClass(parameterType);
       ParameterMap.Builder inlineParameterMapBuilder = new ParameterMap.Builder(
+          configuration,
           context.getStringAttribute("id") + "-inline-parameter-map",
           parameterTypeClass,
           parameterMappings);
@@ -251,6 +264,7 @@ public class MapperParser extends BaseParser {
     } else if (resultType != null) {
       Class resultTypeClass = resolveClass(resultType);
       ResultMap.Builder inlineResultMapBuilder = new ResultMap.Builder(
+          configuration,
           context.getStringAttribute("id")+ "-inline-result-map",
           resultTypeClass,
           new ArrayList<ResultMapping>());
@@ -278,17 +292,18 @@ public class MapperParser extends BaseParser {
     String jdbcType = context.getStringAttribute("jdbcType");
     String nestedSelect = context.getStringAttribute("select");
     String nestedResultMap = context.getStringAttribute("resultMap");
+    String typeHandler = context.getStringAttribute("typeHandler");
 
     Class resultType = resultMapBuilder.type();
     Class javaTypeClass = resolveResultJavaType(resultType, property, javaType);
-    TypeHandler typeHandlerInstance = resolveResultTypeHandler(context, resultType);
+    TypeHandler typeHandlerInstance = (TypeHandler) resolveInstance(typeHandler);
     JdbcType jdbcTypeEnum = resolveJdbcType(jdbcType);
 
-    ResultMapping.Builder builder = new ResultMapping.Builder(property, column, typeHandlerInstance);
-    builder.javaType(javaTypeClass);
+    ResultMapping.Builder builder = new ResultMapping.Builder(configuration, property, column, javaTypeClass);
     builder.jdbcType(jdbcTypeEnum);
     builder.nestedQueryId(nestedSelect);
     builder.nestedResultMapId(nestedResultMap);
+    builder.typeHandler(typeHandlerInstance);
 
     return builder;
   }
@@ -305,51 +320,27 @@ public class MapperParser extends BaseParser {
     return javaTypeClass;
   }
 
-  private TypeHandler resolveResultTypeHandler(NodeletContext context, Class resultType) {
-    String property = context.getStringAttribute("property");
-    String javaType = context.getStringAttribute("javaType");
-    String jdbcType = context.getStringAttribute("jdbcType");
-    String typeHandler = context.getStringAttribute("typeHandler");
-    JdbcType jdbcTypeEnum = resolveJdbcType(jdbcType);
-    Class javaTypeClass = resolveClass(javaType);
-    TypeHandler typeHandlerInstance = (TypeHandler) resolveInstance(typeHandler);
-    if (typeHandler == null) {
-      if (javaTypeClass == null) {
-        if (property != null) {
-          Class propertyType = resolveResultJavaType(resultType, property, javaType);
-          typeHandlerInstance = typeHandlerRegistry.getTypeHandler(propertyType, jdbcTypeEnum);
-        }
-      } else {
-        typeHandlerInstance = typeHandlerRegistry.getTypeHandler(javaTypeClass, jdbcTypeEnum);
-      }
-    }
-    if (typeHandlerInstance == null) {
-      throw new RuntimeException("Could not determine typehandler for result.  Specify property, javaType or typeHandler attribute.");
-    }
-    return typeHandlerInstance;
-  }
-
   private ParameterMapping.Builder buildParameterMappingFromContext(NodeletContext context) {
     String property = context.getStringAttribute("property");
     String javaType = context.getStringAttribute("javaType");
     String jdbcType = context.getStringAttribute("jdbcType");
     String resultMap = context.getStringAttribute("resultMap");
     String mode = context.getStringAttribute("mode");
+    String typeHandler = context.getStringAttribute("typeHandler");
     Integer numericScale = context.getIntAttribute("numericScale",null);
 
     ParameterMode modeEnum = resolveParameterMode(mode);
-
     Class resultType = resultMapBuilder.type();
     Class javaTypeClass = resolveParameterJavaType(resultType, property, javaType);
-    TypeHandler typeHandlerInstance = resolveParameterTypeHandler(context, resultType);
     JdbcType jdbcTypeEnum = resolveJdbcType(jdbcType);
+    TypeHandler typeHandlerInstance = (TypeHandler) resolveInstance(typeHandler);
 
-    ParameterMapping.Builder builder = new ParameterMapping.Builder(property, typeHandlerInstance);
-    builder.javaType(javaTypeClass);
+    ParameterMapping.Builder builder = new ParameterMapping.Builder(configuration, property, javaTypeClass);
     builder.jdbcType(jdbcTypeEnum);
     builder.resultMapId(resultMap);
     builder.mode(modeEnum);
     builder.numericScale(numericScale);
+    builder.typeHandler(typeHandlerInstance);
 
     return builder;
   }
@@ -366,28 +357,5 @@ public class MapperParser extends BaseParser {
     return javaTypeClass;
   }
 
-  private TypeHandler resolveParameterTypeHandler(NodeletContext context, Class resultType) {
-    String property = context.getStringAttribute("property");
-    String javaType = context.getStringAttribute("javaType");
-    String jdbcType = context.getStringAttribute("jdbcType");
-    String typeHandler = context.getStringAttribute("typeHandler");
-    JdbcType jdbcTypeEnum = resolveJdbcType(jdbcType);
-    Class javaTypeClass = resolveClass(javaType);
-    TypeHandler typeHandlerInstance = (TypeHandler) resolveInstance(typeHandler);
-    if (typeHandler == null) {
-      if (javaTypeClass == null) {
-        if (property != null) {
-          Class propertyType = resolveParameterJavaType(resultType, property, javaType);
-          typeHandlerInstance = typeHandlerRegistry.getTypeHandler(propertyType, jdbcTypeEnum);
-        }
-      } else {
-        typeHandlerInstance = typeHandlerRegistry.getTypeHandler(javaTypeClass, jdbcTypeEnum);
-      }
-    }
-    if (typeHandlerInstance == null) {
-      throw new RuntimeException("Could not determine typehandler for result.  Specify property, javaType or typeHandler attribute.");
-    }
-    return typeHandlerInstance;
-  }
 
 }

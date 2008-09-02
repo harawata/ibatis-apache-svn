@@ -18,7 +18,7 @@ public class ResultMap {
   public static class Builder {
     private ResultMap resultMap = new ResultMap();
 
-    public Builder(String id, Class type, List<ResultMapping> resultMappings) {
+    public Builder(Configuration configuration, String id, Class type, List<ResultMapping> resultMappings) {
       resultMap.id = id;
       resultMap.type = type;
       resultMap.resultMappings = resultMappings;

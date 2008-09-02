@@ -11,6 +11,7 @@ import java.util.*;
 
 public class InlineParameterMapParser {
 
+  private Configuration configuration;
   private TypeHandlerRegistry typeHandlerRegistry;
   private TypeAliasRegistry typeAliasRegistry;
 
@@ -18,6 +19,7 @@ public class InlineParameterMapParser {
   private static final String PARAM_DELIM = ":";
 
   public InlineParameterMapParser(Configuration configuration) {
+    this.configuration = configuration;
     this.typeHandlerRegistry = configuration.getTypeHandlerRegistry();
     this.typeAliasRegistry = configuration.getTypeAliasRegistry();
   }
@@ -142,7 +144,7 @@ public class InlineParameterMapParser {
       propertyName = "_collection" + propertyName;
     }
 
-    ParameterMapping.Builder mapping = new ParameterMapping.Builder(propertyName, typeHandler);
+    ParameterMapping.Builder mapping = new ParameterMapping.Builder(configuration, propertyName, typeHandler);
     mapping.javaType(javaType);
     mapping.jdbcType(jdbcType);
     mapping.mode(parameterMode);
@@ -165,7 +167,7 @@ public class InlineParameterMapParser {
         } else {
           handler = resolveTypeHandler(parameterClass, name, null, JdbcType.valueOf(type));
         }
-        ParameterMapping.Builder mapping = new ParameterMapping.Builder(name, handler);
+        ParameterMapping.Builder mapping = new ParameterMapping.Builder(configuration, name, handler);
         mapping.jdbcType(JdbcType.valueOf(type));
         return mapping.build();
       } else if (n1 >= 5) {
@@ -180,7 +182,7 @@ public class InlineParameterMapParser {
       } else {
         handler = resolveTypeHandler(parameterClass, token, null, null);
       }
-      ParameterMapping.Builder mapping = new ParameterMapping.Builder(token, handler);
+      ParameterMapping.Builder mapping = new ParameterMapping.Builder(configuration, token, handler);
       return mapping.build();
     }
   }

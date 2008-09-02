@@ -84,7 +84,7 @@ public class XmlSqlStatementParser {
       if (sqlSource instanceof SimpleSqlSource) {
         parameterMappings = sqlSource.getParameterMappings(null);
       }
-      ParameterMap.Builder parameterMapBuilder = new ParameterMap.Builder(id + "-ParameterMap", parameterClass, parameterMappings);
+      ParameterMap.Builder parameterMapBuilder = new ParameterMap.Builder(configuration, id + "-ParameterMap", parameterClass, parameterMappings);
       builder.parameterMap(parameterMapBuilder.build());
     }
 
@@ -98,11 +98,11 @@ public class XmlSqlStatementParser {
       }
     } else if (resultClassName != null) {
       Class resultClass = resolveClass(resultClassName);
-      ResultMap.Builder resultMapBuilder = new ResultMap.Builder(id + "-ResultMap", resultClass, new ArrayList<ResultMapping>());
+      ResultMap.Builder resultMapBuilder = new ResultMap.Builder(configuration, id + "-ResultMap", resultClass, new ArrayList<ResultMapping>());
       resultMaps.add(resultMapBuilder.build());
       if (additionalResultClasses != null) {
         for (Class additionalResultClass : additionalResultClasses) {
-          resultMapBuilder = new ResultMap.Builder(id + "-ResultMap", additionalResultClass, new ArrayList<ResultMapping>());
+          resultMapBuilder = new ResultMap.Builder(configuration, id + "-ResultMap", additionalResultClass, new ArrayList<ResultMapping>());
           resultMaps.add(resultMapBuilder.build());
         }
       }
@@ -195,11 +195,11 @@ public class XmlSqlStatementParser {
       typeHandler = configuration.getTypeHandlerRegistry().getTypeHandler(resultClass);
     }
 
-    ResultMapping.Builder mappingBuilder = new ResultMapping.Builder(keyPropName, keyPropName, typeHandler);
+    ResultMapping.Builder mappingBuilder = new ResultMapping.Builder(configuration, keyPropName, keyPropName, typeHandler);
     ArrayList<ResultMapping> resultMappingArrayList = new ArrayList<ResultMapping>();
     resultMappingArrayList.add(mappingBuilder.build());
 
-    ResultMap.Builder resultMapBuilder = new ResultMap.Builder(keyStatementId + "ResultMap", HashMap.class, resultMappingArrayList);
+    ResultMap.Builder resultMapBuilder = new ResultMap.Builder(configuration, keyStatementId + "ResultMap", HashMap.class, resultMappingArrayList);
     ArrayList<ResultMap> resultMapList = new ArrayList<ResultMap>();
     resultMapList.add(resultMapBuilder.build());
 
