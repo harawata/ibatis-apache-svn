@@ -93,7 +93,7 @@ public class MapperConfigParser extends BaseParser {
     for (Map.Entry entry : props.entrySet()) {
       MetaClass metaConfig = MetaClass.forClass(Configuration.class);
       if (!metaConfig.hasSetter((String)entry.getKey())) {
-        throw new RuntimeException("The setting " + entry.getKey() + " is not known.  Make sure you spelled it correctly (case sensitive).");
+        throw new BuilderException("The setting " + entry.getKey() + " is not known.  Make sure you spelled it correctly (case sensitive).");
       }
     }
   }
@@ -172,7 +172,7 @@ public class MapperConfigParser extends BaseParser {
     } else if (url != null && resource == null) {
       reader = Resources.getUrlAsReader(url);
     } else {
-      throw new RuntimeException("A mapper element may only specify a url or resource, but not both.");
+      throw new BuilderException("A mapper element may only specify a url or resource, but not both.");
     }
     MapperParser mapperParser = new MapperParser(reader,configuration);
     mapperParser.parse();

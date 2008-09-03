@@ -3,7 +3,7 @@ package org.apache.ibatis.executor;
 import java.sql.BatchUpdateException;
 import java.util.List;
 
-public class BatchExecutorException extends RuntimeException {
+public class BatchExecutorException extends ExecutorException {
 
   private final List successfulBatchResults;
   private final BatchUpdateException batchUpdateException;

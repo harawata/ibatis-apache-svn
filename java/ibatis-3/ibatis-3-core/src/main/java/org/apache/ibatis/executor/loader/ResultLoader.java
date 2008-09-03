@@ -1,6 +1,7 @@
 package org.apache.ibatis.executor.loader;
 
 import org.apache.ibatis.executor.Executor;
+import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.mapping.MappedStatement;
 
 import java.sql.SQLException;
@@ -36,7 +37,7 @@ public class ResultLoader {
       resultObject = listToArray(list, targetType.getComponentType());
     } else {
       if (list.size() > 1) {
-        throw new RuntimeException("Statement " + mappedStatement.getId() + " returned more than one row, where no more than one was expected.");
+        throw new ExecutorException("Statement " + mappedStatement.getId() + " returned more than one row, where no more than one was expected.");
       } else if (list.size() == 1) {
         resultObject = list.get(0);
       }

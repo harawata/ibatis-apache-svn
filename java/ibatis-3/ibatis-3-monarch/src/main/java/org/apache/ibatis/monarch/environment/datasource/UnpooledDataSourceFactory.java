@@ -1,7 +1,9 @@
 package org.apache.ibatis.monarch.environment.datasource;
 
 import org.apache.ibatis.jdbc.PooledDataSource;
+import org.apache.ibatis.jdbc.DataSourceException;
 import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.monarch.environment.EnvironmentException;
 
 import javax.sql.DataSource;
 import java.util.Properties;
@@ -30,7 +32,7 @@ public class UnpooledDataSourceFactory implements DataSourceFactory {
         Object convertedValue = convertValue(metaDataSource, propertyName, value);
         metaDataSource.setValue(propertyName, convertedValue);
       } else {
-        throw new RuntimeException("Unkown DataSource property: " + propertyName);
+        throw new EnvironmentException("Unkown DataSource property: " + propertyName);
       }
     }
     if (driverProperties.size() > 0) {

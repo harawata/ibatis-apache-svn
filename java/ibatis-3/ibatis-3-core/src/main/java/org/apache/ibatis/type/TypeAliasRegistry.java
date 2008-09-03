@@ -43,7 +43,7 @@ public class TypeAliasRegistry {
     assert alias != null;
     String key = alias.toLowerCase();
     if (TYPE_ALIASES.containsKey(key) && !TYPE_ALIASES.get(key).equals(value)) {
-      throw new RuntimeException("The alias '" + key + "' is already mapped to the value '" + TYPE_ALIASES.get(alias) + "'.");
+      throw new TypeException("The alias '" + key + "' is already mapped to the value '" + TYPE_ALIASES.get(alias) + "'.");
     }
     TYPE_ALIASES.put(key, value);
   }

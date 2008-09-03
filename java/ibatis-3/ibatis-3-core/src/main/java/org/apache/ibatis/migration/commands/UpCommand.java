@@ -45,7 +45,7 @@ public class UpCommand extends BaseCommand {
         }
       }
     } catch (Exception e) {
-      throw new RuntimeException("<Description>.  Cause: " + e, e);
+      throw new MigrationException("Error executing command.  Cause: " + e, e);
     }
   }
 

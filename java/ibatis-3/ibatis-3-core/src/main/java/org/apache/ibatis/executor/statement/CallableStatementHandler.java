@@ -1,6 +1,7 @@
 package org.apache.ibatis.executor.statement;
 
 import org.apache.ibatis.executor.Executor;
+import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.executor.result.ResultHandler;
 import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.type.JdbcType;
@@ -56,7 +57,7 @@ public class CallableStatementHandler extends BaseStatementHandler {
       ParameterMapping parameterMapping = parameterMappings.get(i);
       if (parameterMapping.getMode() == ParameterMode.OUT || parameterMapping.getMode() == ParameterMode.INOUT) {
         if (null == parameterMapping.getJdbcType()) {
-          throw new SQLException("The JDBC Type must be specified for output parameterArray.  Paramter: " + parameterMapping.getProperty());
+          throw new ExecutorException("The JDBC Type must be specified for output parameterArray.  Paramter: " + parameterMapping.getProperty());
         } else {
           if (parameterMapping.getNumericScale() != null && (parameterMapping.getJdbcType() == JdbcType.NUMERIC || parameterMapping.getJdbcType() == JdbcType.DECIMAL)) {
             cs.registerOutParameter(i + 1, parameterMapping.getJdbcType().TYPE_CODE, parameterMapping.getNumericScale());

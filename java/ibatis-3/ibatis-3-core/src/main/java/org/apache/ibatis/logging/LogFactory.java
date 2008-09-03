@@ -33,7 +33,7 @@ public class LogFactory {
     try {
       return (Log) logConstructor.newInstance(new Object[]{aClass});
     } catch (Throwable t) {
-      throw new RuntimeException("Error creating logger for class " + aClass + ".  Cause: " + t, t);
+      throw new LogException("Error creating logger for class " + aClass + ".  Cause: " + t, t);
     }
   }
 
@@ -77,7 +77,7 @@ public class LogFactory {
       Class implClass = Class.forName(implClassName);
       logConstructor = implClass.getConstructor(new Class[]{Class.class});
     } catch (Throwable t) {
-      throw new RuntimeException("Error setting Log implementation.  Cause: " + t, t);
+      throw new LogException("Error setting Log implementation.  Cause: " + t, t);
     }
   }
 

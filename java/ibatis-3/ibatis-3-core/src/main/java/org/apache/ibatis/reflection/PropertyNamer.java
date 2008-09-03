@@ -10,7 +10,7 @@ public class PropertyNamer {
     } else if (name.startsWith("get") || name.startsWith("set")) {
       name = name.substring(3);
     } else {
-      throw new RuntimeException("Error parsing property name '" + name + "'.  Didn't start with 'is', 'get' or 'set'.");
+      throw new ReflectionException("Error parsing property name '" + name + "'.  Didn't start with 'is', 'get' or 'set'.");
     }
 
     if (name.length() == 1 || (name.length() > 1 && !Character.isUpperCase(name.charAt(1)))) {

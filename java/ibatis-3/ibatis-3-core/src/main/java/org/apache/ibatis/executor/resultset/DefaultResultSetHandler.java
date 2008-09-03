@@ -2,6 +2,7 @@ package org.apache.ibatis.executor.resultset;
 
 import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.executor.Executor;
+import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.executor.loader.*;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.executor.result.*;
@@ -91,7 +92,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
           ResultSet rs = (ResultSet) callableStatement.getObject(i + 1);
           ResultMap resultMap = mappedStatement.getConfiguration().getResultMap(parameterMapping.getResultMapId());
           if (resultMap == null) {
-            throw new RuntimeException("Parameter requires ResultMap for output types of java.sql.ResultSet");
+            throw new ExecutorException("Parameter requires ResultMap for output types of java.sql.ResultSet");
           } else {
             DefaultResultHandler resultHandler = new DefaultResultHandler();
             handleResults(rs, resultMap, resultHandler, Executor.NO_ROW_OFFSET, Executor.NO_ROW_LIMIT);
@@ -126,7 +127,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 
   private Object loadResultObject(ResultSet rs, ResultMap rm) throws SQLException {
     if (rm.getType() == null) {
-      throw new RuntimeException("The result class was null when trying to get results for ResultMap.");
+      throw new ExecutorException("The result class was null when trying to get results for ResultMap.");
     }
 
     Object resultObject = createResultObject(rs, rm);
@@ -224,7 +225,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         }
       }
     } catch (Exception e) {
-      throw new RuntimeException("Error setting nested bean property.  Cause: " + e, e);
+      throw new ExecutorException("Error setting nested bean property.  Cause: " + e, e);
     }
     if (typeHandlerRegistry.hasTypeHandler(rm.getType())) {
       resultObject = value;
@@ -300,7 +301,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
                     metaObject.setValue(propertyName, obj);
                   }
                 } catch (Exception e) {
-                  throw new RuntimeException("Error instantiating collection property for result '" + resultMapping.getProperty() + "'.  Cause: " + e, e);
+                  throw new ExecutorException("Error instantiating collection property for result '" + resultMapping.getProperty() + "'.  Cause: " + e, e);
                 }
               }
 
@@ -315,7 +316,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
                 }
               }
             } catch (SQLException e) {
-              throw new RuntimeException("Error getting nested result map values for '" + resultMapping.getProperty() + "'.  Cause: " + e, e);
+              throw new ExecutorException("Error getting nested result map values for '" + resultMapping.getProperty() + "'.  Cause: " + e, e);
             }
           }
         }
@@ -385,7 +386,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     if (typeHandler != null) {
       value = typeHandler.getResult(rs, resultMapping.getColumn());
     } else {
-      throw new RuntimeException("No type handler could be found to map the property '" + resultMapping.getProperty() + "' to the column '" + resultMapping.getColumn() + "'.  One or both of the types, or the combination of types is not supported.");
+      throw new ExecutorException("No type handler could be found to map the property '" + resultMapping.getProperty() + "' to the column '" + resultMapping.getColumn() + "'.  One or both of the types, or the combination of types is not supported.");
     }
     return value;
   }

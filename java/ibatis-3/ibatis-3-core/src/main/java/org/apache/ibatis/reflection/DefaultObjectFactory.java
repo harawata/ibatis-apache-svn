@@ -35,7 +35,7 @@ public class DefaultObjectFactory implements ObjectFactory {
         return constructor.newInstance(constructorArgs.toArray(new Object[constructorArgs.size()]));
       }
     } catch (Exception e) {
-      throw new RuntimeException("Error instantiating " + type + ". Cause: " + e, e);
+      throw new ReflectionException("Error instantiating " + type + ". Cause: " + e, e);
     }
   }
 

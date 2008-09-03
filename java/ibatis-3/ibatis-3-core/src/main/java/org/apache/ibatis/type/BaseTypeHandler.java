@@ -8,7 +8,7 @@ public abstract class BaseTypeHandler implements TypeHandler {
       throws SQLException {
     if (parameter == null) {
       if (jdbcType == null) {
-        throw new RuntimeException("JDBC requires that the JdbcType must be specified for all nullable parameters.");
+        throw new TypeException("JDBC requires that the JdbcType must be specified for all nullable parameters.");
       }
       ps.setNull(i, jdbcType.TYPE_CODE);
     } else {

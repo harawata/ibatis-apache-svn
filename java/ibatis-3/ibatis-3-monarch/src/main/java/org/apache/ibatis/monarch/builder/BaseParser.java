@@ -25,7 +25,7 @@ public class BaseParser {
     try {
       return JdbcType.valueOf(resolveAlias(alias));
     } catch (IllegalArgumentException e) {
-      throw new RuntimeException("Error resolving JdbcType. Cause: " + e, e);
+      throw new BuilderException("Error resolving JdbcType. Cause: " + e, e);
     }
   }
 
@@ -34,7 +34,7 @@ public class BaseParser {
     try {
       return ResultSetType.valueOf(resolveAlias(alias));
     } catch (IllegalArgumentException e) {
-      throw new RuntimeException("Error resolving ResultSetType. Cause: " + e, e);
+      throw new BuilderException("Error resolving ResultSetType. Cause: " + e, e);
     }
   }
 
@@ -43,7 +43,7 @@ public class BaseParser {
     try {
       return ParameterMode.valueOf(resolveAlias(alias));
     } catch (IllegalArgumentException e) {
-      throw new RuntimeException("Error resolving ParameterMode. Cause: " + e, e);
+      throw new BuilderException("Error resolving ParameterMode. Cause: " + e, e);
     }
   }
 
@@ -52,7 +52,7 @@ public class BaseParser {
     try {
       return Class.forName(resolveAlias(alias));
     } catch (ClassNotFoundException e) {
-      throw new RuntimeException("Error resolving class . Cause: " + e, e);
+      throw new BuilderException("Error resolving class . Cause: " + e, e);
     }
   }
 
@@ -62,7 +62,7 @@ public class BaseParser {
       Class type = resolveClass(alias);
       return type.newInstance();
     } catch (Exception e) {
-      throw new RuntimeException("Error instantiating class. Cause: " + e, e);
+      throw new BuilderException("Error instantiating class. Cause: " + e, e);
     }
   }
 

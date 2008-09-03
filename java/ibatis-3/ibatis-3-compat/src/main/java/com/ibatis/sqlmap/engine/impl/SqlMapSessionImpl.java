@@ -2,6 +2,7 @@ package com.ibatis.sqlmap.engine.impl;
 
 import com.ibatis.common.util.PaginatedList;
 import com.ibatis.sqlmap.client.*;
+import com.ibatis.sqlmap.client.SqlMapException;
 import com.ibatis.sqlmap.client.event.RowHandler;
 import com.ibatis.sqlmap.engine.builder.Ibatis2Configuration;
 import com.ibatis.sqlmap.engine.execution.BatchException;

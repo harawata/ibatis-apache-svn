@@ -84,7 +84,7 @@ public class MapperParser extends BaseParser {
     if (extend != null) {
       ResultMap resultMap = configuration.getResultMap(extend);
       if (resultMap == null) {
-        throw new RuntimeException("ResultMap named in extends attribute of " + id + "does not exist or is not defined yet.");
+        throw new BuilderException("ResultMap named in extends attribute of " + id + "does not exist or is not defined yet.");
       }
       resultMappings.addAll(resultMap.getResultMappings());
     }
@@ -314,7 +314,7 @@ public class MapperParser extends BaseParser {
       javaTypeClass = metaResultType.getSetterType(property);
     }
     if (javaTypeClass == null) {
-      throw new RuntimeException("Could not determine javaType for result.  Specify property or javaType attribute.");
+      throw new BuilderException("Could not determine javaType for result.  Specify property or javaType attribute.");
     }
     return javaTypeClass;
   }
@@ -351,7 +351,7 @@ public class MapperParser extends BaseParser {
       javaTypeClass = metaResultType.getGetterType(property);
     }
     if (javaTypeClass == null) {
-      throw new RuntimeException("Could not determine javaType for result.  Specify property or javaType attribute.");
+      throw new BuilderException("Could not determine javaType for result.  Specify property or javaType attribute.");
     }
     return javaTypeClass;
   }

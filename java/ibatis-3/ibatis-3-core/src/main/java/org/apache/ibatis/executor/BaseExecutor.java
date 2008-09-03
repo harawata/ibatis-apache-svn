@@ -172,7 +172,7 @@ public abstract class BaseExecutor implements Executor {
         value = list.toArray((Object[]) array);
       } else {
         if (list.size() > 1) {
-          throw new RuntimeException("Statement returned more than one row, where no more than one was expected.");
+          throw new ExecutorException("Statement returned more than one row, where no more than one was expected.");
         } else if (list.size() == 1) {
           value = list.get(0);
         }

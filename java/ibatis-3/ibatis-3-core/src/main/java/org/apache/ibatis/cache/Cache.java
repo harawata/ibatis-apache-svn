@@ -67,7 +67,7 @@ public interface Cache {
         cache = new SynchronizedCache(cache);
         return cache;
       } catch (Exception e) {
-        throw new RuntimeException("Error building Cache class.  Cause: " + e, e);
+        throw new CacheException("Error building Cache class.  Cause: " + e, e);
       }
     }
   }

@@ -161,7 +161,7 @@ public abstract class BaseCommand implements Command {
       dataSource.setAutoCommit(true);
       return new SqlRunner(dataSource.getConnection());
     } catch (SQLException e) {
-      throw new RuntimeException("Could not create SqlRunner. Cause: " + e, e);
+      throw new MigrationException("Could not create SqlRunner. Cause: " + e, e);
     }
   }
 

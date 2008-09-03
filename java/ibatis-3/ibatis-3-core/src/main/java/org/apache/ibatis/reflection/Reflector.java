@@ -116,7 +116,7 @@ class Reflector {
       } else {
         Class expectedType = getTypes.get(propName);
         if (expectedType == null) {
-          throw new RuntimeException("Illegal overloaded setter method with ambiguous type for property "
+          throw new ReflectionException("Illegal overloaded setter method with ambiguous type for property "
               + propName + " in class " + firstMethod.getDeclaringClass() + ".  This breaks the JavaBeans " +
               "specification and can cause unpredicatble results.");
         } else {
@@ -131,7 +131,7 @@ class Reflector {
             }
           }
           if (setter == null) {
-            throw new RuntimeException("Illegal overloaded setter method with ambiguous type for property "
+            throw new ReflectionException("Illegal overloaded setter method with ambiguous type for property "
                 + propName + " in class " + firstMethod.getDeclaringClass() + ".  This breaks the JavaBeans " +
                 "specification and can cause unpredicatble results.");
           }
@@ -284,14 +284,14 @@ class Reflector {
     if (defaultConstructor != null) {
       return defaultConstructor;
     } else {
-      throw new RuntimeException("There is no default constructor for " + type);
+      throw new ReflectionException("There is no default constructor for " + type);
     }
   }
 
   public Invoker getSetInvoker(String propertyName) {
     Invoker method = setMethods.get(propertyName);
     if (method == null) {
-      throw new RuntimeException("There is no setter for property named '" + propertyName + "' in '" + type + "'");
+      throw new ReflectionException("There is no setter for property named '" + propertyName + "' in '" + type + "'");
     }
     return method;
   }
@@ -299,7 +299,7 @@ class Reflector {
   public Invoker getGetInvoker(String propertyName) {
     Invoker method = getMethods.get(propertyName);
     if (method == null) {
-      throw new RuntimeException("There is no getter for property named '" + propertyName + "' in '" + type + "'");
+      throw new ReflectionException("There is no getter for property named '" + propertyName + "' in '" + type + "'");
     }
     return method;
   }
@@ -313,7 +313,7 @@ class Reflector {
   public Class getSetterType(String propertyName) {
     Class clazz = setTypes.get(propertyName);
     if (clazz == null) {
-      throw new RuntimeException("There is no setter for property named '" + propertyName + "' in '" + type + "'");
+      throw new ReflectionException("There is no setter for property named '" + propertyName + "' in '" + type + "'");
     }
     return clazz;
   }
@@ -327,7 +327,7 @@ class Reflector {
   public Class getGetterType(String propertyName) {
     Class clazz = getTypes.get(propertyName);
     if (clazz == null) {
-      throw new RuntimeException("There is no getter for property named '" + propertyName + "' in '" + type + "'");
+      throw new ReflectionException("There is no getter for property named '" + propertyName + "' in '" + type + "'");
     }
     return clazz;
   }

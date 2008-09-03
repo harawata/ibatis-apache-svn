@@ -16,7 +16,7 @@ public abstract class BaseCache implements Cache {
   }
 
   public boolean equals(Object o) {
-    if (getId() == null) throw new RuntimeException("Cache instances require an ID.");
+    if (getId() == null) throw new CacheException("Cache instances require an ID.");
     if (this == o) return true;
     if (!(o instanceof BaseCache)) return false;
 
@@ -28,7 +28,7 @@ public abstract class BaseCache implements Cache {
   }
 
   public int hashCode() {
-    if (getId() == null) throw new RuntimeException("Cache instances require an ID.");
+    if (getId() == null) throw new CacheException("Cache instances require an ID.");
     return getId().hashCode();
   }
 }

@@ -76,7 +76,7 @@ public class CommandLine {
     } else if (DOWN.equals(command)) {
       new DownCommand(repository, environment, force).execute(params);
     } else {
-      throw new RuntimeException("Attempt to execute unkown command.");
+      throw new MigrationException("Attempt to execute unkown command.");
     }
   }
 

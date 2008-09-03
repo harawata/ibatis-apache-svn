@@ -229,7 +229,7 @@ class PooledConnection implements InvocationHandler {
 
   private Connection getValidConnection() {
     if (!valid) {
-      throw new RuntimeException("Error accessing PooledConnection. Connection is invalid.");
+      throw new DataSourceException("Error accessing PooledConnection. Connection is invalid.");
     }
     return realConnection;
   }

@@ -20,7 +20,7 @@ public class MonarchConfiguration extends Configuration {
 
   public void addEnvironment(Environment environment) {
     if(environmentMap.containsKey(environment.getId())) {
-      throw new RuntimeException("Duplicate environment ID detected: " + environment.getId() + ".  Environment ID must be unique.");
+      throw new BuilderException("Duplicate environment ID detected: " + environment.getId() + ".  Environment ID must be unique.");
     }
     environmentMap.put(environment.getId(),environment);
   }

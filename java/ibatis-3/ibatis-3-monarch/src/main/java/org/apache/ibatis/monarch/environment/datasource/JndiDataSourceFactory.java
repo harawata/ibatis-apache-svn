@@ -1,5 +1,8 @@
 package org.apache.ibatis.monarch.environment.datasource;
 
+import org.apache.ibatis.jdbc.DataSourceException;
+import org.apache.ibatis.monarch.environment.EnvironmentException;
+
 import javax.naming.*;
 import javax.sql.DataSource;
 import java.util.*;
@@ -31,7 +34,7 @@ public class JndiDataSourceFactory implements DataSourceFactory {
       }
 
     } catch (NamingException e) {
-      throw new RuntimeException("There was an error configuring JndiDataSourceTransactionPool. Cause: " + e, e);
+      throw new EnvironmentException("There was an error configuring JndiDataSourceTransactionPool. Cause: " + e, e);
     }
   }
 

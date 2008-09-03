@@ -30,7 +30,7 @@ public class BootstrapCommand extends BaseCommand {
         }
       }
     } catch (Exception e) {
-      throw new RuntimeException("Error running bootstrapper.  Cause: " + e, e);
+      throw new MigrationException("Error running bootstrapper.  Cause: " + e, e);
     }
   }
 

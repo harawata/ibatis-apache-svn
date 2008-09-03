@@ -146,7 +146,7 @@ public class MetaObject {
             metaValue = MetaObject.forObject(newObject);
             setProperty(prop, object, newObject);
           } catch (Exception e) {
-            throw new RuntimeException("Cannot set value of property '" + name + "' because '" + name + "' is null and cannot be instantiated on instance of " + type.getName() + ". Cause:" + e.toString(), e);
+            throw new ReflectionException("Cannot set value of property '" + name + "' because '" + name + "' is null and cannot be instantiated on instance of " + type.getName() + ". Cause:" + e.toString(), e);
           }
         }
       }
@@ -194,7 +194,7 @@ public class MetaObject {
     } catch (RuntimeException e) {
       throw e;
     } catch (Throwable t) {
-      throw new RuntimeException("Could not get property '" + prop.getName() + "' from " + object + ".  Cause: " + t.toString(), t);
+      throw new ReflectionException("Could not get property '" + prop.getName() + "' from " + object + ".  Cause: " + t.toString(), t);
     }
   }
 
@@ -208,7 +208,7 @@ public class MetaObject {
         throw ExceptionUtil.unwrapThrowable(t);
       }
     } catch (Throwable t) {
-      throw new RuntimeException("Could not set property '" + prop.getName() + "' for " + object + ".  Cause: " + t.toString(), t);
+      throw new ReflectionException("Could not set property '" + prop.getName() + "' for " + object + ".  Cause: " + t.toString(), t);
     }
   }
 
@@ -251,7 +251,7 @@ public class MetaObject {
     } else if (list instanceof short[]) {
       return ((short[]) list)[i];
     } else {
-      throw new RuntimeException("The '" + prop.getName() + "' property of " + list + " is not a List or Array.");
+      throw new ReflectionException("The '" + prop.getName() + "' property of " + list + " is not a List or Array.");
     }
   }
 
@@ -287,7 +287,7 @@ public class MetaObject {
     } else if (list instanceof short[]) {
       ((short[]) list)[i] = (Short) value;
     } else {
-      throw new RuntimeException("The '" + prop.getName() + "' property of " + list + " is not a List or Array.");
+      throw new ReflectionException("The '" + prop.getName() + "' property of " + list + " is not a List or Array.");
     }
   }
 

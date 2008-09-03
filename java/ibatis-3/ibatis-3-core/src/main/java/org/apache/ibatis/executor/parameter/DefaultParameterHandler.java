@@ -3,6 +3,7 @@ package org.apache.ibatis.executor.parameter;
 import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.type.*;
+import org.apache.ibatis.executor.ExecutorException;
 
 import java.sql.*;
 import java.util.List;
@@ -42,7 +43,7 @@ public class DefaultParameterHandler implements ParameterHandler {
           }
           TypeHandler typeHandler = parameterMapping.getTypeHandler();
           if (typeHandler == null) {
-            throw new RuntimeException("There was no TypeHandler found for parameter " + parameterMapping.getProperty() + " of statement " + mappedStatement.getId());
+            throw new ExecutorException("There was no TypeHandler found for parameter " + parameterMapping.getProperty() + " of statement " + mappedStatement.getId());
           }
           typeHandler.setParameter(ps, i + 1, value, parameterMapping.getJdbcType());
         }

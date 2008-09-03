@@ -161,7 +161,7 @@ public class UnpooledDataSource implements DataSource {
         }
         DriverManager.registerDriver(new DriverProxy((Driver) driverType.newInstance()));
       } catch (Exception e) {
-        throw new RuntimeException("Error setting driver on UnpooledDataSource. Cause: " + e, e);
+        throw new DataSourceException("Error setting driver on UnpooledDataSource. Cause: " + e, e);
       }
     }
   }

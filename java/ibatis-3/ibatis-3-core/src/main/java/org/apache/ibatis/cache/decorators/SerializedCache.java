@@ -24,7 +24,7 @@ public class SerializedCache extends BaseCache {
     if (object == null || object instanceof Serializable) {
       delegate.putObject(key, serialize((Serializable) object));
     } else {
-      throw new RuntimeException("SharedCache failed to make a copy of a non-serializable object: " + object);
+      throw new CacheException("SharedCache failed to make a copy of a non-serializable object: " + object);
     }
   }
 
@@ -54,7 +54,7 @@ public class SerializedCache extends BaseCache {
       oos.close();
       return bos.toByteArray();
     } catch (Exception e) {
-      throw new RuntimeException("Error serializing object.  Cause: " + e, e);
+      throw new CacheException("Error serializing object.  Cause: " + e, e);
     }
   }
 
@@ -66,7 +66,7 @@ public class SerializedCache extends BaseCache {
       result = (Serializable) ois.readObject();
       ois.close();
     } catch (Exception e) {
-      throw new RuntimeException("Error deserializing object.  Cause: " + e, e);
+      throw new CacheException("Error deserializing object.  Cause: " + e, e);
     }
     return result;
   }

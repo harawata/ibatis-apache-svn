@@ -1,6 +1,7 @@
 package org.apache.ibatis.executor.statement;
 
 import org.apache.ibatis.executor.Executor;
+import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.executor.result.ResultHandler;
 import org.apache.ibatis.mapping.MappedStatement;
@@ -25,7 +26,7 @@ public class RoutingStatementHandler implements StatementHandler {
         delegate = new CallableStatementHandler(executor, ms, parameter, rowOffset, rowLimit, resultHandler);
         break;
       default:
-        throw new RuntimeException("Unknown statement type: " + ms.getStatementType());
+        throw new ExecutorException("Unknown statement type: " + ms.getStatementType());
     }
 
   }
