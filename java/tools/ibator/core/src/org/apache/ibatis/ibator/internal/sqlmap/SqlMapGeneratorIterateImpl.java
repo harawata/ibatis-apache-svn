@@ -34,7 +34,6 @@ import org.apache.ibatis.ibator.api.dom.xml.TextElement;
 import org.apache.ibatis.ibator.api.dom.xml.XmlElement;
 import org.apache.ibatis.ibator.config.GeneratedKey;
 import org.apache.ibatis.ibator.config.IbatorContext;
-import org.apache.ibatis.ibator.config.MergeConstants;
 import org.apache.ibatis.ibator.config.PropertyRegistry;
 import org.apache.ibatis.ibator.internal.db.ColumnDefinition;
 import org.apache.ibatis.ibator.internal.rules.IbatorRules;
@@ -135,7 +134,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         if (rules.generateBaseResultMap()) {
             element = getBaseResultMapElement(introspectedTable);
             if (element != null) {
-                if (plugins.sqlMapBaseResultMapGenerated(element, introspectedTable)) {
+                if (plugins.sqlMapResultMapWithoutBLOBsElementGenerated(element, introspectedTable)) {
                     answer.addElement(element);
                 }
             }
@@ -144,7 +143,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         if (rules.generateResultMapWithBLOBs()) {
             element = getResultMapWithBLOBsElement(introspectedTable);
             if (element != null) {
-                if (plugins.sqlMapResultMapWithBLOBsGenerated(element, introspectedTable)) {
+                if (plugins.sqlMapResultMapWithBLOBsElementGenerated(element, introspectedTable)) {
                     answer.addElement(element);
                 }
             }
@@ -153,7 +152,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         if (rules.generateSQLExampleWhereClause()) {
             element = getByExampleWhereClauseFragment(introspectedTable);
             if (element != null) {
-                if (plugins.sqlMapExampleWhereClauseGenerated(element, introspectedTable)) {
+                if (plugins.sqlMapExampleWhereClauseElementGenerated(element, introspectedTable)) {
                     answer.addElement(element);
                 }
             }
@@ -171,7 +170,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         if (rules.generateSelectByExampleWithoutBLOBs()) {
             element = getSelectByExample(introspectedTable);
             if (element != null) {
-                if (plugins.sqlMapSelectByExampleElementGenerated(element, introspectedTable)) {
+                if (plugins.sqlMapSelectByExampleWithoutBLOBsElementGenerated(element, introspectedTable)) {
                     answer.addElement(element);
                 }
             }
@@ -806,7 +805,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         sb.setLength(0);
         sb.append(table.getSqlMapNamespace());
         sb.append('.');
-        sb.append(getExampleWhereClauseId());
+        sb.append(XmlConstants.EXAMPLE_WHERE_CLAUSE_ID);
         includeElement.addAttribute(new Attribute("refid", //$NON-NLS-1$
                 sb.toString()));
 
@@ -848,7 +847,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         sb.setLength(0);
         sb.append(table.getSqlMapNamespace());
         sb.append('.');
-        sb.append(getExampleWhereClauseId());
+        sb.append(XmlConstants.EXAMPLE_WHERE_CLAUSE_ID);
         includeElement.addAttribute(new Attribute("refid", //$NON-NLS-1$
                 sb.toString()));
 
@@ -969,18 +968,6 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
     }
 
     /**
-     * Calculates the name of the example where clause element.
-     * 
-     * @return the name of the example where clause element
-     */
-    protected String getExampleWhereClauseId() {
-        StringBuilder sb = new StringBuilder(MergeConstants.NEW_XML_ELEMENT_PREFIX);
-        sb.append("Example_Where_Clause"); //$NON-NLS-1$
-
-        return sb.toString();
-    }
-
-    /**
      * This method should return an XmlElement for the example where clause SQL
      * fragment (an sql fragment).
      *
@@ -991,7 +978,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
 
         XmlElement answer = new XmlElement("sql"); //$NON-NLS-1$
 
-        answer.addAttribute(new Attribute("id", getExampleWhereClauseId())); //$NON-NLS-1$
+        answer.addAttribute(new Attribute("id", XmlConstants.EXAMPLE_WHERE_CLAUSE_ID)); //$NON-NLS-1$
 
         ibatorContext.getCommentGenerator().addComment(answer);
 
@@ -1235,7 +1222,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         
         XmlElement includeElement = new XmlElement("include"); //$NON-NLS-1$
         includeElement.addAttribute(new Attribute("refid", //$NON-NLS-1$
-                table.getSqlMapNamespace() + "." + getExampleWhereClauseId())); //$NON-NLS-1$
+                table.getSqlMapNamespace() + "." + XmlConstants.EXAMPLE_WHERE_CLAUSE_ID)); //$NON-NLS-1$
         isParameterPresenteElement.addElement(includeElement);
 
         XmlElement isNotNullElement = new XmlElement("isNotNull"); //$NON-NLS-1$
@@ -1304,7 +1291,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         
         XmlElement includeElement = new XmlElement("include"); //$NON-NLS-1$
         includeElement.addAttribute(new Attribute("refid", //$NON-NLS-1$
-                table.getSqlMapNamespace() + "." + getExampleWhereClauseId())); //$NON-NLS-1$
+                table.getSqlMapNamespace() + "." + XmlConstants.EXAMPLE_WHERE_CLAUSE_ID)); //$NON-NLS-1$
         isParameterPresenteElement.addElement(includeElement);
 
         XmlElement isNotNullElement = new XmlElement("isNotNull"); //$NON-NLS-1$
@@ -1450,7 +1437,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         
         XmlElement includeElement = new XmlElement("include"); //$NON-NLS-1$
         includeElement.addAttribute(new Attribute("refid", //$NON-NLS-1$
-                table.getSqlMapNamespace() + "." + getExampleWhereClauseId())); //$NON-NLS-1$
+                table.getSqlMapNamespace() + "." + XmlConstants.EXAMPLE_WHERE_CLAUSE_ID)); //$NON-NLS-1$
         isParameterPresentElement.addElement(includeElement);
 
         return answer;
@@ -1501,7 +1488,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         
         XmlElement includeElement = new XmlElement("include"); //$NON-NLS-1$
         includeElement.addAttribute(new Attribute("refid", //$NON-NLS-1$
-                table.getSqlMapNamespace() + "." + getExampleWhereClauseId())); //$NON-NLS-1$
+                table.getSqlMapNamespace() + "." + XmlConstants.EXAMPLE_WHERE_CLAUSE_ID)); //$NON-NLS-1$
         isParameterPresentElement.addElement(includeElement);
 
         return answer;
@@ -1552,7 +1539,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         
         XmlElement includeElement = new XmlElement("include"); //$NON-NLS-1$
         includeElement.addAttribute(new Attribute("refid", //$NON-NLS-1$
-                table.getSqlMapNamespace() + "." + getExampleWhereClauseId())); //$NON-NLS-1$
+                table.getSqlMapNamespace() + "." + XmlConstants.EXAMPLE_WHERE_CLAUSE_ID)); //$NON-NLS-1$
         isParameterPresentElement.addElement(includeElement);
 
         return answer;

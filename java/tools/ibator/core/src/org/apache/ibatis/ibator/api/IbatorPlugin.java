@@ -829,7 +829,7 @@ public interface IbatorPlugin {
      *   of multiple plugins, the first plugin returning false
      *   will disable the calling of further plugins.
      */
-    boolean sqlMapBaseResultMapGenerated(XmlElement element, IntrospectedTable introspectedTable);
+    boolean sqlMapResultMapWithoutBLOBsElementGenerated(XmlElement element, IntrospectedTable introspectedTable);
 
     /**
      * This method is called when the countByExample element is generated.
@@ -881,7 +881,7 @@ public interface IbatorPlugin {
      *   of multiple plugins, the first plugin returning false
      *   will disable the calling of further plugins.
      */
-    boolean sqlMapExampleWhereClauseGenerated(XmlElement element, IntrospectedTable introspectedTable);
+    boolean sqlMapExampleWhereClauseElementGenerated(XmlElement element, IntrospectedTable introspectedTable);
 
     /**
      * This method is called when the insert element is generated.
@@ -921,7 +921,7 @@ public interface IbatorPlugin {
      *   of multiple plugins, the first plugin returning false
      *   will disable the calling of further plugins.
      */
-    boolean sqlMapResultMapWithBLOBsGenerated(XmlElement element, IntrospectedTable introspectedTable);
+    boolean sqlMapResultMapWithBLOBsElementGenerated(XmlElement element, IntrospectedTable introspectedTable);
 
     /**
      * This method is called when the selectByPrimaryKey element is generated.
@@ -947,7 +947,7 @@ public interface IbatorPlugin {
      *   of multiple plugins, the first plugin returning false
      *   will disable the calling of further plugins.
      */
-    boolean sqlMapSelectByExampleElementGenerated(XmlElement element, IntrospectedTable introspectedTable);
+    boolean sqlMapSelectByExampleWithoutBLOBsElementGenerated(XmlElement element, IntrospectedTable introspectedTable);
 
     /**
      * This method is called when the selectByExampleWithBLOBs element is generated.

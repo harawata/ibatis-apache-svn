@@ -110,6 +110,11 @@ public class XmlConstants {
         sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
         sb.append("ResultMapWithBLOBs"); //$NON-NLS-1$
         RESULT_MAP_WITH_BLOBS_ID = sb.toString();
+
+        sb.setLength(0);
+        sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
+        sb.append("Example_Where_Clause"); //$NON-NLS-1$
+        EXAMPLE_WHERE_CLAUSE_ID = sb.toString();
     }
 
     public static final String SQL_MAP_SYSTEM_ID = "http://ibatis.apache.org/dtd/sql-map-2.dtd"; //$NON-NLS-1$
@@ -155,4 +160,6 @@ public class XmlConstants {
     public static final String BASE_RESULT_MAP_ID;
 
     public static final String RESULT_MAP_WITH_BLOBS_ID;
+    
+    public static final String EXAMPLE_WHERE_CLAUSE_ID;
 }

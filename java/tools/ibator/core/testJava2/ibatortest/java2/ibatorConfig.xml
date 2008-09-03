@@ -31,7 +31,7 @@
 
     <table tableName="FieldsOnly" />
     <table tableName="PKOnly" />
-    <table tableName="PKFields" />
+    <table tableName="PKFields" alias="B" />
     <table tableName="PKBlobs" />
     <table tableName="PKFieldsBlobs" />
     <table tableName="FieldsBlobs" />
@@ -71,7 +71,7 @@
 
     <table tableName="FieldsOnly" />
     <table tableName="PKOnly" />
-    <table tableName="PKFields" />
+    <table tableName="PKFields" alias="B" />
     <table tableName="PKBlobs" />
     <table tableName="PKFieldsBlobs" />
     <table tableName="FieldsBlobs" />
@@ -111,7 +111,7 @@
 
     <table tableName="FieldsOnly" />
     <table tableName="PKOnly" />
-    <table tableName="PKFields" />
+    <table tableName="PKFields" alias="B" />
     <table tableName="PKBlobs" />
     <table tableName="PKFieldsBlobs" />
     <table tableName="FieldsBlobs" />

@@ -109,4 +109,8 @@ public class TopLevelClass extends InnerClass implements CompilationUnit {
     public List<String> getFileCommentLines() {
         return fileCommentLines;
     }
+
+    public void addImportedTypes(Set<FullyQualifiedJavaType> importedTypes) {
+        this.importedTypes.addAll(importedTypes);
+    }
 }

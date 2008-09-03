@@ -33,6 +33,7 @@ public interface CompilationUnit {
     Set<FullyQualifiedJavaType> getSuperInterfaceTypes();
     FullyQualifiedJavaType getType();
     void addImportedType(FullyQualifiedJavaType importedType);
+    void addImportedTypes(Set<FullyQualifiedJavaType> importedTypes);
     
     /**
      * Comments will be written at the top of the file as is,

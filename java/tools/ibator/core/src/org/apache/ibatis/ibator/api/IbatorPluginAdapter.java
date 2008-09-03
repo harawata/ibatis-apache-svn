@@ -218,7 +218,7 @@ public abstract class IbatorPluginAdapter implements IbatorPlugin {
         return true;
     }
 
-    public boolean sqlMapBaseResultMapGenerated(XmlElement element, IntrospectedTable introspectedTable) {
+    public boolean sqlMapResultMapWithoutBLOBsElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
         return true;
     }
 
@@ -238,7 +238,7 @@ public abstract class IbatorPluginAdapter implements IbatorPlugin {
         return true;
     }
 
-    public boolean sqlMapExampleWhereClauseGenerated(XmlElement element, IntrospectedTable introspectedTable) {
+    public boolean sqlMapExampleWhereClauseElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
         return true;
     }
 
@@ -250,11 +250,11 @@ public abstract class IbatorPluginAdapter implements IbatorPlugin {
         return true;
     }
 
-    public boolean sqlMapResultMapWithBLOBsGenerated(XmlElement element, IntrospectedTable introspectedTable) {
+    public boolean sqlMapResultMapWithBLOBsElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
         return true;
     }
 
-    public boolean sqlMapSelectByExampleElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
+    public boolean sqlMapSelectByExampleWithoutBLOBsElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
         return true;
     }
 

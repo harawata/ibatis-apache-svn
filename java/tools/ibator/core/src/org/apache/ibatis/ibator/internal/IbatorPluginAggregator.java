@@ -193,13 +193,13 @@ public final class IbatorPluginAggregator implements IbatorPlugin {
         return rc;
     }
 
-    public boolean sqlMapBaseResultMapGenerated(XmlElement element,
+    public boolean sqlMapResultMapWithoutBLOBsElementGenerated(XmlElement element,
             IntrospectedTable introspectedTable) {
         boolean rc = true;
 
         for (IbatorPlugin plugin : plugins) {
             if (!plugin
-                    .sqlMapBaseResultMapGenerated(element, introspectedTable)) {
+                    .sqlMapResultMapWithoutBLOBsElementGenerated(element, introspectedTable)) {
                 rc = false;
                 break;
             }
@@ -208,12 +208,12 @@ public final class IbatorPluginAggregator implements IbatorPlugin {
         return rc;
     }
 
-    public boolean sqlMapExampleWhereClauseGenerated(XmlElement element,
+    public boolean sqlMapExampleWhereClauseElementGenerated(XmlElement element,
             IntrospectedTable introspectedTable) {
         boolean rc = true;
 
         for (IbatorPlugin plugin : plugins) {
-            if (!plugin.sqlMapExampleWhereClauseGenerated(element,
+            if (!plugin.sqlMapExampleWhereClauseElementGenerated(element,
                     introspectedTable)) {
                 rc = false;
                 break;
@@ -238,12 +238,12 @@ public final class IbatorPluginAggregator implements IbatorPlugin {
         return rc;
     }
 
-    public boolean sqlMapResultMapWithBLOBsGenerated(XmlElement element,
+    public boolean sqlMapResultMapWithBLOBsElementGenerated(XmlElement element,
             IntrospectedTable introspectedTable) {
         boolean rc = true;
 
         for (IbatorPlugin plugin : plugins) {
-            if (!plugin.sqlMapResultMapWithBLOBsGenerated(element,
+            if (!plugin.sqlMapResultMapWithBLOBsElementGenerated(element,
                     introspectedTable)) {
                 rc = false;
                 break;
@@ -253,12 +253,12 @@ public final class IbatorPluginAggregator implements IbatorPlugin {
         return rc;
     }
 
-    public boolean sqlMapSelectByExampleElementGenerated(XmlElement element,
+    public boolean sqlMapSelectByExampleWithoutBLOBsElementGenerated(XmlElement element,
             IntrospectedTable introspectedTable) {
         boolean rc = true;
 
         for (IbatorPlugin plugin : plugins) {
-            if (!plugin.sqlMapSelectByExampleElementGenerated(element,
+            if (!plugin.sqlMapSelectByExampleWithoutBLOBsElementGenerated(element,
                     introspectedTable)) {
                 rc = false;
                 break;
