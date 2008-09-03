@@ -240,7 +240,6 @@ public class MapperParser extends BaseParser {
     if (parameterMap != null) {
       statementBuilder.parameterMap(configuration.getParameterMap(parameterMap));
     } else if (parameterType != null) {
-      //TODO: Parse Paremeter Mappings from SQL
       List<ParameterMapping> parameterMappings = new ArrayList<ParameterMapping>();
       Class parameterTypeClass = resolveClass(parameterType);
       ParameterMap.Builder inlineParameterMapBuilder = new ParameterMap.Builder(
