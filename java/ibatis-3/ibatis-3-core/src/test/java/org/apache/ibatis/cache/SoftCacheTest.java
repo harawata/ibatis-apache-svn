@@ -1,29 +1,28 @@
 package org.apache.ibatis.cache;
 
-import org.apache.ibatis.cache.decorators.SerializedCache;
-import org.apache.ibatis.cache.impl.SoftCache;
+import org.apache.ibatis.cache.decorators.*;
+import org.apache.ibatis.cache.impl.*;
 import org.junit.*;
 
 public class SoftCacheTest {
 
-  @Test @Ignore("Until we can find a reliable way to test it on all machines.")
+  @Test //@Ignore("Until we can find a reliable way to test it on all machines.")
   public void shouldDemonstrateObjectsBeingCollectedAsNeeded() throws Exception {
-    SoftCache cache = new SoftCache();
+    SoftCache cache = new SoftCache(new PerpetualCache());
     int n = 100000;
     for (int i = 0; i < n; i++) {
       byte[] array = new byte[5001]; //waste a bunch of memory
       array[5000] = 1;
       cache.putObject(i, array);
-
       Object value = cache.getObject(i);
-      //Assert.assertTrue(value == null || value.equals(String.valueOf(i)));
     }
+    System.out.println(cache.getSize());
     Assert.assertTrue(cache.getSize() < n);
   }
 
   @Test
   public void shouldDemonstrateCopiesAreEqual() {
-    Cache cache = new SoftCache();
+    Cache cache = new SoftCache(new PerpetualCache());
     cache = new SerializedCache(cache);
     for (int i = 0; i < 1000; i++) {
       cache.putObject(i, i);
@@ -34,7 +33,7 @@ public class SoftCacheTest {
 
   @Test
   public void shouldRemoveItemOnDemand() {
-    Cache cache = new SoftCache();
+    Cache cache = new SoftCache(new PerpetualCache());
     cache.putObject(0, 0);
     Assert.assertNotNull(cache.getObject(0));
     cache.removeObject(0);
@@ -43,7 +42,7 @@ public class SoftCacheTest {
 
   @Test
   public void shouldFlushAllItemsOnDemand() {
-    Cache cache = new SoftCache();
+    Cache cache = new SoftCache(new PerpetualCache());
     for (int i = 0; i < 5; i++) {
       cache.putObject(i, i);
     }

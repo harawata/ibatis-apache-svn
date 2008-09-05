@@ -1,14 +1,14 @@
 package org.apache.ibatis.cache;
 
-import org.apache.ibatis.cache.decorators.SerializedCache;
-import org.apache.ibatis.cache.impl.WeakCache;
+import org.apache.ibatis.cache.decorators.*;
+import org.apache.ibatis.cache.impl.*;
 import org.junit.*;
 
 public class WeakCacheTest {
 
   @Test
   public void shouldDemonstrateObjectsBeingCollectedAsNeeded() {
-    WeakCache cache = new WeakCache();
+    WeakCache cache = new WeakCache(new PerpetualCache());
     for (int i = 0; i < 1000000; i++) {
       cache.putObject(i, i);
     }
@@ -17,7 +17,7 @@ public class WeakCacheTest {
 
   @Test
   public void shouldDemonstrateCopiesAreEqual() {
-    Cache cache = new WeakCache();
+    Cache cache = new WeakCache(new PerpetualCache());
     cache = new SerializedCache(cache);
     for (int i = 0; i < 1000; i++) {
       cache.putObject(i, i);
@@ -28,7 +28,7 @@ public class WeakCacheTest {
 
   @Test
   public void shouldRemoveItemOnDemand() {
-    Cache cache = new WeakCache();
+    WeakCache cache = new WeakCache(new PerpetualCache());
     cache.putObject(0, 0);
     Assert.assertNotNull(cache.getObject(0));
     cache.removeObject(0);
@@ -37,7 +37,7 @@ public class WeakCacheTest {
 
   @Test
   public void shouldFlushAllItemsOnDemand() {
-    Cache cache = new WeakCache();
+    WeakCache cache = new WeakCache(new PerpetualCache());
     for (int i = 0; i < 5; i++) {
       cache.putObject(i, i);
     }

@@ -9,7 +9,7 @@ import java.util.*;
  */
 public class FifoCache extends BaseCache {
 
-  private int size = 256;
+  private int size = 1024;
   private Map cache = new HashMap();
   private List keyList = new LinkedList();
 

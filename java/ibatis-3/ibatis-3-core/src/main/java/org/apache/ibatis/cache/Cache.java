@@ -11,7 +11,7 @@ public interface Cache {
 
   int getSize();
 
-  void putObject(Object key, Object object);
+  void putObject(Object key, Object value);
 
   Object getObject(Object key);
 
