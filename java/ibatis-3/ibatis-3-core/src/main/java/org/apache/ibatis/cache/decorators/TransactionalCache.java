@@ -51,6 +51,7 @@ public class TransactionalCache implements Cache {
   }
 
   public void clear() {
+    reset();
     clearOnCommit = true;
   }
 
