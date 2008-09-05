@@ -2,7 +2,9 @@ package org.apache.ibatis.cache.decorators;
 
 import org.apache.ibatis.cache.*;
 
-public class SynchronizedCache extends BaseCache {
+import java.util.concurrent.locks.ReadWriteLock;
+
+public class SynchronizedCache implements Cache {
 
   private Cache delegate;
 
@@ -14,28 +16,87 @@ public class SynchronizedCache extends BaseCache {
     return delegate.getId();
   }
 
-  public synchronized int getSize() {
-    return delegate.getSize();
+  public int getSize() {
+    acquireReadLock();
+    try {
+      return delegate.getSize();      
+    } finally {
+      releaseReadLock();
+    }
   }
 
-  public synchronized void putObject(Object key, Object object) {
-    delegate.putObject(key, object);
+  public void putObject(Object key, Object object) {
+    acquireWriteLock();
+    try {
+      delegate.putObject(key, object);
+    } finally {
+      releaseWriteLock();
+    }
   }
 
-  public synchronized Object getObject(Object key) {
-    return delegate.getObject(key);
+  public Object getObject(Object key) {
+    acquireReadLock();
+    try {
+      return delegate.getObject(key);
+    } finally {
+      releaseReadLock();
+    }
   }
 
-  public synchronized boolean hasKey(Object key) {
-    return delegate.hasKey(key);
+  public boolean hasKey(Object key) {
+    acquireReadLock();
+    try {
+      return delegate.hasKey(key);
+    } finally {
+      releaseReadLock();
+    }
   }
 
-  public synchronized Object removeObject(Object key) {
-    return delegate.removeObject(key);
+  public Object removeObject(Object key) {
+    acquireWriteLock();
+    try {
+      return delegate.removeObject(key);
+    } finally {
+      releaseWriteLock();
+    }
   }
 
-  public synchronized void clear() {
-    delegate.clear();
+
+  public void clear() {
+    acquireWriteLock();
+    try {
+      delegate.clear();
+    } finally {
+      releaseWriteLock();
+    }
+  }
+
+  public ReadWriteLock getReadWriteLock() {
+    return delegate.getReadWriteLock();
+  }
+
+  public int hashCode() {
+    return delegate.hashCode();
+  }
+
+  public boolean equals(Object obj) {
+    return delegate.equals(obj);
+  }
+
+  private void acquireReadLock() {
+    getReadWriteLock().readLock().lock();
+  }
+
+  private void releaseReadLock() {
+    getReadWriteLock().readLock().unlock();
+  }
+
+  private void acquireWriteLock() {
+    getReadWriteLock().writeLock().lock();
+  }
+
+  private void releaseWriteLock() {
+    getReadWriteLock().writeLock().unlock();
   }
 
 }

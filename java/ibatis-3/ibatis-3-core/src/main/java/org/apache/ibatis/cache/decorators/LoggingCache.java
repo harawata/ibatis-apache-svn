@@ -3,7 +3,9 @@ package org.apache.ibatis.cache.decorators;
 import org.apache.ibatis.cache.*;
 import org.apache.ibatis.logging.*;
 
-public class LoggingCache extends BaseCache {
+import java.util.concurrent.locks.ReadWriteLock;
+
+public class LoggingCache implements Cache {
 
   private static final Log log = LogFactory.getLog(LoggingCache.class);
 
@@ -48,6 +50,18 @@ public class LoggingCache extends BaseCache {
 
   public void clear() {
     delegate.clear();
+  }
+
+  public ReadWriteLock getReadWriteLock() {
+    return delegate.getReadWriteLock();
+  }
+
+  public int hashCode() {
+    return delegate.hashCode();
+  }
+
+  public boolean equals(Object obj) {
+    return delegate.equals(obj);
   }
 
   private double getHitRatio() {

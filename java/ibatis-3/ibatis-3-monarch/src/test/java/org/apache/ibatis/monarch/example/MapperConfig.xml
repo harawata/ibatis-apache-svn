@@ -20,11 +20,9 @@
     <setting name="" value=""/>
   </settings>
 
-  <caches default="MyLRU">
-    <cache id="myLRU" type="LRU">
-      <properties name="" value=""/>
-    </cache>
-  </caches>
+  <cache type="LRU">
+    <properties name="" value=""/>
+  </cache>
 
   <environments default="development">
     <environment id="development">

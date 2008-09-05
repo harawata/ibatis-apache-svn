@@ -3,6 +3,8 @@ package org.apache.ibatis.cache;
 import org.apache.ibatis.cache.decorators.*;
 import org.apache.ibatis.reflection.MetaObject;
 
+import java.util.concurrent.locks.ReadWriteLock;
+
 public interface Cache {
 
   String getId();
@@ -18,6 +20,8 @@ public interface Cache {
   Object removeObject(Object key);
 
   void clear();
+
+  ReadWriteLock getReadWriteLock();
 
   public class Builder {
     private String id;

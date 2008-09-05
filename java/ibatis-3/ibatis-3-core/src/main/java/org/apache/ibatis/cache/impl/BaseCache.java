@@ -1,4 +1,8 @@
-package org.apache.ibatis.cache;
+package org.apache.ibatis.cache.impl;
+
+import org.apache.ibatis.cache.*;
+
+import java.util.concurrent.locks.*;
 
 /**
  * Base Cache class implements a template method pattern for subclasses.
@@ -6,6 +10,8 @@ package org.apache.ibatis.cache;
 public abstract class BaseCache implements Cache {
 
   protected String id;
+
+  private ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
   public String getId() {
     return id;
@@ -15,14 +21,18 @@ public abstract class BaseCache implements Cache {
     this.id = id;
   }
 
+  public ReadWriteLock getReadWriteLock() {
+    return readWriteLock;
+  }
+
   public boolean equals(Object o) {
     if (getId() == null) throw new CacheException("Cache instances require an ID.");
     if (this == o) return true;
-    if (!(o instanceof BaseCache)) return false;
+    if (!(o instanceof Cache)) return false;
 
-    BaseCache baseCache = (BaseCache) o;
+    Cache otherCache = (Cache) o;
 
-    if (!getId().equals(baseCache.getId())) return false;
+    if (!getId().equals(otherCache.getId())) return false;
 
     return true;
   }

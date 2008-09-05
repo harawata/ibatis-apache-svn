@@ -3,8 +3,9 @@ package org.apache.ibatis.cache.decorators;
 import org.apache.ibatis.cache.*;
 
 import java.io.*;
+import java.util.concurrent.locks.ReadWriteLock;
 
-public class SerializedCache extends BaseCache {
+public class SerializedCache implements Cache {
 
   private Cache delegate;
 
@@ -43,6 +44,10 @@ public class SerializedCache extends BaseCache {
 
   public void clear() {
     delegate.clear();
+  }
+
+  public ReadWriteLock getReadWriteLock() {
+    return delegate.getReadWriteLock();
   }
 
   private byte[] serialize(Serializable value) {

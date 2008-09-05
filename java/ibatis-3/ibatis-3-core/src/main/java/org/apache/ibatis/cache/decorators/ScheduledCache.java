@@ -2,7 +2,9 @@ package org.apache.ibatis.cache.decorators;
 
 import org.apache.ibatis.cache.*;
 
-public class ScheduledCache extends BaseCache {
+import java.util.concurrent.locks.ReadWriteLock;
+
+public class ScheduledCache implements Cache {
 
   private Cache delegate;
   protected long clearInterval = 60 * 60 * 1000; // 1 hour
@@ -63,6 +65,18 @@ public class ScheduledCache extends BaseCache {
   public void clear() {
     lastClear = System.currentTimeMillis();
     delegate.clear();
+  }
+
+  public ReadWriteLock getReadWriteLock() {
+    return delegate.getReadWriteLock();
+  }
+
+  public int hashCode() {
+    return delegate.hashCode();
+  }
+
+  public boolean equals(Object obj) {
+    return delegate.equals(obj);
   }
 
   private boolean clearWhenStale() {

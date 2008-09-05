@@ -1,6 +1,6 @@
 package org.apache.ibatis.cache.impl;
 
-import org.apache.ibatis.cache.BaseCache;
+import org.apache.ibatis.cache.impl.BaseCache;
 
 import javax.util.SoftHashMap;
 import java.util.Map;
