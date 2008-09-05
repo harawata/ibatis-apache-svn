@@ -31,10 +31,7 @@ public abstract class BaseCache implements Cache {
     if (!(o instanceof Cache)) return false;
 
     Cache otherCache = (Cache) o;
-
-    if (!getId().equals(otherCache.getId())) return false;
-
-    return true;
+    return getId().equals(otherCache.getId());
   }
 
   public int hashCode() {

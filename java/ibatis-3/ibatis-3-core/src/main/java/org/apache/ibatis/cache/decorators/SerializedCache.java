@@ -50,6 +50,14 @@ public class SerializedCache implements Cache {
     return delegate.getReadWriteLock();
   }
 
+  public int hashCode() {
+    return delegate.hashCode();
+  }
+
+  public boolean equals(Object obj) {
+    return delegate.equals(obj);
+  }
+
   private byte[] serialize(Serializable value) {
     try {
       ByteArrayOutputStream bos = new ByteArrayOutputStream();

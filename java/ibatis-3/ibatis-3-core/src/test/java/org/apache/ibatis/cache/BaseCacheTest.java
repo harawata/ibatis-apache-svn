@@ -17,6 +17,12 @@ public class BaseCacheTest {
     Assert.assertTrue(cache.equals(new SerializedCache(cache)));
     Assert.assertTrue(cache.equals(new LoggingCache(cache)));
     Assert.assertTrue(cache.equals(new ScheduledCache(cache, 5000)));
+
+    Assert.assertEquals(cache.hashCode(), new SynchronizedCache(cache).hashCode());
+    Assert.assertEquals(cache.hashCode(), new SerializedCache(cache).hashCode());
+    Assert.assertEquals(cache.hashCode(), new LoggingCache(cache).hashCode());
+    Assert.assertEquals(cache.hashCode(), new ScheduledCache(cache).hashCode());
+
     Set<Cache> caches = new HashSet<Cache>();
     caches.add(cache);
     caches.add(new SynchronizedCache(cache));
