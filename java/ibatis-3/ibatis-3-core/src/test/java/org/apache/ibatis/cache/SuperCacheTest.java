@@ -8,14 +8,20 @@ public class SuperCacheTest {
 
   @Test
   public void shouldDemonstrate5LevelSuperCacheHandlesLotsOfEntriesWithoutCrashing() {
-    final int N = 1000000;
+    final int N = 100000;
     Cache cache = new PerpetualCache();
-    cache = new LruCache(cache,500000);
-    cache = new FifoCache(cache,500000);
+    cache = new LruCache(cache);
+    cache = new FifoCache(cache);
     cache = new SoftCache(cache);
     cache = new WeakCache(cache);
+    cache = new ScheduledCache(cache);
+    cache = new SerializedCache(cache);
+//    cache = new LoggingCache(cache);
+    cache = new SynchronizedCache(cache);
+    cache = new TransactionalCache(cache);
     for (int i = 0; i < N; i++) {
       cache.putObject(i, i);
+      ((TransactionalCache)cache).commit();
       Object o = cache.getObject(i);
       Assert.assertTrue(o == null || i == ((Integer) o));
     }
