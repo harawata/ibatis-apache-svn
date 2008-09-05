@@ -1,6 +1,5 @@
 package org.apache.ibatis.cache.decorators;
 
-import org.apache.ibatis.cache.impl.BaseCache;
 import org.apache.ibatis.cache.Cache;
 
 import java.util.*;
@@ -11,7 +10,7 @@ import java.lang.ref.*;
  * Weak Reference cache decorator
  * Thanks to Dr. Heinz Kabutz for his guidance here.
  */
-public class WeakCache extends BaseCache {
+public class WeakCache implements Cache {
   private final int numberOfHardLinks;
   private final LinkedList hardLinksToAvoidGarbageCollection = new LinkedList();
   private final ReferenceQueue queueOfGarbageCollectedEntries = new ReferenceQueue();

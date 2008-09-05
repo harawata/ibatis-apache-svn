@@ -1,14 +1,14 @@
 package org.apache.ibatis.cache;
 
-import org.apache.ibatis.cache.impl.LruCache;
+import org.apache.ibatis.cache.decorators.LruCache;
+import org.apache.ibatis.cache.impl.PerpetualCache;
 import org.junit.*;
 
 public class LruCacheTest {
 
   @Test
   public void shouldRemoveLeastRecentlyUsedItemInBeyondFiveEntries() {
-    LruCache cache = new LruCache();
-    cache.setSize(5);
+    LruCache cache = new LruCache(new PerpetualCache(),5);
     for (int i = 0; i < 5; i++) {
       cache.putObject(i, i);
     }
@@ -20,7 +20,7 @@ public class LruCacheTest {
 
   @Test
   public void shouldRemoveItemOnDemand() {
-    Cache cache = new LruCache();
+    Cache cache = new LruCache(new PerpetualCache());
     cache.putObject(0, 0);
     Assert.assertNotNull(cache.getObject(0));
     cache.removeObject(0);
@@ -29,7 +29,7 @@ public class LruCacheTest {
 
   @Test
   public void shouldFlushAllItemsOnDemand() {
-    Cache cache = new LruCache();
+    Cache cache = new LruCache(new PerpetualCache());
     for (int i = 0; i < 5; i++) {
       cache.putObject(i, i);
     }

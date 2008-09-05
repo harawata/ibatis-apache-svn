@@ -5,8 +5,8 @@ import com.ibatis.sqlmap.engine.transaction.TransactionManager;
 import com.ibatis.sqlmap.engine.transaction.external.ExternalTransactionConfig;
 import com.ibatis.sqlmap.engine.transaction.jdbc.JdbcTransactionConfig;
 import com.ibatis.sqlmap.engine.transaction.jta.JtaTransactionConfig;
-import org.apache.ibatis.cache.impl.*;
-import org.apache.ibatis.cache.decorators.WeakCache;
+import org.apache.ibatis.cache.decorators.*;
+import org.apache.ibatis.cache.impl.PerpetualCache;
 import org.apache.ibatis.mapping.Configuration;
 
 import javax.sql.DataSource;
@@ -43,9 +43,9 @@ public class Ibatis2Configuration extends Configuration {
     this.getTypeAliasRegistry().registerAlias("JNDI", JndiDataSourceFactory.class.getName());
 
     // CACHE ALIASES
-    this.getTypeAliasRegistry().registerAlias("FIFO", FifoCache.class.getName());
-    this.getTypeAliasRegistry().registerAlias("LRU", LruCache.class.getName());
-    this.getTypeAliasRegistry().registerAlias("MEMORY", LruCache.class.getName());
+    this.getTypeAliasRegistry().registerAlias("FIFO", PerpetualCache.class.getName());
+    this.getTypeAliasRegistry().registerAlias("LRU", PerpetualCache.class.getName());
+    this.getTypeAliasRegistry().registerAlias("MEMORY", PerpetualCache.class.getName());
   }
 
   public TransactionManager getTransactionManager() {

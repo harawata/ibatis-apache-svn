@@ -1,14 +1,14 @@
 package org.apache.ibatis.cache;
 
-import org.apache.ibatis.cache.impl.FifoCache;
+import org.apache.ibatis.cache.decorators.FifoCache;
+import org.apache.ibatis.cache.impl.PerpetualCache;
 import org.junit.*;
 
 public class FifoCacheTest {
 
   @Test
   public void shouldRemoveFirstItemInBeyondFiveEntries() {
-    FifoCache cache = new FifoCache();
-    cache.setSize(5);
+    FifoCache cache = new FifoCache(new PerpetualCache(),5);
     for (int i = 0; i < 5; i++) {
       cache.putObject(i, i);
     }
@@ -20,7 +20,7 @@ public class FifoCacheTest {
 
   @Test
   public void shouldRemoveItemOnDemand() {
-    Cache cache = new FifoCache();
+    FifoCache cache = new FifoCache(new PerpetualCache());
     cache.putObject(0, 0);
     Assert.assertNotNull(cache.getObject(0));
     cache.removeObject(0);
@@ -29,7 +29,7 @@ public class FifoCacheTest {
 
   @Test
   public void shouldFlushAllItemsOnDemand() {
-    Cache cache = new FifoCache();
+    FifoCache cache = new FifoCache(new PerpetualCache());
     for (int i = 0; i < 5; i++) {
       cache.putObject(i, i);
     }
