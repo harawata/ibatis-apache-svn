@@ -19,7 +19,7 @@ public class XmlSqlMapParser {
   private Reader reader;
   private NodeletParser parser;
 
-  private Cache.Builder cacheBuilder;
+  private CacheBuilder cacheBuilder;
   private List<String> flushCacheStatements;
 
   private ResultMap.Builder resultMapBuilder;
@@ -82,7 +82,8 @@ public class XmlSqlMapParser {
     Boolean serialize = context.getBooleanAttribute("serialize", true);
     type = config.getTypeAliasRegistry().resolveAlias(type);
     Class clazz = Resources.classForName(type);
-    cacheBuilder = new Cache.Builder(id, clazz);
+    cacheBuilder = new CacheBuilder(id);
+    cacheBuilder.addDecorator(clazz);
 
     //LOCAL_READ_WRITE (serializable=false, readOnly=false)
     //SHARED_READ_ONLY (serializable=false, readOnly=true)

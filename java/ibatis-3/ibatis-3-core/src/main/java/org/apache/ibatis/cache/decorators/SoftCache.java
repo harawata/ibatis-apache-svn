@@ -11,18 +11,16 @@ import java.util.concurrent.locks.ReadWriteLock;
  * Thanks to Dr. Heinz Kabutz for his guidance here.
  */
 public class SoftCache implements Cache {
-  private final int numberOfHardLinks;
-  private final LinkedList hardLinksToAvoidGarbageCollection = new LinkedList();
-  private final ReferenceQueue queueOfGarbageCollectedEntries = new ReferenceQueue();
+  private final LinkedList hardLinksToAvoidGarbageCollection;
+  private final ReferenceQueue queueOfGarbageCollectedEntries;
   private final Cache delegate;
+  private int numberOfHardLinks;
 
   public SoftCache(Cache delegate) {
-    this(delegate,256);
-  }
-
-  public SoftCache(Cache delegate, int numberOfHardLinks) {
     this.delegate = delegate;
-    this.numberOfHardLinks = numberOfHardLinks;
+    this.numberOfHardLinks = 256;
+    this.hardLinksToAvoidGarbageCollection = new LinkedList();
+    this.queueOfGarbageCollectedEntries = new ReferenceQueue();
   }
 
   public String getId() {
@@ -32,6 +30,10 @@ public class SoftCache implements Cache {
   public int getSize() {
     removeGarbageCollectedItems();
     return delegate.getSize();
+  }
+
+  public void setSize(int size) {
+    this.numberOfHardLinks = size;
   }
 
   public void putObject(Object key, Object value) {

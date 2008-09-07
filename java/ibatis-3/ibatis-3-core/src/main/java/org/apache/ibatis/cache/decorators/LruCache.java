@@ -11,23 +11,12 @@ import java.util.concurrent.locks.ReadWriteLock;
 public class LruCache implements Cache {
 
   private final Cache delegate;
-
-  private final Map keyMap;
-
+  private Map keyMap;
   private Object eldestKey;
 
   public LruCache(Cache delegate) {
-    this(delegate, 1024);
-  }
-
-  public LruCache(Cache delegate, final int size) {
     this.delegate = delegate;
-    keyMap = new LinkedHashMap(size, .75F, true) {
-      protected boolean removeEldestEntry(Map.Entry eldest) {
-        eldestKey = eldest.getKey();
-        return size() > size;
-      }
-    };
+    setSize(1024);
   }
 
   public String getId() {
@@ -38,17 +27,27 @@ public class LruCache implements Cache {
     return delegate.getSize();
   }
 
+  public void setSize(final int size) {
+    keyMap = new LinkedHashMap(size, .75F, true) {
+      protected boolean removeEldestEntry(Map.Entry eldest) {
+        boolean tooBig = size() > size;
+        if (tooBig) {
+          eldestKey = eldest.getKey();
+        }
+        return tooBig;
+      }
+    };
+  }
+
   public void putObject(Object key, Object value) {
-    cycleKeyList(key);
     delegate.putObject(key, value);
+    cycleKeyList(key);
   }
 
   public Object getObject(Object key) {
-    try {
-      return delegate.getObject(key);
-    } finally {
-      cycleKeyList(key);
-    }
+    keyMap.get(key); //touch
+    return delegate.getObject(key);
+
   }
 
   public boolean hasKey(Object key) {

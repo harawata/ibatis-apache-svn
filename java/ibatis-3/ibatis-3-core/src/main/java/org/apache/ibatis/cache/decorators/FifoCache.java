@@ -11,16 +11,13 @@ import java.util.concurrent.locks.ReadWriteLock;
 public class FifoCache implements Cache {
 
   private final Cache delegate;
-  private final int size;
-  private final LinkedList keyList = new LinkedList();
+  private final LinkedList keyList;
+  private int size;
 
   public FifoCache(Cache delegate) {
-    this(delegate,1024);
-  }
-
-  public FifoCache(Cache delegate, int size) {
     this.delegate = delegate;
-    this.size = size;
+    this.keyList = new LinkedList();
+    this.size = 1024;
   }
 
   public String getId() {
@@ -29,6 +26,10 @@ public class FifoCache implements Cache {
 
   public int getSize() {
     return delegate.getSize();
+  }
+
+  public void setSize(int size) {
+    this.size = size;
   }
 
   public void putObject(Object key, Object value) {

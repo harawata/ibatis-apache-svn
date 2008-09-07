@@ -8,7 +8,8 @@ public class LruCacheTest {
 
   @Test
   public void shouldRemoveLeastRecentlyUsedItemInBeyondFiveEntries() {
-    LruCache cache = new LruCache(new PerpetualCache(),5);
+    LruCache cache = new LruCache(new PerpetualCache("default"));
+    cache.setSize(5);
     for (int i = 0; i < 5; i++) {
       cache.putObject(i, i);
     }
@@ -20,7 +21,7 @@ public class LruCacheTest {
 
   @Test
   public void shouldRemoveItemOnDemand() {
-    Cache cache = new LruCache(new PerpetualCache());
+    Cache cache = new LruCache(new PerpetualCache("default"));
     cache.putObject(0, 0);
     Assert.assertNotNull(cache.getObject(0));
     cache.removeObject(0);
@@ -29,7 +30,7 @@ public class LruCacheTest {
 
   @Test
   public void shouldFlushAllItemsOnDemand() {
-    Cache cache = new LruCache(new PerpetualCache());
+    Cache cache = new LruCache(new PerpetualCache("default"));
     for (int i = 0; i < 5; i++) {
       cache.putObject(i, i);
     }

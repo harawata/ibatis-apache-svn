@@ -9,7 +9,7 @@ public class SuperCacheTest {
   @Test
   public void shouldDemonstrate5LevelSuperCacheHandlesLotsOfEntriesWithoutCrashing() {
     final int N = 100000;
-    Cache cache = new PerpetualCache();
+    Cache cache = new PerpetualCache("default");
     cache = new LruCache(cache);
     cache = new FifoCache(cache);
     cache = new SoftCache(cache);

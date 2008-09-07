@@ -43,9 +43,9 @@ public class Ibatis2Configuration extends Configuration {
     this.getTypeAliasRegistry().registerAlias("JNDI", JndiDataSourceFactory.class.getName());
 
     // CACHE ALIASES
-    this.getTypeAliasRegistry().registerAlias("FIFO", PerpetualCache.class.getName());
-    this.getTypeAliasRegistry().registerAlias("LRU", PerpetualCache.class.getName());
-    this.getTypeAliasRegistry().registerAlias("MEMORY", PerpetualCache.class.getName());
+    this.getTypeAliasRegistry().registerAlias("FIFO", FifoCache.class.getName());
+    this.getTypeAliasRegistry().registerAlias("LRU", LruCache.class.getName());
+    this.getTypeAliasRegistry().registerAlias("MEMORY", SoftCache.class.getName());
   }
 
   public TransactionManager getTransactionManager() {

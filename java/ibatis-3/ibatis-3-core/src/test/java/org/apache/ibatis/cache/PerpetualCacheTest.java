@@ -8,7 +8,7 @@ public class PerpetualCacheTest {
 
   @Test
   public void shouldDemonstrateHowAllObjectsAreKept() {
-    Cache cache = new PerpetualCache();
+    Cache cache = new PerpetualCache("default");
     cache = new SynchronizedCache(cache);
     for (int i = 0; i < 100000; i++) {
       cache.putObject(i, i);
@@ -19,7 +19,7 @@ public class PerpetualCacheTest {
 
   @Test
   public void shouldDemonstrateCopiesAreEqual() {
-    Cache cache = new PerpetualCache();
+    Cache cache = new PerpetualCache("default");
     cache = new SerializedCache(cache);
     for (int i = 0; i < 1000; i++) {
       cache.putObject(i, i);
@@ -29,7 +29,7 @@ public class PerpetualCacheTest {
 
   @Test
   public void shouldRemoveItemOnDemand() {
-    Cache cache = new PerpetualCache();
+    Cache cache = new PerpetualCache("default");
     cache = new SynchronizedCache(cache);
     cache.putObject(0, 0);
     Assert.assertNotNull(cache.getObject(0));
@@ -39,7 +39,7 @@ public class PerpetualCacheTest {
 
   @Test
   public void shouldFlushAllItemsOnDemand() {
-    Cache cache = new PerpetualCache();
+    Cache cache = new PerpetualCache("default");
     cache = new SynchronizedCache(cache);
     for (int i = 0; i < 5; i++) {
       cache.putObject(i, i);

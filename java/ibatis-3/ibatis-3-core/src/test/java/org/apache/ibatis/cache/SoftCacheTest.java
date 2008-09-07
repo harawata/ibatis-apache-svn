@@ -8,7 +8,7 @@ public class SoftCacheTest {
 
   @Test //@Ignore("Until we can find a reliable way to test it on all machines.")
   public void shouldDemonstrateObjectsBeingCollectedAsNeeded() throws Exception {
-    SoftCache cache = new SoftCache(new PerpetualCache());
+    SoftCache cache = new SoftCache(new PerpetualCache("default"));
     int n = 100000;
     for (int i = 0; i < n; i++) {
       byte[] array = new byte[5001]; //waste a bunch of memory
@@ -22,7 +22,7 @@ public class SoftCacheTest {
 
   @Test
   public void shouldDemonstrateCopiesAreEqual() {
-    Cache cache = new SoftCache(new PerpetualCache());
+    Cache cache = new SoftCache(new PerpetualCache("default"));
     cache = new SerializedCache(cache);
     for (int i = 0; i < 1000; i++) {
       cache.putObject(i, i);
@@ -33,7 +33,7 @@ public class SoftCacheTest {
 
   @Test
   public void shouldRemoveItemOnDemand() {
-    Cache cache = new SoftCache(new PerpetualCache());
+    Cache cache = new SoftCache(new PerpetualCache("default"));
     cache.putObject(0, 0);
     Assert.assertNotNull(cache.getObject(0));
     cache.removeObject(0);
@@ -42,7 +42,7 @@ public class SoftCacheTest {
 
   @Test
   public void shouldFlushAllItemsOnDemand() {
-    Cache cache = new SoftCache(new PerpetualCache());
+    Cache cache = new SoftCache(new PerpetualCache("default"));
     for (int i = 0; i < 5; i++) {
       cache.putObject(i, i);
     }

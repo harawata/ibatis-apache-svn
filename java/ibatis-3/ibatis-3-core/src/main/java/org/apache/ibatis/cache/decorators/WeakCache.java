@@ -11,18 +11,16 @@ import java.lang.ref.*;
  * Thanks to Dr. Heinz Kabutz for his guidance here.
  */
 public class WeakCache implements Cache {
-  private final int numberOfHardLinks;
-  private final LinkedList hardLinksToAvoidGarbageCollection = new LinkedList();
-  private final ReferenceQueue queueOfGarbageCollectedEntries = new ReferenceQueue();
+  private final LinkedList hardLinksToAvoidGarbageCollection;
+  private final ReferenceQueue queueOfGarbageCollectedEntries;
   private final Cache delegate;
+  private int numberOfHardLinks;
 
   public WeakCache(Cache delegate) {
-    this(delegate,256);
-  }
-
-  public WeakCache(Cache delegate, int numberOfHardLinks) {
     this.delegate = delegate;
-    this.numberOfHardLinks = numberOfHardLinks;
+    this.numberOfHardLinks = 256;
+    this.hardLinksToAvoidGarbageCollection = new LinkedList();
+    this.queueOfGarbageCollectedEntries = new ReferenceQueue();
   }
 
   public String getId() {
@@ -32,6 +30,10 @@ public class WeakCache implements Cache {
   public int getSize() {
     removeGarbageCollectedItems();
     return delegate.getSize();
+  }
+
+  public void setSize(int size) {
+    this.numberOfHardLinks = size;
   }
 
   public void putObject(Object key, Object value) {

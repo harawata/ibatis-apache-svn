@@ -33,7 +33,7 @@ public abstract class BaseExecutor implements Executor {
       this.connection = connection;
     }
     this.deferredLoads = new ArrayList<DeferredLoad>();
-    this.localCache = new PerpetualCache();
+    this.localCache = new PerpetualCache("LocalCache");
   }
 
   public Connection getConnection() {

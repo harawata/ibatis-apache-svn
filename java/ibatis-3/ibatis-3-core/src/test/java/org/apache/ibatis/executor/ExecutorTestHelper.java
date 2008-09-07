@@ -14,14 +14,12 @@ public class ExecutorTestHelper {
   public static final Cache authorCache;
 
   static {
-    PerpetualCache cache = new PerpetualCache();
-    cache.setId("author_cache");
     authorCache =
         new SynchronizedCache(
             new SerializedCache(
                 new LoggingCache(
                     new ScheduledCache(
-                        cache, 5000))));
+                        new PerpetualCache("author_cache")))));
 
   }
 

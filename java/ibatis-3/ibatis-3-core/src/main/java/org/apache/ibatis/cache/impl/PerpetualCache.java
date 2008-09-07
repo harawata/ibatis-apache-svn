@@ -14,12 +14,12 @@ public class PerpetualCache implements Cache {
 
   private ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
-  public String getId() {
-    return id;
+  public PerpetualCache(String id) {
+    this.id = id;
   }
 
-  public void setId(String id) {
-    this.id = id;
+  public String getId() {
+    return id;
   }
 
   public int getSize() {
@@ -45,7 +45,6 @@ public class PerpetualCache implements Cache {
   public void clear() {
     cache.clear();
   }
-
 
   public ReadWriteLock getReadWriteLock() {
     return readWriteLock;

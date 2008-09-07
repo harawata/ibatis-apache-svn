@@ -7,20 +7,13 @@ import java.util.concurrent.locks.ReadWriteLock;
 public class ScheduledCache implements Cache {
 
   private Cache delegate;
-  protected long clearInterval = 60 * 60 * 1000; // 1 hour
-  protected long lastClear = System.currentTimeMillis();
+  protected long clearInterval;
+  protected long lastClear;
 
   public ScheduledCache(Cache delegate) {
     this.delegate = delegate;
-  }
-
-  public ScheduledCache(Cache delegate, int clearInterval) {
-    this.delegate = delegate;
-    this.clearInterval = clearInterval;
-  }
-
-  public long getClearInterval() {
-    return clearInterval;
+    this.clearInterval = 60 * 60 * 1000; // 1 hour
+    this.lastClear = System.currentTimeMillis();
   }
 
   public void setClearInterval(long clearInterval) {
