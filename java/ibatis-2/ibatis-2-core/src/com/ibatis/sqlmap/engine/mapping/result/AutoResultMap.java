@@ -15,22 +15,14 @@
  */
 package com.ibatis.sqlmap.engine.mapping.result;
 
-import com.ibatis.common.beans.ClassInfo;
-import com.ibatis.common.beans.Probe;
-import com.ibatis.common.beans.ProbeFactory;
-
+import com.ibatis.common.beans.*;
 import com.ibatis.sqlmap.client.SqlMapException;
 import com.ibatis.sqlmap.engine.impl.SqlMapExecutorDelegate;
 import com.ibatis.sqlmap.engine.scope.StatementScope;
 import com.ibatis.sqlmap.engine.type.DomTypeMarker;
 
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.sql.*;
+import java.util.*;
 
 /**
  * An automatic result map for simple stuff
@@ -53,6 +45,16 @@ public class AutoResultMap extends ResultMap {
       initialize(rs);
     }
     return super.getResults(statementScope, rs);
+  }
+
+  public Object setResultObjectValues(StatementScope statementScope, Object resultObject, Object[] values) {
+    // synchronization is only needed when remapping is enabled
+    if (allowRemapping) {
+      synchronized (this) {
+        return super.setResultObjectValues(statementScope, resultObject, values);
+      }
+    }
+    return super.setResultObjectValues(statementScope, resultObject, values);
   }
 
   private void initialize(ResultSet rs) {
@@ -82,7 +84,7 @@ public class AutoResultMap extends ResultMap {
       List resultMappingList = new ArrayList();
       ResultSetMetaData rsmd = rs.getMetaData();
       for (int i = 0, n = rsmd.getColumnCount(); i < n; i++) {
-        String columnName = getColumnIdentifier(rsmd, i+1);
+        String columnName = getColumnIdentifier(rsmd, i + 1);
         String upperColumnName = columnName.toUpperCase(java.util.Locale.ENGLISH);
         String matchedProp = (String) propertyMap.get(upperColumnName);
         Class type = null;
@@ -118,7 +120,7 @@ public class AutoResultMap extends ResultMap {
       List resultMappingList = new ArrayList();
       ResultSetMetaData rsmd = rs.getMetaData();
       for (int i = 0, n = rsmd.getColumnCount(); i < n; i++) {
-        String columnName = getColumnIdentifier(rsmd, i+1);
+        String columnName = getColumnIdentifier(rsmd, i + 1);
         ResultMapping resultMapping = new ResultMapping();
         resultMapping.setPropertyName(columnName);
         resultMapping.setColumnName(columnName);
@@ -137,7 +139,7 @@ public class AutoResultMap extends ResultMap {
       List resultMappingList = new ArrayList();
       ResultSetMetaData rsmd = rs.getMetaData();
       for (int i = 0, n = rsmd.getColumnCount(); i < n; i++) {
-        String columnName = getColumnIdentifier(rsmd, i+1);
+        String columnName = getColumnIdentifier(rsmd, i + 1);
         ResultMapping resultMapping = new ResultMapping();
         resultMapping.setPropertyName(columnName);
         resultMapping.setColumnName(columnName);
@@ -156,7 +158,7 @@ public class AutoResultMap extends ResultMap {
   private void initializePrimitiveResults(ResultSet rs) {
     try {
       ResultSetMetaData rsmd = rs.getMetaData();
-      String columnName = getColumnIdentifier(rsmd,1);
+      String columnName = getColumnIdentifier(rsmd, 1);
       ResultMapping resultMapping = new ResultMapping();
       resultMapping.setPropertyName(columnName);
       resultMapping.setColumnName(columnName);
