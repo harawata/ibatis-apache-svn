@@ -6,18 +6,18 @@ import org.junit.*;
 
 public class SoftCacheTest {
 
-  @Test //@Ignore("Until we can find a reliable way to test it on all machines.")
+  @Test 
   public void shouldDemonstrateObjectsBeingCollectedAsNeeded() throws Exception {
+    final int N = 300000;
     SoftCache cache = new SoftCache(new PerpetualCache("default"));
-    int n = 100000;
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < N; i++) {
       byte[] array = new byte[5001]; //waste a bunch of memory
       array[5000] = 1;
       cache.putObject(i, array);
       Object value = cache.getObject(i);
     }
     System.out.println(cache.getSize());
-    Assert.assertTrue(cache.getSize() < n);
+    Assert.assertTrue(cache.getSize() < N);
   }
 
   @Test

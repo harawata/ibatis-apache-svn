@@ -1,4 +1,4 @@
-<mapper type="com.domain.PersonMapper" cacheDomain="">
+<mapper namespace="com.domain.PersonMapper" cacheDomain="">
 
   <resultMap id="" type="" extends="">
     <constructor>

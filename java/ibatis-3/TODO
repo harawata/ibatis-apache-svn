@@ -1,0 +1,12 @@
+Core
+ * Improved Error Messages
+
+Monarch
+ * Cache Parsing
+ * Namespaces
+ * DTD / Schema
+ * Transaction Manager
+ * Mapper Interface Binding
+ * Client / Mapper Factory
+ * Functional tests
+ * Perf/Threaded Integration Tests

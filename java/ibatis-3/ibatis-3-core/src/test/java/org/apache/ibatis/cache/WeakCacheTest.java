@@ -8,11 +8,12 @@ public class WeakCacheTest {
 
   @Test
   public void shouldDemonstrateObjectsBeingCollectedAsNeeded() {
+    final int N = 300000;
     WeakCache cache = new WeakCache(new PerpetualCache("default"));
-    for (int i = 0; i < 1000000; i++) {
+    for (int i = 0; i < N; i++) {
       cache.putObject(i, i);
     }
-    Assert.assertTrue(cache.getSize() < 500000);
+    Assert.assertTrue(cache.getSize() < N);
   }
 
   @Test
