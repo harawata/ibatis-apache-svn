@@ -49,7 +49,8 @@ namespace Apache.Ibatis.DataMapper.Configuration.Interpreters.Config.Xml.Process
             RegisterElementHandler(ConfigConstants.ELEMENT_CONSTRUCTOR, ProcessConstructorElement);
             RegisterElementHandler(ConfigConstants.ELEMENT_RESULT, ProcessResultElement);
             RegisterElementHandler(ConfigConstants.ELEMENT_DISCRIMINATOR, ProcessDiscriminatorElement);
-            RegisterElementHandler(ConfigConstants.ELEMENT_SUBMAP, ProcessSubMapElement);
+            RegisterElementHandler(ConfigConstants.ELEMENT_CASE, ProcessCaseElement);
+            RegisterElementHandler(ConfigConstants.ELEMENT_DEFAULT, ProcessDefaultElement);
             RegisterElementHandler(ConfigConstants.ELEMENT_ARGUMENT, ProcessArgumentElement);
             RegisterElementHandler(ConfigConstants.ELEMENT_PARAMETERMAP, ProcessParameterMapElement);
             RegisterElementHandler(ConfigConstants.ELEMENT_PARAMETER, ProcessParameterElement);

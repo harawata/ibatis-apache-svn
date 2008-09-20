@@ -30,7 +30,8 @@ vs:defaultnsprefix="" >
 	<xs:element name="discriminator">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="subMap" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="case" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="default" minOccurs="0" maxOccurs="1"/>
 			</xs:sequence>
 			<xs:attribute name="column" type="xs:string"/>
 			<xs:attribute name="type" type="xs:string"/>
@@ -38,10 +39,16 @@ vs:defaultnsprefix="" >
 		</xs:complexType>
 	</xs:element>
 
-	<xs:element name="subMap">
+	<xs:element name="case">
 		<xs:complexType>
 			<xs:attribute name="value" use="required" type="xs:string"/>
-			<xs:attribute name="resultMapping" use="required" type="xs:string"/>
+			<xs:attribute name="resultMap" use="required" type="xs:string"/>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="default">
+		<xs:complexType>
+			<xs:attribute name="resultMap" use="required" type="xs:string"/>
 		</xs:complexType>
 	</xs:element>
 

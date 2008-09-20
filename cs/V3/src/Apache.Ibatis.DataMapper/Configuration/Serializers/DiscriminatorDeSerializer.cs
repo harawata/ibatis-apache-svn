@@ -51,13 +51,13 @@ namespace Apache.Ibatis.DataMapper.Configuration.Serializers
         /// <param name="configuration">The configuration.</param>
         /// <param name="resultClass">The result class.</param>
         /// <param name="dataExchangeFactory">The data exchange factory.</param>
-        /// <param name="subMaps">The sub maps.</param>
+        /// <param name="cases">The case element.</param>
         /// <returns></returns>
         public static Discriminator Deserialize(
             IConfiguration configuration,
             Type resultClass, 
             DataExchangeFactory dataExchangeFactory, 
-            IList<SubMap> subMaps)
+            IList<Case> cases)
         {
             string callBackName = ConfigurationUtils.GetStringAttribute(configuration.Attributes, ConfigConstants.ATTRIBUTE_TYPEHANDLER);
             string clrType = ConfigurationUtils.GetStringAttribute(configuration.Attributes, ConfigConstants.ATTRIBUTE_TYPE);
@@ -73,7 +73,7 @@ namespace Apache.Ibatis.DataMapper.Configuration.Serializers
                 columnName, 
                 dbType, 
                 nullValue,
-                subMaps,
+                cases,
                 resultClass,
                 dataExchangeFactory
                 );

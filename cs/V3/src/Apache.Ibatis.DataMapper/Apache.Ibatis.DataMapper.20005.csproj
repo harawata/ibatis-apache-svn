@@ -102,6 +102,7 @@
     <Compile Include="Configuration\DefaultConfigurationEngine.cs" />
     <Compile Include="Configuration\DefaultConfigurationStore.cs" />
     <Compile Include="Configuration\DefaultModelBuilder.cs" />
+    <Compile Include="Configuration\Interpreters\Config\Xml\Processor\Handlers\ProcessDefaultElement.cs" />
     <Compile Include="Configuration\Interpreters\Config\Xml\Processor\Handlers\ProcessIncludeElement.cs" />
     <Compile Include="Configuration\IConfigurationEngine.cs" />
     <Compile Include="Configuration\IConfigurationStore.cs" />
@@ -157,7 +158,7 @@
     <Compile Include="Configuration\Interpreters\Config\Xml\Processor\Handlers\ProcessSqlElement.cs" />
     <Compile Include="Configuration\Interpreters\Config\Xml\Processor\Handlers\ProcessSqlMapElement.cs" />
     <Compile Include="Configuration\Interpreters\Config\Xml\Processor\Handlers\ProcessStatementElement.cs" />
-    <Compile Include="Configuration\Interpreters\Config\Xml\Processor\Handlers\ProcessSubMapElement.cs" />
+    <Compile Include="Configuration\Interpreters\Config\Xml\Processor\Handlers\ProcessCaseElement.cs" />
     <Compile Include="Configuration\Interpreters\Config\Xml\Processor\Handlers\ProcessTextElement.cs" />
     <Compile Include="Configuration\Interpreters\Config\Xml\Processor\Handlers\ProcessTypeAliasElement.cs" />
     <Compile Include="Configuration\Interpreters\Config\Xml\Processor\Handlers\ProcessTypeHandlerElement.cs" />
@@ -316,7 +317,7 @@
     <Compile Include="Configuration\Serializers\StatementDeSerializer.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Configuration\Serializers\SubMapDeSerializer.cs">
+    <Compile Include="Configuration\Serializers\CaseDeSerializer.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Configuration\Serializers\TypeAliasDeSerializer.cs">
@@ -434,7 +435,7 @@
     <Compile Include="Model\ResultMapping\ResultMapCollection.cs" />
     <Compile Include="Model\ResultMapping\ResultProperty.cs" />
     <Compile Include="Model\ResultMapping\ResultPropertyCollection.cs" />
-    <Compile Include="Model\ResultMapping\SubMap.cs" />
+    <Compile Include="Model\ResultMapping\Case.cs" />
     <Compile Include="Model\Sql\Dynamic\DynamicSql.cs" />
     <Compile Include="Model\Sql\Dynamic\Elements\BaseTag.cs" />
     <Compile Include="Model\Sql\Dynamic\Elements\Conditional.cs" />

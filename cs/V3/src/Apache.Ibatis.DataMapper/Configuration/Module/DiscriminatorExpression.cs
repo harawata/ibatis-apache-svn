@@ -57,8 +57,8 @@ namespace Apache.Ibatis.DataMapper.Configuration.Module
             Contract.Require.That(id, Is.Not.Null & Is.Not.Empty).When("retrieving id argument in UsingResultMap method");
 
             id = builder.ApplyNamespace(id);
-            currentSubMap = new MutableConfiguration(ConfigConstants.ELEMENT_SUBMAP, id);
-            currentSubMap.CreateAttribute(ConfigConstants.ATTRIBUTE_RESULTMAPPING, id);
+            currentSubMap = new MutableConfiguration(ConfigConstants.ELEMENT_CASE, id);
+            currentSubMap.CreateAttribute(ConfigConstants.ATTRIBUTE_RESULTMAP, id);
             parentConfiguration.Children.Add(currentSubMap);
  
             return this;

@@ -263,6 +263,7 @@ namespace Apache.Ibatis.DataMapper.Configuration.Interpreters.Config
         /// Token for attribute share.
         /// </summary>
         public const string ATTRIBUTE_SHARE = "share";
+ 
         #endregion
 
         #region Token element
@@ -339,7 +340,7 @@ namespace Apache.Ibatis.DataMapper.Configuration.Interpreters.Config
         /// <summary>
         /// Token for xml path to subMap element.
         /// </summary>
-        public const string ELEMENT_SUBMAP = "subMap";
+        public const string ELEMENT_CASE = "case";
         /// <summary>
         /// Token for xml path to parameterMap element.
         /// </summary>
@@ -458,8 +459,11 @@ namespace Apache.Ibatis.DataMapper.Configuration.Interpreters.Config
         /// <summary>
         /// Token for CDATA element.
         /// </summary>
-        public const string ELEMENT_CDATA = "CDATA"; 
-
+        public const string ELEMENT_CDATA = "CDATA";
+        /// <summary>
+        /// Token for default element.
+        /// </summary>
+        public const string ELEMENT_DEFAULT = "default"; 
 
         #endregion
 

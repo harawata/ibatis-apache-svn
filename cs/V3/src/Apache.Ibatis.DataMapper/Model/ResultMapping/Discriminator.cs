@@ -46,6 +46,7 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
     public class Discriminator
 	{
         private static readonly ILog logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        public const string DEFAULT_KEY = "\002_DEFAULT_KEY_\002";
 
 		#region Fields
 		[NonSerialized]
@@ -56,10 +57,10 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
 		[NonSerialized]
 		private readonly IDictionary<string, IResultMap> resultMaps = null;
 		/// <summary>
-		/// The subMaps name who used this discriminator
+		/// The case value who used this discriminator
 		/// </summary>
 		[NonSerialized]
-		private readonly IList<SubMap> subMaps = null;
+		private readonly IList<Case> cases = null;
 
 		[NonSerialized]
 		private readonly string nullValue = string.Empty;
@@ -156,7 +157,7 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
         /// <param name="columnName">Name of the column.</param>
         /// <param name="dbType">Type of the db.</param>
         /// <param name="nullValue">The null value.</param>
-        /// <param name="subMaps">The sub maps.</param>
+        /// <param name="cases">The cases.</param>
         /// <param name="resultClass">The result class.</param>
         /// <param name="dataExchangeFactory">The data exchange factory.</param>
         public Discriminator(
@@ -166,7 +167,7 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
             string columnName,
             string dbType,
             string nullValue,
-            IList<SubMap> subMaps,
+            IList<Case> cases,
             Type resultClass,
             DataExchangeFactory dataExchangeFactory)
 		{
@@ -178,7 +179,7 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
             this.columnIndex = columnIndex;
             this.columnName = columnName;
             this.dbType = dbType;
-            this.subMaps = subMaps;
+            this.cases = cases;
 
 			resultMaps = new Dictionary<string, IResultMap>();
 
@@ -210,16 +211,16 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
         public void Initialize(IModelStore modelStore)
 		{
 			// Set the ResultMaps
-			int count = subMaps.Count;
+			int count = cases.Count;
 			for(int index=0; index<count; index++)
 			{
-				SubMap subMap = subMaps[index];
-                resultMaps.Add(subMap.DiscriminatorValue, modelStore.GetResultMap(subMap.ResultMapName) );
+				Case kase = cases[index];
+                resultMaps.Add(kase.DiscriminatorValue, modelStore.GetResultMap(kase.ResultMapName));
 			}
 		}
 
 		/// <summary>
-		/// Find the SubMap to use.
+		/// Find the Case to use.
 		/// </summary>
 		/// <param name="discriminatorValue">the discriminator value</param>
 		/// <returns>The find ResultMap</returns>
@@ -228,7 +229,14 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
             IResultMap resultMap = null;
             if (!resultMaps.TryGetValue(discriminatorValue, out resultMap))
             {
-                logger.Info("There's no SubMap for the key '" + discriminatorValue + "'. Checks yours mapping files.");
+                logger.Info("There's no Case for the key '" + discriminatorValue + "'. Checks yours mapping files.");
+            }
+            if (resultMap==null)
+            {
+                if (!resultMaps.TryGetValue(DEFAULT_KEY, out resultMap))
+                {
+                    logger.Info("There's no Case for the key '" + discriminatorValue + "'. Checks yours mapping files.");                   
+                }
             }
             return resultMap;
 		}

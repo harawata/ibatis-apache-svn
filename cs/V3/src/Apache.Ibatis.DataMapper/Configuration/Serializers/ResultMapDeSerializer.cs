@@ -257,27 +257,27 @@ namespace Apache.Ibatis.DataMapper.Configuration.Serializers
             WaitDiscriminatorResolution waitDiscriminatorResolution)
         {
             Discriminator discriminator = null;
-            // Build the Discriminator/SubMap Property
+            // Build the Discriminator/Case Property
 
             ConfigurationCollection discriminatorsConfig = resultMapConfig.Children.Find(ConfigConstants.ELEMENT_DISCRIMINATOR);
             if (discriminatorsConfig.Count > 0)
             {
                 //configScope.ErrorContext.MoreInfo = "initialize discriminator";
 
-                // Find the subMaps
-                IList<SubMap> subMaps = new List<SubMap>();
-                ConfigurationCollection subMapsConfig = discriminatorsConfig[0].Children.Find(ConfigConstants.ELEMENT_SUBMAP);
-                foreach (IConfiguration subMapConfig in subMapsConfig)
+                // Find the cases
+                IList<Case> cases = new List<Case>();
+                ConfigurationCollection caseConfigs = discriminatorsConfig[0].Children.Find(ConfigConstants.ELEMENT_CASE);
+                foreach (IConfiguration caseConfig in caseConfigs)
                 {
-                    SubMap subMap = SubMapDeSerializer.Deserialize(subMapConfig);
-                    subMaps.Add(subMap);
+                    Case caseElement = CaseDeSerializer.Deserialize(caseConfig);
+                    cases.Add(caseElement);
                 }
 
                 discriminator = DiscriminatorDeSerializer.Deserialize(
                     discriminatorsConfig[0], 
                     resultClass, 
                     dataExchangeFactory,
-                    subMaps
+                    cases
                     );
                 waitDiscriminatorResolution(discriminator);
             }

@@ -12,16 +12,16 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 	<resultMaps>  	
 		<resultMap id="document" class="Document" extends="NewsPaper.baseDocument">
 			<result property="Test"			column="Document_Title"/>
-			<discriminator column="Document_Type" type="string"> 
-				<subMap value="Book" resultMapping="book" />
-				<subMap value="Newspaper" resultMapping="NewsPaper.newspaper" />
+			<discriminator column="Document_Type" type="string">
+        <case value="Newspaper" resultMap="NewsPaper.newspaper"/>
+        <default resultMap="book"/>
 			</discriminator>	
 		</resultMap>
 		
 		<resultMap id="document-custom-handler" class="Document" extends="NewsPaper.baseDocument">
-			<discriminator column="Document_Type"  typeHandler="CustomInheritance"> 
-				<subMap value="Book" resultMapping="book" />
-				<subMap value="Newspaper" resultMapping="NewsPaper.newspaper" />
+			<discriminator column="Document_Type"  typeHandler="CustomInheritance">
+        <case value="Book" resultMap="book"/>
+        <case value="Newspaper" resultMap="NewsPaper.newspaper"/>
 			</discriminator>
 		</resultMap>
 		

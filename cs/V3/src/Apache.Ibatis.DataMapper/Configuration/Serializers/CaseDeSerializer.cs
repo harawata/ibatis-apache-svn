@@ -23,36 +23,29 @@
  ********************************************************************************/
 #endregion
 
-#region Using
 
-using System.Collections.Specialized;
-using System.Xml;
 using Apache.Ibatis.Common.Configuration;
-using Apache.Ibatis.Common.Xml;
 using Apache.Ibatis.DataMapper.Model.ResultMapping;
-using Apache.Ibatis.DataMapper.Scope;
 using Apache.Ibatis.DataMapper.Configuration.Interpreters.Config;
-#endregion 
-
 
 namespace Apache.Ibatis.DataMapper.Configuration.Serializers
 {
 	/// <summary>
-	/// Summary description for SubMapDeSerializer.
+	/// Summary description for CaseDeSerializer.
 	/// </summary>
-	public sealed class SubMapDeSerializer
+	public sealed class CaseDeSerializer
 	{
         /// <summary>
-        /// Build a SubMap object
+        /// Build a Case object
         /// </summary>
         /// <param name="configuration">The configuration.</param>
-        /// <returns>a SubMap object</returns>
-        public static SubMap Deserialize(IConfiguration configuration)
+        /// <returns>a Case object</returns>
+        public static Case Deserialize(IConfiguration configuration)
         {
             string discriminatorValue = ConfigurationUtils.GetStringAttribute(configuration.Attributes, ConfigConstants.ATTRIBUTE_VALUE);
-            string resultMapName = ConfigurationUtils.GetStringAttribute(configuration.Attributes, ConfigConstants.ATTRIBUTE_RESULTMAPPING);
+            string resultMapName = ConfigurationUtils.GetStringAttribute(configuration.Attributes, ConfigConstants.ATTRIBUTE_RESULTMAP);
 
-            return new SubMap(discriminatorValue, resultMapName);
+            return new Case(discriminatorValue, resultMapName);
         }
 
 	}

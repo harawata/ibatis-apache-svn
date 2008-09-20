@@ -107,7 +107,7 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
         }
 
         /// <summary>
-        /// The discriminator used to choose the good SubMap
+        /// The discriminator used to choose the good Case
         /// </summary>
         public Discriminator Discriminator
         {
@@ -295,7 +295,7 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
 
 
         /// <summary>
-        /// Resolve the SubMap
+        /// Resolve the submap
         /// </summary>
         /// <param name="dataReader"></param>
         /// <returns></returns>

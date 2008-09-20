@@ -83,7 +83,7 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
         }
 
         /// <summary>
-        /// The discriminator used to choose the good SubMap
+        /// The discriminator used to choose the good Case
         /// </summary>
         public Discriminator Discriminator
         {
@@ -146,10 +146,10 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
         /// <summary>
         /// Create an instance Of result.
         /// </summary>
-        /// <param name="parameters">An array of values that matches the number, order and type
+        /// <param name="parms">An array of values that matches the number, order and type
         /// of the parameters for this constructor.</param>
         /// <returns>An object.</returns>
-        public object CreateInstanceOfResult(object[] parameters)
+        public object CreateInstanceOfResult(object[] parms)
         {
             return null;
         }

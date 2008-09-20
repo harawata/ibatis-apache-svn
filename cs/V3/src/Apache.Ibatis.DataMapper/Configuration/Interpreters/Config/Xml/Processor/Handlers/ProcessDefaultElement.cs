@@ -1,4 +1,4 @@
-﻿#region Apache Notice
+#region Apache Notice
 /*****************************************************************************
  * $Header: $
  * $Revision: 591621 $
@@ -23,33 +23,30 @@
  ********************************************************************************/
 #endregion
 
-using System;
-using System.Text;
-using System.Xml;
-
 using Apache.Ibatis.Common.Configuration;
-using Apache.Ibatis.Common.Resources;
+using Apache.Ibatis.DataMapper.Model.ResultMapping;
 
 namespace Apache.Ibatis.DataMapper.Configuration.Interpreters.Config.Xml.Processor
 {
     public partial class XmlMappingProcessor
     {
         /// <summary>
-        /// Processes the sub map element.
+        /// Processes the discriminator/default element.
         /// </summary>
         /// <param name="element">The element.</param>
         /// <param name="configurationStore">The configuration store.</param>
-        private void ProcessSubMapElement(Tag element, IConfigurationStore configurationStore)
+        private void ProcessDefaultElement(Tag element, IConfigurationStore configurationStore)
         {
             if (element.Parent != null && element.Parent.Name == ConfigConstants.ELEMENT_DISCRIMINATOR)
             {
                 MutableConfiguration config = new MutableConfiguration(
-                    element.Name,
-                    element.Attributes[ConfigConstants.ATTRIBUTE_VALUE]);
+                    ConfigConstants.ELEMENT_CASE,
+                    Discriminator.DEFAULT_KEY);
                 config.CreateAttributes(element.Attributes);
+                config.CreateAttribute(ConfigConstants.ATTRIBUTE_VALUE, Discriminator.DEFAULT_KEY);
 
-                config.Attributes[ConfigConstants.ATTRIBUTE_RESULTMAPPING] =
-                        ApplyNamespace(config.Attributes[ConfigConstants.ATTRIBUTE_RESULTMAPPING]);
+                config.Attributes[ConfigConstants.ATTRIBUTE_RESULTMAP] =
+                        ApplyNamespace(config.Attributes[ConfigConstants.ATTRIBUTE_RESULTMAP]);
 
                 element.Parent.Configuration.Children.Add(config);
             }

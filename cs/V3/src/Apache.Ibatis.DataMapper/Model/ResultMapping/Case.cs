@@ -35,11 +35,11 @@ using Apache.Ibatis.Common.Contracts;
 namespace Apache.Ibatis.DataMapper.Model.ResultMapping
 {
 	/// <summary>
-	/// Summary description for SubMap.
+	/// Summary description for Case.
 	/// </summary>
 	[Serializable]
-    [DebuggerDisplay("SubMap: {discriminatorValue}-{resultMapName}")]
-	public class SubMap
+    [DebuggerDisplay("case: {discriminatorValue}-{resultMapName}")]
+	public class Case
 	{
 		#region Fields
 		[NonSerialized]
@@ -82,14 +82,14 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
 		#region Constructor
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SubMap"/> class.
+        /// Initializes a new instance of the <see cref="Case"/> class.
         /// </summary>
         /// <param name="discriminatorValue">The discriminator value.</param>
         /// <param name="resultMapName">Name of the result map.</param>
-        public SubMap(string discriminatorValue, string resultMapName)
+        public Case(string discriminatorValue, string resultMapName)
 		{
-            Contract.Require.That(discriminatorValue, Is.Not.Null & Is.Not.Empty).When("retrieving argument discriminatorValue in SubMap constructor");
-            Contract.Require.That(resultMapName, Is.Not.Null & Is.Not.Empty).When("retrieving argument resultMapName in SubMap constructor");
+            Contract.Require.That(discriminatorValue, Is.Not.Null & Is.Not.Empty).When("retrieving argument discriminatorValue in Case constructor");
+            Contract.Require.That(resultMapName, Is.Not.Null & Is.Not.Empty).When("retrieving argument resultMapName in Case constructor");
 
             this.discriminatorValue = discriminatorValue;
             this.resultMapName = resultMapName;

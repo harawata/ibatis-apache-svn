@@ -30,18 +30,21 @@ namespace Apache.Ibatis.DataMapper.Configuration.Interpreters.Config.Xml.Process
     public partial class XmlMappingProcessor
     {
         /// <summary>
-        /// Processes the argument element.
+        /// Processes the discriminator/case element.
         /// </summary>
         /// <param name="element">The element.</param>
         /// <param name="configurationStore">The configuration store.</param>
-        private void ProcessArgumentElement(Tag element, IConfigurationStore configurationStore)
+        private void ProcessCaseElement(Tag element, IConfigurationStore configurationStore)
         {
-            if (element.Parent != null && element.Parent.Name == ConfigConstants.ELEMENT_CONSTRUCTOR)
+            if (element.Parent != null && element.Parent.Name == ConfigConstants.ELEMENT_DISCRIMINATOR)
             {
                 MutableConfiguration config = new MutableConfiguration(
                     element.Name,
-                    element.Attributes[ConfigConstants.ATTRIBUTE_ARGUMENTNAME]);
+                    element.Attributes[ConfigConstants.ATTRIBUTE_VALUE]);
                 config.CreateAttributes(element.Attributes);
+
+                config.Attributes[ConfigConstants.ATTRIBUTE_RESULTMAP] =
+                        ApplyNamespace(config.Attributes[ConfigConstants.ATTRIBUTE_RESULTMAP]);
 
                 element.Parent.Configuration.Children.Add(config);
             }
