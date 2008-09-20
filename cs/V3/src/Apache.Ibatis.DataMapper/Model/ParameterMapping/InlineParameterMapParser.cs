@@ -211,15 +211,15 @@ namespace Apache.Ibatis.DataMapper.Model.ParameterMapping
 					{
                         type = value;
 					} 
-					else if ("dbType".Equals(field)) 
+					else if ("dbtype".Equals(field.ToLower())) 
 					{
                         dbType = value;
 					} 
 					else if ("direction".Equals(field)) 
 					{
                         direction = value;
-					} 
-					else if ("nullValue".Equals(field)) 
+					}
+                    else if ("nullvalue".Equals(field.ToLower())) 
 					{
                         if (value.StartsWith("\"") && value.EndsWith("\""))
                         {
