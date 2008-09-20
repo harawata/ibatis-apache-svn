@@ -811,6 +811,18 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
     <procedure id="SelectAccountWithOutPutParam" parameterMap="select-params3" resultClass="Account">
       ps_SelectAccountWithOutPutParam
     </procedure>
+
+    <procedure id="SelectAccountViaOutputParameter" parameterMap="account-via-output" resultClass="Account">
+      ps_SelectAccountViaOuputParam
+    </procedure>
+
+    <procedure id="SelectAccountViaOutputParameterInlineParameter" parameterClass="Account" resultClass="Account">
+      ps_SelectAccountViaOuputParam
+      @{Id,column=Account_ID,direction=InputOutput},
+      @{FirstName,column=Account_FirstName,direction=Output},
+      @{LastName,column=Account_LastName,direction=Output},
+      @{EmailAddress,column=Account_Email,nullValue="no_email@provided.com"}
+    </procedure>
     
     <procedure id="SPWithInlineParameter" parameterClass="int" resultClass="Account">
       ps_SelectAccount @{Account_ID,column=Account_ID}
@@ -853,7 +865,14 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 	</statements>
 
 	<parameterMaps>
-
+     
+    <parameterMap id="account-via-output" class ="Account">
+      <parameter property="Id" column="Account_ID" direction="InputOutput" />
+      <parameter property="FirstName" column="Account_FirstName" />
+      <parameter property="LastName" column="Account_LastName" />
+      <parameter property="EmailAddress" column="Account_Email" nullValue="no_email@provided.com"/>
+    </parameterMap>
+    
     <parameterMap id="XML-params" class="string" >
       <parameter property="AccountIds" /> <!-- we don't need dbType="NText" but you can specify it --> 
     </parameterMap>

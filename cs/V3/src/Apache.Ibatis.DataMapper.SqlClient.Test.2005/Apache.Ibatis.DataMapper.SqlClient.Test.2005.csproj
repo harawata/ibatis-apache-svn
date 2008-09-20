@@ -223,6 +223,7 @@
     <Content Include="Scripts\petstore-schema.sql" />
     <Content Include="Scripts\ps_InsertAccountWithDefault.sql" />
     <Content Include="Scripts\ps_SelectAccount.sql" />
+    <Content Include="Scripts\ps_SelectAccountViaOuputParam.sql" />
     <Content Include="Scripts\ps_SelectAccountWithOutPutParam.sql" />
     <Content Include="Scripts\ps_SelectAllAccount.sql" />
     <None Include="App.config" />

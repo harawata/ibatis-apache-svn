@@ -35,6 +35,8 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping.MSSQL
             InitScript(sessionFactory.DataSource, scriptDirectory + "swap-procedure.sql");
             InitScript(sessionFactory.DataSource, scriptDirectory + "ps_SelectAccountWithOutPutParam.sql");
             InitScript(sessionFactory.DataSource, scriptDirectory + "ps_InsertAccountWithDefault.sql");
+            InitScript(sessionFactory.DataSource, scriptDirectory + "ps_SelectAccountViaOuputParam.sql");
+
         }
 
         /// <summary>
@@ -154,6 +156,68 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping.MSSQL
             Assert.That(hashtable["OutPut"], Is.EqualTo(987));
 
             AssertAccount1(account);
+        }
+
+        /// <summary>
+        /// ResultClass via Output param should be returned.
+        /// </summary>
+        [Test]
+        public void ResultClass_via_output_param_should_be_returned()
+        {
+            Account account = new Account();
+            account.Id = 1;
+
+            dataMapper.QueryForObject<Account>("SelectAccountViaOutputParameter", account);
+
+            AssertAccount1(account);
+        }
+
+        /// <summary>
+        /// ResultClass via Output param should be returned.
+        /// </summary>
+        [Test]
+        public void ResultClass_via_inline_output_param_should_be_returned()
+        {
+            Account account = new Account();
+            account.Id = 1;
+
+            dataMapper.QueryForObject<Account>("SelectAccountViaOutputParameterInlineParameter", account);
+
+            AssertAccount1(account);
+        }
+
+        /// <summary>
+        /// ResultClass via Output param should be returned even when
+        /// the output is null
+        /// </summary>
+        [Test]
+        public void ResultClass_via_output_param_and_null_should_be_returned()
+        {
+            Account account = new Account();
+            account.Id = 99;
+
+            dataMapper.QueryForObject<Account>("SelectAccountViaOutputParameter", account);
+
+            Assert.That(account.EmailAddress, Is.EqualTo("no_email@provided.com"));
+            Assert.That(account.FirstName, Is.Null);
+            Assert.That(account.LastName, Is.Null);
+        }
+
+        /// <summary>
+        /// ResultClass via Output param should be returned even when
+        /// the output is null
+        /// </summary>
+        [Test]
+        public void ResultClass_via_inline_output_param_and_null_should_be_returned()
+        {
+            Account account = new Account();
+            account.Id = 99;
+
+            dataMapper.QueryForObject<Account>("SelectAccountViaOutputParameterInlineParameter", account);
+
+            Assert.That(account.EmailAddress, Is.EqualTo("no_email@provided.com"));
+            Assert.That(account.FirstName, Is.Null);
+            Assert.That(account.LastName, Is.Null);
         }
 
         /// <summary>

@@ -58,3 +58,6 @@ drop procedure [dbo].[ps_SelectAccountWithOutPutParam]
 
 if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[ps_InsertAccountWithDefault]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
 drop procedure [dbo].[ps_InsertAccountWithDefault]
+
+if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[ps_SelectAccountViaOuputParam]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+drop procedure [dbo].[ps_SelectAccountViaOuputParam]

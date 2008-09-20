@@ -221,7 +221,14 @@ namespace Apache.Ibatis.DataMapper.Model.ParameterMapping
 					} 
 					else if ("nullValue".Equals(field)) 
 					{
-                        nullValue = value;
+                        if (value.StartsWith("\"") && value.EndsWith("\""))
+                        {
+                            nullValue = value.Substring(1, value.Length-2);
+                        }
+                        else
+                        {
+                            nullValue = value;
+                        }
 					} 
 					else if ("handler".Equals(field)) 
 					{
