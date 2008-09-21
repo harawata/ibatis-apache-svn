@@ -54,10 +54,7 @@ namespace Apache.Ibatis.DataMapper.TypeHandlers
             {
                 return DBNull.Value;
             }
-            else
-            {
-                return GetValueByIndex(index, dataReader);
-            }
+            return GetValueByIndex(index, dataReader);
 		}
 
         /// <summary>
@@ -66,20 +63,17 @@ namespace Apache.Ibatis.DataMapper.TypeHandlers
         /// <param name="mapping"></param>
         /// <param name="dataReader"></param>
         /// <returns></returns>
-		public override object GetValueByIndex(ResultProperty mapping, IDataReader dataReader) 
-		{
+		public override object GetValueByIndex(ResultProperty mapping, IDataReader dataReader)
+        {
             if (dataReader.IsDBNull(mapping.ColumnIndex) || dataReader.GetBytes(mapping.ColumnIndex, 0, null, 0, 0) == 0)
             {
                 return DBNull.Value;
             }
-            else
-            {
-                return GetValueByIndex(mapping.ColumnIndex, dataReader);
-            }
-		}
+            return GetValueByIndex(mapping.ColumnIndex, dataReader);
+        }
 
 
-        /// <summary>
+	    /// <summary>
         /// Gets the index of the value by.
         /// </summary>
         /// <param name="columnIndex">Index of the column.</param>

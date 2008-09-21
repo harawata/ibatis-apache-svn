@@ -61,7 +61,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.ResultStrategy
 			int count = reader.FieldCount;
 			for (int i = 0; i < count; i++) 
 			{
-				string propertyName = "value";
+				const string propertyName = "value";
                 int columnIndex = i;
                 ITypeHandler typeHandler = request.DataExchangeFactory.TypeHandlerFactory.GetTypeHandler(reader.GetFieldType(i));
                 ResultProperty property = new ResultProperty(

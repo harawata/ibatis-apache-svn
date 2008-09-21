@@ -44,7 +44,7 @@ namespace Apache.Ibatis.DataMapper.Session.Stores
         /// Initializes a new instance of the <see cref="AbstractSessionStore"/> class.
         /// </summary>
         /// <param name="id">The id.</param>
-        public AbstractSessionStore(string id)
+        protected AbstractSessionStore(string id)
 		{
             sessionName = KEY + id;
 		}

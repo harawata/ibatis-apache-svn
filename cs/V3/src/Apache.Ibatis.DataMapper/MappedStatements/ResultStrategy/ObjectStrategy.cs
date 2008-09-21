@@ -52,8 +52,8 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.ResultStrategy
 
 			if (reader.FieldCount == 1)
 			{
-                string propertyName = "value";
-                int columnIndex = 0;
+                const string propertyName = "value";
+                const int columnIndex = 0;
                 ITypeHandler typeHandler = request.DataExchangeFactory.TypeHandlerFactory.GetTypeHandler(reader.GetFieldType(0));
 
                 ResultProperty property = new ResultProperty(
@@ -83,7 +83,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.ResultStrategy
 				int count = reader.FieldCount;
 				for (int i = 0; i < count; i++) 
 				{
-                    string propertyName = "value";
+                    const string propertyName = "value";
                     int columnIndex = i;
                     ITypeHandler typeHandler = request.DataExchangeFactory.TypeHandlerFactory.GetTypeHandler(reader.GetFieldType(i));
 
@@ -112,10 +112,10 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.ResultStrategy
 
 				outObject = newOutObject;
 			}
-			else
-			{
-				// do nothing if 0 fields
-			}   
+            //else
+            //{
+            //    // do nothing if 0 fields
+            //}   
      
 			return outObject;
 		}

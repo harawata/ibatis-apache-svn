@@ -126,18 +126,12 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.ResultStrategy
                     // we should never go here
                     return null;
                 }
-                else
-                {
-                    // separator value not likely to appear in a database
-                    keyBuffer.Append(KEY_SEPARATOR);
-                    return keyBuffer.ToString();
-                }
+                // separator value not likely to appear in a database
+                keyBuffer.Append(KEY_SEPARATOR);
+                return keyBuffer.ToString();
             }
-            else
-            {
-                // we should never go here
-                return null;
-            }
+            // we should never go here
+            return null;
         }
 
         #endregion

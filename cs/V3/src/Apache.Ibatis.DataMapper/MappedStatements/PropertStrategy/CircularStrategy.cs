@@ -23,7 +23,6 @@
  ********************************************************************************/
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Text;
@@ -132,18 +131,12 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.PropertStrategy
                     // we should never go here
                     return null;
                 }
-                else
-                {
-                    // separator value not likely to appear in a database
-                    keyBuffer.Append(KEY_SEPARATOR);
-                    return keyBuffer.ToString();
-                }
+                // separator value not likely to appear in a database
+                keyBuffer.Append(KEY_SEPARATOR);
+                return keyBuffer.ToString();
             }
-            else
-            {
-                // we should never go here
-                return null;
-            }
+            // we should never go here
+            return null;
         }
     }
 }

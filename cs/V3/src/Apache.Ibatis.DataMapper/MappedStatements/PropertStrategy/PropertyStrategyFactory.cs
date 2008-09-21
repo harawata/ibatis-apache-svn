@@ -68,47 +68,40 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.PropertyStrategy
 		/// <returns>The <see cref="IPropertyStrategy"/></returns>
 		public static IPropertyStrategy Get(ResultProperty mapping)
 		{
-			// no 'select' or 'resultMap' attributes
+		    // no 'select' or 'resultMap' attributes
 			if (mapping.Select.Length == 0 && mapping.NestedResultMap == null)
 			{
 				// We have a 'normal' ResultMap
 				return defaultStrategy;
 			}
-			else if (mapping.NestedResultMap != null) // 'resultMap' attribute
-			{
-                if (mapping.NestedResultMap.GroupByPropertyNames.Count>0)
-                {
-                    return groupByStrategy; 
-                }
-			    else
-                {
-                    if (mapping.MemberType.IsGenericType &&
-                        typeof(IList<>).IsAssignableFrom(mapping.MemberType.GetGenericTypeDefinition()))
-                    {
-                        return groupByStrategy; 
-                    }
-                    else if (typeof(IList).IsAssignableFrom(mapping.MemberType))
-                    {
-                        return groupByStrategy; 
-                    }
-                    else if (mapping.NestedResultMap.KeyPropertyNames.Count > 0)
-                    {
-                        return circularStrategy;
-                    }
-                    else
-                    {
-                        return resultMapStrategy; 
-                    }
-                }
-			}
-			else //'select' ResultProperty 
-			{
-				return new SelectStrategy(mapping,
-                    selectArrayStrategy,
-                    selectGenericListStrategy,
-                    selectListStrategy,
-                    selectObjectStrategy);
-			}
+		    if (mapping.NestedResultMap != null) // 'resultMap' attribute
+		    {
+		        if (mapping.NestedResultMap.GroupByPropertyNames.Count>0)
+		        {
+		            return groupByStrategy; 
+		        }
+		        if (mapping.MemberType.IsGenericType &&
+		            typeof(IList<>).IsAssignableFrom(mapping.MemberType.GetGenericTypeDefinition()))
+		        {
+		            return groupByStrategy; 
+		        }
+		        if (typeof(IList).IsAssignableFrom(mapping.MemberType))
+		        {
+		            return groupByStrategy; 
+		        }
+		        if (mapping.NestedResultMap.KeyPropertyNames.Count > 0)
+		        {
+		            return circularStrategy;
+		        }
+		        return resultMapStrategy;
+		    }
+
+            //'select' ResultProperty 
+		    return new SelectStrategy(mapping,
+		                              selectArrayStrategy,
+		                              selectGenericListStrategy,
+		                              selectListStrategy,
+		                              selectObjectStrategy);
 		}
 	}
 }

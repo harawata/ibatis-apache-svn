@@ -27,7 +27,6 @@ using System.Web;
 using Apache.Ibatis.Common.Exceptions;
 
 namespace Apache.Ibatis.DataMapper.Session.Stores
-
 {
 
 	/// <summary>

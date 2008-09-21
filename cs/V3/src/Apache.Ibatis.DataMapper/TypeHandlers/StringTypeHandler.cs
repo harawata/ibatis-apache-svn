@@ -24,14 +24,10 @@
  ********************************************************************************/
 #endregion
 
-#region Using
-
 using System;
 using System.Data;
-using System.Globalization;
 
 using Apache.Ibatis.DataMapper.Model.ResultMapping;
-#endregion 
 
 namespace Apache.Ibatis.DataMapper.TypeHandlers
 {
@@ -52,14 +48,11 @@ namespace Apache.Ibatis.DataMapper.TypeHandlers
 		{
 			int index = dataReader.GetOrdinal(mapping.ColumnName);
 
-			if (dataReader.IsDBNull(index) == true)
+			if (dataReader.IsDBNull(index))
 			{
-				return System.DBNull.Value;
+				return DBNull.Value;
 			}
-			else
-			{
-				return dataReader.GetString(index);
-			}
+            return dataReader.GetString(index);
 		}
 
         /// <summary>
@@ -68,19 +61,16 @@ namespace Apache.Ibatis.DataMapper.TypeHandlers
         /// <param name="mapping"></param>
         /// <param name="dataReader"></param>
         /// <returns></returns>
-		public override object GetValueByIndex(ResultProperty mapping, IDataReader dataReader) 
-		{	
-			if (dataReader.IsDBNull(mapping.ColumnIndex) == true)
+		public override object GetValueByIndex(ResultProperty mapping, IDataReader dataReader)
+        {
+            if (dataReader.IsDBNull(mapping.ColumnIndex))
 			{
-				return System.DBNull.Value;
+				return DBNull.Value;
 			}
-			else
-			{
-				return dataReader.GetString(mapping.ColumnIndex);
-			}
-		}
+            return dataReader.GetString(mapping.ColumnIndex);
+        }
 
-        /// <summary>
+	    /// <summary>
         /// Retrieve ouput database value of an output parameter
         /// </summary>
         /// <param name="outputValue">ouput database value</param>

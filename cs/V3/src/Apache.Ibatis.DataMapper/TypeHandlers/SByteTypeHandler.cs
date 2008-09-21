@@ -24,15 +24,10 @@
  ********************************************************************************/
 #endregion
 
-#region Using
-
 using System;
 using System.Data;
-using System.Globalization;
 
 using Apache.Ibatis.DataMapper.Model.ResultMapping;
-#endregion
-
 
 namespace Apache.Ibatis.DataMapper.TypeHandlers
 {
@@ -51,14 +46,11 @@ namespace Apache.Ibatis.DataMapper.TypeHandlers
         {
             int index = dataReader.GetOrdinal(mapping.ColumnName);
 
-            if (dataReader.IsDBNull(index) == true)
+            if (dataReader.IsDBNull(index))
             {
-                return System.DBNull.Value;
+                return DBNull.Value;
             }
-            else
-            {
-                return Convert.ToSByte(dataReader.GetValue(index));
-            }
+            return Convert.ToSByte(dataReader.GetValue(index));
         }
 
         /// <summary>
@@ -69,14 +61,11 @@ namespace Apache.Ibatis.DataMapper.TypeHandlers
         /// <returns></returns>
         public override object GetValueByIndex(ResultProperty mapping, IDataReader dataReader)
         {
-            if (dataReader.IsDBNull(mapping.ColumnIndex) == true)
+            if (dataReader.IsDBNull(mapping.ColumnIndex))
             {
-                return System.DBNull.Value;
+                return DBNull.Value;
             }
-            else
-            {
-                return Convert.ToSByte(dataReader.GetValue(mapping.ColumnIndex));
-            }
+            return Convert.ToSByte(dataReader.GetValue(mapping.ColumnIndex));
         }
 
         /// <summary>
@@ -113,13 +102,13 @@ namespace Apache.Ibatis.DataMapper.TypeHandlers
             get { return true; }
         }
 
-        /// <summary>
-        /// The null value for this type
-        /// </summary>
-        /// <value></value>
-        public override object NullValue
-        {
-            get { throw new InvalidCastException("SByteTypeHandler, could not cast a null value in sbyte field."); }
-        }
+        ///// <summary>
+        ///// The null value for this type
+        ///// </summary>
+        ///// <value></value>
+        //public override object NullValue
+        //{
+        //    get { throw new InvalidCastException("SByteTypeHandler, could not cast a null value in sbyte field."); }
+        //}
     }
 }

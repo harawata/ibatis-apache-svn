@@ -32,12 +32,12 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.ArgumentStrategy
 	/// </summary>
 	public sealed class ArgumentStrategyFactory
 	{
-		private static IArgumentStrategy _defaultStrategy = null;
-		private static IArgumentStrategy _resultMapStrategy = null;
-        private static IArgumentStrategy _selectArrayStrategy = null;
-        private static IArgumentStrategy _selectGenericListStrategy = null;
-        private static IArgumentStrategy _selectListStrategy = null;
-        private static IArgumentStrategy _selectObjectStrategy = null;
+		private static readonly IArgumentStrategy _defaultStrategy = null;
+		private static readonly IArgumentStrategy _resultMapStrategy = null;
+        private static readonly IArgumentStrategy _selectArrayStrategy = null;
+        private static readonly IArgumentStrategy _selectGenericListStrategy = null;
+        private static readonly IArgumentStrategy _selectListStrategy = null;
+        private static readonly IArgumentStrategy _selectObjectStrategy = null;
 
 		/// <summary>
 		/// Initializes the <see cref="ArgumentStrategyFactory"/> class.
@@ -60,24 +60,22 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.ArgumentStrategy
 		/// <returns>The <see cref="IArgumentStrategy"/></returns>
 		public static IArgumentStrategy Get(ArgumentProperty mapping)
 		{
-			// no 'select' or 'resultMap' attributes
+		    // no 'select' or 'resultMap' attributes
             if (mapping.Select.Length == 0 && mapping.NestedResultMapName.Length == 0)
 			{
 				// We have a 'normal' ResultMap
 				return _defaultStrategy;
 			}
-			else if (mapping.NestedResultMapName.Length != 0) // 'resultMap' attribut
-			{
-				return _resultMapStrategy;
-			}
-			else //'select' ResultProperty 
-			{
-				return new SelectStrategy(mapping,
-                    _selectArrayStrategy,
-                    _selectGenericListStrategy,
-                    _selectListStrategy,
-                    _selectObjectStrategy);
-			}
+		    if (mapping.NestedResultMapName.Length != 0) // 'resultMap' attribut
+		    {
+		        return _resultMapStrategy;
+		    }
+            //'select' ResultProperty 
+		    return new SelectStrategy(mapping,
+		                              _selectArrayStrategy,
+		                              _selectGenericListStrategy,
+		                              _selectListStrategy,
+		                              _selectObjectStrategy);
 		}
 	}
 }

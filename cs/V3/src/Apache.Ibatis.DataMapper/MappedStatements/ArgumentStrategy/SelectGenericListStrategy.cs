@@ -25,16 +25,11 @@
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Data;
 using System.Reflection;
-
-using Apache.Ibatis.Common;
 using Apache.Ibatis.DataMapper.Data;
 using Apache.Ibatis.DataMapper.Model.ResultMapping;
 using Apache.Ibatis.DataMapper.Scope;
-using Apache.Ibatis.DataMapper.Session;
-
 
 namespace Apache.Ibatis.DataMapper.MappedStatements.ArgumentStrategy
 {
@@ -63,14 +58,14 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.ArgumentStrategy
            
             reader = DataReaderTransformer.Transform(reader, request.Session.SessionFactory.DataSource.DbProvider);
 
-            Type[] typeArgs = mapping.MemberType.GetGenericArguments();
-            Type genericList = typeof(IList<>);
-            Type constructedType = genericList.MakeGenericType(typeArgs);
+            //Type[] typeArgs = mapping.MemberType.GetGenericArguments();
+            //Type genericList = typeof(IList<>);
+            //Type constructedType = genericList.MakeGenericType(typeArgs);
             Type elementType = mapping.MemberType.GetGenericArguments()[0];
 
             Type mappedStatementType = selectStatement.GetType();
 
-            Type[] typeArguments = { typeof(ISession), typeof(object) };
+            //Type[] typeArguments = { typeof(ISession), typeof(object) };
 
             MethodInfo[] mis = mappedStatementType.GetMethods(BindingFlags.InvokeMethod | BindingFlags.Public | BindingFlags.Instance);
             MethodInfo mi = null;

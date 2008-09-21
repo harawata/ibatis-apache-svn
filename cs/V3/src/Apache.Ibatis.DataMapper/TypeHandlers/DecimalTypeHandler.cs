@@ -24,14 +24,12 @@
  ********************************************************************************/
 #endregion
 
-#region Using
 
 using System;
 using System.Data;
 using System.Globalization;
 
 using Apache.Ibatis.DataMapper.Model.ResultMapping;
-#endregion 
 
 namespace Apache.Ibatis.DataMapper.TypeHandlers
 {
@@ -47,38 +45,28 @@ namespace Apache.Ibatis.DataMapper.TypeHandlers
 		/// <param name="dataReader"></param>
 		/// <returns></returns>
 		public override object GetValueByName(ResultProperty mapping, IDataReader dataReader)
-		{
-			int index = dataReader.GetOrdinal(mapping.ColumnName);
+        {
+            int index = dataReader.GetOrdinal(mapping.ColumnName);
 
-			if (dataReader.IsDBNull(index) == true)
-			{
-				return System.DBNull.Value;
-			}
-			else
-			{
-				return dataReader.GetDecimal(index);
-			}
-		}
+            return dataReader.IsDBNull(index) ? (object) DBNull.Value : dataReader.GetDecimal(index);
+        }
 
-        /// <summary>
+	    /// <summary>
         /// Gets a column value by the index
         /// </summary>
         /// <param name="mapping"></param>
         /// <param name="dataReader"></param>
         /// <returns></returns>
-		public override object GetValueByIndex(ResultProperty mapping, IDataReader dataReader) 
-		{
-			if (dataReader.IsDBNull(mapping.ColumnIndex) == true)
+		public override object GetValueByIndex(ResultProperty mapping, IDataReader dataReader)
+	    {
+	        if (dataReader.IsDBNull(mapping.ColumnIndex))
 			{
-				return System.DBNull.Value;
+				return DBNull.Value;
 			}
-			else
-			{
-				return dataReader.GetDecimal(mapping.ColumnIndex);
-			}
-		}
+	        return dataReader.GetDecimal(mapping.ColumnIndex);
+	    }
 
-        /// <summary>
+	    /// <summary>
         /// Converts the String to the type that this handler deals with
         /// </summary>
         /// <param name="type">the tyepe of the property (used only for enum conversion)</param>

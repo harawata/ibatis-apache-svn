@@ -82,7 +82,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.PropertyStrategy
                         {
                             columnIndex = mapping.ColumnIndex;
                         }
-                        Type systemType = ((IDataRecord)reader).GetFieldType(columnIndex);
+                        Type systemType = reader.GetFieldType(columnIndex);
 
                         mapping.TypeHandler = request.DataExchangeFactory.TypeHandlerFactory.GetTypeHandler(systemType);
                     }

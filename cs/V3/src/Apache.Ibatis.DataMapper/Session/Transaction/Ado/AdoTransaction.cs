@@ -210,7 +210,7 @@ namespace Apache.Ibatis.DataMapper.Session.Transaction.Ado
         #region IDisposable Members
 
         /// <summary>
-        /// A flag to indicate if <c>Disose()</c> has been called.
+        /// A flag to indicate if <c>Dispose()</c> has been called.
         /// </summary>
         private bool isAlreadyDisposed = false;
 
@@ -271,7 +271,7 @@ namespace Apache.Ibatis.DataMapper.Session.Transaction.Ado
 
             isStarted = false;
             session = null;
-
+            isAlreadyDisposed = true;
             // nothing for Finalizer to do - so tell the GC to ignore it
             GC.SuppressFinalize(this);
         }

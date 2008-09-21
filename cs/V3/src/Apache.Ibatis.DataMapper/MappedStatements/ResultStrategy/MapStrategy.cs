@@ -67,18 +67,15 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.ResultStrategy
             {
                 return groupByStrategy.Process(request, ref reader, resultObject);
             }
-            else if (resultMap.KeyPropertyNames.Count > 0)
+            if (resultMap.KeyPropertyNames.Count > 0)
             {
                 return cirularStrategy.Process(request, ref reader, resultObject);
             }
-            else if (typeof(DataRow).IsAssignableFrom(resultMap.Class))
+            if (typeof(DataRow).IsAssignableFrom(resultMap.Class))
             {
                 return dataTableStrategy.Process(request, ref reader, resultObject);
             }
-            else
-            {
-                return resultMapStrategy.Process(request, ref reader, resultObject);
-            }
+            return resultMapStrategy.Process(request, ref reader, resultObject);
         }
 
         #endregion

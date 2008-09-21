@@ -24,12 +24,6 @@
  ********************************************************************************/
 #endregion
 
-#region Using
-
-using System.Data;
-using Apache.Ibatis.DataMapper.Model.ParameterMapping;
-
-#endregion 
 
 namespace Apache.Ibatis.DataMapper.TypeHandlers
 {

@@ -61,15 +61,9 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.ResultStrategy
                 {
                     return _mapStrategy; 
                 }
-                else // it is an AutoResultMap
-                {
-                    return _resultClassStrategy;
-                }                    
+                return _resultClassStrategy;
             }
-            else
-            {
-                return _objectStrategy;
-            }
+            return _objectStrategy;
         }
     }
 }

@@ -60,14 +60,11 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.ArgumentStrategy
 				reader = DataReaderTransformer.Transform(reader, request.Session.SessionFactory.DataSource.DbProvider);
 				return selectStatement.ExecuteQueryForList(request.Session, keys); 
 			}
-			else // Strongly typed List
-			{
-                reader = DataReaderTransformer.Transform(reader, request.Session.SessionFactory.DataSource.DbProvider);
-				IFactory factory = request.DataExchangeFactory.ObjectFactory.CreateFactory(mapping.MemberType, Type.EmptyTypes);
-				object values = factory.CreateInstance(null);
-				selectStatement.ExecuteQueryForList(request.Session, keys, (IList)values);
-				return values;
-			}
+		    reader = DataReaderTransformer.Transform(reader, request.Session.SessionFactory.DataSource.DbProvider);
+		    IFactory factory = request.DataExchangeFactory.ObjectFactory.CreateFactory(mapping.MemberType, Type.EmptyTypes);
+		    object values = factory.CreateInstance(null);
+		    selectStatement.ExecuteQueryForList(request.Session, keys, (IList)values);
+		    return values;
 		}
 
 		#endregion

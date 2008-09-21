@@ -24,13 +24,9 @@
  ********************************************************************************/
 #endregion
 
-#region Using
-
 using System;
 using System.Data;
 using Apache.Ibatis.DataMapper.Model.ResultMapping;
-
-#endregion 
 
 namespace Apache.Ibatis.DataMapper.TypeHandlers
 {
@@ -39,7 +35,6 @@ namespace Apache.Ibatis.DataMapper.TypeHandlers
     /// </summary>
     public sealed class UInt32TypeHandler : BaseTypeHandler
     {
-
 
         /// <summary>
         /// Gets a column value by the name
@@ -51,14 +46,11 @@ namespace Apache.Ibatis.DataMapper.TypeHandlers
         {
             int index = dataReader.GetOrdinal(mapping.ColumnName);
 
-            if (dataReader.IsDBNull(index) == true)
+            if (dataReader.IsDBNull(index))
             {
                 return DBNull.Value;
             }
-            else
-            {
-                return Convert.ToUInt32(dataReader.GetValue(index));
-            }
+            return Convert.ToUInt32(dataReader.GetValue(index));
         }
 
         /// <summary>
@@ -69,14 +61,11 @@ namespace Apache.Ibatis.DataMapper.TypeHandlers
         /// <returns></returns>
         public override object GetValueByIndex(ResultProperty mapping, IDataReader dataReader)
         {
-            if (dataReader.IsDBNull(mapping.ColumnIndex) == true)
+            if (dataReader.IsDBNull(mapping.ColumnIndex))
             {
                 return DBNull.Value;
             }
-            else
-            {
-                return Convert.ToUInt32(dataReader.GetValue(mapping.ColumnIndex));
-            }
+            return Convert.ToUInt32(dataReader.GetValue(mapping.ColumnIndex));
         }
 
         /// <summary>

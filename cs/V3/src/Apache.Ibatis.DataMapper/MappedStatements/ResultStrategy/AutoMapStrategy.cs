@@ -41,7 +41,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.ResultStrategy
 		/// <param name="reader">The reader.</param>
 		/// <param name="resultObject">The result object.</param>
         /// <returns>The AutoResultMap use to map the resultset.</returns>
-        private static AutoResultMap InitializeAutoResultMap(RequestScope request, ref IDataReader reader, ref object resultObject) 
+        private static AutoResultMap InitializeAutoResultMap(RequestScope request, IDataReader reader, ref object resultObject) 
 		{
 		    AutoResultMap resultMap  = request.CurrentResultMap as AutoResultMap;
 		    
@@ -99,7 +99,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.ResultStrategy
                 outObject = request.CurrentResultMap.CreateInstanceOfResult(null);
 			}
 
-            AutoResultMap resultMap = InitializeAutoResultMap(request, ref reader, ref outObject);
+            AutoResultMap resultMap = InitializeAutoResultMap(request, reader, ref outObject);
 
             // En configuration initialiser des AutoResultMap (IResultMap) avec uniquement leur class name et class et les mettres
 			// ds Statement.ResultsMap puis ds AutoMapStrategy faire comme AutoResultMap ds Java

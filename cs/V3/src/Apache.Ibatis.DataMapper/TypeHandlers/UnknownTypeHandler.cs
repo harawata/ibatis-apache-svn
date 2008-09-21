@@ -23,14 +23,9 @@
  ********************************************************************************/
 #endregion
 
-#region Using
-
 using System;
 using System.Data;
-using Apache.Ibatis.DataMapper.Model.ParameterMapping;
 using Apache.Ibatis.DataMapper.Model.ResultMapping;
-
-#endregion 
 
 namespace Apache.Ibatis.DataMapper.TypeHandlers
 {
@@ -39,8 +34,7 @@ namespace Apache.Ibatis.DataMapper.TypeHandlers
 	/// </summary>
     public sealed class UnknownTypeHandler : BaseTypeHandler
 	{
-
-		private TypeHandlerFactory _factory = null;
+		private readonly TypeHandlerFactory _factory = null;
 
 		/// <summary>
 		/// Constructor to create via a factory
@@ -68,7 +62,7 @@ namespace Apache.Ibatis.DataMapper.TypeHandlers
 			{
 				// When sending a null parameter value to the server,
 				// the user must specify DBNull, not null. 
-                dataParameter.Value = System.DBNull.Value;
+                dataParameter.Value = DBNull.Value;
 			}
 		}
 
@@ -82,14 +76,11 @@ namespace Apache.Ibatis.DataMapper.TypeHandlers
 		{
 			int index = dataReader.GetOrdinal(mapping.ColumnName);
 
-			if (dataReader.IsDBNull(index) == true)
+			if (dataReader.IsDBNull(index))
 			{
-				return System.DBNull.Value;
+				return DBNull.Value;
 			}
-			else
-			{
-				return dataReader.GetValue(index);
-			}		
+            return dataReader.GetValue(index);
 		}
 
         /// <summary>
@@ -99,18 +90,15 @@ namespace Apache.Ibatis.DataMapper.TypeHandlers
         /// <param name="dataReader"></param>
         /// <returns></returns>
 		public override object GetValueByIndex(ResultProperty mapping, IDataReader dataReader)
-		{
-			if (dataReader.IsDBNull(mapping.ColumnIndex) == true)
+        {
+            if (dataReader.IsDBNull(mapping.ColumnIndex))
 			{
-				return System.DBNull.Value;
+				return DBNull.Value;
 			}
-			else
-			{
-				return dataReader.GetValue(mapping.ColumnIndex);
-			}		
-		}
+            return dataReader.GetValue(mapping.ColumnIndex);
+        }
 
-        /// <summary>
+	    /// <summary>
         /// Converts the String to the type that this handler deals with
         /// </summary>
         /// <param name="type">the tyepe of the property (used only for enum conversion)</param>
@@ -160,13 +148,10 @@ namespace Apache.Ibatis.DataMapper.TypeHandlers
 			if (obj == null || str == null) 
 			{
 				return (string)obj == str;
-			} 
-			else 
-			{
-				ITypeHandler handler = _factory.GetTypeHandler(obj.GetType());
-				object castedObject = handler.ValueOf(obj.GetType(), str);
-				return obj.Equals(castedObject);
 			}
+		    ITypeHandler handler = _factory.GetTypeHandler(obj.GetType());
+		    object castedObject = handler.ValueOf(obj.GetType(), str);
+		    return obj.Equals(castedObject);
 		}
 	}
 }

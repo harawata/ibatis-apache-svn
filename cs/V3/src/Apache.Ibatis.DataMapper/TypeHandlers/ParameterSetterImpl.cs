@@ -24,11 +24,7 @@
  ********************************************************************************/
 #endregion
 
-#region Using
-
 using System.Data;
-
-#endregion 
 
 namespace Apache.Ibatis.DataMapper.TypeHandlers
 {
@@ -37,11 +33,7 @@ namespace Apache.Ibatis.DataMapper.TypeHandlers
 	/// </summary>
     public sealed class ParameterSetterImpl : IParameterSetter	
 	{
-		#region Fields
-
-		private IDataParameter _dataParameter = null;
-
-		#endregion 
+		private readonly IDataParameter _dataParameter = null;
 
 		#region Constructor
 

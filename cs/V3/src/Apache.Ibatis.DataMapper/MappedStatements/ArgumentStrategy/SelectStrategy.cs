@@ -132,12 +132,10 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.ArgumentStrategy
 			if (wasNull) 
 			{
 				return null;
-			} 
-			else // Collection object or .Net object
-			{
-				// lazyLoading is not permit for argument constructor
-				return _selectStrategy.GetValue(request, mapping, ref reader, keys);
-			}	
+			}
+            // Collection object or .Net object
+		    // lazyLoading is not permit for argument constructor
+		    return _selectStrategy.GetValue(request, mapping, ref reader, keys);
 		}
 
 		#endregion

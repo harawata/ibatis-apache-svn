@@ -24,13 +24,10 @@
  ********************************************************************************/
 #endregion
 
-#region Using
 
 using System;
 using System.Data;
 using Apache.Ibatis.DataMapper.Model.ResultMapping;
-
-#endregion 
 
 namespace Apache.Ibatis.DataMapper.TypeHandlers
 {
@@ -39,11 +36,12 @@ namespace Apache.Ibatis.DataMapper.TypeHandlers
 	/// </summary>
 	public interface ITypeHandler
 	{
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <returns></returns>
+        /// <summary>
+        /// Gets a value indicating whether this instance is simple type.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if this instance is simple type; otherwise, <c>false</c>.
+        /// </value>
 		bool IsSimpleType{get;}
 
 		/// <summary>

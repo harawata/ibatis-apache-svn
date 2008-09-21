@@ -24,12 +24,8 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Reflection;
-
-using Apache.Ibatis.Common;
 using Apache.Ibatis.DataMapper.Scope;
-using Apache.Ibatis.DataMapper.Session;
 
 namespace Apache.Ibatis.DataMapper.MappedStatements.PostSelectStrategy
 {
@@ -50,14 +46,14 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.PostSelectStrategy
             // How to: Examine and Instantiate Generic Types with Reflection  
             // http://msdn2.microsoft.com/en-us/library/b8ytshk6.aspx
 
-            Type[] typeArgs = postSelect.ResultProperty.SetAccessor.MemberType.GetGenericArguments();
-            Type genericList = typeof(IList<>);
-            Type constructedType = genericList.MakeGenericType(typeArgs);
+            //Type[] typeArgs = postSelect.ResultProperty.SetAccessor.MemberType.GetGenericArguments();
+            //Type genericList = typeof(IList<>);
+            //Type constructedType = genericList.MakeGenericType(typeArgs);
             Type elementType = postSelect.ResultProperty.SetAccessor.MemberType.GetGenericArguments()[0];
 
             Type mappedStatementType = postSelect.Statement.GetType();
 
-            Type[] typeArguments = { typeof(ISession), typeof(object) };
+            //Type[] typeArguments = { typeof(ISession), typeof(object) };
 
             MethodInfo[] mis = mappedStatementType.GetMethods(BindingFlags.InvokeMethod | BindingFlags.Public | BindingFlags.Instance);
             MethodInfo mi = null;

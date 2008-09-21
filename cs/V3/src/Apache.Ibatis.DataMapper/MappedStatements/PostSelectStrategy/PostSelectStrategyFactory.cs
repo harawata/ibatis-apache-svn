@@ -33,7 +33,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.PostSelectStrategy
 	/// </summary>
 	public sealed class PostSelectStrategyFactory
 	{
-		private static IDictionary _strategies = new HybridDictionary();
+		private static readonly IDictionary _strategies = new HybridDictionary();
 
 		/// <summary>
 		/// Initializes the <see cref="PostSelectStrategyFactory"/> class.

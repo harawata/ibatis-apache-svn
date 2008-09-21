@@ -23,11 +23,7 @@
  ********************************************************************************/
 #endregion
 
-#region Using
-
 using System.Data;
-
-#endregion 
 
 namespace Apache.Ibatis.DataMapper.TypeHandlers
 {
@@ -36,15 +32,11 @@ namespace Apache.Ibatis.DataMapper.TypeHandlers
 	/// </summary>
     public sealed class ResultGetterImpl : IResultGetter
 	{
+		private readonly int _columnIndex = int.MinValue;
+		private readonly string _columnName = string.Empty;
+		private readonly object _outputValue = null;
 
-		#region Fields
-
-		private int _columnIndex = int.MinValue;
-		private string _columnName = string.Empty;
-		private object _outputValue = null;
-
-		private IDataReader _dataReader = null;
-		#endregion 
+		private readonly IDataReader _dataReader = null;
 
 		#region Constructors
 
@@ -98,19 +90,16 @@ namespace Apache.Ibatis.DataMapper.TypeHandlers
 		{
 			get
 			{
-				if (_columnName.Length >0)
+			    if (_columnName.Length >0)
 				{
 					int index = _dataReader.GetOrdinal(_columnName);
 					return _dataReader.GetValue(index);
 				}
-				else if (_columnIndex>=0)
-				{
-					return _dataReader.GetValue(_columnIndex);
-				}
-				else
-				{
-					return _outputValue;
-				}
+			    if (_columnIndex>=0)
+			    {
+			        return _dataReader.GetValue(_columnIndex);
+			    }
+			    return _outputValue;
 			}
 		}
 		#endregion 

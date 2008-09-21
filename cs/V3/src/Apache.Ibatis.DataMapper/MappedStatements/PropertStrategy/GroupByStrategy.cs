@@ -23,7 +23,6 @@
  ********************************************************************************/
 #endregion
 
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
@@ -120,7 +119,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.PropertStrategy
                         for (int index = 0; index < propertyRresultMap.Properties.Count; index++)
                         {
                             ResultProperty resultProperty = propertyRresultMap.Properties[index];
-                            if (resultProperty.PropertyStrategy is PropertStrategy.GroupByStrategy)
+                            if (resultProperty.PropertyStrategy is GroupByStrategy)
                             {
                                 resultProperty.PropertyStrategy.Set(request, propertyRresultMap, resultProperty, ref result, reader, null);
                             }

@@ -24,11 +24,7 @@
  ********************************************************************************/
 #endregion
 
-#region Using
-
 using System.Data;
-
-#endregion 
 
 namespace Apache.Ibatis.DataMapper.TypeHandlers
 {

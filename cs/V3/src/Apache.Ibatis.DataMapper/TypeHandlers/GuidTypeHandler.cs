@@ -24,13 +24,10 @@
  ********************************************************************************/
 #endregion
 
-#region Using
 
 using System;
 using System.Data;
 using Apache.Ibatis.DataMapper.Model.ResultMapping;
-
-#endregion 
 
 namespace Apache.Ibatis.DataMapper.TypeHandlers
 {
@@ -76,17 +73,14 @@ namespace Apache.Ibatis.DataMapper.TypeHandlers
             {
                 return DBNull.Value;
             }
-            else if (dataRecord.GetFieldType(index) == typeof(Guid))
+            if (dataRecord.GetFieldType(index) == typeof(Guid))
             {
                 return dataRecord.GetGuid(index);
             }
-            else
-            {
-                return new Guid(Convert.ToString(dataRecord[index]));
-            } 
+            return new Guid(Convert.ToString(dataRecord[index]));
         }
 
-        /// <summary>
+	    /// <summary>
         /// Converts the String to the type that this handler deals with
         /// </summary>
         /// <param name="type">the tyepe of the property (used only for enum conversion)</param>

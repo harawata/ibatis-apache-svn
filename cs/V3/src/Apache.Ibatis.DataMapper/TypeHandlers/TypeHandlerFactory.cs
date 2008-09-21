@@ -196,19 +196,16 @@ namespace Apache.Ibatis.DataMapper.TypeHandlers
 		/// <param name="type">the type you want a TypeHandler for</param>
 		/// <param name="dbType">the database type</param>
 		/// <returns>the handler</returns>
-		public ITypeHandler GetTypeHandler(Type type, string dbType) 
+		public ITypeHandler GetTypeHandler(Type type, string dbType)
 		{
-			if (type.IsEnum)
+		    if (type.IsEnum)
 			{
 				return GetPrivateTypeHandler(typeof(Enum), dbType);
 			}
-			else
-			{
-				return GetPrivateTypeHandler(type, dbType);
-			}
+		    return GetPrivateTypeHandler(type, dbType);
 		}
 
-		/// <summary>
+	    /// <summary>
 		///  Get a TypeHandler for a type and a dbType type
 		/// </summary>
 		/// <param name="type">the type</param>
@@ -360,7 +357,7 @@ namespace Apache.Ibatis.DataMapper.TypeHandlers
             else if (typeof(IDictionary).IsAssignableFrom(classType) || typeof(DataRow).IsAssignableFrom(classType))
             {
                 // IDictionary or DataTable
-                if (memberType == null || memberType.Length == 0)
+                if (string.IsNullOrEmpty(memberType))
                 {
                     handler = GetUnkownTypeHandler();
                 }
@@ -385,7 +382,7 @@ namespace Apache.Ibatis.DataMapper.TypeHandlers
             else
             {
                 // .NET object
-                if (memberType == null || memberType.Length == 0)
+                if (string.IsNullOrEmpty(memberType))
                 {
                     Type type = null;
                     if (forSetter)
@@ -435,7 +432,7 @@ namespace Apache.Ibatis.DataMapper.TypeHandlers
             else if (typeof(IDictionary).IsAssignableFrom(argumentType) || typeof(DataRow).IsAssignableFrom(argumentType))
             {
                 // IDictionary or 
-                if (clrType == null || clrType.Length == 0)
+                if (string.IsNullOrEmpty(clrType))
                 {
                     handler = GetUnkownTypeHandler();
                 }
@@ -460,7 +457,7 @@ namespace Apache.Ibatis.DataMapper.TypeHandlers
             else
             {
                 // .NET object
-                if (clrType == null || clrType.Length == 0)
+                if (string.IsNullOrEmpty(clrType))
                 {
                     handler = GetUnkownTypeHandler();
                 }
@@ -488,19 +485,16 @@ namespace Apache.Ibatis.DataMapper.TypeHandlers
 		/// </summary>
         /// <param name="id">The id of the TypeAlias.</param>
 		/// <returns>The TypeAlias.</returns>
-        public TypeAlias GetTypeAlias(string id) 
+        public TypeAlias GetTypeAlias(string id)
 		{
-            if (typeAliasMaps.ContainsKey(id)) 
+		    if (typeAliasMaps.ContainsKey(id)) 
 			{
                 return typeAliasMaps[id];
 			}
-			else
-			{
-                throw new ConfigurationException("There's no type alias with the name:" + id);
-			}
+		    throw new ConfigurationException("There's no type alias with the name:" + id);
 		}
 
-		/// <summary>
+	    /// <summary>
 		/// Gets the type object from the specific class name.
 		/// </summary>
 		/// <param name="className">The supplied class name.</param>
@@ -530,7 +524,7 @@ namespace Apache.Ibatis.DataMapper.TypeHandlers
 		/// <param name="typeAlias"> The TypeAlias.</param>
         public void AddTypeAlias(string key, TypeAlias typeAlias) 
 		{
-            if (typeAliasMaps.ContainsKey(key) == true) 
+            if (typeAliasMaps.ContainsKey(key)) 
 			{
 				throw new DataMapperException(" Alias name conflict occurred.  The type alias '" + key + "' is already mapped to the value '"+typeAlias +"'.");
 			}

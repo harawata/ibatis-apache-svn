@@ -64,8 +64,8 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.ResultStrategy
                     if (!resultMap.IsInitalized)
                     {
                         // Create a ResultProperty
-                        string propertyName = "value";
-                        int columnIndex = 0;
+                        const string propertyName = "value";
+                        const int columnIndex = 0;
                         ITypeHandler typeHandler = request.DataExchangeFactory.TypeHandlerFactory.GetTypeHandler(outObject.GetType());
 
                         ResultProperty property = new ResultProperty(

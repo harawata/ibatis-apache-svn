@@ -51,7 +51,6 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.ResultStrategy
 			listStrategy = new ListStrategy();
 			autoMapStrategy = new AutoMapStrategy();
             dataTableStrategy = new DataRowStrategy();
-
 		}
 
         #region IResultStrategy Members
@@ -64,30 +63,26 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.ResultStrategy
 		/// <param name="resultObject">The result object.</param>
         public object Process(RequestScope request, ref IDataReader reader, object resultObject)
 		{
-
-  			// Check if the ResultClass is a 'primitive' Type
+		    // Check if the ResultClass is a 'primitive' Type
             if (request.DataExchangeFactory.TypeHandlerFactory.IsSimpleType(request.CurrentResultMap.Class))
 			{
                 return simpleTypeStrategy.Process(request, ref reader, resultObject);
 			}
-            else if (typeof(IDictionary).IsAssignableFrom(request.CurrentResultMap.Class)) 
-			{
-                return dictionaryStrategy.Process(request, ref reader, resultObject);
-			}
-            else if (typeof(IList).IsAssignableFrom(request.CurrentResultMap.Class)) 
-			{
-                return listStrategy.Process(request, ref reader, resultObject);
-			}
-            else if (typeof(DataRow).IsAssignableFrom(request.CurrentResultMap.Class))
-            {
-                return dataTableStrategy.Process(request, ref reader, resultObject);
-            }
-            else
-			{
-                return autoMapStrategy.Process(request, ref reader, resultObject);
-			}
+		    if (typeof(IDictionary).IsAssignableFrom(request.CurrentResultMap.Class)) 
+		    {
+		        return dictionaryStrategy.Process(request, ref reader, resultObject);
+		    }
+		    if (typeof(IList).IsAssignableFrom(request.CurrentResultMap.Class)) 
+		    {
+		        return listStrategy.Process(request, ref reader, resultObject);
+		    }
+		    if (typeof(DataRow).IsAssignableFrom(request.CurrentResultMap.Class))
+		    {
+		        return dataTableStrategy.Process(request, ref reader, resultObject);
+		    }
+		    return autoMapStrategy.Process(request, ref reader, resultObject);
 		}
 
-		#endregion
+	    #endregion
 	}
 }

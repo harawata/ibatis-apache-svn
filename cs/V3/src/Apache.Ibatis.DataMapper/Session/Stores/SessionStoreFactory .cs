@@ -42,17 +42,13 @@ namespace Apache.Ibatis.DataMapper.Session.Stores
         /// <param name="Id">A unique id to identify the session DataMapper parent.</param>
         /// <returns></returns>
         static public ISessionStore GetSessionStore(string Id)
-		{
-			if (System.Web.HttpContext.Current == null)
+        {
+            if (System.Web.HttpContext.Current == null)
 			{
                 return new CallContextSessionStore(Id);
 			}
-			else
-			{
-                return new WebSessionStore(Id);
-			}
-		}
-
+            return new WebSessionStore(Id);
+        }
 	}
 }
 
