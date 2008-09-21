@@ -256,6 +256,10 @@ namespace Apache.Ibatis.DataMapper.Configuration.Interpreters.Config
         /// </summary>
         public const string ATTRIBUTE_VALIDATE_SQLMAP = "validateSqlMap";
         /// <summary>
+        /// Token for attribute command.timeout.
+        /// </summary>
+        public const string ATTRIBUTE_COMMAND_TIMEOUT = "commandTimeout";
+        /// <summary>
         /// Token for attribute flushInterval.
         /// </summary>
         public const string ATTRIBUTE_FLUSHINTERVAL = "flushInterval";

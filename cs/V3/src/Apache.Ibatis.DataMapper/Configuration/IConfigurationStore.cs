@@ -171,21 +171,6 @@ namespace Apache.Ibatis.DataMapper.Configuration
         /// <returns></returns>
         IConfiguration[] Alias { get; }
 
-        ///// <summary>
-        ///// Returns the configuration node associated with 
-        ///// the specified SqlMapping key. Should return null
-        ///// if no association exists.
-        ///// </summary>
-        ///// <param name="key">item key</param>
-        ///// <returns></returns>
-        //IConfiguration GetSqlMappingConfiguration(string key);
-
-        ///// <summary>
-        ///// Returns all configuration nodes for SqlMapping
-        ///// </summary>
-        ///// <returns></returns>
-        //IConfiguration[] SqlMappings { get; }
-
         #endregion
 
         #region IMappingConfigurationStore

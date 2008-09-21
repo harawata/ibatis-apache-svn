@@ -73,6 +73,8 @@ namespace Apache.Ibatis.DataMapper.Configuration
         private bool useStatementNamespaces = false;
         private bool isCacheModelsEnabled = false;
         private bool useReflectionOptimizer = true;
+        private int commandTimeOut = -1;
+
         private readonly WaitResultPropertyResolution waitResultPropertyResolution = null;
         private readonly WaitDiscriminatorResolution waitDiscriminatorResolution = null;
         private ISqlSource dynamicSqlEngine = null;

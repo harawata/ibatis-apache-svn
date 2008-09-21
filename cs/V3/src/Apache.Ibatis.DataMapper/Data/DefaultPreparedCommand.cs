@@ -89,28 +89,37 @@ namespace Apache.Ibatis.DataMapper.Data
 
             command.CommandType = commandType;
             command.Connection = session.Connection;
+            SetCommandTimeout(command, session.SessionFactory.DataSource.CommandTimeout);
 
             // Assign transaction
             if (session.Transaction != null)
             {
                 session.Transaction.Enlist(command);
             }
-            // Assign connection timeout
-            if (session.Connection != null)
+            return command;
+        }
+
+        /// <summary>
+        /// Sets the command timeout.
+        /// </summary>
+        /// <param name="cmd">The CMD.</param>
+        /// <param name="commandTimeout">The command timeout.</param>
+        private void SetCommandTimeout(IDbCommand cmd, int commandTimeout)
+        {
+            if (commandTimeout >= 0)
             {
-                try // MySql provider doesn't suppport it !
+                try
                 {
-                    command.CommandTimeout = session.Connection.ConnectionTimeout;
+                    cmd.CommandTimeout = commandTimeout;
                 }
-                catch (NotSupportedException e)
+                catch (Exception e)
                 {
-                    if (logger.IsInfoEnabled)
+                    if (logger.IsWarnEnabled)
                     {
-                        logger.Info(e.Message);
+                        logger.Warn(e.ToString());
                     }
                 }
             }
-            return command;
         }
 
         /// <summary>

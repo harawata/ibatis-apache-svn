@@ -41,16 +41,18 @@ namespace Apache.Ibatis.Common.Data
         /// <summary>
         /// Deserialize a DataSource object
         /// </summary>
+        /// <param name="dbProvider">The db provider.</param>
+        /// <param name="commandTimeOut">The command time out.</param>
         /// <param name="config">The config.</param>
         /// <returns></returns>
-        public static DataSource Deserialize(IDbProvider dbProvider,IConfiguration config)
+        public static DataSource Deserialize(IDbProvider dbProvider, int commandTimeOut, IConfiguration config)
 		{
             IConfiguration dataSourceConfig = config.Children.Find(DataConstants.ELEMENT_DATASOURCE)[0];
 
             string connectionString = dataSourceConfig.Attributes[DataConstants.ATTRIBUTE_CONNECTIONSTRING];
             string name = dataSourceConfig.Attributes[DataConstants.ATTRIBUTE_NAME];
 
-            return new DataSource(name, connectionString, dbProvider);
+            return new DataSource(name, connectionString, commandTimeOut, dbProvider);
 		}
 
 	}

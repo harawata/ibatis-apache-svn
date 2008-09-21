@@ -27,7 +27,6 @@
 #region Using
 
 using System;
-using System.Xml.Serialization;
 using Apache.Ibatis.Common.Contracts;
 using System.Diagnostics;
 
@@ -42,15 +41,13 @@ namespace Apache.Ibatis.Common.Data
     [DebuggerDisplay("DataSource: {Id}-{ConnectionString}")]
 	public class DataSource : IDataSource
 	{
-
-		#region Fields
 		[NonSerialized]
 		private string connectionString = string.Empty;
 		[NonSerialized]
 		private IDbProvider provider = null;
 		[NonSerialized]
-        private string id = string.Empty;
-		#endregion
+        private readonly string id = string.Empty;
+        private readonly int commandTimeout;
 
 		#region Properties
 
@@ -72,6 +69,14 @@ namespace Apache.Ibatis.Common.Data
             get { return id; }
 		}
 
+        /// <summary>
+        /// Gets the command timeout.
+        /// </summary>
+        /// <value>The command timeout.</value>
+        public int CommandTimeout
+        {
+            get { return commandTimeout; }
+        }
 
         /// <summary>
         /// Gets or sets the db provider.
@@ -81,7 +86,6 @@ namespace Apache.Ibatis.Common.Data
 		{
 			get { return provider; }
             set { provider = value; }
-
 		}
 		#endregion
 
@@ -90,8 +94,9 @@ namespace Apache.Ibatis.Common.Data
         /// </summary>
         /// <param name="id">The id.</param>
         /// <param name="connectionString">The connection string.</param>
+        /// <param name="commandTimeout">The command timeout.</param>
         /// <param name="provider">The provider.</param>
-        public DataSource(string id, string connectionString, IDbProvider provider)
+        public DataSource(string id, string connectionString, int commandTimeout, IDbProvider provider)
         {
             Contract.Require.That(connectionString, Is.Not.Null & Is.Not.Empty).When("retrieving argument connectionString in DataSource constructor");
             Contract.Require.That(provider, Is.Not.Null).When("retrieving argument provider in DataSource constructor");
@@ -99,6 +104,7 @@ namespace Apache.Ibatis.Common.Data
             this.id = id;
             this.connectionString = connectionString;
             this.provider = provider;
+            this.commandTimeout = commandTimeout;
         }
 
 

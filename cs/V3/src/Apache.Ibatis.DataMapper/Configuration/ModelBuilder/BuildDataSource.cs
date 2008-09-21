@@ -44,10 +44,7 @@ namespace Apache.Ibatis.DataMapper.Configuration
                 IConfiguration providerConfig = dataBaseConfig.Children.Find(DataConstants.ELEMENT_PROVIDER)[0];
                 IDbProvider dbProvider = dbProviderFactory.GetDbProvider(providerConfig.Value);
 
-                //_configScope.ErrorContext.Resource = nodeDataSource.OuterXml.ToString();
-                //_configScope.ErrorContext.MoreInfo = "parse DataSource";
-
-                dataSource = DataSourceDeSerializer.Deserialize(dbProvider, dataBaseConfig);
+                dataSource = DataSourceDeSerializer.Deserialize(dbProvider, commandTimeOut, dataBaseConfig);
             }
 
 

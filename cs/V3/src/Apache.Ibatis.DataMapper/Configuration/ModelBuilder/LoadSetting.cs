@@ -48,13 +48,17 @@ namespace Apache.Ibatis.DataMapper.Configuration
                     {
                         useStatementNamespaces = Convert.ToBoolean(setting.Value);
                     }
-                    if (setting.Id == ConfigConstants.ATTRIBUTE_CACHE_MODELS_ENABLED)
+                    else if (setting.Id == ConfigConstants.ATTRIBUTE_CACHE_MODELS_ENABLED)
                     {
                         isCacheModelsEnabled = Convert.ToBoolean(setting.Value);
                     }
-                    if (setting.Id == ConfigConstants.ATTRIBUTE_USE_REFLECTION_OPTIMIZER)
+                    else if (setting.Id == ConfigConstants.ATTRIBUTE_USE_REFLECTION_OPTIMIZER)
                     {
                         useReflectionOptimizer = Convert.ToBoolean(setting.Value);
+                    }
+                    else if (setting.Id == ConfigConstants.ATTRIBUTE_COMMAND_TIMEOUT)
+                    {
+                        commandTimeOut = Convert.ToInt32(setting.Value);
                     }
                 }
             }

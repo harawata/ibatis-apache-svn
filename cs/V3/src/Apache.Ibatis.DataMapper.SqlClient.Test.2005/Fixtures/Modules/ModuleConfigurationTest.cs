@@ -66,6 +66,11 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Modules
                 set { throw new Exception("The method or operation is not implemented."); }
             }
 
+            public int CommandTimeout
+            {
+                get { throw new Exception("The method or operation is not implemented."); }
+            }
+
             #endregion
         }
 

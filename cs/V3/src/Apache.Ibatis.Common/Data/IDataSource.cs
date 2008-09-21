@@ -35,6 +35,11 @@ namespace Apache.Ibatis.Common.Data
 		/// </summary>
 		string Id { get; }
 
+        /// <summary>
+        /// Gets the command timeout.
+        /// </summary>
+        /// <value>The command timeout.</value>
+        int CommandTimeout { get; }
 
         /// <summary>
         /// Gets or sets the connection string.
