@@ -24,14 +24,12 @@
  ********************************************************************************/
 #endregion
 
-#region Using
 
 using System;
 using System.Collections.Specialized;
 using System.Data;
 using System.Reflection;
 using System.Text;
-using Apache.Ibatis.Common;
 using Apache.Ibatis.Common.Logging;
 using Apache.Ibatis.Common.Utilities.Objects;
 using Apache.Ibatis.DataMapper.Model.ParameterMapping;
@@ -40,8 +38,6 @@ using Apache.Ibatis.DataMapper.Exceptions;
 using Apache.Ibatis.DataMapper.Scope;
 using Apache.Ibatis.DataMapper.Session;
 using Apache.Ibatis.Common.Data;
-
-#endregion
 
 namespace Apache.Ibatis.DataMapper.Data
 {
@@ -163,15 +159,13 @@ namespace Apache.Ibatis.DataMapper.Data
 					{
 						throw new DataMapperException("A procedure statement tag must alway have a parameterMap attribute, which is not the case for the procedure '"+statement.Id+"'."); 
 					}
-					else // Parameters via ParameterMap
+					// Parameters via ParameterMap
+					if (property.DirectionAttribute.Length == 0)
 					{
-						if (property.DirectionAttribute.Length == 0)
-						{
-							property.Direction = sqlParameter.Direction;
-						}
-
-						sqlParameter.Direction = property.Direction;					
+						property.Direction = sqlParameter.Direction;
 					}
+
+					sqlParameter.Direction = property.Direction;					
 					#endregion 
 				}
 
@@ -197,18 +191,9 @@ namespace Apache.Ibatis.DataMapper.Data
 						ObjectProbe.SetMemberValue(parameterCopy, dbTypePropertyName, propertyValue, 
 							request.DataExchangeFactory.ObjectFactory, request.DataExchangeFactory.AccessorFactory);
 					}
-					else
-					{
-						//parameterCopy.DbType = sqlParameter.DbType;
-					}
-				}
-				else
-				{
-					//parameterCopy.DbType = sqlParameter.DbType;
 				}
 
-
-				#region Logging
+			    #region Logging
 				if (logger.IsDebugEnabled)
 				{
 					if (parameterCopy.Value == DBNull.Value) 

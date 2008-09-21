@@ -451,15 +451,6 @@ namespace Apache.Ibatis.Common.Data
 		}
 		#endregion
 
-		#region Constructor (s) / Destructor
-		/// <summary>
-		/// Do not use direclty, only for serialization.
-		/// </summary>
-		public DbProvider()
-		{
-		}
-		#endregion
-
 		#region Methods
 		/// <summary>
 		/// Init the provider.
@@ -512,7 +503,7 @@ namespace Apache.Ibatis.Common.Data
 		/// <returns>An 'IDbConnection' object.</returns>
 		public virtual IDbConnection CreateConnection()
 		{
-			// Cannot do that because on 
+		    // Cannot do that because on 
 			// IDbCommand.Connection = cmdConnection
 			// .NET cast the cmdConnection to the real type (as SqlConnection)
 			// and we pass a proxy --> exception invalid cast !
@@ -524,14 +515,11 @@ namespace Apache.Ibatis.Common.Data
 			{
 				return (IDbConnection) ((ICloneable)_templateConnection).Clone();
 			}
-			else
-			{
-				return (IDbConnection) Activator.CreateInstance(_templateConnection.GetType());
-			}
+		    return (IDbConnection) Activator.CreateInstance(_templateConnection.GetType());
 		}
 
-		
-		/// <summary>
+
+        /// <summary>
 		/// Create a command object for this provider.
 		/// </summary>
 		/// <returns>An 'IDbCommand' object.</returns>
@@ -546,18 +534,15 @@ namespace Apache.Ibatis.Common.Data
 		/// <returns>An 'IDbDataAdapter' object.</returns>
 		public virtual IDbDataAdapter CreateDataAdapter()
 		{
-			if (_templateDataAdapterIsICloneable)
+		    if (_templateDataAdapterIsICloneable)
 			{
 				return (IDbDataAdapter) ((ICloneable)_templateDataAdapter).Clone();
 			}
-			else
-			{
-				return (IDbDataAdapter) Activator.CreateInstance(_templateDataAdapter.GetType());
-			}
+		    return (IDbDataAdapter) Activator.CreateInstance(_templateDataAdapter.GetType());
 		}
 
 
-		/// <summary>
+        /// <summary>
 		/// Create a IDbDataParameter object for this provider.
 		/// </summary>
 		/// <returns>An 'IDbDataParameter' object.</returns>

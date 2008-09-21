@@ -97,7 +97,10 @@ namespace Apache.Ibatis.DataMapper.Model.Sql.External
             string sqlCommandText = statement.SqlSource.GetSql(mappedStatement, parameterObject);
             string newSqlCommandText = string.Empty;
 
-            request.ParameterMap = inlineParemeterMapBuilder.BuildInlineParemeterMap(statement, sqlCommandText, out newSqlCommandText);
+            if (request.ParameterMap==null)
+            {               
+                request.ParameterMap = inlineParemeterMapBuilder.BuildInlineParemeterMap(statement, sqlCommandText, out newSqlCommandText);
+            }
 
             // Processes $substitutions$ after DynamicSql
             if (SimpleDynamicSql.IsSimpleDynamicSql(newSqlCommandText))
