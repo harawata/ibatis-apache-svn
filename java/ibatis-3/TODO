@@ -8,5 +8,8 @@ Monarch
  * Transaction Manager
  * Mapper Interface Binding
  * Client / Mapper Factory
+ * Named parameter parsing/merging
+ 
+Testing
  * Functional tests
  * Perf/Threaded Integration Tests
