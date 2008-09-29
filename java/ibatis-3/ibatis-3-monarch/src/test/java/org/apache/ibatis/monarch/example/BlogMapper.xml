@@ -1,4 +1,4 @@
-<mapper namespace="com.domain.PersonMapper" cacheDomain="">
+<mapper namespace="com.domain.PersonMapper" cacheNamespace="com.domain.PersonMapper">
 
   <resultMap id="" type="" extends="">
     <constructor>
@@ -20,14 +20,12 @@
            mode="" scale="" resultMap=""/>
   </parameterMap>
 
-  <select id="selectAllPeople" cacheDomain="" flushCache="" parameterType="" resultType="" resultMap="">
+  <select id="selectAllPeople" cache="true" flushCache="false" parameterType="" resultType="" resultMap="">
     select * from PERSON order by
     ${opts.order,javaType="",jdbcType="",typeHandler="",mode="",scale="",resultMap=""}
   </select>
   
-  <select id="selectPersonInDept" cacheType="" cacheDomain=""
-          flushCache="" parameterType="" resultType=""
-          resultMap="">
+  <select id="selectPersonInDept" parameterType="" resultType="" resultMap="">
     select * from PERSON
     where PERSON_ID = #param.id --or #{params.id}
     <!-- if(expr) foreach(x,expr) dynamic() propavail(name)

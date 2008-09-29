@@ -228,9 +228,9 @@ public class MapperParser extends BaseParser {
   }
 
   private void setStatementCache(NodeletContext context, MappedStatement.Builder statementBuilder) {
-    //TODO: Implement cache templates
-    String cacheType = context.getStringAttribute("cacheType");
-    String flushCache = context.getStringAttribute("flushCache");
+    boolean isSelect = "select".equals(context.getNode().getNodeName());
+    boolean cache = context.getBooleanAttribute("cache",isSelect);
+    boolean flushCache = context.getBooleanAttribute("flushCache",!isSelect);
     statementBuilder.cache(null);
   }
 
