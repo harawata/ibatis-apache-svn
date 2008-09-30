@@ -4,12 +4,15 @@ import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.reflection.MetaClass;
 import org.apache.ibatis.type.*;
 import org.apache.ibatis.xml.*;
+import org.apache.ibatis.cache.impl.PerpetualCache;
+import org.apache.ibatis.cache.Cache;
 
 import java.io.Reader;
 import java.util.*;
 
 public class MapperParser extends BaseParser {
 
+  protected String namespace;
   protected Reader reader;
   protected NodeletParser parser;
 
@@ -21,6 +24,8 @@ public class MapperParser extends BaseParser {
 
   private Discriminator.Builder discriminatorBuilder;
   private HashMap<String, String> discriminatorMap;
+
+  private Cache cache;
 
   public MapperParser(Reader reader, MonarchConfiguration configuration) {
     this.reader = reader;
@@ -42,6 +47,38 @@ public class MapperParser extends BaseParser {
     assert typeAliasRegistry != null;
     assert typeHandlerRegistry != null;
     parser.parse(reader);
+  }
+
+  //  <configuration namespace="com.domain.MapperClass" />
+  @Nodelet("/configuration")
+  public void configurationElement(NodeletContext context) throws Exception {
+    namespace = context.getStringAttribute("namespace");
+    if (namespace == null) {
+      throw new BuilderException("The configuration element requires a namespace attribute to be specified.");
+    }
+  }
+
+  //  <cache type="LRU" flushInterval="3600000" size="1000" readOnly="false" />
+  @Nodelet("/configuration/cache")
+  public void cacheTemplateElement(NodeletContext context) throws Exception {
+    String type = context.getStringAttribute("type","LRU");
+    type = typeAliasRegistry.resolveAlias(type);
+    Class typeClass = Class.forName(type);
+
+    long flushInterval = context.getLongAttribute("flushInterval",3600000L);
+    int size = context.getIntAttribute("size",1000);
+    boolean readOnly = context.getBooleanAttribute("readOnly",false);
+
+    Properties props = context.getChildrenAsProperties();
+
+    cache = new CacheBuilder(namespace)
+        .implementation(PerpetualCache.class)
+        .addDecorator(typeClass)
+        .clearInterval(flushInterval)
+        .size(size)
+        .readWrite(!readOnly)
+        .properties(props)
+        .build();
   }
 
   //  <parameterMap id="" type="">
@@ -229,9 +266,9 @@ public class MapperParser extends BaseParser {
 
   private void setStatementCache(NodeletContext context, MappedStatement.Builder statementBuilder) {
     boolean isSelect = "select".equals(context.getNode().getNodeName());
-    boolean cache = context.getBooleanAttribute("cache",isSelect);
+    boolean useCache = context.getBooleanAttribute("useCache",isSelect);
     boolean flushCache = context.getBooleanAttribute("flushCache",!isSelect);
-    statementBuilder.cache(null);
+    statementBuilder.cache(cache);
   }
 
   private void setStatementParameterMap(NodeletContext context, MappedStatement.Builder statementBuilder) {

@@ -1,5 +1,11 @@
-<mapper namespace="com.domain.PersonMapper" cacheNamespace="com.domain.PersonMapper">
+<mapper namespace="com.domain.PersonMapper">
 
+  <cache-ref namespace=""/>
+
+  <cache type="LRU" flushInterval="3600000" size="1000" readOnly="false">
+    <property name="" value=""/>
+  </cache>
+  
   <resultMap id="" type="" extends="">
     <constructor>
       <id column="" javaType="" jdbcType="" typeHandler=""/>
@@ -20,7 +26,7 @@
            mode="" scale="" resultMap=""/>
   </parameterMap>
 
-  <select id="selectAllPeople" cache="true" flushCache="false" parameterType="" resultType="" resultMap="">
+  <select id="selectAllPeople" useCache="true" flushCache="false" parameterType="" resultType="" resultMap="">
     select * from PERSON order by
     ${opts.order,javaType="",jdbcType="",typeHandler="",mode="",scale="",resultMap=""}
   </select>
