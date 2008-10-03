@@ -84,7 +84,7 @@ public class ResultObjectFactoryUtil {
   public static Object createObjectThroughFactory(Class clazz) throws InstantiationException,
       IllegalAccessException {
     
-    FactorySettings fs = getFactorySettings();
+    FactorySettings fs = getCurrentFactorySettings();
     
     Object obj;
     if (fs.getResultObjectFactory() == null) {
@@ -124,19 +124,52 @@ public class ResultObjectFactoryUtil {
     return obj;
   }
   
-  public static void setResultObjectFactory(ResultObjectFactory resultObjectFactory) {
-    getFactorySettings().setResultObjectFactory(resultObjectFactory);
+  /**
+   * This method pushes a new result object factory configuration onto the stack.
+   * We use a stack because the method can be called in a "nested" fashion if there
+   * are sub-selects.  Calls to this method should be equally balanced
+   * with calls to cleanupResultObjectFactory().
+   * 
+   * @param resultObjectFactory
+   * @param statementId
+   */
+  public static void setupResultObjectFactory(ResultObjectFactory resultObjectFactory, String statementId) {
+    Stack<FactorySettings> fss = (Stack<FactorySettings>) factorySettings.get();
+    if (fss == null) {
+    	fss = new Stack<FactorySettings>();
+    	factorySettings.set(fss);
+    }
+    
+    FactorySettings fs = new FactorySettings();
+    fs.setResultObjectFactory(resultObjectFactory);
+    fs.setStatementId(statementId);
+    fss.push(fs);
   }
   
-  public static void setStatementId(String statementId) {
-    getFactorySettings().setStatementId(statementId);
+  /**
+   * Removes the FactorySettings bound to the current thread to avoid classloader leak issues.
+   * This method pops the top item off the stack, and kills the stack if there
+   * are no items left.
+   */
+  public static void cleanupResultObjectFactory(){
+    Stack<FactorySettings> fss = (Stack<FactorySettings>) factorySettings.get();
+    if (!fss.empty()) {
+    	fss.pop();
+    }
+    
+    if (fss.empty()) {
+    	factorySettings.remove();
+    }
   }
   
-  private static FactorySettings getFactorySettings() {
-    FactorySettings fs = (FactorySettings) factorySettings.get();
-    if (fs == null) {
+  private static FactorySettings getCurrentFactorySettings() {
+    Stack<FactorySettings> fss = (Stack<FactorySettings>) factorySettings.get();
+    FactorySettings fs;
+    if (fss == null || fss.empty()) {
+      // this shouldn't happen if the SqlExecuter is behaving correctly
       fs = new FactorySettings();
-      factorySettings.set(fs);
+    } else {
+      fs = fss.peek();
     }
     
     return fs;

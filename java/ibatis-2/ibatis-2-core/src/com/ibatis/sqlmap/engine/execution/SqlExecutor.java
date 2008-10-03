@@ -81,6 +81,7 @@ public class SqlExecutor {
       rows = ps.getUpdateCount();
     } finally {
       closeStatement(statementScope.getSession(), ps);
+      cleanupResultObjectFactory();
     }
     return rows;
   }
@@ -193,6 +194,7 @@ public class SqlExecutor {
         closeResultSet(rs);
       } finally {
         closeStatement(statementScope.getSession(), ps);
+        cleanupResultObjectFactory();
       }
     }
 
@@ -232,6 +234,7 @@ public class SqlExecutor {
       retrieveOutputParameters(statementScope, cs, mappings, parameters, null);
     } finally {
       closeStatement(statementScope.getSession(), cs);
+      cleanupResultObjectFactory();
     }
     return rows;
   }
@@ -289,6 +292,7 @@ public class SqlExecutor {
         closeResultSet(rs);
       } finally {
         closeStatement(statementScope.getSession(), cs);
+        cleanupResultObjectFactory();
       }
     }
   }
@@ -676,7 +680,11 @@ public class SqlExecutor {
 
   private void setupResultObjectFactory(StatementScope statementScope) {
     SqlMapClientImpl client = (SqlMapClientImpl) statementScope.getSession().getSqlMapClient();
-    ResultObjectFactoryUtil.setResultObjectFactory(client.getResultObjectFactory());
-    ResultObjectFactoryUtil.setStatementId(statementScope.getStatement().getId());
+    ResultObjectFactoryUtil.setupResultObjectFactory(client.getResultObjectFactory(),
+        statementScope.getStatement().getId());
+  }
+  
+  private void cleanupResultObjectFactory() {
+    ResultObjectFactoryUtil.cleanupResultObjectFactory();
   }
 }

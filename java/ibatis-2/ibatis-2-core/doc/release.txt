@@ -5,7 +5,7 @@ Build Number: @buildNum@
 Next Version
 ------------------------------
 
- o 
+ o iBATIS-540 - cleanup result object factory after use to avoid leaks
 
 ------------------------------
  2.3.4
