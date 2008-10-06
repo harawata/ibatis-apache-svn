@@ -6,6 +6,13 @@
     <property name="" value=""/>
   </cache>
   
+  <parameterMap id="" type="">
+    <param property="id" javaType="" jdbcType="" typeHandler=""
+           mode="" scale="" resultMap=""/>
+    <param property="dept" javaType="" jdbcType="" typeHandler=""
+           mode="" scale="" resultMap=""/>
+  </parameterMap>
+
   <resultMap id="" type="" extends="">
     <constructor>
       <id column="" javaType="" jdbcType="" typeHandler=""/>
@@ -18,13 +25,6 @@
       <case value="" resultMap=""/>
     </discriminator>
   </resultMap>
-
-  <parameterMap id="" type="">
-    <param property="id" javaType="" jdbcType="" typeHandler=""
-           mode="" scale="" resultMap=""/>
-    <param property="dept" javaType="" jdbcType="" typeHandler=""
-           mode="" scale="" resultMap=""/>
-  </parameterMap>
 
   <select id="selectAllPeople" useCache="true" flushCache="false" parameterType="" resultType="" resultMap="">
     select * from PERSON order by

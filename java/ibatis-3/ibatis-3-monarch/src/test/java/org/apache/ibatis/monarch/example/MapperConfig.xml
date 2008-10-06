@@ -1,24 +1,26 @@
 <configuration>
 
+  <properties resource="" url="">
+    <property name="" value=""/>
+  </properties>
+
   <typeAliases>
     <typeAlias alias="" type=""/>
   </typeAliases>
+
+  <typeHandlers>
+    <typeHandler javaType="" jdbcType="" handler=""/>
+  </typeHandlers>
+
+  <objectFactory type="">
+    <property name="" value=""/>
+  </objectFactory>
 
   <plugins>
     <plugin interceptor="">
       <property name="" value=""/>
     </plugin>
   </plugins>
-
-  <objectFactory type="">
-    <property name="" value=""/>
-  </objectFactory>
-
-  <settings>
-    <setting name="" value=""/>
-    <setting name="" value=""/>
-    <setting name="" value=""/>
-  </settings>
 
   <environments default="development">
     <environment id="development">
@@ -30,10 +32,6 @@
       </dataSource>
     </environment>
   </environments>
-
-  <typeHandlers>
-    <typeHandler javaType="" jdbcType="" handler=""/>
-  </typeHandlers>
 
   <mappers>
     <mapper type="com.domain.PersonMapper"/>
