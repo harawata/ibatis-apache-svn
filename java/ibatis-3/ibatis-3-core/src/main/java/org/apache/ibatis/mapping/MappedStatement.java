@@ -16,6 +16,8 @@ public class MappedStatement {
   private Cache cache;
   private ParameterMap parameterMap;
   private List<ResultMap> resultMaps;
+  private boolean flushCacheRequired;
+  private boolean useCache;
 
   private MappedStatement() {
   }
@@ -31,6 +33,10 @@ public class MappedStatement {
       mappedStatement.parameterMap = new ParameterMap.Builder(configuration, "defaultParameterMap", Object.class, new ArrayList<ParameterMapping>()).build();
       mappedStatement.resultMaps = new ArrayList<ResultMap>();
       mappedStatement.timeout = configuration.getDefaultStatementTimeout();
+    }
+
+    public String id() {
+      return mappedStatement.id;
     }
 
     public Builder parameterMap(ParameterMap parameterMap) {
@@ -68,6 +74,16 @@ public class MappedStatement {
       return this;
     }
 
+    public Builder flushCacheRequired(boolean flushCacheRequired) {
+      mappedStatement.flushCacheRequired = flushCacheRequired;
+      return this;
+    }
+
+    public Builder useCache(boolean useCache) {
+      mappedStatement.useCache = useCache;
+      return this;
+    }
+
     public MappedStatement build() {
       assert mappedStatement.configuration != null;
       assert mappedStatement.id != null;
@@ -75,6 +91,7 @@ public class MappedStatement {
       mappedStatement.resultMaps = Collections.unmodifiableList(mappedStatement.resultMaps);
       return mappedStatement;
     }
+
   }
 
   public Configuration getConfiguration() {
@@ -115,6 +132,14 @@ public class MappedStatement {
 
   public Cache getCache() {
     return cache;
+  }
+
+  public boolean isFlushCacheRequired() {
+    return flushCacheRequired;
+  }
+
+  public boolean isUseCache() {
+    return useCache;
   }
 
   public String getSql(Object parameterObject) {

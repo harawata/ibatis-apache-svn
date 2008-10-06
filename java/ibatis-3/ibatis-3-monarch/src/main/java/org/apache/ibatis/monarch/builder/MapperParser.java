@@ -4,7 +4,6 @@ import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.reflection.MetaClass;
 import org.apache.ibatis.type.*;
 import org.apache.ibatis.xml.*;
-import org.apache.ibatis.cache.impl.PerpetualCache;
 import org.apache.ibatis.cache.Cache;
 
 import java.io.Reader;
@@ -50,41 +49,61 @@ public class MapperParser extends BaseParser {
   }
 
   //  <configuration namespace="com.domain.MapperClass" />
-  @Nodelet("/configuration")
+  @Nodelet("/mapper")
   public void configurationElement(NodeletContext context) throws Exception {
     namespace = context.getStringAttribute("namespace");
     if (namespace == null) {
-      throw new BuilderException("The configuration element requires a namespace attribute to be specified.");
+      throw new BuilderException("The mapper element requires a namespace attribute to be specified.");
     }
   }
 
   //  <cache type="LRU" flushInterval="3600000" size="1000" readOnly="false" />
-  @Nodelet("/configuration/cache")
-  public void cacheTemplateElement(NodeletContext context) throws Exception {
-    String type = context.getStringAttribute("type","LRU");
+  @Nodelet("/mapper/cache-ref")
+  public void cacheRefElement(NodeletContext context) throws Exception {
+    String ns = context.getStringAttribute("namespace");
+    if (ns == null) {
+      throw new BuilderException("cache-ref element requires a namespace attribute.");
+    }
+    cache = configuration.getCache(namespaceCacheId(ns));
+    if (cache == null) {
+      throw new BuilderException("No cache for namespace '"+ns+"' could be found.");
+    }
+  }
+
+  //  <cache type="LRU" flushInterval="3600000" size="1000" readOnly="false" />
+  @Nodelet("/mapper/cache")
+  public void cacheElement(NodeletContext context) throws Exception {
+    String type = context.getStringAttribute("perpetual","PERPETUAL");
     type = typeAliasRegistry.resolveAlias(type);
     Class typeClass = Class.forName(type);
 
-    long flushInterval = context.getLongAttribute("flushInterval",3600000L);
-    int size = context.getIntAttribute("size",1000);
+    String eviction = context.getStringAttribute("eviction","LRU");
+    eviction = typeAliasRegistry.resolveAlias(eviction);
+    Class evictionClass = Class.forName(eviction);
+
+    Long flushInterval = context.getLongAttribute("flushInterval",null);
+    Integer size = context.getIntAttribute("size",null);
     boolean readOnly = context.getBooleanAttribute("readOnly",false);
 
     Properties props = context.getChildrenAsProperties();
 
-    cache = new CacheBuilder(namespace)
-        .implementation(PerpetualCache.class)
-        .addDecorator(typeClass)
+    cache = new CacheBuilder(namespaceCacheId(namespace))
+        .implementation(typeClass)
+        .addDecorator(evictionClass)
         .clearInterval(flushInterval)
         .size(size)
         .readWrite(!readOnly)
         .properties(props)
         .build();
+
+    configuration.addCache(cache);
   }
 
   //  <parameterMap id="" type="">
   @Nodelet("/mapper/parameterMap")
   public void parameterMapElement(NodeletContext context) throws Exception {
     String id = context.getStringAttribute("id");
+    id = applyNamespace(id);
     String type = context.getStringAttribute("type");
     Class parameterClass = resolveClass(type);
     parameterMappings = new ArrayList<ParameterMapping>();
@@ -110,8 +129,11 @@ public class MapperParser extends BaseParser {
   @Nodelet("/mapper/resultMap")
   public void resultMapElement(NodeletContext context) throws Exception {
     String id = context.getStringAttribute("id");
+    id = applyNamespace(id);
+
     String type = context.getStringAttribute("type");
     String extend = context.getStringAttribute("extends");
+    extend = applyNamespace(extend);
 
     Class typeClass = resolveClass(type);
 
@@ -194,6 +216,7 @@ public class MapperParser extends BaseParser {
   public void resultMapDiscriminatorCaseElement(NodeletContext context) throws Exception {
     String value = context.getStringAttribute("value");
     String resultMap = context.getStringAttribute("resultMap");
+    resultMap = applyNamespace(resultMap);
     discriminatorMap.put(value, resultMap);
   }
 
@@ -245,8 +268,20 @@ public class MapperParser extends BaseParser {
     buildStatement(context,StatementType.STATEMENT);
   }
 
+  private String applyNamespace(String base) {
+    if (base == null) return null;
+    if (base.contains(".")) return base;
+    return namespace + "." + base;
+  }
+
+  private String namespaceCacheId(String ns) {
+    return ns + ".Cache";
+  }
+
   private void buildStatement(NodeletContext context, StatementType statementType) {
     String id = context.getStringAttribute("id");
+    id = applyNamespace(id);
+
     String sql = context.getStringBody();
     SqlSource sqlSource = new BasicSqlSource(sql);
 
@@ -266,13 +301,20 @@ public class MapperParser extends BaseParser {
 
   private void setStatementCache(NodeletContext context, MappedStatement.Builder statementBuilder) {
     boolean isSelect = "select".equals(context.getNode().getNodeName());
-    boolean useCache = context.getBooleanAttribute("useCache",isSelect);
+
     boolean flushCache = context.getBooleanAttribute("flushCache",!isSelect);
+    statementBuilder.flushCacheRequired(flushCache);
+
+    boolean useCache = context.getBooleanAttribute("useCache",isSelect);
+    statementBuilder.useCache(useCache);
+
     statementBuilder.cache(cache);
   }
 
   private void setStatementParameterMap(NodeletContext context, MappedStatement.Builder statementBuilder) {
     String parameterMap = context.getStringAttribute("parameterMap");
+    parameterMap = applyNamespace(parameterMap);
+
     String parameterType = context.getStringAttribute("parameterType");
     if (parameterMap != null) {
       statementBuilder.parameterMap(configuration.getParameterMap(parameterMap));
@@ -281,7 +323,7 @@ public class MapperParser extends BaseParser {
       Class parameterTypeClass = resolveClass(parameterType);
       ParameterMap.Builder inlineParameterMapBuilder = new ParameterMap.Builder(
           configuration,
-          context.getStringAttribute("id") + "-inline-parameter-map",
+          statementBuilder.id() + "-inline-parameter-map",
           parameterTypeClass,
           parameterMappings);
       statementBuilder.parameterMap(inlineParameterMapBuilder.build());
@@ -290,6 +332,8 @@ public class MapperParser extends BaseParser {
 
   private void setStatementResultMap(NodeletContext context, MappedStatement.Builder statementBuilder) {
     String resultMap = context.getStringAttribute("resultMap");
+    resultMap = applyNamespace(resultMap);
+
     String resultType = context.getStringAttribute("resultType");
     List<ResultMap> resultMaps = new ArrayList<ResultMap>();
     if (resultMap != null) {
@@ -301,7 +345,7 @@ public class MapperParser extends BaseParser {
       Class resultTypeClass = resolveClass(resultType);
       ResultMap.Builder inlineResultMapBuilder = new ResultMap.Builder(
           configuration,
-          context.getStringAttribute("id")+ "-inline-result-map",
+          statementBuilder.id() + "-inline-result-map",
           resultTypeClass,
           new ArrayList<ResultMapping>());
       resultMaps.add(inlineResultMapBuilder.build());
@@ -328,6 +372,8 @@ public class MapperParser extends BaseParser {
     String jdbcType = context.getStringAttribute("jdbcType");
     String nestedSelect = context.getStringAttribute("select");
     String nestedResultMap = context.getStringAttribute("resultMap");
+    nestedResultMap = applyNamespace(nestedResultMap);
+
     String typeHandler = context.getStringAttribute("typeHandler");
 
     Class resultType = resultMapBuilder.type();
@@ -361,6 +407,7 @@ public class MapperParser extends BaseParser {
     String javaType = context.getStringAttribute("javaType");
     String jdbcType = context.getStringAttribute("jdbcType");
     String resultMap = context.getStringAttribute("resultMap");
+    resultMap = applyNamespace(resultMap);
     String mode = context.getStringAttribute("mode");
     String typeHandler = context.getStringAttribute("typeHandler");
     Integer numericScale = context.getIntAttribute("numericScale",null);

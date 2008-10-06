@@ -26,10 +26,7 @@ public class CachingExecutor implements Executor {
   }
 
   public int update(MappedStatement ms, Object parameterObject) throws SQLException {
-    Cache cache = ms.getCache();
-    if (cache != null) {
-      tcm.clear(cache);
-    }
+    flushCacheIfRequired(ms);
     return delegate.update(ms, parameterObject);
   }
 
@@ -38,15 +35,20 @@ public class CachingExecutor implements Executor {
     if (ms != null) {
       Cache cache = ms.getCache();
       if (cache != null) {
+        flushCacheIfRequired(ms);
         cache.getReadWriteLock().readLock().lock();
         try {
-          CacheKey key = createCacheKey(ms, parameterObject, offset, limit);
-          if (cache.hasKey(key)) {
-            return (List) cache.getObject(key);
+          if (ms.isUseCache()) {
+            CacheKey key = createCacheKey(ms, parameterObject, offset, limit);
+            if (cache.hasKey(key)) {
+              return (List) cache.getObject(key);
+            } else {
+              List list = delegate.query(ms, parameterObject, offset, limit, resultHandler);
+              tcm.putObject(cache, key, list);
+              return list;
+            }
           } else {
-            List list = delegate.query(ms, parameterObject, offset, limit, resultHandler);
-            tcm.putObject(cache, key, list);
-            return list;
+            return delegate.query(ms, parameterObject, offset, limit, resultHandler);
           }
         } finally {
           cache.getReadWriteLock().readLock().unlock();
@@ -54,6 +56,13 @@ public class CachingExecutor implements Executor {
       }
     }
     return delegate.query(ms, parameterObject, offset, limit, resultHandler);
+  }
+
+  private void flushCacheIfRequired(MappedStatement ms) {
+    Cache cache = ms.getCache();
+    if (ms.isFlushCacheRequired()) {
+      tcm.clear(cache);
+    }
   }
 
   public List flushStatements() throws SQLException {

@@ -28,7 +28,9 @@ public class CacheBuilder {
   }
 
   public CacheBuilder addDecorator(Class<? extends Cache> decorator) {
-    this.decorators.add(decorator);
+    if (decorator != null) {
+      this.decorators.add(decorator);
+    }
     return this;
   }
 
