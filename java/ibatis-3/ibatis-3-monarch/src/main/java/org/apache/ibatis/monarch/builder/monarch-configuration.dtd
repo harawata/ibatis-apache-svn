@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<!ELEMENT configuration (properties?, typeAliases?, typeHandlers?, objectFactory?, plugins?, environments?, mappers)>
+<!ELEMENT configuration (properties?, settings?, typeAliases?, typeHandlers?, objectFactory?, plugins?, environments?, mappers)>
 
 <!ELEMENT properties (property*)>
 <!ATTLIST properties
@@ -10,6 +10,14 @@ url CDATA #IMPLIED
 
 <!ELEMENT property EMPTY>
 <!ATTLIST property
+name CDATA #REQUIRED
+value CDATA #REQUIRED
+>
+
+<!ELEMENT settings (setting*)>
+
+<!ELEMENT setting EMPTY>
+<!ATTLIST setting
 name CDATA #REQUIRED
 value CDATA #REQUIRED
 >

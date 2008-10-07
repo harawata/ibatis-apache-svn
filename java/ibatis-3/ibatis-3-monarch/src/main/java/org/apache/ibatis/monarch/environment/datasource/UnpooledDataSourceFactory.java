@@ -1,7 +1,6 @@
 package org.apache.ibatis.monarch.environment.datasource;
 
-import org.apache.ibatis.jdbc.PooledDataSource;
-import org.apache.ibatis.jdbc.DataSourceException;
+import org.apache.ibatis.jdbc.UnpooledDataSource;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.monarch.environment.EnvironmentException;
 
@@ -13,10 +12,10 @@ public class UnpooledDataSourceFactory implements DataSourceFactory {
   private static final String DRIVER_PROPERTY_PREFIX = "driver.";
   private static final int DRIVER_PROPERTY_PREFIX_LENGTH = DRIVER_PROPERTY_PREFIX.length();
 
-  protected PooledDataSource dataSource;
+  protected DataSource dataSource;
 
   public UnpooledDataSourceFactory() {
-    this.dataSource = new PooledDataSource();
+    this.dataSource = new UnpooledDataSource();
   }
 
   public void setProperties(Properties properties) {
@@ -36,7 +35,7 @@ public class UnpooledDataSourceFactory implements DataSourceFactory {
       }
     }
     if (driverProperties.size() > 0) {
-      dataSource.setDriverProperties(driverProperties);
+      metaDataSource.setValue("driverProperties",driverProperties);
     }
   }
 

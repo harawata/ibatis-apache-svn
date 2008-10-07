@@ -4,6 +4,10 @@
     <property name="" value=""/>
   </properties>
 
+  <settings>
+    <property name="" value=""/>
+  </settings>
+
   <typeAliases>
     <typeAlias alias="" type=""/>
   </typeAliases>

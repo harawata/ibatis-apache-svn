@@ -77,11 +77,40 @@ public class MapperConfigParser extends BaseParser {
     configuration.setObjectFactory(factory);
   }
 
+  //  <settings url="" resource="">
+  //    <setting name="" value=""/>
+  @Nodelet("/configuration/properties")
+  public void propertiesElement(NodeletContext context) throws Exception {
+    Properties defaults = context.getChildrenAsProperties();
+    String resource = context.getStringAttribute("resource");
+    String url = context.getStringAttribute("url");
+    if (resource != null && url != null) {
+      throw new BuilderException("The properties element cannot specify both a URL and a resource based property file reference.  Please specify one or the other.");
+    }
+    if (resource != null) {
+      defaults.putAll(Resources.getResourceAsProperties(resource));
+    } else if (url != null){
+      defaults.putAll(Resources.getUrlAsProperties(url));
+    }
+    Properties vars = configuration.getVariables();
+    if (vars != null) {
+      defaults.putAll(vars);
+    }
+    configuration.setVariables(defaults);
+  }
+
   //  <settings>
   //    <setting name="" value=""/>
   @Nodelet("/configuration/settings")
   public void settingsElement(NodeletContext context) throws Exception {
     Properties props = context.getChildrenAsProperties();
+    // Check that all settings are known to the configuration class
+    for (Map.Entry entry : props.entrySet()) {
+      MetaClass metaConfig = MetaClass.forClass(Configuration.class);
+      if (!metaConfig.hasSetter((String)entry.getKey())) {
+        throw new BuilderException("The setting " + entry.getKey() + " is not known.  Make sure you spelled it correctly (case sensitive).");
+      }
+    }
     configuration.setCacheEnabled(booleanValueOf(props.getProperty("cacheEnabled"),true));
     configuration.setLazyLoadingEnabled(booleanValueOf(props.getProperty("lazyLoadingEnabled"),true));
     configuration.setMultipleResultSetsEnabled(booleanValueOf(props.getProperty("multipleResultSetsEnabled"),true));
@@ -90,12 +119,6 @@ public class MapperConfigParser extends BaseParser {
     configuration.setGeneratedKeysEnabled(booleanValueOf(props.getProperty("generatedKeysEnabled"),false));
     configuration.setDefaultExecutorType(ExecutorType.valueOf(stringValueOf(props.getProperty("defaultExecutorType"),"SIMPLE")));
     configuration.setDefaultStatementTimeout(integerValueOf(props.getProperty("defaultStatementTimeout"),null));
-    for (Map.Entry entry : props.entrySet()) {
-      MetaClass metaConfig = MetaClass.forClass(Configuration.class);
-      if (!metaConfig.hasSetter((String)entry.getKey())) {
-        throw new BuilderException("The setting " + entry.getKey() + " is not known.  Make sure you spelled it correctly (case sensitive).");
-      }
-    }
   }
 
   //  <environments default="development">
