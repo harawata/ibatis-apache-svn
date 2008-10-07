@@ -7,8 +7,8 @@ import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.reflection.*;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.monarch.environment.Environment;
-import org.apache.ibatis.monarch.environment.transaction.TransactionManagerFactory;
-import org.apache.ibatis.monarch.environment.datasource.DataSourceFactory;
+import org.apache.ibatis.transaction.TransactionManagerFactory;
+import org.apache.ibatis.datasource.DataSourceFactory;
 
 import java.io.Reader;
 import java.util.*;

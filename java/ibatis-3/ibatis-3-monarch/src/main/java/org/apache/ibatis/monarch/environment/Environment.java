@@ -1,6 +1,6 @@
 package org.apache.ibatis.monarch.environment;
 
-import org.apache.ibatis.monarch.environment.transaction.TransactionManager;
+import org.apache.ibatis.transaction.TransactionManager;
 
 import javax.sql.DataSource;
 
