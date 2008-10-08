@@ -75,6 +75,11 @@ public class XmlSqlStatementParser {
 
     MappedStatement.Builder builder = new MappedStatement.Builder(configuration, id, sqlSource);
 
+    builder.useCache(true);
+    if (!"select".equals(context.getNode().getNodeName())) {
+      builder.flushCacheRequired(true);
+    }
+
     if (parameterMapName != null) {
       parameterMapName = mapParser.applyNamespace(parameterMapName);
       builder.parameterMap(configuration.getParameterMap(parameterMapName));

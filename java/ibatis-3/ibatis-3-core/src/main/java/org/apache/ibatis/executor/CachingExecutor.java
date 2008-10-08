@@ -58,13 +58,6 @@ public class CachingExecutor implements Executor {
     return delegate.query(ms, parameterObject, offset, limit, resultHandler);
   }
 
-  private void flushCacheIfRequired(MappedStatement ms) {
-    Cache cache = ms.getCache();
-    if (ms.isFlushCacheRequired()) {
-      tcm.clear(cache);
-    }
-  }
-
   public List flushStatements() throws SQLException {
     return delegate.flushStatements();
   }
@@ -92,6 +85,15 @@ public class CachingExecutor implements Executor {
 
   public void deferLoad(MappedStatement ms, MetaObject resultObject, String property, CacheKey key) {
     throw new UnsupportedOperationException("The CachingExecutor should not be used by result loaders and thus deferLoad() should never be called.");
+  }
+
+  private void flushCacheIfRequired(MappedStatement ms) {
+    Cache cache = ms.getCache();
+    if (cache != null) {
+      if (ms.isFlushCacheRequired()) {
+        tcm.clear(cache);
+      }
+    }
   }
 
 }
