@@ -21,7 +21,7 @@ public class Configuration {
   private boolean generatedKeysEnabled = false;
   private boolean useColumnLabel = true;
   private boolean cacheEnabled = true;
-
+  private Integer defaultStatementTimeout;
   private ExecutorType defaultExecutorType = ExecutorType.SIMPLE;
 
   private Properties variables = new Properties();
@@ -34,7 +34,6 @@ public class Configuration {
   private final Map<String, Cache> caches = new HashMap<String, Cache>();
   private final Map<String, ResultMap> resultMaps = new HashMap<String, ResultMap>();
   private final Map<String, ParameterMap> parameterMaps = new HashMap<String, ParameterMap>();
-  private Integer defaultStatementTimeout;
 
   public boolean isLazyLoadingEnabled() {
     return lazyLoadingEnabled;
