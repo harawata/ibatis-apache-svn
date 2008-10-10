@@ -2,11 +2,10 @@ Core
  * Improved Error Messages
 
 Monarch XML
- * DTD / Schema
  * Named parameter parsing/merging
  * Loosely bound cache id to instance
    - (perhaps use late-binding lookup proxies for all config elements?)
-mvn 
+
 Monarch API
  * Transaction Manager
  * Mapper Interface Binding

@@ -6,7 +6,7 @@ import org.apache.ibatis.type.*;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.reflection.*;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.monarch.environment.Environment;
+import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.transaction.TransactionManagerFactory;
 import org.apache.ibatis.datasource.DataSourceFactory;
 
@@ -15,9 +15,11 @@ import java.util.*;
 
 public class MapperConfigParser extends BaseParser {
 
+
   protected Reader reader;
   protected NodeletParser parser;
 
+  private String environment;
   private Environment.Builder environmentBuilder;
 
   public MapperConfigParser(Reader reader, Properties props) {
@@ -72,7 +74,7 @@ public class MapperConfigParser extends BaseParser {
   public void objectFactoryElement(NodeletContext context) throws Exception {
     String type = context.getStringAttribute("type");
     Properties properties = context.getChildrenAsProperties();
-    ObjectFactory factory = (ObjectFactory)resolveClass(type).newInstance();
+    ObjectFactory factory = (ObjectFactory) resolveClass(type).newInstance();
     factory.setProperties(properties);
     configuration.setObjectFactory(factory);
   }
@@ -89,7 +91,7 @@ public class MapperConfigParser extends BaseParser {
     }
     if (resource != null) {
       defaults.putAll(Resources.getResourceAsProperties(resource));
-    } else if (url != null){
+    } else if (url != null) {
       defaults.putAll(Resources.getUrlAsProperties(url));
     }
     Properties vars = configuration.getVariables();
@@ -107,64 +109,71 @@ public class MapperConfigParser extends BaseParser {
     // Check that all settings are known to the configuration class
     for (Map.Entry entry : props.entrySet()) {
       MetaClass metaConfig = MetaClass.forClass(Configuration.class);
-      if (!metaConfig.hasSetter((String)entry.getKey())) {
+      if (!metaConfig.hasSetter((String) entry.getKey())) {
         throw new BuilderException("The setting " + entry.getKey() + " is not known.  Make sure you spelled it correctly (case sensitive).");
       }
     }
-    configuration.setCacheEnabled(booleanValueOf(props.getProperty("cacheEnabled"),true));
-    configuration.setLazyLoadingEnabled(booleanValueOf(props.getProperty("lazyLoadingEnabled"),true));
-    configuration.setMultipleResultSetsEnabled(booleanValueOf(props.getProperty("multipleResultSetsEnabled"),true));
-    configuration.setUseColumnLabel(booleanValueOf(props.getProperty("useColumnLabel"),true));
-    configuration.setEnhancementEnabled(booleanValueOf(props.getProperty("enhancementEnabled"),false));
-    configuration.setGeneratedKeysEnabled(booleanValueOf(props.getProperty("generatedKeysEnabled"),false));
-    configuration.setDefaultExecutorType(ExecutorType.valueOf(stringValueOf(props.getProperty("defaultExecutorType"),"SIMPLE")));
-    configuration.setDefaultStatementTimeout(integerValueOf(props.getProperty("defaultStatementTimeout"),null));
+    configuration.setCacheEnabled(booleanValueOf(props.getProperty("cacheEnabled"), true));
+    configuration.setLazyLoadingEnabled(booleanValueOf(props.getProperty("lazyLoadingEnabled"), true));
+    configuration.setMultipleResultSetsEnabled(booleanValueOf(props.getProperty("multipleResultSetsEnabled"), true));
+    configuration.setUseColumnLabel(booleanValueOf(props.getProperty("useColumnLabel"), true));
+    configuration.setEnhancementEnabled(booleanValueOf(props.getProperty("enhancementEnabled"), false));
+    configuration.setGeneratedKeysEnabled(booleanValueOf(props.getProperty("generatedKeysEnabled"), false));
+    configuration.setDefaultExecutorType(ExecutorType.valueOf(stringValueOf(props.getProperty("defaultExecutorType"), "SIMPLE")));
+    configuration.setDefaultStatementTimeout(integerValueOf(props.getProperty("defaultStatementTimeout"), null));
   }
 
   //  <environments default="development">
   @Nodelet("/configuration/environments")
   public void environmentsElement(NodeletContext context) throws Exception {
-    String defaultEnv = context.getStringAttribute("default","default");
-    configuration.setDefaultEnvironment(defaultEnv);
+    if (environment == null) {
+      environment = context.getStringAttribute("default");
+    }
   }
 
   //  <environment id="development">
   @Nodelet("/configuration/environments/environment")
   public void environmentElement(NodeletContext context) throws Exception {
-    String id = context.getStringAttribute("id","default");
-    environmentBuilder = new Environment.Builder(id);
+    String id = context.getStringAttribute("id");
+    environmentBuilder = new Environment.Builder(id, null, null);
   }
 
   //  <transactionManager type="JDBC|JTA|EXTERNAL">
   //    <property name="" value=""/>
   @Nodelet("/configuration/environments/environment/transactionManager")
   public void transactionManagerElement(NodeletContext context) throws Exception {
-    String type = context.getStringAttribute("type");
-    Properties props = context.getChildrenAsProperties();
+    if (isSpecifiedEnvironment()) {
+      String type = context.getStringAttribute("type");
+      Properties props = context.getChildrenAsProperties();
 
-    TransactionManagerFactory factory = (TransactionManagerFactory) resolveClass(type).newInstance();
-    factory.setProperties(props);
+      TransactionManagerFactory factory = (TransactionManagerFactory) resolveClass(type).newInstance();
+      factory.setProperties(props);
 
-    environmentBuilder.transactionManager(factory.getTransactionManager());
+      environmentBuilder.transactionManager(factory.getTransactionManager());
+    }
   }
 
   //  <dataSource type="POOLED|UNPOOLED|JNDI">
   //    <property name="" value=""/>
   @Nodelet("/configuration/environments/environment/dataSource")
   public void dataSourceElement(NodeletContext context) throws Exception {
-    String type = context.getStringAttribute("type");
-    Properties props = context.getChildrenAsProperties();
+    if (isSpecifiedEnvironment()) {
+      String type = context.getStringAttribute("type");
+      Properties props = context.getChildrenAsProperties();
 
-    DataSourceFactory factory = (DataSourceFactory) resolveClass(type).newInstance();
-    factory.setProperties(props);
+      DataSourceFactory factory = (DataSourceFactory) resolveClass(type).newInstance();
+      factory.setProperties(props);
 
-    environmentBuilder.dataSource(factory.getDataSource());
+      environmentBuilder.dataSource(factory.getDataSource());
+    }
   }
 
   //  </environment>
   @Nodelet("/configuration/environments/environment/end()")
-  public void environmentClosingElement(NodeletContext context) throws Exception {
-    configuration.addEnvironment(environmentBuilder.build());
+  public void environmentElementEnd(NodeletContext context) throws Exception {
+    if (isSpecifiedEnvironment()) {
+      configuration.setEnvironment(environmentBuilder.build());
+    }
   }
 
   //  <typeHandler javaType="" jdbcType="" handler=""/>
@@ -197,8 +206,18 @@ public class MapperConfigParser extends BaseParser {
     } else {
       throw new BuilderException("A mapper element may only specify a url or resource, but not both.");
     }
-    MapperParser mapperParser = new MapperParser(reader,configuration);
+    MapperParser mapperParser = new MapperParser(reader, configuration);
     mapperParser.parse();
   }
 
+  private boolean isSpecifiedEnvironment() {
+    if (environment == null) {
+      throw new BuilderException("No environment specified.");
+    } else if (environmentBuilder.id() == null) {
+      throw new BuilderException("Environment requires an id attribute.");
+    } else if (environment.equals(environmentBuilder.id())) {
+      return true;
+    }
+    return false;
+  }
 }

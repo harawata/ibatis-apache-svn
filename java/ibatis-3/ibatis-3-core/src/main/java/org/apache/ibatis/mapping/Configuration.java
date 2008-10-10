@@ -15,6 +15,8 @@ import java.util.*;
 
 public class Configuration {
 
+  private Environment environment;
+
   private boolean lazyLoadingEnabled = true;
   private boolean enhancementEnabled = false;
   private boolean multipleResultSetsEnabled = true;
@@ -34,6 +36,14 @@ public class Configuration {
   private final Map<String, Cache> caches = new HashMap<String, Cache>();
   private final Map<String, ResultMap> resultMaps = new HashMap<String, ResultMap>();
   private final Map<String, ParameterMap> parameterMaps = new HashMap<String, ParameterMap>();
+
+  public Environment getEnvironment() {
+    return environment;
+  }
+
+  public void setEnvironment(Environment environment) {
+    this.environment = environment;
+  }
 
   public boolean isLazyLoadingEnabled() {
     return lazyLoadingEnabled;

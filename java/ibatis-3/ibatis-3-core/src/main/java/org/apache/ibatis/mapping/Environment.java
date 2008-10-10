@@ -1,4 +1,4 @@
-package org.apache.ibatis.monarch.environment;
+package org.apache.ibatis.mapping;
 
 import org.apache.ibatis.transaction.TransactionManager;
 
@@ -13,8 +13,10 @@ public class Environment {
 
   public static class Builder {
     private Environment environment = new Environment();
-    public Builder(String id) {
+    public Builder(String id, TransactionManager transactionManager, DataSource dataSource) {
       environment.id = id;
+      environment.transactionManager = transactionManager;
+      environment.dataSource = dataSource;
     }
     public Builder transactionManager(TransactionManager transactionManager) {
       environment.transactionManager = transactionManager;
@@ -24,9 +26,14 @@ public class Environment {
       environment.dataSource = dataSource;
       return this;
     }
+    public String id() {
+      return environment.id;
+    }
+
     public Environment build() {
       return environment;
     }
+
   }
 
   public String getId() {
