@@ -237,17 +237,15 @@ public class IbatorConfigurationParser {
             Node node) {
 
         Properties attributes = parseAttributes(node);
-        String generatorSet = attributes.getProperty("generatorSet"); //$NON-NLS-1$
+        String targetJRE = attributes.getProperty("targetJRE"); //$NON-NLS-1$
         String defaultModelType = attributes.getProperty("defaultModelType"); //$NON-NLS-1$
         String id = attributes.getProperty("id"); //$NON-NLS-1$
-        String introspectedTableImplementation = attributes.getProperty("introspectedTableImplementation"); //$NON-NLS-1$
 
         ModelType mt = defaultModelType == null ? null : ModelType
                 .getModelType(defaultModelType);
 
-        IbatorContext ibatorContext = new IbatorContext(generatorSet, mt);
+        IbatorContext ibatorContext = new IbatorContext(targetJRE, mt);
         ibatorContext.setId(id);
-        ibatorContext.setIntrospectedTableImplementation(introspectedTableImplementation);
 
         ibatorConfiguration.addIbatorContext(ibatorContext);
 
@@ -288,13 +286,8 @@ public class IbatorConfigurationParser {
                 .setSqlMapGeneratorConfiguration(sqlMapGeneratorConfiguration);
 
         Properties attributes = parseAttributes(node);
-        String type = attributes.getProperty("type"); //$NON-NLS-1$
         String targetPackage = attributes.getProperty("targetPackage"); //$NON-NLS-1$
         String targetProject = attributes.getProperty("targetProject"); //$NON-NLS-1$
-
-        if (StringUtility.stringHasValue(type)) {
-            sqlMapGeneratorConfiguration.setConfigurationType(type);
-        }
 
         sqlMapGeneratorConfiguration.setTargetPackage(targetPackage);
         sqlMapGeneratorConfiguration.setTargetProject(targetProject);
@@ -575,13 +568,8 @@ public class IbatorConfigurationParser {
                 .setJavaModelGeneratorConfiguration(javaModelGeneratorConfiguration);
 
         Properties attributes = parseAttributes(node);
-        String type = attributes.getProperty("type"); //$NON-NLS-1$
         String targetPackage = attributes.getProperty("targetPackage"); //$NON-NLS-1$
         String targetProject = attributes.getProperty("targetProject"); //$NON-NLS-1$
-
-        if (StringUtility.stringHasValue(type)) {
-            javaModelGeneratorConfiguration.setConfigurationType(type);
-        }
 
         javaModelGeneratorConfiguration.setTargetPackage(targetPackage);
         javaModelGeneratorConfiguration.setTargetProject(targetProject);

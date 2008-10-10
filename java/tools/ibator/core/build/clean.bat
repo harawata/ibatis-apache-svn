@@ -4,4 +4,4 @@ setlocal
 
 call setupCmdLine.bat
 
-ant clean
+call ant.bat clean

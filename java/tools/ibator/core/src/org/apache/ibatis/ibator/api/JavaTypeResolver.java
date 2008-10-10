@@ -18,8 +18,8 @@ package org.apache.ibatis.ibator.api;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.ibator.config.IbatorContext;
-import org.apache.ibatis.ibator.internal.db.ColumnDefinition;
 
 /**
  * This interface describes methods that are required in any Java type
@@ -63,15 +63,13 @@ public interface JavaTypeResolver {
 	void setWarnings(List<String> warnings);
 
 	/**
-	 * Initializes the ResolvedJavaType property of the ColumnDescription based
-	 * on the jdbc type, length, and scale of the column.
+	 * Calculates and returns the Java type that should be associated
+	 * with this column based on the jdbc type, length, and scale of the column.
 	 * 
-	 * @param cd the JDBC type will be used first to resolve the Java type. If
-	 *            the type cannot be resolved from this value, then we will try
-	 *            from the type name (which may be the qualified UDT from the
-	 *            database)
-     * @return true if the type can be resolved, otherwize false.  If false,
-     *   the column will be set to Object type and a warning will be issued.
+	 * @param introspectedColumn the column whose Java type needs to be
+	 *        calculated
+     * @return true the calculated type, or null if an unsupported data type.  If null,
+     *   the column should be set to Object type and a warning will be issued.
 	 */
-	boolean initializeResolvedJavaType(ColumnDefinition cd);
+    FullyQualifiedJavaType calculateJavaType(IntrospectedColumn introspectedColumn);
 }

@@ -192,9 +192,10 @@ public class Ibator {
 
         int totalSteps = 0;
 
-        for (IbatorContext ibatorContext : contextsToRun) {
-            totalSteps += ibatorContext.getTotalSteps();
-        }
+        // TODO...
+//        for (IbatorContext ibatorContext : contextsToRun) {
+//            totalSteps += ibatorContext.getTotalSteps();
+//        }
         
         callback.setNumberOfSubTasks(totalSteps);
         

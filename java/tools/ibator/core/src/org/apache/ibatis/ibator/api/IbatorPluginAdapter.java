@@ -25,7 +25,6 @@ import org.apache.ibatis.ibator.api.dom.java.TopLevelClass;
 import org.apache.ibatis.ibator.api.dom.xml.Document;
 import org.apache.ibatis.ibator.api.dom.xml.XmlElement;
 import org.apache.ibatis.ibator.config.IbatorContext;
-import org.apache.ibatis.ibator.internal.db.ColumnDefinition;
 
 /**
  * This class includes no-operation methods for almost every method in the
@@ -198,11 +197,11 @@ public abstract class IbatorPluginAdapter implements IbatorPlugin {
         return true;
     }
 
-    public boolean modelFieldGenerated(Field field, TopLevelClass topLevelClass, ColumnDefinition columnDefinition, IntrospectedTable introspectedTable) {
+    public boolean modelFieldGenerated(Field field, TopLevelClass topLevelClass, IntrospectedColumn introspectedColumn, IntrospectedTable introspectedTable) {
         return true;
     }
 
-    public boolean modelGetterMethodGenerated(Method method, TopLevelClass topLevelClass, ColumnDefinition columnDefinition, IntrospectedTable introspectedTable) {
+    public boolean modelGetterMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedColumn introspectedColumn, IntrospectedTable introspectedTable) {
         return true;
     }
 
@@ -214,7 +213,7 @@ public abstract class IbatorPluginAdapter implements IbatorPlugin {
         return true;
     }
 
-    public boolean modelSetterMethodGenerated(Method method, TopLevelClass topLevelClass, ColumnDefinition columnDefinition, IntrospectedTable introspectedTable) {
+    public boolean modelSetterMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedColumn introspectedColumn, IntrospectedTable introspectedTable) {
         return true;
     }
 

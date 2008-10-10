@@ -4,4 +4,4 @@ setlocal
 
 call setupCmdLine.bat
 
-ant -lib ../devlib
+call ant.bat buildIbator

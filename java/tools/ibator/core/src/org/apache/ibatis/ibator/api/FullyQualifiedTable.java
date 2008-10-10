@@ -65,7 +65,7 @@ public class FullyQualifiedTable {
      *  
      * @param introspectedTableName the actual table name as returned from DatabaseMetaData
      * 
-     * @param domainObjectName the configred domain object name for this table.
+     * @param domainObjectName the configured domain object name for this table.
      *  If nothing is configured, we'll build the domain object named based
      *  on the tableName or runtimeTableName.
      *  

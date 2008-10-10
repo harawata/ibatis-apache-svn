@@ -19,6 +19,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.ibatis.ibator.api.IbatorPluginAdapter;
+import org.apache.ibatis.ibator.api.IntrospectedColumn;
 import org.apache.ibatis.ibator.api.IntrospectedTable;
 import org.apache.ibatis.ibator.api.dom.OutputUtilities;
 import org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType;
@@ -27,7 +28,6 @@ import org.apache.ibatis.ibator.api.dom.java.Method;
 import org.apache.ibatis.ibator.api.dom.java.Parameter;
 import org.apache.ibatis.ibator.api.dom.java.TopLevelClass;
 import org.apache.ibatis.ibator.config.IbatorContext;
-import org.apache.ibatis.ibator.internal.db.ColumnDefinition;
 import org.apache.ibatis.ibator.internal.util.JavaBeansUtil;
 
 /**
@@ -64,13 +64,13 @@ public class EqualsHashCodePlugin extends IbatorPluginAdapter {
     public void setIbatorContext(IbatorContext ibatorContext) {
         super.setIbatorContext(ibatorContext);
         usingJava5 = "Java5".equalsIgnoreCase(ibatorContext //$NON-NLS-1$
-                .getConfiguredGeneratorSet());
+                .getTargetJRE());
     }
 
     @Override
     public boolean modelBaseRecordClassGenerated(TopLevelClass topLevelClass,
             IntrospectedTable introspectedTable) {
-        List<ColumnDefinition> columns;
+        List<IntrospectedColumn> columns;
         if (introspectedTable.getRules().generateRecordWithBLOBsClass()) {
             columns = introspectedTable.getNonBLOBColumns();
         } else {
@@ -121,7 +121,7 @@ public class EqualsHashCodePlugin extends IbatorPluginAdapter {
      * @param introspectedTable the table corresponding to this class 
      */
     protected void generateEquals(TopLevelClass topLevelClass,
-            List<ColumnDefinition> columnDefinitions,
+            List<IntrospectedColumn> introspectedColumns,
             IntrospectedTable introspectedTable) {
         Method method = new Method();
         method.setVisibility(JavaVisibility.PUBLIC);
@@ -157,9 +157,9 @@ public class EqualsHashCodePlugin extends IbatorPluginAdapter {
         method.addBodyLine(sb.toString());
 
         boolean first = true;
-        Iterator<ColumnDefinition> iter = columnDefinitions.iterator();
+        Iterator<IntrospectedColumn> iter = introspectedColumns.iterator();
         while (iter.hasNext()) {
-            ColumnDefinition columnDefinition = iter.next();
+            IntrospectedColumn introspectedColumn = iter.next();
 
             sb.setLength(0);
 
@@ -172,10 +172,10 @@ public class EqualsHashCodePlugin extends IbatorPluginAdapter {
             }
 
             String getterMethod = JavaBeansUtil.getGetterMethodName(
-                    columnDefinition.getJavaProperty(), columnDefinition
-                            .getResolvedJavaType().getFullyQualifiedJavaType());
+                    introspectedColumn.getJavaProperty(), introspectedColumn
+                            .getFullyQualifiedJavaType());
 
-            if (columnDefinition.getResolvedJavaType()
+            if (introspectedColumn
                     .getFullyQualifiedJavaType().isPrimitive()) {
                 sb.append("this."); //$NON-NLS-1$
                 sb.append(getterMethod);
@@ -215,7 +215,7 @@ public class EqualsHashCodePlugin extends IbatorPluginAdapter {
      * @param introspectedTable the table corresponding to this class 
      */
     protected void generateHashCode(TopLevelClass topLevelClass,
-            List<ColumnDefinition> columnDefinitions,
+            List<IntrospectedColumn> introspectedColumns,
             IntrospectedTable introspectedTable) {
         Method method = new Method();
         method.setVisibility(JavaVisibility.PUBLIC);
@@ -234,16 +234,16 @@ public class EqualsHashCodePlugin extends IbatorPluginAdapter {
         StringBuilder sb = new StringBuilder();
         boolean valueDeclared = false;
 
-        Iterator<ColumnDefinition> iter = columnDefinitions.iterator();
+        Iterator<IntrospectedColumn> iter = introspectedColumns.iterator();
         while (iter.hasNext()) {
-            ColumnDefinition columnDefinition = iter.next();
+            IntrospectedColumn introspectedColumn = iter.next();
 
 
-            FullyQualifiedJavaType fqjt = columnDefinition.getResolvedJavaType()
+            FullyQualifiedJavaType fqjt = introspectedColumn
                 .getFullyQualifiedJavaType();
 
             String getterMethod = JavaBeansUtil.getGetterMethodName(
-                    columnDefinition.getJavaProperty(), fqjt);
+                    introspectedColumn.getJavaProperty(), fqjt);
             
             if (fqjt.isPrimitive()) {
                 boolean cast = false;

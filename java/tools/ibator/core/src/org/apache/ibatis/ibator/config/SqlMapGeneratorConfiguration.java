@@ -22,7 +22,7 @@ import org.apache.ibatis.ibator.api.dom.xml.XmlElement;
 /**
  * @author Jeff Butler
  */
-public class SqlMapGeneratorConfiguration extends TypedPropertyHolder {
+public class SqlMapGeneratorConfiguration extends PropertyHolder {
 	private String targetPackage;
 
 	private String targetProject;
@@ -52,9 +52,6 @@ public class SqlMapGeneratorConfiguration extends TypedPropertyHolder {
 
     public XmlElement toXmlElement() {
         XmlElement answer = new XmlElement("sqlMapGenerator"); //$NON-NLS-1$
-        if (getConfigurationType() != null) {
-            answer.addAttribute(new Attribute("type", getConfigurationType())); //$NON-NLS-1$
-        }
         
         if (targetPackage != null) {
             answer.addAttribute(new Attribute("targetPackage", targetPackage)); //$NON-NLS-1$

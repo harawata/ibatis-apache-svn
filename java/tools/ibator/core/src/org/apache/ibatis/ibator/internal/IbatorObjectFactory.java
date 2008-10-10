@@ -18,24 +18,17 @@ package org.apache.ibatis.ibator.internal;
 import java.util.List;
 
 import org.apache.ibatis.ibator.api.CommentGenerator;
-import org.apache.ibatis.ibator.api.DAOGenerator;
 import org.apache.ibatis.ibator.api.FullyQualifiedTable;
 import org.apache.ibatis.ibator.api.IbatorPlugin;
 import org.apache.ibatis.ibator.api.IntrospectedTable;
-import org.apache.ibatis.ibator.api.JavaModelGenerator;
 import org.apache.ibatis.ibator.api.JavaTypeResolver;
-import org.apache.ibatis.ibator.api.SqlMapGenerator;
 import org.apache.ibatis.ibator.config.CommentGeneratorConfiguration;
-import org.apache.ibatis.ibator.config.DAOGeneratorConfiguration;
 import org.apache.ibatis.ibator.config.IbatorContext;
 import org.apache.ibatis.ibator.config.IbatorPluginConfiguration;
-import org.apache.ibatis.ibator.config.JavaModelGeneratorConfiguration;
 import org.apache.ibatis.ibator.config.JavaTypeResolverConfiguration;
-import org.apache.ibatis.ibator.config.SqlMapGeneratorConfiguration;
 import org.apache.ibatis.ibator.config.TableConfiguration;
-import org.apache.ibatis.ibator.internal.db.ColumnDefinitions;
-import org.apache.ibatis.ibator.internal.db.IntrospectedTableDefaultImpl;
-import org.apache.ibatis.ibator.internal.util.StringUtility;
+import org.apache.ibatis.ibator.generator.ibatis2.IntrospectedTableIbatis2Impl;
+import org.apache.ibatis.ibator.internal.types.JavaTypeResolverDefaultImpl;
 import org.apache.ibatis.ibator.internal.util.messages.Messages;
 
 /**
@@ -98,7 +91,7 @@ public class IbatorObjectFactory {
         if (config != null && config.getConfigurationType() != null) {
             type = config.getConfigurationType();
         } else {
-            type = context.getGeneratorSet().getJavaTypeResolverType();
+            type = JavaTypeResolverDefaultImpl.class.getName();
         }
         
 	    JavaTypeResolver answer = (JavaTypeResolver) createObject(type);
@@ -120,68 +113,6 @@ public class IbatorObjectFactory {
         return ibatorPlugin;
     }
 	
-	public static SqlMapGenerator createSqlMapGenerator(IbatorContext context,
-	        List<String> warnings) {
-        
-        SqlMapGeneratorConfiguration config = context.getSqlMapGeneratorConfiguration();
-        String type;
-
-        if (config.getConfigurationType() != null) {
-            type = config.getConfigurationType();
-        } else {
-            type = context.getGeneratorSet().getSqlMapGeneratorType();
-        }
-        
-	    SqlMapGenerator answer = (SqlMapGenerator) createObject(type);
-	    answer.setWarnings(warnings);
-
-	    answer.addConfigurationProperties(config.getProperties());
-        answer.setIbatorContext(context);
-	    
-	    return answer;
-	}
-	
-	public static JavaModelGenerator createJavaModelGenerator(IbatorContext context,
-			List<String> warnings) {
-
-        JavaModelGeneratorConfiguration config = context.getJavaModelGeneratorConfiguration();
-        String type;
-
-        if (config.getConfigurationType() != null) {
-            type = config.getConfigurationType();
-        } else {
-            type = context.getGeneratorSet().getJavaModelGeneratorType();
-        }
-        
-	    JavaModelGenerator answer = (JavaModelGenerator) createObject(type);
-	    answer.setWarnings(warnings);
-	    
-	    answer.addConfigurationProperties(config.getProperties());
-        answer.setIbatorContext(context);
-	    
-	    return answer;
-	}
-	
-	public static DAOGenerator createDAOGenerator(IbatorContext context,
-            List<String> warnings) {
-        
-        DAOGeneratorConfiguration config = context.getDaoGeneratorConfiguration();
-        
-	    if (config == null) {
-	        return null;
-	    }
-        
-        String type = context.getGeneratorSet().translateDAOGeneratorType(config.getConfigurationType());
-	    
-	    DAOGenerator answer = (DAOGenerator) createObject(type);
-	    answer.setWarnings(warnings);
-
-	    answer.addConfigurationProperties(config.getProperties());
-        answer.setIbatorContext(context);
-	    
-	    return answer;
-	}
-
     public static CommentGenerator createCommentGenerator(IbatorContext context) {
         
         CommentGeneratorConfiguration config = context.getCommentGeneratorConfiguration();
@@ -203,16 +134,14 @@ public class IbatorObjectFactory {
         return answer;
     }
     
-    public static IntrospectedTable createIntrospectedTable(TableConfiguration tableConfiguration, ColumnDefinitions columnDefinitions,
+    public static IntrospectedTable createIntrospectedTable(TableConfiguration tableConfiguration, 
             FullyQualifiedTable table, IbatorContext ibatorContext) {
 
-        String type = ibatorContext.getIntrospectedTableImplementation();
-        if (!StringUtility.stringHasValue(type)) {
-            type = IntrospectedTableDefaultImpl.class.getName();
-        }
+        // TODO - this method should decide what implementation based on some
+        // configuration setting (getting ready for iBATIS 3)
+        String type = IntrospectedTableIbatis2Impl.class.getName();
         
         IntrospectedTable answer = (IntrospectedTable) createObject(type);
-        answer.setColumnDefinitions(columnDefinitions);
         answer.setFullyQualifiedTable(table);
         answer.setIbatorContext(ibatorContext);
         answer.setTableConfiguration(tableConfiguration);

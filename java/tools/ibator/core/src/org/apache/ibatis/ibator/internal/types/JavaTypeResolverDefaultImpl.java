@@ -21,11 +21,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.ibatis.ibator.api.IntrospectedColumn;
 import org.apache.ibatis.ibator.api.JavaTypeResolver;
 import org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.ibator.config.IbatorContext;
 import org.apache.ibatis.ibator.config.PropertyRegistry;
-import org.apache.ibatis.ibator.internal.db.ColumnDefinition;
 import org.apache.ibatis.ibator.internal.util.StringUtility;
 
 /**
@@ -53,190 +53,154 @@ public class JavaTypeResolverDefaultImpl implements JavaTypeResolver {
 	 *  (non-Javadoc)
 	 * @see org.apache.ibatis.ibator.api.JavaTypeResolver#initializeResolvedJavaType(org.apache.ibatis.ibator.internal.db.ColumnDefinition)
 	 */
-	public boolean initializeResolvedJavaType(ColumnDefinition cd) {
+	public FullyQualifiedJavaType calculateJavaType(IntrospectedColumn introspectedColumn) {
 		boolean forceBigDecimals = StringUtility.isTrue(properties
 				.getProperty(PropertyRegistry.TYPE_RESOLVER_FORCE_BIG_DECIMALS));
-        boolean rc = true;
 
-		ResolvedJavaType type = new ResolvedJavaType();
-
-		switch (cd.getJdbcType()) {
+        FullyQualifiedJavaType answer;
+		switch (introspectedColumn.getJdbcType()) {
 		case Types.ARRAY:
-			type.setJdbcTypeName("ARRAY"); //$NON-NLS-1$
-			type.setFullyQualifiedJavaType(new FullyQualifiedJavaType(Object.class.getName()));
+			answer = new FullyQualifiedJavaType(Object.class.getName());
 			break;
 
 		case Types.BIGINT:
-			type.setJdbcTypeName("BIGINT"); //$NON-NLS-1$
-			type.setFullyQualifiedJavaType(new FullyQualifiedJavaType(Long.class.getName()));
+		    answer = new FullyQualifiedJavaType(Long.class.getName());
 			break;
 
 		case Types.BINARY:
-			type.setJdbcTypeName("BINARY"); //$NON-NLS-1$
-			type.setFullyQualifiedJavaType(new FullyQualifiedJavaType("byte[]")); //$NON-NLS-1$
+		    answer = new FullyQualifiedJavaType("byte[]"); //$NON-NLS-1$
 			break;
 
 		case Types.BIT:
-			type.setJdbcTypeName("BIT"); //$NON-NLS-1$
-			type.setFullyQualifiedJavaType(new FullyQualifiedJavaType(Boolean.class.getName()));
+		    answer = new FullyQualifiedJavaType(Boolean.class.getName());
 			break;
 
 		case Types.BLOB:
-			type.setJdbcTypeName("BLOB"); //$NON-NLS-1$
-			type.setFullyQualifiedJavaType(new FullyQualifiedJavaType("byte[]")); //$NON-NLS-1$
+		    answer = new FullyQualifiedJavaType("byte[]"); //$NON-NLS-1$
 			break;
 
 		case Types.BOOLEAN:
-			type.setJdbcTypeName("BOOLEAN"); //$NON-NLS-1$
-			type.setFullyQualifiedJavaType(new FullyQualifiedJavaType(Boolean.class.getName()));
+		    answer = new FullyQualifiedJavaType(Boolean.class.getName());
 			break;
 
 		case Types.CHAR:
-			type.setJdbcTypeName("CHAR"); //$NON-NLS-1$
-			type.setFullyQualifiedJavaType(new FullyQualifiedJavaType(String.class.getName()));
+		    answer = new FullyQualifiedJavaType(String.class.getName());
 			break;
 
 		case Types.CLOB:
-			type.setJdbcTypeName("CLOB"); //$NON-NLS-1$
-			type.setFullyQualifiedJavaType(new FullyQualifiedJavaType(String.class.getName()));
+		    answer = new FullyQualifiedJavaType(String.class.getName());
 			break;
 
 		case Types.DATALINK:
-			type.setJdbcTypeName("DATALINK"); //$NON-NLS-1$
-			type.setFullyQualifiedJavaType(new FullyQualifiedJavaType(Object.class.getName()));
+		    answer = new FullyQualifiedJavaType(Object.class.getName());
 			break;
 
 		case Types.DATE:
-			type.setJdbcTypeName("DATE"); //$NON-NLS-1$
-			type.setFullyQualifiedJavaType(new FullyQualifiedJavaType(Date.class.getName()));
+		    answer = new FullyQualifiedJavaType(Date.class.getName());
 			break;
 
 		case Types.DECIMAL:
-			type.setJdbcTypeName("DECIMAL"); //$NON-NLS-1$
-			if (cd.getScale() > 0 || cd.getLength() > 18 || forceBigDecimals) {
-				type.setFullyQualifiedJavaType(new FullyQualifiedJavaType(BigDecimal.class.getName()));
-			} else if (cd.getLength() > 9) {
-				type.setFullyQualifiedJavaType(new FullyQualifiedJavaType(Long.class.getName()));
-			} else if (cd.getLength() > 4) {
-				type.setFullyQualifiedJavaType(new FullyQualifiedJavaType(Integer.class.getName()));
+			if (introspectedColumn.getScale() > 0 || introspectedColumn.getLength() > 18 || forceBigDecimals) {
+			    answer = new FullyQualifiedJavaType(BigDecimal.class.getName());
+			} else if (introspectedColumn.getLength() > 9) {
+			    answer = new FullyQualifiedJavaType(Long.class.getName());
+			} else if (introspectedColumn.getLength() > 4) {
+			    answer = new FullyQualifiedJavaType(Integer.class.getName());
 			} else {
-				type.setFullyQualifiedJavaType(new FullyQualifiedJavaType(Short.class.getName()));
+			    answer = new FullyQualifiedJavaType(Short.class.getName());
 			}
 			break;
 
 		case Types.DISTINCT:
-			type.setJdbcTypeName("DISTINCT"); //$NON-NLS-1$
-			type.setFullyQualifiedJavaType(new FullyQualifiedJavaType(Object.class.getName()));
+		    answer = new FullyQualifiedJavaType(Object.class.getName());
 			break;
 
 		case Types.DOUBLE:
-			type.setJdbcTypeName("DOUBLE"); //$NON-NLS-1$
-			type.setFullyQualifiedJavaType(new FullyQualifiedJavaType(Double.class.getName()));
+		    answer = new FullyQualifiedJavaType(Double.class.getName());
 			break;
 
 		case Types.FLOAT:
-			type.setJdbcTypeName("FLOAT"); //$NON-NLS-1$
-			type.setFullyQualifiedJavaType(new FullyQualifiedJavaType(Double.class.getName()));
+		    answer = new FullyQualifiedJavaType(Double.class.getName());
 			break;
 
 		case Types.INTEGER:
-			type.setJdbcTypeName("INTEGER"); //$NON-NLS-1$
-			type.setFullyQualifiedJavaType(new FullyQualifiedJavaType(Integer.class.getName()));
+		    answer = new FullyQualifiedJavaType(Integer.class.getName());
 			break;
 
 		case Types.JAVA_OBJECT:
-			type.setJdbcTypeName("JAVA_OBJECT"); //$NON-NLS-1$
-			type.setFullyQualifiedJavaType(new FullyQualifiedJavaType(Object.class.getName()));
+		    answer = new FullyQualifiedJavaType(Object.class.getName());
 			break;
 
 		case Types.LONGVARBINARY:
-			type.setJdbcTypeName("LONGVARBINARY"); //$NON-NLS-1$
-			type.setFullyQualifiedJavaType(new FullyQualifiedJavaType("byte[]")); //$NON-NLS-1$
+		    answer = new FullyQualifiedJavaType("byte[]"); //$NON-NLS-1$
 			break;
 
 		case Types.LONGVARCHAR:
-			type.setJdbcTypeName("LONGVARCHAR"); //$NON-NLS-1$
-			type.setFullyQualifiedJavaType(new FullyQualifiedJavaType(String.class.getName()));
+		    answer = new FullyQualifiedJavaType(String.class.getName());
 			break;
 
 		case Types.NULL:
-			type.setJdbcTypeName("NULL"); //$NON-NLS-1$
-			type.setFullyQualifiedJavaType(new FullyQualifiedJavaType(Object.class.getName()));
+		    answer = new FullyQualifiedJavaType(Object.class.getName());
 			break;
 
 		case Types.NUMERIC:
-			type.setJdbcTypeName("NUMERIC"); //$NON-NLS-1$
-			if (cd.getScale() > 0 || cd.getLength() > 18 || forceBigDecimals) {
-				type.setFullyQualifiedJavaType(new FullyQualifiedJavaType(BigDecimal.class.getName()));
-			} else if (cd.getLength() > 9) {
-				type.setFullyQualifiedJavaType(new FullyQualifiedJavaType(Long.class.getName()));
-			} else if (cd.getLength() > 4) {
-				type.setFullyQualifiedJavaType(new FullyQualifiedJavaType(Integer.class.getName()));
+			if (introspectedColumn.getScale() > 0 || introspectedColumn.getLength() > 18 || forceBigDecimals) {
+			    answer = new FullyQualifiedJavaType(BigDecimal.class.getName());
+			} else if (introspectedColumn.getLength() > 9) {
+			    answer = new FullyQualifiedJavaType(Long.class.getName());
+			} else if (introspectedColumn.getLength() > 4) {
+			    answer = new FullyQualifiedJavaType(Integer.class.getName());
 			} else {
-				type.setFullyQualifiedJavaType(new FullyQualifiedJavaType(Short.class.getName()));
+			    answer = new FullyQualifiedJavaType(Short.class.getName());
 			}
 			break;
 
 		case Types.OTHER:
-			type.setJdbcTypeName("OTHER"); //$NON-NLS-1$
-			type.setFullyQualifiedJavaType(new FullyQualifiedJavaType(Object.class.getName()));
+		    answer = new FullyQualifiedJavaType(Object.class.getName());
 			break;
 
 		case Types.REAL:
-			type.setJdbcTypeName("REAL"); //$NON-NLS-1$
-			type.setFullyQualifiedJavaType(new FullyQualifiedJavaType(Float.class.getName()));
+		    answer = new FullyQualifiedJavaType(Float.class.getName());
 			break;
 
 		case Types.REF:
-			type.setJdbcTypeName("REF"); //$NON-NLS-1$
-			type.setFullyQualifiedJavaType(new FullyQualifiedJavaType(Object.class.getName()));
+		    answer = new FullyQualifiedJavaType(Object.class.getName());
 			break;
 
 		case Types.SMALLINT:
-			type.setJdbcTypeName("SMALLINT"); //$NON-NLS-1$
-			type.setFullyQualifiedJavaType(new FullyQualifiedJavaType(Short.class.getName()));
+		    answer = new FullyQualifiedJavaType(Short.class.getName());
 			break;
 
 		case Types.STRUCT:
-			type.setJdbcTypeName("STRUCT"); //$NON-NLS-1$
-			type.setFullyQualifiedJavaType(new FullyQualifiedJavaType(Object.class.getName()));
+		    answer = new FullyQualifiedJavaType(Object.class.getName());
 			break;
 
 		case Types.TIME:
-			type.setJdbcTypeName("TIME"); //$NON-NLS-1$
-			type.setFullyQualifiedJavaType(new FullyQualifiedJavaType(Date.class.getName()));
+		    answer = new FullyQualifiedJavaType(Date.class.getName());
 			break;
 
 		case Types.TIMESTAMP:
-			type.setJdbcTypeName("TIMESTAMP"); //$NON-NLS-1$
-			type.setFullyQualifiedJavaType(new FullyQualifiedJavaType(Date.class.getName()));
+		    answer = new FullyQualifiedJavaType(Date.class.getName());
 			break;
 
 		case Types.TINYINT:
-			type.setJdbcTypeName("TINYINT"); //$NON-NLS-1$
-			type.setFullyQualifiedJavaType(new FullyQualifiedJavaType(Byte.class.getName()));
+		    answer = new FullyQualifiedJavaType(Byte.class.getName());
 			break;
 
 		case Types.VARBINARY:
-			type.setJdbcTypeName("VARBINARY"); //$NON-NLS-1$
-			type.setFullyQualifiedJavaType(new FullyQualifiedJavaType("byte[]")); //$NON-NLS-1$
+		    answer = new FullyQualifiedJavaType("byte[]"); //$NON-NLS-1$
 			break;
 
 		case Types.VARCHAR:
-			type.setJdbcTypeName("VARCHAR"); //$NON-NLS-1$
-			type.setFullyQualifiedJavaType(new FullyQualifiedJavaType(String.class.getName()));
+		    answer = new FullyQualifiedJavaType(String.class.getName());
 			break;
 
 		default:
-            rc = false;
+		    answer = null;
             break;
 		}
 
-        if (rc) {
-            cd.setResolvedJavaType(type);
-        }
-        
-        return rc;
+        return answer;
 	}
 	
 	/* (non-Javadoc)

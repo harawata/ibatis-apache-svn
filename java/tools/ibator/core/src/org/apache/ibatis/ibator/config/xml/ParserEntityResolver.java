@@ -18,7 +18,7 @@ package org.apache.ibatis.ibator.config.xml;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.apache.ibatis.ibator.internal.sqlmap.XmlConstants;
+import org.apache.ibatis.ibator.generator.ibatis2.XmlConstants;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;

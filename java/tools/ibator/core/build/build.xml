@@ -95,8 +95,7 @@
     	deprecation="true" 
     	debug="true" 
     	source="1.5"
-    	target="1.5"
-        classpath="../devlib/ant.jar"/>
+    	target="1.5"/>
   </target>
 	  	
   <target name="build.ibator.jar" depends="build.compile">
@@ -151,8 +150,8 @@
     <javac destdir="${ibator.test.bin.dir}"
     	deprecation="true" 
     	debug="true"
-    	source="1.4"
-    	target="1.4">
+    	source="1.5"
+    	target="1.5">
       <src path="${basedir}/../test"/>
       <classpath>
         <pathelement location="${deploy.files}/ibator.jar"/>
@@ -184,7 +183,7 @@
     <mkdir dir="${reports.junit}"/>
   	<mkdir dir="${work.buildsupport}"/>
   	
-  	<!-- compile our build support classes -->
+    <!-- compile our build support classes -->
     <javac destdir="${work.buildsupport}"
     	deprecation="true" 
     	debug="true"
@@ -332,14 +331,14 @@
       </batchtest>
       <classpath>
       	<pathelement location="${generated.bin.dir.java2}"/>
-		<pathelement location="${basedir}/../devlib/ibatis-2.3.3.720.jar" />
-		<pathelement location="${basedir}/../devlib/hsqldb1.8.0.7.jar" />
-		<pathelement location="${basedir}/../devlib/commons-logging-1.1.1.jar" />
-		<pathelement location="${basedir}/../devlib/spring-beans-2.5.5.jar" />
-		<pathelement location="${basedir}/../devlib/spring-core-2.5.5.jar" />
-		<pathelement location="${basedir}/../devlib/spring-jdbc-2.5.5.jar" />
-		<pathelement location="${basedir}/../devlib/spring-orm-2.5.5.jar" />
-		<pathelement location="${basedir}/../devlib/spring-tx-2.5.5.jar" />
+        <pathelement location="${basedir}/../devlib/ibatis-2.3.3.720.jar" />
+        <pathelement location="${basedir}/../devlib/hsqldb1.8.0.7.jar" />
+        <pathelement location="${basedir}/../devlib/commons-logging-1.1.1.jar" />
+        <pathelement location="${basedir}/../devlib/spring-beans-2.5.5.jar" />
+        <pathelement location="${basedir}/../devlib/spring-core-2.5.5.jar" />
+        <pathelement location="${basedir}/../devlib/spring-jdbc-2.5.5.jar" />
+        <pathelement location="${basedir}/../devlib/spring-orm-2.5.5.jar" />
+        <pathelement location="${basedir}/../devlib/spring-tx-2.5.5.jar" />
       </classpath>
     </junit>
   </target>
@@ -354,14 +353,14 @@
       </batchtest>
       <classpath>
       	<pathelement location="${generated.bin.dir.java5}"/>
-		<pathelement location="${basedir}/../devlib/ibatis-2.3.3.720.jar" />
-		<pathelement location="${basedir}/../devlib/hsqldb1.8.0.7.jar" />
-		<pathelement location="${basedir}/../devlib/commons-logging-1.1.1.jar" />
-		<pathelement location="${basedir}/../devlib/spring-beans-2.5.5.jar" />
-		<pathelement location="${basedir}/../devlib/spring-core-2.5.5.jar" />
-		<pathelement location="${basedir}/../devlib/spring-jdbc-2.5.5.jar" />
-		<pathelement location="${basedir}/../devlib/spring-orm-2.5.5.jar" />
-		<pathelement location="${basedir}/../devlib/spring-tx-2.5.5.jar" />
+        <pathelement location="${basedir}/../devlib/ibatis-2.3.3.720.jar" />
+        <pathelement location="${basedir}/../devlib/hsqldb1.8.0.7.jar" />
+        <pathelement location="${basedir}/../devlib/commons-logging-1.1.1.jar" />
+        <pathelement location="${basedir}/../devlib/spring-beans-2.5.5.jar" />
+        <pathelement location="${basedir}/../devlib/spring-core-2.5.5.jar" />
+        <pathelement location="${basedir}/../devlib/spring-jdbc-2.5.5.jar" />
+        <pathelement location="${basedir}/../devlib/spring-orm-2.5.5.jar" />
+        <pathelement location="${basedir}/../devlib/spring-tx-2.5.5.jar" />
       </classpath>
     </junit>
   </target>
@@ -376,8 +375,8 @@
       </batchtest>
       <classpath>
       	<pathelement location="${generated.source.dir.java5}"/>
-		<pathelement location="${basedir}/../devlib/ibatis-2.3.1.710.jar" />
-		<pathelement location="${basedir}/../devlib/hsqldb1.8.0.7.jar" />
+        <pathelement location="${basedir}/../devlib/ibatis-2.3.1.710.jar" />
+        <pathelement location="${basedir}/../devlib/hsqldb1.8.0.7.jar" />
       </classpath>
     </junit>
 
@@ -390,8 +389,8 @@
       </batchtest>
       <classpath>
       	<pathelement location="${generated.source.dir.java2}"/>
-		<pathelement location="${basedir}/../devlib/ibatis-2.3.1.710.jar" />
-		<pathelement location="${basedir}/../devlib/hsqldb1.8.0.7.jar" />
+        <pathelement location="${basedir}/../devlib/ibatis-2.3.1.710.jar" />
+        <pathelement location="${basedir}/../devlib/hsqldb1.8.0.7.jar" />
       </classpath>
     </junit>
   </target>

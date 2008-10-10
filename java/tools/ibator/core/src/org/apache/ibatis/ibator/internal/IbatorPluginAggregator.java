@@ -22,6 +22,7 @@ import java.util.Properties;
 import org.apache.ibatis.ibator.api.GeneratedJavaFile;
 import org.apache.ibatis.ibator.api.GeneratedXmlFile;
 import org.apache.ibatis.ibator.api.IbatorPlugin;
+import org.apache.ibatis.ibator.api.IntrospectedColumn;
 import org.apache.ibatis.ibator.api.IntrospectedTable;
 import org.apache.ibatis.ibator.api.dom.java.Field;
 import org.apache.ibatis.ibator.api.dom.java.Interface;
@@ -30,7 +31,6 @@ import org.apache.ibatis.ibator.api.dom.java.TopLevelClass;
 import org.apache.ibatis.ibator.api.dom.xml.Document;
 import org.apache.ibatis.ibator.api.dom.xml.XmlElement;
 import org.apache.ibatis.ibator.config.IbatorContext;
-import org.apache.ibatis.ibator.internal.db.ColumnDefinition;
 
 /**
  * This class is for internal use only. It contains a list of plugins for the
@@ -861,11 +861,11 @@ public final class IbatorPluginAggregator implements IbatorPlugin {
         return rc;
     }
 
-    public boolean modelFieldGenerated(Field field, TopLevelClass topLevelClass, ColumnDefinition columnDefinition, IntrospectedTable introspectedTable) {
+    public boolean modelFieldGenerated(Field field, TopLevelClass topLevelClass, IntrospectedColumn introspectedColumn, IntrospectedTable introspectedTable) {
         boolean rc = true;
 
         for (IbatorPlugin plugin : plugins) {
-            if (!plugin.modelFieldGenerated(field, topLevelClass, columnDefinition, introspectedTable)) {
+            if (!plugin.modelFieldGenerated(field, topLevelClass, introspectedColumn, introspectedTable)) {
                 rc = false;
                 break;
             }
@@ -874,11 +874,11 @@ public final class IbatorPluginAggregator implements IbatorPlugin {
         return rc;
     }
 
-    public boolean modelGetterMethodGenerated(Method method, TopLevelClass topLevelClass, ColumnDefinition columnDefinition, IntrospectedTable introspectedTable) {
+    public boolean modelGetterMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedColumn introspectedColumn, IntrospectedTable introspectedTable) {
         boolean rc = true;
 
         for (IbatorPlugin plugin : plugins) {
-            if (!plugin.modelGetterMethodGenerated(method, topLevelClass, columnDefinition, introspectedTable)) {
+            if (!plugin.modelGetterMethodGenerated(method, topLevelClass, introspectedColumn, introspectedTable)) {
                 rc = false;
                 break;
             }
@@ -887,11 +887,11 @@ public final class IbatorPluginAggregator implements IbatorPlugin {
         return rc;
     }
 
-    public boolean modelSetterMethodGenerated(Method method, TopLevelClass topLevelClass, ColumnDefinition columnDefinition, IntrospectedTable introspectedTable) {
+    public boolean modelSetterMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedColumn introspectedColumn, IntrospectedTable introspectedTable) {
         boolean rc = true;
 
         for (IbatorPlugin plugin : plugins) {
-            if (!plugin.modelSetterMethodGenerated(method, topLevelClass, columnDefinition, introspectedTable)) {
+            if (!plugin.modelSetterMethodGenerated(method, topLevelClass, introspectedColumn, introspectedTable)) {
                 rc = false;
                 break;
             }

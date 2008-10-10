@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
-   Copyright 2006 The Apache Software Foundation
+   Copyright 2008 The Apache Software Foundation
  
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -54,8 +54,7 @@
                          javaModelGenerator, sqlMapGenerator, daoGenerator?, table+)>
 <!ATTLIST ibatorContext id ID #REQUIRED
   defaultModelType CDATA #IMPLIED
-  generatorSet CDATA #IMPLIED
-  introspectedTableImplementation CDATA #IMPLIED>
+  targetJRE CDATA #IMPLIED>
 
 <!--
   The jdbcConnection element is used to describe the JDBC connection that ibator
@@ -101,7 +100,6 @@
 -->
 <!ELEMENT javaModelGenerator (property*)>
 <!ATTLIST javaModelGenerator
-  type CDATA #IMPLIED
   targetPackage CDATA #REQUIRED
   targetProject CDATA #REQUIRED>
 
@@ -122,7 +120,6 @@
 -->
 <!ELEMENT sqlMapGenerator (property*)>
 <!ATTLIST sqlMapGenerator
-  type CDATA #IMPLIED
   targetPackage CDATA #REQUIRED
   targetProject CDATA #REQUIRED>
 
