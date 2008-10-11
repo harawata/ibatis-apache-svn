@@ -15,7 +15,7 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Modules
             RegisterAlias<SqlSourceWithParameter>();
             RegisterAlias<SqlSourceWithInlineParameter>();
             RegisterAlias<NVelocityDynamicEngine>();
-
+            RegisterAlias<IAccount>();
         }
     }
 }

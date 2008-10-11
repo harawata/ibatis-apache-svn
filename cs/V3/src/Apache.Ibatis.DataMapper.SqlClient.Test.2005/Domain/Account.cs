@@ -1,15 +1,58 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace Apache.Ibatis.DataMapper.SqlClient.Test.Domain
 {
-	/// <summary>
+    public interface IAccount
+    {
+        int Id { get; set; }
+        string FirstName { get; set; }
+        string LastName { get; set; }
+        string EmailAddress { get; set; }
+    }
+
+    public class BaseAccount: IAccount
+    {
+        private int id;
+        private string firstName;
+        private string lastName;
+        private string emailAddress;
+
+        #region IAccount Members
+
+        public int Id
+        {
+            get { return id; }
+            set { id = value; }
+        }
+
+        public string FirstName
+        {
+            get { return firstName; }
+            set { firstName = value; }
+        }
+
+        public string LastName
+        {
+            get { return lastName; }
+            set { lastName = value; }
+        }
+
+        public string EmailAddress
+        {
+            get { return emailAddress; }
+            set { emailAddress = value; }
+        }
+
+        #endregion
+    }
+
+    /// <summary>
 	/// Description résumée de Account.
 	/// </summary>
 	[Serializable]
-	public class Account
-	{
+	public class Account : IAccount
+    {
 		private int id;
 		private string _firstName;
 		private string _lastName;

@@ -45,6 +45,23 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
 
         #region Object Query tests
 
+        /// <summary>
+        /// Test use a statement with property subtitution
+        /// (JIRA 22)
+        /// </summary>
+        [Test]
+        public void TestInterface()
+        {
+            BaseAccount account = new BaseAccount();
+
+            dataMapper.QueryForObject<IAccount>("GetInterfaceAccount", 1, account);
+
+            Assert.AreEqual(1, account.Id, "account.Id");
+            Assert.AreEqual("Joe", account.FirstName, "account.FirstName");
+            Assert.AreEqual("Dalton", account.LastName, "account.LastName");
+            Assert.AreEqual("Joe.Dalton@somewhere.com", account.EmailAddress, "account.EmailAddress");
+        }
+
 
         [Test]
         public void QueryForDatatable_with_resulclass_should_work()

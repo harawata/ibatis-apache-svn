@@ -37,7 +37,7 @@ namespace Apache.Ibatis.DataMapper.DataExchange
 	public sealed class DotNetObjectDataExchange : BaseDataExchange
 	{
 
-        private readonly Type _parameterClass = null;
+        private readonly Type parameterClass = null;
 
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace Apache.Ibatis.DataMapper.DataExchange
         public DotNetObjectDataExchange(Type parameterClass, DataExchangeFactory dataExchangeFactory)
             : base(dataExchangeFactory)
 		{
-            _parameterClass = parameterClass;
+            this.parameterClass = parameterClass;
 		}
 
 		#region IDataExchange Members
@@ -60,7 +60,7 @@ namespace Apache.Ibatis.DataMapper.DataExchange
 		/// <param name="parameterObject"></param>
 		public override object GetData(ParameterProperty mapping, object parameterObject)
 		{
-		    if (mapping.IsComplexMemberName || _parameterClass!=parameterObject.GetType())
+		    if (mapping.IsComplexMemberName || parameterClass!=parameterObject.GetType())
 			{
 				return ObjectProbe.GetMemberValue(parameterObject, mapping.PropertyName,
 					DataExchangeFactory.AccessorFactory);
@@ -77,10 +77,11 @@ namespace Apache.Ibatis.DataMapper.DataExchange
 		public override void SetData(ref object target, ResultProperty mapping, object dataBaseValue)
 		{
 		    Type targetType = target.GetType();
-            if ((targetType != _parameterClass)
-                && !targetType.IsSubclassOf(_parameterClass)) 
+            if ((targetType != parameterClass)
+                && !targetType.IsSubclassOf(parameterClass)
+                && !parameterClass.IsAssignableFrom(targetType))
 			{
-                throw new ArgumentException("Could not set value of type '" + target.GetType() + "' in property '" + mapping.PropertyName + "' of type '" + _parameterClass + "'");
+                throw new ArgumentException("Could not set value in class '" + target.GetType() + "' for property '" + mapping.PropertyName + "' of type '" + mapping.MemberType + "'");
 			}
 			if ( mapping.IsComplexMemberName)
 			{
@@ -93,6 +94,8 @@ namespace Apache.Ibatis.DataMapper.DataExchange
                 mapping.Set(target, dataBaseValue);
 			}
 		}
+
+
 
 		/// <summary>
 		/// Sets the value to the parameter property.
@@ -112,7 +115,7 @@ namespace Apache.Ibatis.DataMapper.DataExchange
 			else
 			{
                 ISetAccessorFactory setAccessorFactory = DataExchangeFactory.AccessorFactory.SetAccessorFactory;
-                ISetAccessor _setAccessor = setAccessorFactory.CreateSetAccessor(_parameterClass, mapping.PropertyName);
+                ISetAccessor _setAccessor = setAccessorFactory.CreateSetAccessor(parameterClass, mapping.PropertyName);
 
                 _setAccessor.Set(target, dataBaseValue);
 			}
