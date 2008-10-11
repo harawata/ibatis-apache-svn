@@ -56,10 +56,11 @@ namespace Apache.Ibatis.DataMapper.Model.ParameterMapping
         /// Parse Inline ParameterMap
         /// </summary>
         /// <param name="dataExchangeFactory">The data exchange factory.</param>
+        /// <param name="statementId">The statement id.</param>
         /// <param name="statement">The statement.</param>
         /// <param name="sqlStatement">The SQL statement.</param>
         /// <returns>A new sql command text.</returns>
-        public SqlText ParseInlineParameterMap(DataExchangeFactory dataExchangeFactory, IStatement statement, string sqlStatement)
+        public static SqlText ParseInlineParameterMap(DataExchangeFactory dataExchangeFactory, string statementId, IStatement statement, string sqlStatement)
 		{
 			string newSql = sqlStatement;
             List<ParameterProperty> mappingList = new List<ParameterProperty>();
@@ -89,7 +90,7 @@ namespace Apache.Ibatis.DataMapper.Model.ParameterMapping
                        
                         //EmailAddress,column=string,type=string,dbType=Varchar,nullValue=no_email@provided.com
                         string parameter = toAnalyse.Substring(start + NEW_BEGIN_TOKEN.Length, end - start - NEW_BEGIN_TOKEN.Length);
-                        ParameterProperty mapping = NewParseMapping(parameter, parameterClassType, dataExchangeFactory, statement);
+                        ParameterProperty mapping = NewParseMapping(parameter, parameterClassType, dataExchangeFactory, statementId);
                         mappingList.Add(mapping);
                         newSqlBuffer.Append(prepend);
                         newSqlBuffer.Append(MARK_TOKEN);
@@ -133,7 +134,7 @@ namespace Apache.Ibatis.DataMapper.Model.ParameterMapping
 						    } 
 						    else 
 						    {
-                                mapping = NewParseMapping(token, parameterClassType, dataExchangeFactory, statement);
+                                mapping = NewParseMapping(token, parameterClassType, dataExchangeFactory, statementId);
 						    }															 
 
 						    mappingList.Add(mapping);
@@ -143,7 +144,7 @@ namespace Apache.Ibatis.DataMapper.Model.ParameterMapping
 						    token = (string)enumerator.Current;
 						    if (!PARAMETER_TOKEN.Equals(token)) 
 						    {
-							    throw new DataMapperException("Unterminated inline parameter in mapped statement (" + statement.Id + ").");
+							    throw new DataMapperException("Unterminated inline parameter in mapped statement (" + statementId + ").");
 						    }
 						    token = null;
 					    }
@@ -180,12 +181,12 @@ namespace Apache.Ibatis.DataMapper.Model.ParameterMapping
         /// <param name="token">The token.</param>
         /// <param name="parameterClassType">Type of the parameter class.</param>
         /// <param name="dataExchangeFactory">The data exchange factory.</param>
-        /// <param name="statement">The statement.</param>
+        /// <param name="statementId">The statement id.</param>
         /// <returns></returns>
         /// <example>
         /// #propertyName,type=string,dbype=Varchar,direction=Input,nullValue=N/A,handler=string#
         /// </example>
-        private ParameterProperty NewParseMapping(string token, Type parameterClassType, DataExchangeFactory dataExchangeFactory,IStatement statement) 
+        private static ParameterProperty NewParseMapping(string token, Type parameterClassType, DataExchangeFactory dataExchangeFactory, string statementId) 
 		{
             string propertyName = string.Empty;
             string type = string.Empty;
@@ -203,15 +204,15 @@ namespace Apache.Ibatis.DataMapper.Model.ParameterMapping
 
 			while (enumeratorParam.MoveNext()) 
 			{
-				string field = (string)enumeratorParam.Current;
+                string field = ((string)enumeratorParam.Current).Trim().ToLower();
 				if (enumeratorParam.MoveNext()) 
 				{
-					string value = (string)enumeratorParam.Current;
+                    string value = ((string)enumeratorParam.Current).Trim();
 					if ("type".Equals(field)) 
 					{
                         type = value;
 					} 
-					else if ("dbtype".Equals(field.ToLower())) 
+					else if ("dbtype".Equals(field)) 
 					{
                         dbType = value;
 					} 
@@ -219,7 +220,7 @@ namespace Apache.Ibatis.DataMapper.Model.ParameterMapping
 					{
                         direction = value;
 					}
-                    else if ("nullvalue".Equals(field.ToLower())) 
+                    else if ("nullvalue".Equals(field)) 
 					{
                         if (value.StartsWith("\"") && value.EndsWith("\""))
                         {
@@ -240,7 +241,7 @@ namespace Apache.Ibatis.DataMapper.Model.ParameterMapping
                     } 
 					else 
 					{
-						throw new DataMapperException("When parsing inline parameter for statement '"+statement.Id+"', can't recognize parameter mapping field: '" + field + "' in " + token+", check your inline parameter syntax.");
+						throw new DataMapperException("When parsing inline parameter for statement '"+statementId+"', can't recognize parameter mapping field: '" + field + "' in " + token+", check your inline parameter syntax.");
 					}
 				} 
 				else 
@@ -274,7 +275,7 @@ namespace Apache.Ibatis.DataMapper.Model.ParameterMapping
         /// #propertyName:dbType:nullValue#
         /// </example>
         /// <returns></returns>
-        private ParameterProperty OldParseMapping(string token, Type parameterClassType, DataExchangeFactory dataExchangeFactory) 
+        private static ParameterProperty OldParseMapping(string token, Type parameterClassType, DataExchangeFactory dataExchangeFactory) 
 		{
             string propertyName = string.Empty;
             string dbType = string.Empty;

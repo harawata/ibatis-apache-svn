@@ -291,7 +291,7 @@ namespace Apache.Ibatis.DataMapper.Model.Sql.Dynamic
 
 									if (handler.IsPostParseRequired) 
 									{
-                                        SqlText sqlText = paramParser.ParseInlineParameterMap(dataExchangeFactory, null, body.ToString());
+                                        SqlText sqlText = InlineParameterMapParser.ParseInlineParameterMap(dataExchangeFactory, statement.Id, null, body.ToString());
 										buffer.Append(sqlText.Text);
 										ParameterProperty[] mappings = sqlText.Parameters;
 										if (mappings != null) 

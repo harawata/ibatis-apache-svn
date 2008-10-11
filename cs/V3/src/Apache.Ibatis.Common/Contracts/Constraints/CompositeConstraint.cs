@@ -39,7 +39,7 @@ namespace Apache.Ibatis.Common.Contracts
         /// </summary>
         /// <param name="left">The left side.</param>
         /// <param name="right">The right side.</param>
-        public CompositeConstraint(
+        protected CompositeConstraint(
             BaseConstraint left, 
             BaseConstraint right)
         {

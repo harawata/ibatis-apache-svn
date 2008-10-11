@@ -23,15 +23,11 @@
  ********************************************************************************/
 #endregion
 
-#region Using
 using System;
 using System.Data;
 using System.Globalization;
 
-using System.Collections.Generic;
-using Apache.Ibatis.DataMapper.Model.ParameterMapping;
 using Apache.Ibatis.DataMapper.Model.ResultMapping;
-#endregion
 
 namespace Apache.Ibatis.DataMapper.TypeHandlers.Nullables
 {
@@ -72,14 +68,11 @@ namespace Apache.Ibatis.DataMapper.TypeHandlers.Nullables
         {
             int index = dataReader.GetOrdinal(mapping.ColumnName);
 
-            if (dataReader.IsDBNull(index) == true)
+            if (dataReader.IsDBNull(index))
             {
                 return DBNull.Value;
             }
-            else
-            {
-                return new decimal?( dataReader.GetDecimal(index) );
-            }
+            return new decimal?( dataReader.GetDecimal(index) );
         }
 
         /// <summary>
@@ -90,14 +83,11 @@ namespace Apache.Ibatis.DataMapper.TypeHandlers.Nullables
         /// <returns></returns>
         public override object GetValueByIndex(ResultProperty mapping, IDataReader dataReader)
         {
-            if (dataReader.IsDBNull(mapping.ColumnIndex) == true)
+            if (dataReader.IsDBNull(mapping.ColumnIndex))
             {
                 return DBNull.Value;
             }
-            else
-            {
-                return new decimal?( dataReader.GetDecimal(mapping.ColumnIndex) );
-            }
+            return new decimal?( dataReader.GetDecimal(mapping.ColumnIndex) );
         }
 
         /// <summary>

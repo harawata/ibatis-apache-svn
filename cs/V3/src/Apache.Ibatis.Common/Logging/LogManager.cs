@@ -38,7 +38,7 @@ namespace Apache.Ibatis.Common.Logging
 	{
 		private static ILoggerFactoryAdapter _adapter = null;
 		private static readonly object _loadLock = new object();
-		private static readonly string IBATIS_SECTION_LOGGING = "iBATIS/logging";
+		private const string IBATIS_SECTION_LOGGING = "iBATIS/logging";
 
         /// <summary>
         /// Initializes the <see cref="LogManager"/> class.

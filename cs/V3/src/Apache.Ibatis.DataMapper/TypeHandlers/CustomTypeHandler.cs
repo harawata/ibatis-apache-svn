@@ -34,7 +34,7 @@ namespace Apache.Ibatis.DataMapper.TypeHandlers
 	/// </summary>
     public sealed class CustomTypeHandler : BaseTypeHandler
 	{
-		private ITypeHandlerCallback _callback = null;
+		private readonly ITypeHandlerCallback _callback = null;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CustomTypeHandler"/> class.

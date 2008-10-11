@@ -33,7 +33,7 @@ namespace Apache.Ibatis.Common.Utilities.Objects
 	/// </summary>
     public class AbstractFactory : IFactory
     {
-        private Type _typeToCreate = null;
+        private readonly Type _typeToCreate = null;
         
         /// <summary>
         /// Initializes a new instance of the <see cref="AbstractFactory"/> class.

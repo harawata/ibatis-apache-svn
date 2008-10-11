@@ -34,9 +34,9 @@ namespace Apache.Ibatis.Common.Utilities.Objects.Members
     /// </summary>
     public sealed class ReflectionPropertySetAccessor : ISetAccessor
     {
-        private PropertyInfo _propertyInfo = null;
-		private string _propertyName = string.Empty;
-		private Type _targetType = null;
+        private readonly PropertyInfo _propertyInfo = null;
+		private readonly string _propertyName = string.Empty;
+		private readonly Type _targetType = null;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ReflectionPropertySetAccessor"/> class.

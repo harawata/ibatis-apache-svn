@@ -231,7 +231,7 @@ namespace Apache.Ibatis.DataMapper.Data
         /// <summary>
         /// Retrieves the set of IDataParameters appropriate for the stored procedure
         /// </summary>
-        /// <param name="dataSource">The data source.</param>
+        /// <param name="session">The session.</param>
         /// <param name="spName">the name of the stored procedure</param>
         /// <param name="includeReturnValueParameter">a bool value indicating whether the return value parameter should be included in the results</param>
         /// <returns>an array of IDataParameters</returns>

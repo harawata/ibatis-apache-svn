@@ -121,10 +121,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
                 handlers(this, eventArgs);            
                 return eventArgs.ParameterObject;
             }
-            else
-            {
-                return parameterObject;
-            }
+            return parameterObject;
         }
 
         /// <summary>
@@ -147,10 +144,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
                 handlers(this, eventArgs);
                 return (TType)eventArgs.ResultObject;
             }
-            else
-            {
-                return resultObject;
-            }
+            return resultObject;
         }
     }
 }

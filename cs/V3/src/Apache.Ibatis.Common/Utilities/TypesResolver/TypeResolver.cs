@@ -100,7 +100,7 @@ namespace Apache.Ibatis.Common.Utilities.TypesResolver
         /// If the supplied <paramref name="typeName"/> could not be resolved
         /// to a <see cref="System.Type"/>.
         /// </exception>
-        private Type ResolveGenericType(string typeName)
+        private static Type ResolveGenericType(string typeName)
         {
             Contract.Require.That(typeName, Is.Not.Null & Is.Not.Empty).When("retrieving argument typeName for ResolveType method");
 
@@ -108,37 +108,34 @@ namespace Apache.Ibatis.Common.Utilities.TypesResolver
             {
                 return null;
             }
-            else
+            GenericArgumentsInfo genericInfo = new GenericArgumentsInfo(typeName);
+            Type type = null;
+            try
             {
-                GenericArgumentsInfo genericInfo = new GenericArgumentsInfo(typeName);
-                Type type = null;
-                try
+                if (genericInfo.ContainsGenericArguments)
                 {
-                    if (genericInfo.ContainsGenericArguments)
+                    type = TypeUtils.ResolveType(genericInfo.GenericTypeName);
+                    if (!genericInfo.IsGenericDefinition)
                     {
-                        type = TypeUtils.ResolveType(genericInfo.GenericTypeName);
-                        if (!genericInfo.IsGenericDefinition)
+                        string[] unresolvedGenericArgs = genericInfo.GetGenericArguments();
+                        Type[] genericArgs = new Type[unresolvedGenericArgs.Length];
+                        for (int i = 0; i < unresolvedGenericArgs.Length; i++)
                         {
-                            string[] unresolvedGenericArgs = genericInfo.GetGenericArguments();
-                            Type[] genericArgs = new Type[unresolvedGenericArgs.Length];
-                            for (int i = 0; i < unresolvedGenericArgs.Length; i++)
-                            {
-                                genericArgs[i] = TypeUtils.ResolveType(unresolvedGenericArgs[i]);
-                            }
-                            type = type.MakeGenericType(genericArgs);
+                            genericArgs[i] = TypeUtils.ResolveType(unresolvedGenericArgs[i]);
                         }
+                        type = type.MakeGenericType(genericArgs);
                     }
                 }
-                catch (Exception ex)
-                {
-                    if (ex is TypeLoadException)
-                    {
-                        throw;
-                    }
-                    throw BuildTypeLoadException(typeName, ex);
-                }
-                return type;
             }
+            catch (Exception ex)
+            {
+                if (ex is TypeLoadException)
+                {
+                    throw;
+                }
+                throw BuildTypeLoadException(typeName, ex);
+            }
+            return type;
         }
 
         /// <summary>
@@ -157,7 +154,7 @@ namespace Apache.Ibatis.Common.Utilities.TypesResolver
         /// If the supplied <paramref name="typeName"/> could not be resolved
         /// to a <see cref="System.Type"/>.
         /// </exception>
-        private Type ResolveType(string typeName)
+        private static Type ResolveType(string typeName)
         {
             Contract.Require.That(typeName, Is.Not.Null & Is.Not.Empty).When("retrieving argument typeName for ResolveType method");
 
@@ -421,7 +418,7 @@ namespace Apache.Ibatis.Common.Utilities.TypesResolver
                  arguments.CopyTo(_unresolvedGenericArguments, 0);
            }
 
-            private IList<string> Parse(string args)
+            private static IList<string> Parse(string args)
             {
                 StringBuilder argument = new StringBuilder();
                 IList<string> arguments = new List<string>();
@@ -535,21 +532,18 @@ namespace Apache.Ibatis.Common.Utilities.TypesResolver
 
             #region Methods
 
-            private bool HasText(string target)
+            private static bool HasText(string target)
             {
                 if (target == null)
                 {
                     return false;
                 }
-                else
-                {
-                    return HasLength(target.Trim());
-                }
+                return HasLength(target.Trim());
             }
 
-            private bool HasLength(string target)
+            private static bool HasLength(string target)
             {
-                return (target != null && target.Length > 0);
+                return (!string.IsNullOrEmpty(target));
             }
 
             private void SplitTypeAndAssemblyNames(string originalTypeName)

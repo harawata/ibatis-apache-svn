@@ -23,15 +23,9 @@
  ********************************************************************************/
 #endregion
 
-
-#region Using
 using System;
 using System.Data;
-
-using System.Collections.Generic;
-using Apache.Ibatis.DataMapper.Model.ParameterMapping;
 using Apache.Ibatis.DataMapper.Model.ResultMapping;
-#endregion
 
 namespace Apache.Ibatis.DataMapper.TypeHandlers.Nullables
 {
@@ -72,14 +66,11 @@ namespace Apache.Ibatis.DataMapper.TypeHandlers.Nullables
         {
             int index = dataReader.GetOrdinal(mapping.ColumnName);
 
-            if (dataReader.IsDBNull(index) == true)
+            if (dataReader.IsDBNull(index))
             {
                 return DBNull.Value;
             }
-            else
-            {
-                return new UInt32?(Convert.ToUInt32(dataReader.GetValue(index)));
-            }
+            return new UInt32?(Convert.ToUInt32(dataReader.GetValue(index)));
         }
 
         /// <summary>
@@ -90,17 +81,14 @@ namespace Apache.Ibatis.DataMapper.TypeHandlers.Nullables
         /// <returns></returns>
         public override object GetValueByIndex(ResultProperty mapping, IDataReader dataReader)
         {
-            if (dataReader.IsDBNull(mapping.ColumnIndex) == true)
+            if (dataReader.IsDBNull(mapping.ColumnIndex))
             {
                 return DBNull.Value;
             }
-            else
-            {
-                return new UInt32?(Convert.ToUInt32(dataReader.GetValue(mapping.ColumnIndex)));
-            }
+            return new UInt32?(Convert.ToUInt32(dataReader.GetValue(mapping.ColumnIndex)));
         }
 
-        /// <summary>
+	    /// <summary>
         /// Retrieve ouput database value of an output parameter
         /// </summary>
         /// <param name="outputValue">ouput database value</param>

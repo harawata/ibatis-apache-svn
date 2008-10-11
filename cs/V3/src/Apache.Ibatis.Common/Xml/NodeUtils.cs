@@ -47,11 +47,8 @@ namespace Apache.Ibatis.Common.Xml
 			if (value == null) 
 			{
 				return string.Empty;
-			} 
-			else 
-			{
-				return value;
 			}
+		    return value;
 		}
 
 		/// <summary>
@@ -67,11 +64,8 @@ namespace Apache.Ibatis.Common.Xml
 			if (value == null) 
 			{
 				return def;
-			} 
-			else 
-			{
-				return value;
 			}
+		    return value;
 		}
 		/// <summary>
 		/// Searches for the attribute with the specified name in this attributes list.
@@ -86,11 +80,8 @@ namespace Apache.Ibatis.Common.Xml
 			if (value == null) 
 			{
 				return def;
-			} 
-			else 
-			{
-				return XmlConvert.ToByte(value);
 			}
+		    return XmlConvert.ToByte(value);
 		}
 
 		/// <summary>
@@ -106,11 +97,8 @@ namespace Apache.Ibatis.Common.Xml
 			if (value == null) 
 			{
 				return def;
-			} 
-			else 
-			{
-				return XmlConvert.ToInt32(value);
 			}
+		    return XmlConvert.ToInt32(value);
 		}
 
 		/// <summary>
@@ -126,11 +114,8 @@ namespace Apache.Ibatis.Common.Xml
 			if (value == null) 
 			{
 				return def;
-			} 
-			else 
-			{
-				return XmlConvert.ToBoolean(value);
 			}
+		    return XmlConvert.ToBoolean(value);
 		}
 
 		/// <summary>
@@ -171,8 +156,8 @@ namespace Apache.Ibatis.Common.Xml
 		/// <returns></returns>
 		public static string ParsePropertyTokens(string str, NameValueCollection  properties) 
 		{
-			string OPEN = "${";
-			string CLOSE = "}";
+			const string OPEN = "${";
+			const string CLOSE = "}";
 
 			string newString = str;
 			if (newString != null && properties != null) 

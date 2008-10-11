@@ -1,12 +1,6 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.IO;
 using Apache.Ibatis.DataMapper.SqlClient.Test.Domain;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
-using NVelocity;
-using NVelocity.App;
 
 namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
 {
@@ -258,36 +252,6 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
         {
             IList list = dataMapper.QueryForList("DynamicIsParameterPresent", null);
             Assert.AreEqual(5, list.Count);
-        }
-
-        /// <summary>
-        /// Test Iterate 
-        /// </summary>
-        [Test]
-        public void TestIterate()
-        {
-            IList parameters = new ArrayList();
-            parameters.Add(1);
-            parameters.Add(2);
-            parameters.Add(3);
-
-            IList list = dataMapper.QueryForList("DynamicIterate", parameters);
-            AssertAccount1((Account)list[0]);
-            Assert.AreEqual(3, list.Count);
-        }
-
-        /// <summary>
-        /// Test Iterate 2
-        /// </summary>
-        [Test]
-        public void TestIterate2()
-        {
-            Account account = new Account();
-            account.Ids = new int[3] { 1, 2, 3 };
-
-            IList list = dataMapper.QueryForList("DynamicIterate2", account);
-            AssertAccount1((Account)list[0]);
-            Assert.AreEqual(3, list.Count);
         }
 
         /// <summary>

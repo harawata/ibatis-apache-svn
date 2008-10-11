@@ -30,8 +30,8 @@ namespace Apache.Ibatis.Common.Utilities.Objects.Members
     /// </summary>
     public class AccessorFactory
     {
-        private ISetAccessorFactory _setAccessorFactory = null;
-        private IGetAccessorFactory _getAccessorFactory = null;
+        private readonly ISetAccessorFactory _setAccessorFactory = null;
+        private readonly IGetAccessorFactory _getAccessorFactory = null;
 
         /// <summary>
         /// The factory which build <see cref="ISetAccessor"/>

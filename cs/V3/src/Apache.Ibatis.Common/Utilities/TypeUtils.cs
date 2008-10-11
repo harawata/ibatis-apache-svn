@@ -38,7 +38,7 @@ namespace Apache.Ibatis.Common.Utilities
     /// Mainly for internal use within the framework.
     /// </p>
     /// </remarks>
-    public sealed class TypeUtils
+    public static class TypeUtils
     {
         #region Fields
 
@@ -48,19 +48,7 @@ namespace Apache.Ibatis.Common.Utilities
 
         #region Constructor (s) / Destructor
 
-		/// <summary>
-        /// Creates a new instance of the <see cref="Apache.Ibatis.Common.Utilities.TypeUtils"/> class.
-		/// </summary>
-		/// <remarks>
-		/// <p>
-		/// This is a utility class, and as such exposes no public constructors.
-		/// </p>
-		/// </remarks>
-        private TypeUtils()
-		{
-		}
-
-		#endregion
+        #endregion
 
         /// <summary>
         /// Resolves the supplied type name into a <see cref="System.Type"/>
@@ -155,27 +143,24 @@ namespace Apache.Ibatis.Common.Utilities
                     {
                         return new DateTime();
                     }
-                    else if (type == typeof(Decimal))
+                    if (type == typeof(Decimal))
                     {
                         return new Decimal();
-                    } 
-                    else if (type == typeof(Guid))
+                    }
+                    if (type == typeof(Guid))
                     {
                         return Guid.Empty;
                     }
-                    else if (type == typeof(TimeSpan))
+                    if (type == typeof(TimeSpan))
                     {
                         return new TimeSpan(0);
                     }
-                    else if (type.IsGenericType &&
+                    if (type.IsGenericType &&
                         typeof(Nullable<>).IsAssignableFrom(type.GetGenericTypeDefinition()))
                     {
                         return InstantiateNullableType(type);
                     }
-                    else
-                    {
-                        throw new NotImplementedException("Unable to instanciate value type");
-                    }
+                    throw new NotImplementedException("Unable to instanciate value type");
                 }
             }
 
@@ -271,16 +256,14 @@ namespace Apache.Ibatis.Common.Utilities
             {
                 return true;
             }
-            else // check if one of the derived interfaces is IList<>
+            // check if one of the derived interfaces is IList<>
+            Type[] interfaceTypes = type.GetInterfaces();
+            foreach (Type interfaceType in interfaceTypes)
             {
-                Type[] interfaceTypes = type.GetInterfaces();
-                foreach (Type interfaceType in interfaceTypes)
+                ret = IsImplementGenericIListInterface(interfaceType);
+                if (ret)
                 {
-                    ret = IsImplementGenericIListInterface(interfaceType);
-                    if (ret)
-                    {
-                        break;
-                    }
+                    break;
                 }
             }
             return ret;

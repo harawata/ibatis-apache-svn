@@ -53,25 +53,18 @@ namespace Apache.Ibatis.DataMapper.DataExchange
 		/// <param name="parameterObject"></param>
 		public override object GetData(ParameterProperty mapping, object parameterObject)
 		{
-            if (parameterObject!=null)
+		    if (parameterObject!=null)
             {
- 			    if (this.DataExchangeFactory.TypeHandlerFactory.IsSimpleType(parameterObject.GetType()))
+                if (DataExchangeFactory.TypeHandlerFactory.IsSimpleType(parameterObject.GetType()))
 			    {
 				    return parameterObject;
 			    }
-			    else
-			    {
-				    return ObjectProbe.GetMemberValue(parameterObject, mapping.PropertyName, this.DataExchangeFactory.AccessorFactory);
-			    }               
+                return ObjectProbe.GetMemberValue(parameterObject, mapping.PropertyName, DataExchangeFactory.AccessorFactory);
             }
-		    else
-            {
-                return null;
-            }
-
+		    return null;
 		}
 
-		/// <summary>
+	    /// <summary>
 		/// Sets the value to the result property.
 		/// </summary>
 		/// <param name="mapping"></param>
@@ -80,8 +73,8 @@ namespace Apache.Ibatis.DataMapper.DataExchange
 		public override void SetData(ref object target, ResultProperty mapping, object dataBaseValue)
 		{
 			ObjectProbe.SetMemberValue(target, mapping.PropertyName, dataBaseValue, 
-				this.DataExchangeFactory.ObjectFactory,
-				this.DataExchangeFactory.AccessorFactory);
+				DataExchangeFactory.ObjectFactory,
+				DataExchangeFactory.AccessorFactory);
 		}
 
 		/// <summary>
@@ -94,8 +87,8 @@ namespace Apache.Ibatis.DataMapper.DataExchange
 		public override void SetData(ref object target, ParameterProperty mapping, object dataBaseValue)
 		{
 			ObjectProbe.SetMemberValue(target, mapping.PropertyName, dataBaseValue, 
-				this.DataExchangeFactory.ObjectFactory,
-				this.DataExchangeFactory.AccessorFactory);
+				DataExchangeFactory.ObjectFactory,
+				DataExchangeFactory.AccessorFactory);
 		}
 
 		#endregion

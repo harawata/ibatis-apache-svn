@@ -220,35 +220,6 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       </dynamic>
     </statement>
 
-    <statement id="DynamicIterate"
-					parameterClass="list"
-					resultClass="Account">
-      select
-      Account_ID			as Id,
-      Account_FirstName	as FirstName,
-      Account_LastName	as LastName,
-      Account_Email		as EmailAddress
-      from Accounts
-      WHERE Account_ID IN
-      <iterate open="(" close=")" conjunction=",">
-        #[]#
-      </iterate>
-    </statement>
-
-    <statement id="DynamicIterate2"
-					parameterClass="Account"
-					resultClass="Account">
-      select
-      Account_ID			as Id,
-      Account_FirstName	as FirstName,
-      Account_LastName	as LastName,
-      Account_Email		as EmailAddress
-      from Accounts
-      WHERE Account_ID IN
-      <iterate property="Ids" open="(" close=")"  conjunction="," >
-        #Ids[]#
-      </iterate>
-    </statement>
 
     <statement id="MultiDynamicIterate"
             parameterClass="list"
@@ -511,6 +482,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       order by Account_LastName
     </statement>
 
+   
     <insert id="SelectKeyWithDynamicSql">
       INSERT INTO $AccountsTableName$
       (

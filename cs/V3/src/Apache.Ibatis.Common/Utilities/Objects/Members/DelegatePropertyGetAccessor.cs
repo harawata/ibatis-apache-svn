@@ -38,12 +38,12 @@ namespace Apache.Ibatis.Common.Utilities.Objects.Members
     {
         private delegate object GetValue(object instance);
 
-        private GetValue _get = null;
+        private readonly GetValue _get = null;
          /// <summary>
         /// The property type
         /// </summary>
-        private Type _propertyType = null;
-        private bool _canRead = false;
+        private readonly Type _propertyType = null;
+        private readonly bool _canRead = false;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DelegatePropertyGetAccessor"/> class
@@ -70,36 +70,33 @@ namespace Apache.Ibatis.Common.Utilities.Objects.Members
 					string.Format("Property \"{0}\" does not exist for type "
                     + "{1}.", propertyName, targetType));
 			}
-			else
-			{
-                _propertyType = propertyInfo.PropertyType;
-                _canRead = propertyInfo.CanRead;
+            _propertyType = propertyInfo.PropertyType;
+            _canRead = propertyInfo.CanRead;
 
-                this.nullInternal = this.GetNullInternal(_propertyType);
+            nullInternal = GetNullInternal(_propertyType);
 
-    			if (propertyInfo.CanRead)
-				{
-					DynamicMethod dynamicMethod = new DynamicMethod("GetImplementation", typeof(object), new Type[] { typeof(object) }, this.GetType().Module, true);
-					ILGenerator ilgen = dynamicMethod.GetILGenerator();
+            if (propertyInfo.CanRead)
+            {
+                DynamicMethod dynamicMethod = new DynamicMethod("GetImplementation", typeof(object), new Type[] { typeof(object) }, GetType().Module, true);
+                ILGenerator ilgen = dynamicMethod.GetILGenerator();
 
-                    // Emit the IL for get access. 
-                    MethodInfo targetGetMethod = propertyInfo.GetGetMethod();
+                // Emit the IL for get access. 
+                MethodInfo targetGetMethod = propertyInfo.GetGetMethod();
 
-                    ilgen.DeclareLocal(typeof(object));
-                    ilgen.Emit(OpCodes.Ldarg_0);	//Load the first argument,(target object)
-                    ilgen.Emit(OpCodes.Castclass, targetObjectType);	//Cast to the source type
-                    ilgen.EmitCall(OpCodes.Callvirt, targetGetMethod, null); //Get the property value
-                    if (targetGetMethod.ReturnType.IsValueType)
-                    {
-                        ilgen.Emit(OpCodes.Box, targetGetMethod.ReturnType); //Box if necessary
-                    }
-                    ilgen.Emit(OpCodes.Stloc_0); //Store it
-                    ilgen.Emit(OpCodes.Ldloc_0);
-                    ilgen.Emit(OpCodes.Ret);
+                ilgen.DeclareLocal(typeof(object));
+                ilgen.Emit(OpCodes.Ldarg_0);	//Load the first argument,(target object)
+                ilgen.Emit(OpCodes.Castclass, targetObjectType);	//Cast to the source type
+                ilgen.EmitCall(OpCodes.Callvirt, targetGetMethod, null); //Get the property value
+                if (targetGetMethod.ReturnType.IsValueType)
+                {
+                    ilgen.Emit(OpCodes.Box, targetGetMethod.ReturnType); //Box if necessary
+                }
+                ilgen.Emit(OpCodes.Stloc_0); //Store it
+                ilgen.Emit(OpCodes.Ldloc_0);
+                ilgen.Emit(OpCodes.Ret);
   
-					_get = (GetValue)dynamicMethod.CreateDelegate(typeof(GetValue));
-				}
-			}
+                _get = (GetValue)dynamicMethod.CreateDelegate(typeof(GetValue));
+            }
 		}
             
         #region IAccessor Members

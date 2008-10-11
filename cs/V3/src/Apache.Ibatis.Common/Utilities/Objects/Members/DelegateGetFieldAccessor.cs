@@ -38,18 +38,18 @@ namespace Apache.Ibatis.Common.Utilities.Objects.Members
     {
         private delegate object GetValue(object instance);
 
-        private GetValue _get = null;
+        private readonly GetValue _get = null;
         /// <summary>
         /// The field name
         /// </summary>
-        private string _fieldName = string.Empty;
+        private readonly string _fieldName = string.Empty;
         /// <summary>
         /// The class parent type
         /// </summary>
-        private Type _fieldType = null;
+        private readonly Type _fieldType = null;
 
          /// <summary>
-        /// Initializes a new instance of the <see cref="T:DelegateFieldGetAccessor"/> class
+        /// Initializes a new instance of the <see cref="DelegateFieldGetAccessor"/> class
         /// for field get access via DynamicMethod.
         /// </summary>
         /// <param name="targetObjectType">Type of the target object.</param>
@@ -68,30 +68,27 @@ namespace Apache.Ibatis.Common.Utilities.Objects.Members
                     string.Format("Field \"{0}\" does not exist for type "
                     + "{1}.", fieldName, targetObjectType));
             }
-            else
-            {
-                _fieldType = fieldInfo.FieldType;
-                this.nullInternal = this.GetNullInternal(_fieldType);
+             _fieldType = fieldInfo.FieldType;
+             nullInternal = GetNullInternal(_fieldType);
 
-                DynamicMethod dynamicMethodGet = new DynamicMethod("GetImplementation", typeof(object), new Type[] { typeof(object) }, this.GetType().Module, false);
-                ILGenerator ilgen = dynamicMethodGet.GetILGenerator();
+             DynamicMethod dynamicMethodGet = new DynamicMethod("GetImplementation", typeof(object), new Type[] { typeof(object) }, GetType().Module, false);
+             ILGenerator ilgen = dynamicMethodGet.GetILGenerator();
 
-                // Emit the IL for get access. 
+             // Emit the IL for get access. 
 
-                // We need a reference to the current instance (stored in local argument index 0) 
-                // so Ldfld can load from the correct instance (this one).
-                ilgen.Emit(OpCodes.Ldarg_0);
-                ilgen.Emit(OpCodes.Ldfld, fieldInfo);
-                if (_fieldType.IsValueType)
-                {
-                    // Now, we execute the box opcode, which pops the value of field 'x',
-                    // returning a reference to the filed value boxed as an object.
-                    ilgen.Emit(OpCodes.Box, fieldInfo.FieldType);
-                }
-                ilgen.Emit(OpCodes.Ret);
-                _get = (GetValue)dynamicMethodGet.CreateDelegate(typeof(GetValue));              
-            }
-		}
+             // We need a reference to the current instance (stored in local argument index 0) 
+             // so Ldfld can load from the correct instance (this one).
+             ilgen.Emit(OpCodes.Ldarg_0);
+             ilgen.Emit(OpCodes.Ldfld, fieldInfo);
+             if (_fieldType.IsValueType)
+             {
+                 // Now, we execute the box opcode, which pops the value of field 'x',
+                 // returning a reference to the filed value boxed as an object.
+                 ilgen.Emit(OpCodes.Box, fieldInfo.FieldType);
+             }
+             ilgen.Emit(OpCodes.Ret);
+             _get = (GetValue)dynamicMethodGet.CreateDelegate(typeof(GetValue));
+        }
 
         #region IAccessor Members
 

@@ -41,16 +41,16 @@ namespace Apache.Ibatis.Common.Utilities.Objects.Members
         /// <summary>
         /// The field name
         /// </summary>
-        private string _fieldName = string.Empty;        
+        private readonly string _fieldName = string.Empty;        
         /// <summary>
         /// The class parent type
         /// </summary>
-        private Type _fieldType = null;
+        private readonly Type _fieldType = null;
         /// <summary>
         /// The IL emitted IGet
         /// </summary>
         private IGet _emittedGet = null;
-        private Type _targetType = null;
+        private readonly Type _targetType = null;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EmitFieldGetAccessor"/> class.
@@ -73,11 +73,8 @@ namespace Apache.Ibatis.Common.Utilities.Objects.Members
 					string.Format("Field \"{0}\" does not exist for type "
 					+ "{1}.", fieldName, targetObjectType));
 			}
-			else
-			{
-				_fieldType = fieldInfo.FieldType;
-                this.EmitIL(assemblyBuilder, moduleBuilder);
-			}
+            _fieldType = fieldInfo.FieldType;
+            EmitIL(assemblyBuilder, moduleBuilder);
 		}
 
         /// <summary>
@@ -94,12 +91,12 @@ namespace Apache.Ibatis.Common.Utilities.Objects.Members
             // Create a new instance
             _emittedGet = assemblyBuilder.CreateInstance("GetFor" + _targetType.FullName + _fieldName) as IGet;
 
-            this.nullInternal = this.GetNullInternal(_fieldType);
+            nullInternal = GetNullInternal(_fieldType);
 
             if (_emittedGet == null)
             {
                 throw new NotSupportedException(
-                    string.Format("Unable to create a get field accessor for '{0}' field on class  '{0}'.", _fieldName, _fieldType));
+                    string.Format("Unable to create a get field accessor for '{0}' field on class  '{1}'.", _fieldName, _fieldType));
             }
         }
 

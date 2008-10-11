@@ -33,7 +33,7 @@ namespace Apache.Ibatis.DataMapper.DataExchange
 	/// </summary>
 	public abstract class BaseDataExchange : IDataExchange
 	{
-		private DataExchangeFactory _dataExchangeFactory = null;
+		private readonly DataExchangeFactory _dataExchangeFactory = null;
 
 		/// <summary>
 		/// Getter for the factory that created this object
@@ -47,7 +47,7 @@ namespace Apache.Ibatis.DataMapper.DataExchange
 		/// Constructor
 		/// </summary>
 		/// <param name="dataExchangeFactory"></param>
-		public BaseDataExchange(DataExchangeFactory dataExchangeFactory)
+		protected BaseDataExchange(DataExchangeFactory dataExchangeFactory)
 		{
 			_dataExchangeFactory = dataExchangeFactory;
 		}

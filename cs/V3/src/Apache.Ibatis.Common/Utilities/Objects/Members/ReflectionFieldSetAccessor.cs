@@ -34,7 +34,7 @@ namespace Apache.Ibatis.Common.Utilities.Objects.Members
     /// </summary>
     public sealed class ReflectionFieldSetAccessor : ISetAccessor
     {
-                private FieldInfo _fieldInfo = null;
+        private readonly FieldInfo _fieldInfo = null;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ReflectionFieldSetAccessor"/> class.

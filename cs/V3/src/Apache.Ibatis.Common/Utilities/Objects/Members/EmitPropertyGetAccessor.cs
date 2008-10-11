@@ -38,16 +38,16 @@ namespace Apache.Ibatis.Common.Utilities.Objects.Members
         /// <summary>
         /// The property name
         /// </summary>
-        private string _propertyName = string.Empty;
+        private readonly string _propertyName = string.Empty;
         /// <summary>
         /// The property type
         /// </summary>
-        private Type _propertyType = null;
+        private readonly Type _propertyType = null;
         /// <summary>
         /// The class parent type
         /// </summary>
-        private Type _targetType = null;
-        private bool _canRead = false;
+        private readonly Type _targetType = null;
+        private readonly bool _canRead = false;
         /// <summary>
         /// The IL emitted IGet
         /// </summary>
@@ -81,12 +81,9 @@ namespace Apache.Ibatis.Common.Utilities.Objects.Members
 					string.Format("Property \"{0}\" does not exist for type "
 					+ "{1}.", propertyName, _targetType));
 			}
-			else
-			{
-				this._propertyType = propertyInfo.PropertyType;
-                _canRead = propertyInfo.CanRead;
-                this.EmitIL(assemblyBuilder, moduleBuilder);
-			}
+            _propertyType = propertyInfo.PropertyType;
+            _canRead = propertyInfo.CanRead;
+            EmitIL(assemblyBuilder, moduleBuilder);
 		}
 
         /// <summary>
@@ -103,7 +100,7 @@ namespace Apache.Ibatis.Common.Utilities.Objects.Members
             // Create a new instance
             _emittedGet = assemblyBuilder.CreateInstance("GetFor" + _targetType.FullName + _propertyName) as IGet;
 
-            this.nullInternal = this.GetNullInternal(_propertyType);
+            nullInternal = GetNullInternal(_propertyType);
 
             if (_emittedGet == null)
             {
@@ -206,12 +203,9 @@ namespace Apache.Ibatis.Common.Utilities.Objects.Members
             {
                 return _emittedGet.Get(target);
             }
-            else
-            {
-                throw new NotSupportedException(
-                    string.Format("Property \"{0}\" on type "
-                    + "{1} doesn't have a get method.", _propertyName, _targetType));
-            }
+            throw new NotSupportedException(
+                string.Format("Property \"{0}\" on type "
+                              + "{1} doesn't have a get method.", _propertyName, _targetType));
         }
 
         #endregion

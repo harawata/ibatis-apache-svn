@@ -60,18 +60,15 @@ namespace Apache.Ibatis.DataMapper.DataExchange
 		/// <param name="parameterObject"></param>
 		public override object GetData(ParameterProperty mapping, object parameterObject)
 		{
-            if (mapping.IsComplexMemberName || _parameterClass!=parameterObject.GetType())
+		    if (mapping.IsComplexMemberName || _parameterClass!=parameterObject.GetType())
 			{
 				return ObjectProbe.GetMemberValue(parameterObject, mapping.PropertyName,
-					this.DataExchangeFactory.AccessorFactory);
+					DataExchangeFactory.AccessorFactory);
 			}
-			else
-			{
-				return mapping.GetAccessor.Get(parameterObject);
-			}
+		    return mapping.GetAccessor.Get(parameterObject);
 		}
 
-		/// <summary>
+	    /// <summary>
 		/// Sets the value to the result property.
 		/// </summary>
 		/// <param name="mapping"></param>
@@ -88,8 +85,8 @@ namespace Apache.Ibatis.DataMapper.DataExchange
 			if ( mapping.IsComplexMemberName)
 			{
 				ObjectProbe.SetMemberValue(target, mapping.PropertyName, dataBaseValue, 
-					this.DataExchangeFactory.ObjectFactory,
-					this.DataExchangeFactory.AccessorFactory);
+					DataExchangeFactory.ObjectFactory,
+					DataExchangeFactory.AccessorFactory);
 			}
 			else
 			{
@@ -109,12 +106,12 @@ namespace Apache.Ibatis.DataMapper.DataExchange
 			if (mapping.IsComplexMemberName)
 			{	
 				ObjectProbe.SetMemberValue(target, mapping.PropertyName, dataBaseValue, 
-					this.DataExchangeFactory.ObjectFactory,
-					this.DataExchangeFactory.AccessorFactory);
+					DataExchangeFactory.ObjectFactory,
+					DataExchangeFactory.AccessorFactory);
 			}
 			else
 			{
-                ISetAccessorFactory setAccessorFactory = this.DataExchangeFactory.AccessorFactory.SetAccessorFactory;
+                ISetAccessorFactory setAccessorFactory = DataExchangeFactory.AccessorFactory.SetAccessorFactory;
                 ISetAccessor _setAccessor = setAccessorFactory.CreateSetAccessor(_parameterClass, mapping.PropertyName);
 
                 _setAccessor.Set(target, dataBaseValue);

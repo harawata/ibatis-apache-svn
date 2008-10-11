@@ -40,7 +40,7 @@ namespace Apache.Ibatis.Common.Utilities.Objects
         private const MethodAttributes CREATE_METHOD_ATTRIBUTES = MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.NewSlot | MethodAttributes.Virtual | MethodAttributes.Final;
 		private static readonly ILog _logger = LogManager.GetLogger( MethodBase.GetCurrentMethod().DeclaringType );
 
-        private ModuleBuilder _moduleBuilder = null;
+        private readonly ModuleBuilder _moduleBuilder = null;
        
         /// <summary>
 		/// constructor
@@ -48,7 +48,7 @@ namespace Apache.Ibatis.Common.Utilities.Objects
 		public FactoryBuilder()
 		{
 			AssemblyName assemblyName = new AssemblyName();
-            assemblyName.Name = "iBATIS.EmitFactory" + HashCodeProvider.GetIdentityHashCode(this).ToString();
+            assemblyName.Name = "iBATIS.EmitFactory" + HashCodeProvider.GetIdentityHashCode(this);
 
 			// Create a new assembly with one module
 			AssemblyBuilder _assemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
@@ -72,12 +72,9 @@ namespace Apache.Ibatis.Common.Utilities.Objects
                 }
                 return new AbstractFactory(typeToCreate);
 			}
-			else
-			{
-				Type innerType = CreateFactoryType(typeToCreate, types);
-				ConstructorInfo ctor = innerType.GetConstructor(Type.EmptyTypes);
-				return (IFactory) ctor.Invoke(new object[] {});			
-			}
+		    Type innerType = CreateFactoryType(typeToCreate, types);
+		    ConstructorInfo ctor = innerType.GetConstructor(Type.EmptyTypes);
+		    return (IFactory) ctor.Invoke(new object[] {});
 		}
 
 
@@ -92,7 +89,7 @@ namespace Apache.Ibatis.Common.Utilities.Objects
 			string typesName = string.Empty;
 			for(int i = 0; i < types.Length; i++)
 			{
-				typesName += types[i].Name.Replace("[]",string.Empty)+i.ToString();
+				typesName += types[i].Name.Replace("[]",string.Empty)+i;
 			}
 			TypeBuilder typeBuilder = _moduleBuilder.DefineType("EmitFactoryFor" + typeToCreate.FullName + typesName, TypeAttributes.Public);
 			typeBuilder.AddInterfaceImplementation(typeof (IFactory));
@@ -130,7 +127,7 @@ namespace Apache.Ibatis.Common.Utilities.Objects
 		/// </summary>   
 		/// <param name="il">IL generator.</param>   
 		/// <param name="argumentTypes">Arguments type defined for a the constructor.</param>   
-		private void EmitArgsIL(ILGenerator il, Type[] argumentTypes)   
+		private static void EmitArgsIL(ILGenerator il, Type[] argumentTypes)   
 		{   
 			// Add args. Since all args are objects, value types are unboxed. 
 			// Refs to value types are to be converted to values themselves.   

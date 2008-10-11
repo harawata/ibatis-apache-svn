@@ -338,7 +338,8 @@ namespace Apache.Ibatis.DataMapper.Configuration
                     }
                     else
                     {
-                        sqlText = paramParser.ParseInlineParameterMap(modelStore.DataExchangeFactory, null, child.Value);
+                        
+                        sqlText = InlineParameterMapParser.ParseInlineParameterMap(modelStore.DataExchangeFactory, statementConfig.Id, null, child.Value);
                     }
 
                     dynamic.AddChild(sqlText);

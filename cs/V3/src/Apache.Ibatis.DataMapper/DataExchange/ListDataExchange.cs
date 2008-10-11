@@ -53,7 +53,7 @@ namespace Apache.Ibatis.DataMapper.DataExchange
 		public override object GetData(ParameterProperty mapping, object parameterObject)
 		{
 			return ObjectProbe.GetMemberValue(parameterObject, mapping.PropertyName,
-				this.DataExchangeFactory.AccessorFactory);
+				DataExchangeFactory.AccessorFactory);
 		}
 
 		/// <summary>
@@ -65,8 +65,8 @@ namespace Apache.Ibatis.DataMapper.DataExchange
 		public override void SetData(ref object target, ResultProperty mapping, object dataBaseValue)
 		{
 			ObjectProbe.SetMemberValue(target, mapping.PropertyName, dataBaseValue, 
-				this.DataExchangeFactory.ObjectFactory,
-				this.DataExchangeFactory.AccessorFactory);
+				DataExchangeFactory.ObjectFactory,
+				DataExchangeFactory.AccessorFactory);
 		}
 
 		/// <summary>
@@ -79,8 +79,8 @@ namespace Apache.Ibatis.DataMapper.DataExchange
 		public override void SetData(ref object target, ParameterProperty mapping, object dataBaseValue)
 		{
 			ObjectProbe.SetMemberValue(target, mapping.PropertyName, dataBaseValue, 
-				this.DataExchangeFactory.ObjectFactory,
-				this.DataExchangeFactory.AccessorFactory);
+				DataExchangeFactory.ObjectFactory,
+				DataExchangeFactory.AccessorFactory);
 		}
 
 		#endregion

@@ -38,19 +38,19 @@ namespace Apache.Ibatis.Common.Utilities.Objects.Members
     {
         private delegate void SetValue(object instance, object value);
 
-        private SetValue _set = null;
+        private readonly SetValue _set = null;
 
         /// <summary>
         /// The field name
         /// </summary>
-        private string _fieldName = string.Empty;
+        private readonly string _fieldName = string.Empty;
         /// <summary>
         /// The class parent type
         /// </summary>
-        private Type _fieldType = null;
+        private readonly Type _fieldType = null;
 
                  /// <summary>
-        /// Initializes a new instance of the <see cref="T:DelegateFieldSetAccessor"/> class
+        /// Initializes a new instance of the <see cref="DelegateFieldSetAccessor"/> class
         /// for field get access via DynamicMethod.
         /// </summary>
         /// <param name="targetObjectType">Type of the target object.</param>
@@ -69,26 +69,23 @@ namespace Apache.Ibatis.Common.Utilities.Objects.Members
                     string.Format("Field \"{0}\" does not exist for type "
                     + "{1}.", fieldName, targetObjectType));
             }
-            else
-            {
-                _fieldType = fieldInfo.FieldType;
-                this.nullInternal = this.GetNullInternal(_fieldType);
+                     _fieldType = fieldInfo.FieldType;
+                     nullInternal = GetNullInternal(_fieldType);
 
-                // Emit the IL for set access. 
-                DynamicMethod dynamicMethodSet = new DynamicMethod("SetImplementation", null, new Type[] { typeof(object), typeof(object) }, this.GetType().Module, false);
-                ILGenerator ilgen = dynamicMethodSet.GetILGenerator();
+                     // Emit the IL for set access. 
+                     DynamicMethod dynamicMethodSet = new DynamicMethod("SetImplementation", null, new Type[] { typeof(object), typeof(object) }, GetType().Module, false);
+                     ILGenerator ilgen = dynamicMethodSet.GetILGenerator();
 
-                ilgen = dynamicMethodSet.GetILGenerator();
+                     ilgen = dynamicMethodSet.GetILGenerator();
 
-                ilgen.Emit(OpCodes.Ldarg_0);
-                ilgen.Emit(OpCodes.Ldarg_1);
-                UnboxIfNeeded(fieldInfo.FieldType, ilgen);
-                ilgen.Emit(OpCodes.Stfld, fieldInfo);
-                ilgen.Emit(OpCodes.Ret);
+                     ilgen.Emit(OpCodes.Ldarg_0);
+                     ilgen.Emit(OpCodes.Ldarg_1);
+                     UnboxIfNeeded(fieldInfo.FieldType, ilgen);
+                     ilgen.Emit(OpCodes.Stfld, fieldInfo);
+                     ilgen.Emit(OpCodes.Ret);
 
-                _set = (SetValue)dynamicMethodSet.CreateDelegate(typeof(SetValue));
-            }
-		}
+                     _set = (SetValue)dynamicMethodSet.CreateDelegate(typeof(SetValue));
+        }
 
         #region IAccessor Members
         

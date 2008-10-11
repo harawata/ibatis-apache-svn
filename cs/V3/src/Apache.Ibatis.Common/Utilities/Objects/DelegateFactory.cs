@@ -39,7 +39,7 @@ namespace Apache.Ibatis.Common.Utilities.Objects
 
         private delegate object Create(object[] parameters);
 
-        private Create _create = null;
+        private readonly Create _create = null;
 
         #region IFactory members
 
@@ -69,7 +69,7 @@ namespace Apache.Ibatis.Common.Utilities.Objects
         /// <param name="argumentTypes">The types argument.</param>
         public DelegateFactory(Type typeToCreate, Type[] argumentTypes)
         {
-            DynamicMethod dynamicMethod = new DynamicMethod("CreateImplementation", typeof(object), new Type[] { typeof(object[]) }, this.GetType().Module, false);
+            DynamicMethod dynamicMethod = new DynamicMethod("CreateImplementation", typeof(object), new Type[] { typeof(object[]) }, GetType().Module, false);
             ILGenerator generatorIL = dynamicMethod.GetILGenerator();
             
             // Emit the IL for Create method. 
@@ -93,7 +93,7 @@ namespace Apache.Ibatis.Common.Utilities.Objects
         /// </summary>   
         /// <param name="il">IL generator.</param>   
         /// <param name="argumentTypes">Arguments type defined for a the constructor.</param>   
-        private void EmitArgsIL(ILGenerator il, Type[] argumentTypes)
+        private static void EmitArgsIL(ILGenerator il, Type[] argumentTypes)
         {
             // Add args. Since all args are objects, value types are unboxed. 
             // Refs to value types are to be converted to values themselves.   

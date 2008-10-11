@@ -35,7 +35,7 @@ namespace Apache.Ibatis.Common.Utilities
 	/// </summary>
 	public sealed class StringTokenizer : IEnumerable 
 	{
-		private static readonly string defaultDelim=" \t\n\r\f";
+		private const string DEFAULT_DELIM = " \t\n\r\f";
         private readonly string  origin = string.Empty;
         private readonly string delimiters = string.Empty;
         private readonly bool returnDelimiters = false;
@@ -48,7 +48,7 @@ namespace Apache.Ibatis.Common.Utilities
 		public StringTokenizer(string str) 
 		{
 			origin = str;
-			delimiters = defaultDelim;
+			delimiters = DEFAULT_DELIM;
 			returnDelimiters = false;
 		}
 
@@ -176,14 +176,11 @@ namespace Apache.Ibatis.Common.Utilities
 
 			private string GetNext() 
 			{
-				char c;
-				bool isDelim;
-			
-				if( cursor >= stokenizer.origin.Length )
+			    if( cursor >= stokenizer.origin.Length )
 					return null;
 
-				c = stokenizer.origin[cursor];
-				isDelim = (stokenizer.delimiters.IndexOf(c) != -1);
+				char c = stokenizer.origin[cursor];
+				bool isDelim = (stokenizer.delimiters.IndexOf(c) != -1);
 			
 				if ( isDelim ) 
 				{

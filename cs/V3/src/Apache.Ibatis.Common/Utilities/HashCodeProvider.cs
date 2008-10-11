@@ -24,11 +24,7 @@
  ********************************************************************************/
 #endregion
 
-#region Imports
 using System;
-using System.Runtime.CompilerServices;
-
-#endregion
 
 namespace Apache.Ibatis.Common.Utilities
 {
@@ -39,7 +35,7 @@ namespace Apache.Ibatis.Common.Utilities
 	/// </summary>
 	public sealed class HashCodeProvider
 	{
-		private static MethodInfo getHashCodeMethodInfo = null;
+		private static readonly MethodInfo getHashCodeMethodInfo = null;
 
 		static HashCodeProvider()
 		{

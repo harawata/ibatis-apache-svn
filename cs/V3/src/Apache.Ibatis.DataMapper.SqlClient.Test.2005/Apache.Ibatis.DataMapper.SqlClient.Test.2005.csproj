@@ -58,6 +58,7 @@
     <Compile Include="Fixtures\Mapping\Cache\WeakCacheTest.cs" />
     <Compile Include="Fixtures\Mapping\CircularReferenceTest.cs" />
     <Compile Include="Fixtures\Mapping\EventTest.cs" />
+    <Compile Include="Fixtures\Mapping\IterateTest.cs" />
     <Compile Include="Fixtures\Mapping\VelocityTest.cs" />
     <Compile Include="Fixtures\Modules\AliasModule.cs" />
     <Compile Include="Fixtures\Modules\EventModule.cs" />
@@ -182,6 +183,7 @@
     <Content Include="Maps\Enumeration.xml" />
     <Content Include="Maps\Event.xml" />
     <Content Include="Maps\GroupByMapping.xml" />
+    <Content Include="Maps\Iterate.xml" />
     <Content Include="Maps\LineItem.xml" />
     <Content Include="Maps\Mapping1.xml" />
     <EmbeddedResource Include="Maps\Mapping2.xml" />

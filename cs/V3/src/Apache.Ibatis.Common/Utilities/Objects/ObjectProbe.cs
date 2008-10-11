@@ -38,7 +38,7 @@ namespace Apache.Ibatis.Common.Utilities.Objects
 	/// </summary>
 	public sealed class ObjectProbe
 	{
-		private static ArrayList _simpleTypeMap = new ArrayList();
+		private static readonly ArrayList _simpleTypeMap = new ArrayList();
 
 		static ObjectProbe() 
 		{
@@ -296,7 +296,7 @@ namespace Apache.Ibatis.Common.Utilities.Objects
 				int length = indexedName.IndexOf("]");
 				string name = indexedName.Substring(0, startIndex);
 				string index = indexedName.Substring( startIndex+1, length-(startIndex+1));
-				int i = System.Convert.ToInt32(index);
+				int i = Convert.ToInt32(index);
 				
 				if (name.Length > 0)
 				{
@@ -344,7 +344,7 @@ namespace Apache.Ibatis.Common.Utilities.Objects
 				int length = indexedName.IndexOf("]");
 				string name = indexedName.Substring(0, startIndex);
 				string index = indexedName.Substring( startIndex+1, length-(startIndex+1));
-				int i = System.Convert.ToInt32(index);
+				int i = Convert.ToInt32(index);
 				
 				object list = null;
 				if (name.Length > 0)
@@ -385,17 +385,16 @@ namespace Apache.Ibatis.Common.Utilities.Objects
         /// <returns>An Object representing the return value of the invoked property.</returns>
 		public static object GetMemberValue(object obj, string memberName,
             AccessorFactory accessorFactory)
-		{
-			if (memberName.IndexOf('.') > -1) 
+        {
+            if (memberName.IndexOf('.') > -1) 
 			{
 				StringTokenizer parser = new StringTokenizer(memberName, ".");
 				IEnumerator enumerator = parser.GetEnumerator();
 				object value = obj;
-				string token = null;
 
-				while (enumerator.MoveNext()) 
+			    while (enumerator.MoveNext()) 
 				{
-					token = (string)enumerator.Current;
+					string token = (string)enumerator.Current;
                     value = GetMember(value, token, accessorFactory);
 
 					if (value == null) 
@@ -404,15 +403,12 @@ namespace Apache.Ibatis.Common.Utilities.Objects
 					}
 				}
 				return value;
-			} 
-			else 
-			{
-                return GetMember(obj, memberName, accessorFactory);
 			}
-		}
-        
+            return GetMember(obj, memberName, accessorFactory);
+        }
 
-        /// <summary>
+
+	    /// <summary>
         /// Gets the member's value on the specified object.
         /// </summary>
         /// <param name="obj">The obj.</param>
@@ -655,32 +651,29 @@ namespace Apache.Ibatis.Common.Utilities.Objects
 		/// </summary>
 		/// <param name="type"></param>
 		/// <returns></returns>
-		public static bool IsSimpleType(Type type) 
+		public static bool IsSimpleType(Type type)
 		{
-			if (_simpleTypeMap.Contains(type)) 
+		    if (_simpleTypeMap.Contains(type)) 
 			{
 				return true;
-			} 
-			else if (typeof(ICollection).IsAssignableFrom(type))
-			{
-				return true;
-			} 
-			else if (typeof(IDictionary).IsAssignableFrom(type)) 
-			{
-				return true;
-			} 
-			else if (typeof(IList).IsAssignableFrom(type)) 
-			{
-				return true;
-			} 
-			else if (typeof(IEnumerable).IsAssignableFrom(type)) 
-			{
-				return true;
-			} 
-			else
-			{
-				return false;
 			}
+		    if (typeof(ICollection).IsAssignableFrom(type))
+		    {
+		        return true;
+		    }
+		    if (typeof(IDictionary).IsAssignableFrom(type)) 
+		    {
+		        return true;
+		    }
+		    if (typeof(IList).IsAssignableFrom(type)) 
+		    {
+		        return true;
+		    }
+		    if (typeof(IEnumerable).IsAssignableFrom(type)) 
+		    {
+		        return true;
+		    }
+		    return false;
 		}
 
 

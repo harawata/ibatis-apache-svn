@@ -70,7 +70,7 @@ namespace Apache.Ibatis.Common.Contracts
             return test;
         }
 
-        private bool CheckEquality(object expected, object actual)
+        private static bool CheckEquality(object expected, object actual)
         {
             if ((expected == null) && (actual == null))
             {

@@ -130,7 +130,7 @@ namespace Apache.Ibatis.Common.Contracts
             get { return this; }
         }
         
-        private BaseConstraint Resolve(BaseConstraint constraint)
+        private static BaseConstraint Resolve(BaseConstraint constraint)
         {
             return new NotConstraint(constraint);
         }

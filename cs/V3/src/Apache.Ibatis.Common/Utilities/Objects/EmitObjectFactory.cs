@@ -81,7 +81,7 @@ namespace Apache.Ibatis.Common.Utilities.Objects
 		/// <param name="typeToCreate">The type instance to build.</param>
 		/// <param name="arguments">The types of the constructor arguments</param>
 		/// <returns>The key for a cache entry.</returns>
-		private string GenerateKey(Type typeToCreate, object[] arguments)
+		private static string GenerateKey(Type typeToCreate, object[] arguments)
 		{
 			StringBuilder cacheKey = new StringBuilder();
 			cacheKey.Append(typeToCreate.ToString());

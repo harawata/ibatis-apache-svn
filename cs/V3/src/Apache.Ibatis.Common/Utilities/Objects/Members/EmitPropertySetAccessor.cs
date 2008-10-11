@@ -38,17 +38,17 @@ namespace Apache.Ibatis.Common.Utilities.Objects.Members
         /// <summary>
         /// The property name
         /// </summary>
-        private string _propertyName = string.Empty;
+        private readonly string _propertyName = string.Empty;
         /// <summary>
         /// The property type
         /// </summary>
-        private Type _propertyType = null;
+        private readonly Type _propertyType = null;
         /// <summary>
         /// The class parent type
         /// </summary>
-        private Type _targetType = null;
+        private readonly Type _targetType = null;
 
-        private bool _canWrite = false;
+        private readonly bool _canWrite = false;
         /// <summary>
         /// The IL emitted ISet
         /// </summary>
@@ -82,12 +82,9 @@ namespace Apache.Ibatis.Common.Utilities.Objects.Members
 					string.Format("Property \"{0}\" does not exist for type "
 					+ "{1}.", propertyName, _targetType));
 			}
-			else
-			{
-				this._propertyType = propertyInfo.PropertyType;
-				_canWrite = propertyInfo.CanWrite;
-                this.EmitIL(assemblyBuilder, moduleBuilder);
-			}
+            _propertyType = propertyInfo.PropertyType;
+            _canWrite = propertyInfo.CanWrite;
+            EmitIL(assemblyBuilder, moduleBuilder);
 		}
 
 
@@ -105,12 +102,12 @@ namespace Apache.Ibatis.Common.Utilities.Objects.Members
             // Create a new instance
             _emittedSet = assemblyBuilder.CreateInstance("SetFor" + _targetType.FullName + _propertyName) as ISet;
 
-            this.nullInternal = this.GetNullInternal(_propertyType);
+            nullInternal = GetNullInternal(_propertyType);
 
             if (_emittedSet == null)
             {
                 throw new NotSupportedException(
-                    string.Format("Unable to create a get propert accessor for '{0}' property on class  '{1}'.", _propertyName, _propertyType.ToString()));
+                    string.Format("Unable to create a get propert accessor for '{0}' property on class  '{1}'.", _propertyName, _propertyType));
             }
         }
 

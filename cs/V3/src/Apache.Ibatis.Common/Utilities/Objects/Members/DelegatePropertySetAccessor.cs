@@ -38,13 +38,13 @@ namespace Apache.Ibatis.Common.Utilities.Objects.Members
     {
         private delegate void SetValue(object instance, object value);
 
-        private SetValue _set = null;
+        private readonly SetValue _set = null;
 
         /// <summary>
         /// The property type
         /// </summary>
-        private Type _propertyType = null;
-        private bool _canWrite = false;
+        private readonly Type _propertyType = null;
+        private readonly bool _canWrite = false;
 
                 /// <summary>
         /// Initializes a new instance of the <see cref="DelegatePropertySetAccessor"/> class
@@ -66,49 +66,46 @@ namespace Apache.Ibatis.Common.Utilities.Objects.Members
 					string.Format("Property \"{0}\" does not exist for type "
                     + "{1}.", propertyName, targetType));
 			}
-			else
-			{
-                _propertyType = propertyInfo.PropertyType;
-                _canWrite = propertyInfo.CanWrite;
+                    _propertyType = propertyInfo.PropertyType;
+                    _canWrite = propertyInfo.CanWrite;
 
-                this.nullInternal = this.GetNullInternal(_propertyType);
+                    nullInternal = GetNullInternal(_propertyType);
 
-				if (propertyInfo.CanWrite)
-				{
-					DynamicMethod dynamicMethod = new DynamicMethod("SetImplementation", null, new Type[] { typeof(object), typeof(object) }, this.GetType().Module, true);
-					ILGenerator ilgen = dynamicMethod.GetILGenerator();
-                    
-                    // Emit the IL for set access. 
-                    MethodInfo targetSetMethod = propertyInfo.GetSetMethod();
-
-                    Type paramType = targetSetMethod.GetParameters()[0].ParameterType;
-                    ilgen.DeclareLocal(paramType);
-                    ilgen.Emit(OpCodes.Ldarg_0); //Load the first argument (target object)
-                    ilgen.Emit(OpCodes.Castclass, targetType); //Cast to the source type
-                    ilgen.Emit(OpCodes.Ldarg_1); //Load the second argument (value object)
-                    if (paramType.IsValueType)
+                    if (propertyInfo.CanWrite)
                     {
-                        ilgen.Emit(OpCodes.Unbox, paramType); //Unbox it 	
-                        if (typeToOpcode[paramType] != null)
+                        DynamicMethod dynamicMethod = new DynamicMethod("SetImplementation", null, new Type[] { typeof(object), typeof(object) }, GetType().Module, true);
+                        ILGenerator ilgen = dynamicMethod.GetILGenerator();
+                    
+                        // Emit the IL for set access. 
+                        MethodInfo targetSetMethod = propertyInfo.GetSetMethod();
+
+                        Type paramType = targetSetMethod.GetParameters()[0].ParameterType;
+                        ilgen.DeclareLocal(paramType);
+                        ilgen.Emit(OpCodes.Ldarg_0); //Load the first argument (target object)
+                        ilgen.Emit(OpCodes.Castclass, targetType); //Cast to the source type
+                        ilgen.Emit(OpCodes.Ldarg_1); //Load the second argument (value object)
+                        if (paramType.IsValueType)
                         {
-                            OpCode load = (OpCode)typeToOpcode[paramType];
-                            ilgen.Emit(load); //and load
+                            ilgen.Emit(OpCodes.Unbox, paramType); //Unbox it 	
+                            if (typeToOpcode[paramType] != null)
+                            {
+                                OpCode load = (OpCode)typeToOpcode[paramType];
+                                ilgen.Emit(load); //and load
+                            }
+                            else
+                            {
+                                ilgen.Emit(OpCodes.Ldobj, paramType);
+                            }
                         }
                         else
                         {
-                            ilgen.Emit(OpCodes.Ldobj, paramType);
+                            ilgen.Emit(OpCodes.Castclass, paramType); //Cast class
                         }
-                    }
-                    else
-                    {
-                        ilgen.Emit(OpCodes.Castclass, paramType); //Cast class
-                    }
-                    ilgen.EmitCall(OpCodes.Callvirt, targetSetMethod, null); //Set the property value
-                    ilgen.Emit(OpCodes.Ret);
+                        ilgen.EmitCall(OpCodes.Callvirt, targetSetMethod, null); //Set the property value
+                        ilgen.Emit(OpCodes.Ret);
 				
-					_set = (SetValue)dynamicMethod.CreateDelegate(typeof(SetValue));
-				}
-			}
+                        _set = (SetValue)dynamicMethod.CreateDelegate(typeof(SetValue));
+                    }
 		}
 
         #region IAccessor Members

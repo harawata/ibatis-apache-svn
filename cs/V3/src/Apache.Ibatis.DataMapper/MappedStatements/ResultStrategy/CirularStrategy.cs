@@ -108,7 +108,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.ResultStrategy
         /// <param name="resultMap">The result map.</param>
         /// <param name="reader">The reader.</param>
         /// <returns></returns>
-        private string GetCircularKey(IResultMap resultMap, IDataReader reader)
+        private static string GetCircularKey(IResultMap resultMap, IDataReader reader)
         {
             if (resultMap.KeysProperties.Count > 0)
             {

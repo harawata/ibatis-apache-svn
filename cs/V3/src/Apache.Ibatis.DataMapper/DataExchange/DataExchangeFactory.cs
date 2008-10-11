@@ -29,9 +29,6 @@ using Apache.Ibatis.Common.Utilities.Objects;
 using Apache.Ibatis.Common.Utilities.Objects.Members;
 using Apache.Ibatis.DataMapper.TypeHandlers;
 
-
-using System.Collections.Generic;
-
 namespace Apache.Ibatis.DataMapper.DataExchange
 {
 	/// <summary>
@@ -39,14 +36,14 @@ namespace Apache.Ibatis.DataMapper.DataExchange
 	/// </summary>
 	public class DataExchangeFactory
 	{
-		private TypeHandlerFactory _typeHandlerFactory = null;
-		private IObjectFactory _objectFactory = null;
-        private AccessorFactory _accessorFactory = null;
+		private readonly TypeHandlerFactory _typeHandlerFactory = null;
+		private readonly IObjectFactory _objectFactory = null;
+        private readonly AccessorFactory _accessorFactory = null;
 
-		private IDataExchange _primitiveDataExchange = null;
-		private IDataExchange _complexDataExchange = null;
-		private IDataExchange _listDataExchange = null;
-		private IDataExchange _dictionaryDataExchange = null;
+		private readonly IDataExchange _primitiveDataExchange = null;
+		private readonly IDataExchange _complexDataExchange = null;
+		private readonly IDataExchange _listDataExchange = null;
+		private readonly IDataExchange _dictionaryDataExchange = null;
 
 		/// <summary>
 		///  Getter for the type handler factory

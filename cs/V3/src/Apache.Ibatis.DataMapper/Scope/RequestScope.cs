@@ -26,7 +26,6 @@
 
 #region Using
 
-using System.Collections;
 using System.Data;
 using System.Runtime.CompilerServices;
 using Apache.Ibatis.DataMapper.Model.ParameterMapping;

@@ -19,6 +19,7 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Domain
 		private bool _cartOption = false;
 	    private Document _document = null;
         private bool? nullBannerOption = false;
+        private List<Account> accounts = new List<Account>();
 
         protected IList<Document> documents = new List<Document>();
 
@@ -99,5 +100,11 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Domain
             get { return _document; }
             set { _document = value; }
         }
+
+	    public List<Account> Accounts
+	    {
+	        get { return accounts; }
+	        set { accounts = value; }
+	    }
 	}
 }

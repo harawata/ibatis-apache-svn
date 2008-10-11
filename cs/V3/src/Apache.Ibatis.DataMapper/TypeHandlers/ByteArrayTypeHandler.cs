@@ -79,7 +79,7 @@ namespace Apache.Ibatis.DataMapper.TypeHandlers
         /// <param name="columnIndex">Index of the column.</param>
         /// <param name="dataReader">The data reader.</param>
         /// <returns></returns>
-		private byte[] GetValueByIndex(int columnIndex, IDataReader dataReader) 
+		private static byte[] GetValueByIndex(int columnIndex, IDataReader dataReader) 
 		{
 			// determine the buffer size
 			int bufferLength = (int) dataReader.GetBytes(columnIndex, 0, null, 0, 0);

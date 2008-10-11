@@ -411,7 +411,7 @@ namespace Apache.Ibatis.Common.Data
 			get { return _parameterPrefix; }
 			set 
 			{ 
-				if ((value == null) || (value.Length < 1))
+				if (string.IsNullOrEmpty(value))
 				{
 					_parameterPrefix = ""; 
 				}
@@ -586,9 +586,9 @@ namespace Apache.Ibatis.Common.Data
 			if ((obj != null) && (obj is IDbProvider))
 			{
 				IDbProvider that = (IDbProvider) obj;
-				return ((this.id == that.Id) && 
-					(this._assemblyName == that.AssemblyName) &&
-					(this._connectionClass == that.DbConnectionClass));
+				return ((id == that.Id) && 
+					(_assemblyName == that.AssemblyName) &&
+					(_connectionClass == that.DbConnectionClass));
 			}
 			return false;
 		}
@@ -611,7 +611,7 @@ namespace Apache.Ibatis.Common.Data
 			return "Provider " + id;
 		}
 
-		private void CheckPropertyString(string propertyName, string value)
+		private static void CheckPropertyString(string propertyName, string value)
 		{
 			if (value == null || value.Trim().Length == 0)
 			{
@@ -621,7 +621,7 @@ namespace Apache.Ibatis.Common.Data
 			}
 		}
 
-		private void CheckPropertyType(string propertyName,Type expectedType, Type value)
+		private static void CheckPropertyType(string propertyName,Type expectedType, Type value)
 		{
 			if (value == null)
 			{

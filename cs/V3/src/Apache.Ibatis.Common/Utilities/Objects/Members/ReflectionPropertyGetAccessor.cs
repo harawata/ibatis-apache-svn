@@ -34,9 +34,9 @@ namespace Apache.Ibatis.Common.Utilities.Objects.Members
     /// </summary>
     public sealed class ReflectionPropertyGetAccessor : IGetAccessor
     {
-        private PropertyInfo _propertyInfo = null;
-		private string _propertyName = string.Empty;
-		private Type _targetType = null;
+        private readonly PropertyInfo _propertyInfo = null;
+		private readonly string _propertyName = string.Empty;
+		private readonly Type _targetType = null;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ReflectionPropertyGetAccessor"/> class.
@@ -87,12 +87,9 @@ namespace Apache.Ibatis.Common.Utilities.Objects.Members
             {
                 return _propertyInfo.GetValue(target, null);
             }
-            else
-            {
-                throw new NotSupportedException(
-                    string.Format("Property \"{0}\" on type "
-                    + "{1} doesn't have a get method.", _propertyName, _targetType));
-            }
+            throw new NotSupportedException(
+                string.Format("Property \"{0}\" on type "
+                              + "{1} doesn't have a get method.", _propertyName, _targetType));
         }
 
         #endregion

@@ -52,8 +52,8 @@ namespace Apache.Ibatis.Common.Contracts
         /// </returns>
         public override bool IsSatisfiedBy(object actual, AppendErrorMessage appendErrorMessage)
         {
-            bool test = ((actual != null) && object.ReferenceEquals(this.expected, actual));
-            ErrorMessage = NegationMessage + "be same as " + expected.ToString();
+            bool test = ((actual != null) && ReferenceEquals(expected, actual));
+            ErrorMessage = NegationMessage + "be same as " + expected;
 
             if (!test)
             {

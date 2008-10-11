@@ -69,7 +69,7 @@ namespace Apache.Ibatis.Common.Data
                         }
                         else
                         {
-                            throw new CommonExceptions.ConfigurationException(
+                            throw new ConfigurationException(
                                 string.Format("Error while configuring the Provider named \"{0}\" There can be only one default Provider.", provider.Id));
                         }
                     }
@@ -93,11 +93,7 @@ namespace Apache.Ibatis.Common.Data
             {
                 return repository[providerInvariantName];
             }
-            else
-            {
-                throw new ConfigurationException("There's no provider with the name '" + providerInvariantName + "'. Cause you give a wrong name or the provider is disabled in the providers.config file.");
-            }
+            throw new ConfigurationException("There's no provider with the name '" + providerInvariantName + "'. Cause you give a wrong name or the provider is disabled in the providers.config file.");
         }
-
     }
 }

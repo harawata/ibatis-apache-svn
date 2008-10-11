@@ -34,7 +34,7 @@ namespace Apache.Ibatis.Common.Utilities.Objects
 	/// </summary>
 	public class ObjectFactory : IObjectFactory
 	{
-		private IObjectFactory _objectFactory = null;
+		private readonly IObjectFactory _objectFactory = null;
         private static readonly ILog _logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		/// <summary>
@@ -71,16 +71,13 @@ namespace Apache.Ibatis.Common.Utilities.Objects
 		/// <returns>Returns a new instance factory</returns>
 		public IFactory CreateFactory(Type typeToCreate, Type[] types)
 		{
-            if (_logger.IsDebugEnabled)
+		    if (_logger.IsDebugEnabled)
             {
                 return new FactoryLogAdapter(typeToCreate, types, _objectFactory.CreateFactory(typeToCreate, types));
             }
-		    else
-            {
-                return _objectFactory.CreateFactory(typeToCreate, types);
-            }
+		    return _objectFactory.CreateFactory(typeToCreate, types);
 		}
 
-		#endregion
+	    #endregion
 	}
 }

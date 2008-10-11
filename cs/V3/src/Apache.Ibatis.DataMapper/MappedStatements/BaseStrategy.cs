@@ -49,7 +49,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
 	    /// <param name="resultMap"></param>
 	    /// <param name="reader"></param>
 	    /// <returns></returns>
-        protected string GetUniqueKey(IResultMap resultMap, IDataReader reader)
+        protected static string GetUniqueKey(IResultMap resultMap, IDataReader reader)
         {
             if (resultMap.GroupByProperties.Count > 0)
             {
@@ -67,18 +67,12 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
                     // we should never go here
                     return null;
                 }
-                else
-                {
-                    // separator value not likely to appear in a database
-                    keyBuffer.Append(KEY_SEPARATOR);
-                    return keyBuffer.ToString();
-                }
+                // separator value not likely to appear in a database
+                keyBuffer.Append(KEY_SEPARATOR);
+                return keyBuffer.ToString();
             }
-            else
-            {
-                // we should never go here
-                return null;
-            }
+	        // we should never go here
+	        return null;
         }
 	    
 		/// <summary>
@@ -89,7 +83,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
 		/// <param name="resultMap">The result map.</param>
 		/// <param name="resultObject">The result object.</param>
 		/// <returns>Indicates if we have found a row.</returns>
-		protected bool FillObjectWithReaderAndResultMap(RequestScope request,IDataReader reader,
+		protected static bool FillObjectWithReaderAndResultMap(RequestScope request,IDataReader reader,
                                                         IResultMap resultMap, ref object resultObject)
 		{
 			bool dataFound = false;
@@ -108,11 +102,8 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
 			    request.IsRowDataFound = dataFound;
 			    return dataFound;
 		    }
-		    else
-            {
-                return true;
-            }
-        }
+		    return true;
+		}
 
 	}
 }

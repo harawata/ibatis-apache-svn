@@ -36,7 +36,6 @@ using Apache.Ibatis.Common.Utilities.Objects.Members;
 using Apache.Ibatis.DataMapper.Model.ResultMapping;
 using Apache.Ibatis.DataMapper.DataExchange;
 using Apache.Ibatis.DataMapper.Exceptions;
-using Apache.Ibatis.DataMapper.MappedStatements.PropertyStrategy;
 using Apache.Ibatis.DataMapper.TypeHandlers;
 using System.Collections.Generic;
 
@@ -124,7 +123,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
 						}
 						catch
 						{
-							_logger.Error("The column [" + columnName + "] could not be auto mapped to a property on [" + resultObject.ToString() + "]");
+							_logger.Error("The column [" + columnName + "] could not be auto mapped to a property on [" + resultObject + "]");
 						}
 					}
 					else

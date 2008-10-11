@@ -55,18 +55,15 @@ namespace Apache.Ibatis.DataMapper.DataExchange
 		/// <param name="parameterObject"></param>
 		public override object GetData(ParameterProperty mapping, object parameterObject)
 		{
-			if (mapping.IsComplexMemberName)
+		    if (mapping.IsComplexMemberName)
 			{
 				return ObjectProbe.GetMemberValue(parameterObject, mapping.PropertyName, 
-					this.DataExchangeFactory.AccessorFactory);
+					DataExchangeFactory.AccessorFactory);
 			}
-			else
-			{
-				return parameterObject;
-			}
+		    return parameterObject;
 		}
 
-		/// <summary>
+	    /// <summary>
 		/// Sets the value to the result property.
 		/// </summary>
 		/// <param name="mapping"></param>

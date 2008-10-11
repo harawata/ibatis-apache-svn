@@ -67,7 +67,7 @@ namespace Apache.Ibatis.Common.Utilities.Objects.Members
                 else
                 {
                     AssemblyName assemblyName = new AssemblyName();
-                    assemblyName.Name = "iBATIS.FastGetAccessor" + HashCodeProvider.GetIdentityHashCode(this).ToString();
+                    assemblyName.Name = "iBATIS.FastGetAccessor" + HashCodeProvider.GetIdentityHashCode(this);
 
                     // Create a new assembly with one module
                     _assemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
@@ -90,7 +90,7 @@ namespace Apache.Ibatis.Common.Utilities.Objects.Members
         /// <param name="targetType">Target object type.</param>
         /// <param name="propertyName">Property name.</param>
         /// <returns>null if the generation fail</returns>
-        private IGetAccessor CreateDynamicPropertyGetAccessor(Type targetType, string propertyName)
+        private static IGetAccessor CreateDynamicPropertyGetAccessor(Type targetType, string propertyName)
         {
             ReflectionInfo reflectionCache = ReflectionInfo.GetInstance(targetType);
             PropertyInfo propertyInfo = (PropertyInfo)reflectionCache.GetGetter(propertyName);
@@ -104,17 +104,11 @@ namespace Apache.Ibatis.Common.Utilities.Objects.Members
                 {
                     return new DelegatePropertyGetAccessor(targetType, propertyName);
                 }
-                else
-                {
-                    return new ReflectionPropertyGetAccessor(targetType, propertyName);
-                }
+                return new ReflectionPropertyGetAccessor(targetType, propertyName);
             }
-            else
-            {
-                throw new NotSupportedException(
-                    string.Format("Property \"{0}\" on type "
-                    + "{1} cannot be get.", propertyInfo.Name, targetType));
-            }
+            throw new NotSupportedException(
+                string.Format("Property \"{0}\" on type "
+                              + "{1} cannot be get.", propertyInfo.Name, targetType));
         }
 
         /// <summary>
@@ -123,7 +117,7 @@ namespace Apache.Ibatis.Common.Utilities.Objects.Members
         /// <param name="targetType">Target object type.</param>
         /// <param name="fieldName">Property name.</param>
         /// <returns>null if the generation fail</returns>
-        private IGetAccessor CreateDynamicFieldGetAccessor(Type targetType, string fieldName)
+        private static IGetAccessor CreateDynamicFieldGetAccessor(Type targetType, string fieldName)
         {
             ReflectionInfo reflectionCache = ReflectionInfo.GetInstance(targetType);
             FieldInfo fieldInfo = (FieldInfo)reflectionCache.GetGetter(fieldName);
@@ -132,10 +126,7 @@ namespace Apache.Ibatis.Common.Utilities.Objects.Members
             {
                 return new DelegateFieldGetAccessor(targetType, fieldName);
             }
-            else
-            {
-                return new ReflectionFieldGetAccessor(targetType, fieldName);
-            }
+            return new ReflectionFieldGetAccessor(targetType, fieldName);
         }
 
         /// <summary>
@@ -159,17 +150,11 @@ namespace Apache.Ibatis.Common.Utilities.Objects.Members
                 {
                     return new EmitPropertyGetAccessor(targetType, propertyName, _assemblyBuilder, _moduleBuilder);
                 }
-                else
-                {
-                    return new ReflectionPropertyGetAccessor(targetType, propertyName);
-                }
+                return new ReflectionPropertyGetAccessor(targetType, propertyName);
             }
-            else
-            {
-                throw new NotSupportedException(
-                    string.Format("Property \"{0}\" on type "
-                    + "{1} cannot be get.", propertyInfo.Name, targetType));
-            }
+            throw new NotSupportedException(
+                string.Format("Property \"{0}\" on type "
+                              + "{1} cannot be get.", propertyInfo.Name, targetType));
         }
 
         /// <summary>
@@ -187,10 +172,7 @@ namespace Apache.Ibatis.Common.Utilities.Objects.Members
             {
                 return new EmitFieldGetAccessor(targetType, fieldName, _assemblyBuilder, _moduleBuilder);
             }
-            else
-            {
-                return new ReflectionFieldGetAccessor(targetType, fieldName);
-            }
+            return new ReflectionFieldGetAccessor(targetType, fieldName);
         }
 
         /// <summary>
@@ -199,7 +181,7 @@ namespace Apache.Ibatis.Common.Utilities.Objects.Members
         /// <param name="targetType">Target object type.</param>
         /// <param name="propertyName">Property name.</param>
         /// <returns>null if the generation fail</returns>
-        private IGetAccessor CreateReflectionPropertyGetAccessor(Type targetType, string propertyName)
+        private static IGetAccessor CreateReflectionPropertyGetAccessor(Type targetType, string propertyName)
         {
             return new ReflectionPropertyGetAccessor(targetType, propertyName);
         }
@@ -210,7 +192,7 @@ namespace Apache.Ibatis.Common.Utilities.Objects.Members
         /// <param name="targetType">Target object type.</param>
         /// <param name="fieldName">field name.</param>
         /// <returns>null if the generation fail</returns>
-        private IGetAccessor CreateReflectionFieldGetAccessor(Type targetType, string fieldName)
+        private static IGetAccessor CreateReflectionFieldGetAccessor(Type targetType, string fieldName)
         {
             return new ReflectionFieldGetAccessor(targetType, fieldName);
         }
@@ -232,44 +214,41 @@ namespace Apache.Ibatis.Common.Utilities.Objects.Members
             {
                 return (IGetAccessor)_cachedIGetAccessor[key];
             }
-            else
+            IGetAccessor getAccessor = null;
+            lock (syncLock)
             {
-                IGetAccessor getAccessor = null;
-                lock (syncLock)
+                if (!_cachedIGetAccessor.Contains(key))
                 {
-                    if (!_cachedIGetAccessor.Contains(key))
-                    {
-                        // Property
-                        ReflectionInfo reflectionCache = ReflectionInfo.GetInstance(targetType);
-                        MemberInfo memberInfo = reflectionCache.GetGetter(name);
+                    // Property
+                    ReflectionInfo reflectionCache = ReflectionInfo.GetInstance(targetType);
+                    MemberInfo memberInfo = reflectionCache.GetGetter(name);
 
-                        if (memberInfo != null)
+                    if (memberInfo != null)
+                    {
+                        if (memberInfo is PropertyInfo)
                         {
-                            if (memberInfo is PropertyInfo)
-                            {
-                                getAccessor = _createPropertyGetAccessor(targetType, name);
-                                _cachedIGetAccessor[key] = getAccessor;
-                            }
-                            else
-                            {
-                                getAccessor = _createFieldGetAccessor(targetType, name);
-                                _cachedIGetAccessor[key] = getAccessor;
-                            }
+                            getAccessor = _createPropertyGetAccessor(targetType, name);
+                            _cachedIGetAccessor[key] = getAccessor;
                         }
                         else
                         {
-                            throw new ProbeException(
-                                       string.Format("No property or field named \"{0}\" exists for type "
-                                       + "{1}.", name, targetType));
+                            getAccessor = _createFieldGetAccessor(targetType, name);
+                            _cachedIGetAccessor[key] = getAccessor;
                         }
                     }
                     else
                     {
-                        getAccessor = (IGetAccessor)_cachedIGetAccessor[key];
+                        throw new ProbeException(
+                            string.Format("No property or field named \"{0}\" exists for type "
+                                          + "{1}.", name, targetType));
                     }
                 }
-                return getAccessor;
+                else
+                {
+                    getAccessor = (IGetAccessor)_cachedIGetAccessor[key];
+                }
             }
+            return getAccessor;
         }
 
         #endregion

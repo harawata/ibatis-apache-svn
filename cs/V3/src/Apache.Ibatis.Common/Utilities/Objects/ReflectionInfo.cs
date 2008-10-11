@@ -306,31 +306,28 @@ namespace Apache.Ibatis.Common.Utilities.Objects
         /// <returns>
         /// 	<c>true</c> if [is known type] [the specified type]; otherwise, <c>false</c>.
         /// </returns>
-		public static bool IsKnownType(Type type) 
-		{
-			if (_simleTypeMap.Contains(type)) 
+		public static bool IsKnownType(Type type)
+        {
+            if (_simleTypeMap.Contains(type)) 
 			{
 				return true;
-			} 
-			else if (typeof(IList).IsAssignableFrom(type)) 
-			{
-				return true;
-			} 
-			else if (typeof(IDictionary).IsAssignableFrom(type)) 
-			{
-				return true;
-			} 
-			else if (typeof(IEnumerator).IsAssignableFrom(type)) 
-			{
-				return true;
-			} 
-			else 
-			{
-				return false;
 			}
-		}
+            if (typeof(IList).IsAssignableFrom(type)) 
+            {
+                return true;
+            }
+            if (typeof(IDictionary).IsAssignableFrom(type)) 
+            {
+                return true;
+            }
+            if (typeof(IEnumerator).IsAssignableFrom(type)) 
+            {
+                return true;
+            }
+            return false;
+        }
 
-		/// <summary>
+	    /// <summary>
 		/// Gets an instance of ReflectionInfo for the specified type.
 		/// </summary>summary>
 		/// <param name="type">The type for which to lookup the method cache.</param>

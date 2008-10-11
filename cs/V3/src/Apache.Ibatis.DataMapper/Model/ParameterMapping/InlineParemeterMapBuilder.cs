@@ -68,7 +68,7 @@ namespace Apache.Ibatis.DataMapper.Model.ParameterMapping
                 // Build a Parametermap with the inline parameters.
                 // if they exist. Then delete inline infos from sqltext.
 
-                SqlText sqlText = paramParser.ParseInlineParameterMap(modelStore.DataExchangeFactory, statement, newSqlCommandText);
+                SqlText sqlText = InlineParameterMapParser.ParseInlineParameterMap(modelStore.DataExchangeFactory, statement.Id, statement, newSqlCommandText);
 
                 if (sqlText.Parameters.Length > 0)
                 {

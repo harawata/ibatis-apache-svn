@@ -27,13 +27,9 @@
 // Inpspired from Spring.NET
 #endregion
 
-#region Imports
 
 using System;
-using System.Collections;
-using System.Collections.Specialized;
-
-#endregion
+using System.Collections.Generic;
 
 namespace Apache.Ibatis.Common.Utilities.TypesResolver
 {
@@ -49,9 +45,9 @@ namespace Apache.Ibatis.Common.Utilities.TypesResolver
         /// The cache, mapping type names (<see cref="System.String"/> instances) against
         /// <see cref="System.Type"/> instances.
         /// </summary>
-        private IDictionary _typeCache = new HybridDictionary();
+        private readonly IDictionary<string, Type> _typeCache = new Dictionary<string, Type>();
 
-        private ITypeResolver _typeResolver = null;
+        private readonly ITypeResolver _typeResolver = null;
         #endregion
 
         #region Constructor (s) / Destructor
@@ -99,8 +95,7 @@ namespace Apache.Ibatis.Common.Utilities.TypesResolver
             Type type = null;
             try
             {
-                type = _typeCache[typeName] as Type;
-                if (type == null)
+                if (!_typeCache.TryGetValue(typeName, out type))
                 {
                     type = _typeResolver.Resolve(typeName);
                     _typeCache[typeName] = type;

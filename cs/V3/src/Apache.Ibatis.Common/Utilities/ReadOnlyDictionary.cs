@@ -25,7 +25,6 @@
 #endregion
 
 using System.Collections;
-using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using System.Collections.Generic;
 using System;
@@ -37,17 +36,17 @@ namespace Apache.Ibatis.Common.Utilities
     /// mirrors ReadOnlyCollection, and follows the apparent pattern that write operations
     /// do not throw an exception, but simply make no change to the underlying collection.
     /// </summary>
-   public class ReadOnlyDictionary<TKey, TValue> : IDictionary<TKey, TValue>, ICollection<KeyValuePair<TKey, TValue>>, IEnumerable<KeyValuePair<TKey, TValue>>, IDictionary, ICollection, IEnumerable, ISerializable, IDeserializationCallback
+   public class ReadOnlyDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IDictionary, ISerializable, IDeserializationCallback
    { 
        /// <summary>
         /// 
         /// </summary>
-        private IDictionary<TKey, TValue> dict;
+        private readonly IDictionary<TKey, TValue> dict;
 
         /// <summary>
         /// 
         /// </summary>
-        private IDictionary idict;
+        private readonly IDictionary idict;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ReadOnlyDictionary&lt;TKey, TValue&gt;"/> class.

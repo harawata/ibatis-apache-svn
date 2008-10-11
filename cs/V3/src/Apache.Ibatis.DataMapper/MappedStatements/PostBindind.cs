@@ -40,7 +40,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
 		/// <summary>
 		/// Enumeration of the ExecuteQuery method.
 		/// </summary>
-		public enum ExecuteMethod : int
+		public enum ExecuteMethod
 		{
 			/// <summary>
 			/// Execute Query For Object

@@ -24,10 +24,7 @@
 #endregion
 
 using System;
-using System.Collections;
-using System.Reflection;
 using System.Reflection.Emit;
-using Apache.Ibatis.Common.Exceptions;
 using System.Collections.Generic;
 
 namespace Apache.Ibatis.Common.Utilities.Objects
@@ -38,7 +35,7 @@ namespace Apache.Ibatis.Common.Utilities.Objects
     /// <remarks>From Spring.NET</remarks>
     public sealed class BoxingOpCodes
     {
-        private static IDictionary<Type,OpCode> boxingOpCodes;
+        private static readonly IDictionary<Type,OpCode> boxingOpCodes;
 
         /// <summary>
         /// Initializes the <see cref="BoxingOpCodes"/> class.

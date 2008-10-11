@@ -36,9 +36,9 @@ namespace Apache.Ibatis.Common.Utilities.Objects
 	/// </summary>
 	public class FactoryLogAdapter : IFactory
 	{
-		private IFactory _factory = null;
-		private string _typeName = string.Empty;
-		private string _parametersTypeName = string.Empty;
+		private readonly IFactory _factory = null;
+		private readonly string _typeName = string.Empty;
+		private readonly string _parametersTypeName = string.Empty;
 		
 		private static readonly ILog _logger = LogManager.GetLogger( MethodBase.GetCurrentMethod().DeclaringType );
 
@@ -93,7 +93,7 @@ namespace Apache.Ibatis.Common.Utilities.Objects
 		/// </summary>
 		/// <param name="arguments">The types of the constructor arguments</param>
 		/// <returns>The string.</returns>
-		private string GenerateParametersName(object[] arguments)
+		private static string GenerateParametersName(object[] arguments)
 		{
 			StringBuilder names = new StringBuilder();
 			if ((arguments != null) && (arguments.Length != 0)) 
@@ -111,7 +111,7 @@ namespace Apache.Ibatis.Common.Utilities.Objects
 		/// </summary>
 		/// <param name="arguments">The arguments</param>
 		/// <returns>The string.</returns>
-		private string GenerateLogInfoForParameterValue(object[] arguments)
+		private static string GenerateLogInfoForParameterValue(object[] arguments)
 		{
 			StringBuilder values = new StringBuilder();
 			if ((arguments != null) && (arguments.Length != 0)) 

@@ -25,7 +25,6 @@
 #endregion
 
 using System.Collections;
-using System.Collections.Specialized;
 using System.IO;
 using System.Threading;
 using Apache.Ibatis.Common.Logging;
@@ -79,17 +78,17 @@ namespace Apache.Ibatis.Common.Utilities
 		/// <summary>
 		/// The timer used to compress the notification events.
 		/// </summary>
-		private Timer _timer = null;
+		private readonly Timer _timer = null;
 
 		/// <summary>
 		/// A list of configuration files to watch.
 		/// </summary>
-		private static ArrayList _filesToWatch = new ArrayList();
+		private static readonly ArrayList _filesToWatch = new ArrayList();
 
 		/// <summary>
 		/// The list of FileSystemWatcher.
 		/// </summary>
-		private static ArrayList _filesWatcher = new ArrayList();
+		private static readonly ArrayList _filesWatcher = new ArrayList();
 
 		/// <summary>
 		/// The default amount of time to wait after receiving notification
