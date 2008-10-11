@@ -46,11 +46,12 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
         #region Object Query tests
 
         /// <summary>
-        /// Test use a statement with property subtitution
-        /// (JIRA 22)
+        /// Interface mapping
         /// </summary>
         [Test]
-        public void TestInterface()
+        [Category("JIRA")]
+        [Description("JIRA-283")]
+        public void Result_mapping_on_interface_should_work()
         {
             BaseAccount account = new BaseAccount();
 
