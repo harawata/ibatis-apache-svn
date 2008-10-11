@@ -44,6 +44,24 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
         #region Object Query tests
 
         /// <summary>
+        /// Interface mapping
+        /// </summary>
+        [Test]
+        [Category("JIRA")]
+        [Description("JIRA-283")]
+        public void TestInterface()
+        {
+            BaseAccount account = new BaseAccount();
+
+            sqlMap.QueryForObject<IAccount>("GetInterfaceAccount", 1, account);
+
+            Assert.AreEqual(1, account.Id, "account.Id");
+            Assert.AreEqual("Joe", account.FirstName, "account.FirstName");
+            Assert.AreEqual("Dalton", account.LastName, "account.LastName");
+            Assert.AreEqual("Joe.Dalton@somewhere.com", account.EmailAddress, "account.EmailAddress");
+        }
+
+        /// <summary>
         /// Test Open connection with a connection string
         /// </summary>
         [Test]

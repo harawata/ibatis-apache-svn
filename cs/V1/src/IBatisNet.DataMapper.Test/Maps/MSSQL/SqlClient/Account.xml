@@ -49,6 +49,8 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 	<alias>
 		<typeAlias alias="HundredsBool" type="IBatisNet.DataMapper.Test.Domain.HundredsTypeHandlerCallback, IBatisNet.DataMapper.Test"/>
     <typeAlias alias="Category2" type="IBatisNet.DataMapper.Test.Domain.Category, IBatisNet.DataMapper.Test"/>
+    <typeAlias alias="IAccount" type="IBatisNet.DataMapper.Test.Domain.IAccount, IBatisNet.DataMapper.Test"/>
+
   </alias>       
   
   <cacheModels>
@@ -175,6 +177,16 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
     -->
   <statements>
 
+    <select id="GetInterfaceAccount" resultClass="IAccount">
+					select
+					Account_ID as Id,
+					Account_FirstName as FirstName,
+					Account_LastName as LastName,
+					Account_Email as EmailAddress
+					from Accounts
+					where Account_ID = #value#
+    </select>
+    
     <select id="GetLruCachedAccountsViaResultMap"
       resultMap="account-result"
       cacheModel="lru-account-cache" >

@@ -78,12 +78,13 @@ namespace IBatisNet.DataMapper.DataExchange
 		/// <param name="dataBaseValue"></param>
 		public override void SetData(ref object target, ResultProperty mapping, object dataBaseValue)
 		{
-		    Type targetType = target.GetType();
+            Type targetType = target.GetType();
             if ((targetType != _parameterClass)
-                && !targetType.IsSubclassOf(_parameterClass)) 
-			{
-                throw new ArgumentException("Could not set value of type '" + target.GetType() + "' in property '" + mapping.PropertyName + "' of type '" + _parameterClass + "'");
-			}
+                && !targetType.IsSubclassOf(_parameterClass)
+                && !_parameterClass.IsAssignableFrom(targetType))
+            {
+                throw new ArgumentException("Could not set value in class '" + target.GetType() + "' for property '" + mapping.PropertyName + "' of type '" + mapping.MemberType + "'");
+            }
 			if ( mapping.IsComplexMemberName)
 			{
 				ObjectProbe.SetMemberValue(target, mapping.PropertyName, dataBaseValue, 
