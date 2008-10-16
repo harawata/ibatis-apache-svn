@@ -40,17 +40,18 @@ namespace Apache.Ibatis.DataMapper.Configuration
         /// <param name="store">The store.</param>
         private void BuildCacheModels(IConfigurationStore store)
         {
-            foreach (IConfiguration cacheModelConfig in store.CacheModels)
+            for(int i=0;i<store.CacheModels.Length;i++)
             {
+                IConfiguration cacheModelConfig = store.CacheModels[i];
                 CacheModel cacheModel = CacheModelDeSerializer.Deserialize(cacheModelConfig, modelStore.DataExchangeFactory);
 
                 string nameSpace = ConfigurationUtils.GetMandatoryStringAttribute(cacheModelConfig, ConfigConstants.ATTRIBUTE_NAMESPACE);
 
                 // Gets all the flush on excecute statement id
                 ConfigurationCollection flushConfigs = cacheModelConfig.Children.Find(ConfigConstants.ELEMENT_FLUSHONEXECUTE);
-                foreach (IConfiguration flushOnExecute in flushConfigs)
+                for (int j = 0; j < flushConfigs.Count; j++)
                 {
-                    string statementId= flushOnExecute.Attributes[ConfigConstants.ATTRIBUTE_STATEMENT];
+                    string statementId = flushConfigs[j].Attributes[ConfigConstants.ATTRIBUTE_STATEMENT];
                     if (useStatementNamespaces)
                     {
                         statementId = ApplyNamespace(nameSpace, statementId);
@@ -74,8 +75,10 @@ namespace Apache.Ibatis.DataMapper.Configuration
 
             // Get Properties 
             ConfigurationCollection propertiesConfigs = cacheModelConfiguration.Children.Find(ConfigConstants.ELEMENT_PROPERTY);
-            foreach (IConfiguration propertie in propertiesConfigs)
+
+            for (int i = 0; i < propertiesConfigs.Count; i++)
             {
+                IConfiguration propertie = propertiesConfigs[i];
                 string name = propertie.Attributes[ConfigConstants.ATTRIBUTE_NAME];
                 string value = propertie.Attributes[ConfigConstants.ATTRIBUTE_VALUE];
 

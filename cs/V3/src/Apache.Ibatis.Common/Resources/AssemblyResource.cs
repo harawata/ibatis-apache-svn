@@ -159,8 +159,9 @@ namespace Apache.Ibatis.Common.Resources
                 {
                     // bare type name... loop thru all loaded assemblies
                     Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
-                    foreach (Assembly ass in assemblies)
+                    for (int i = 0; i < assemblies.Length; i++)
                     {
+                        Assembly ass = assemblies[i];
                         stream = ass.GetManifestResourceStream(fullResourceName);
                         if (stream == null)
                         {

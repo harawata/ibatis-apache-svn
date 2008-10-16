@@ -42,8 +42,9 @@ namespace Apache.Ibatis.DataMapper.Configuration
         {
             if (store.Settings.Count > 0)
             {
-                foreach (IConfiguration setting in store.Settings)
+                for (int i = 0; i < store.Settings.Count; i++)
                 {
+                    IConfiguration setting = store.Settings[i];
                     if (setting.Id == ConfigConstants.ATTRIBUTE_USE_STATEMENT_NAMESPACES)
                     {
                         useStatementNamespaces = Convert.ToBoolean(setting.Value);

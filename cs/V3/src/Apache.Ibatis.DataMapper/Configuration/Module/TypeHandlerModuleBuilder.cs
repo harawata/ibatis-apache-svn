@@ -83,9 +83,9 @@ namespace Apache.Ibatis.DataMapper.Configuration.Module
 
         private void BuildTypeHandler(IConfigurationStore configurationStore)
         {
-            foreach (IConfiguration configuration in store.TypeHandlers)
+            for (int i = 0; i < store.TypeHandlers.Length; i++)
             {
-                configurationStore.AddTypeHandlerConfiguration(configuration);
+                configurationStore.AddTypeHandlerConfiguration(store.TypeHandlers[i]);
             }
         }
     }

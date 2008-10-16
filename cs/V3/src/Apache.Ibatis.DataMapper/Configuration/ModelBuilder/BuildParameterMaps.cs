@@ -41,8 +41,9 @@ namespace Apache.Ibatis.DataMapper.Configuration
         /// <param name="store">The store.</param>
         private void BuildParameterMaps(IConfigurationStore store)
         {
-            foreach (IConfiguration parameterMapConfig in store.ParameterMaps)
+            for (int i = 0; i < store.ParameterMaps.Length; i++)
             {
+                IConfiguration parameterMapConfig = store.ParameterMaps[i];
                 ParameterMap parameterMap = ParameterMapDeSerializer.Deserialize(modelStore.DataExchangeFactory, parameterMapConfig, modelStore);
 
                 BuildParameterProperties(parameterMap, parameterMapConfig);
@@ -59,8 +60,9 @@ namespace Apache.Ibatis.DataMapper.Configuration
         private void BuildParameterProperties(ParameterMap parameterMap, IConfiguration parameterMapConfig)
         {
             ConfigurationCollection parametersConfig = parameterMapConfig.Children.Find(ConfigConstants.ELEMENT_PARAMETER);
-            foreach (IConfiguration parameterConfig in parametersConfig)
+            for (int i = 0; i < parametersConfig.Count; i++)
             {
+                IConfiguration parameterConfig = parametersConfig[i];
                 ParameterProperty property = null;
                 try
                 {

@@ -62,9 +62,9 @@ namespace Apache.Ibatis.DataMapper.Configuration.Module
 
         private void BuildResultMap(IConfigurationStore configurationStore)
         {
-            foreach (IConfiguration configuration in store.ResultMaps)
+            for (int i = 0; i < store.ResultMaps.Length; i++)
             {
-                configurationStore.AddResultMapConfiguration(configuration);
+                configurationStore.AddResultMapConfiguration(store.ResultMaps[i]);
             }
         }
     }

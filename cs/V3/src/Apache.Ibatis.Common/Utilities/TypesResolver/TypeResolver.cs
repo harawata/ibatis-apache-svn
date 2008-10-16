@@ -231,9 +231,10 @@ namespace Apache.Ibatis.Common.Utilities.TypesResolver
         {
             Type type = null;
             Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
-            foreach (Assembly assembly in assemblies)
+
+            for (int i = 0; i < assemblies.Length; i++)
             {
-                type = assembly.GetType(typeInfo.TypeName, false, false);
+                type = assemblies[i].GetType(typeInfo.TypeName, false, false);
                 if (type != null)
                 {
                     break;
@@ -343,9 +344,9 @@ namespace Apache.Ibatis.Common.Utilities.TypesResolver
                     if (_unresolvedGenericArguments == null)
                         return false;
 
-                    foreach (string arg in _unresolvedGenericArguments)
+                    for (int i = 0; i < _unresolvedGenericArguments.Length; i++)
                     {
-                        if (arg.Length > 0)
+                        if (_unresolvedGenericArguments[i].Length > 0)
                             return false;
                     }
                     return true;

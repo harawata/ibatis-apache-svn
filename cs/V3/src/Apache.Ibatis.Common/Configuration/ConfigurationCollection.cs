@@ -43,11 +43,11 @@ namespace Apache.Ibatis.Common.Configuration
         {
             get
             {
-                foreach(IConfiguration config in this)
+                for(int i=0;i<Count;i++)
                 {
-                    if (id.Equals(config.Id))
+                    if (id.Equals(this[i].Id))
                     {
-                        return config;
+                        return this[i];
                     }
                 }
 
@@ -64,11 +64,11 @@ namespace Apache.Ibatis.Common.Configuration
         {
             ConfigurationCollection liste = new ConfigurationCollection();
 
-            foreach (IConfiguration config in this)
+            for (int i = 0; i < Count; i++)
             {
-                if (elementType.Equals(config.Type))
+                if (elementType.Equals(this[i].Type))
                 {
-                    liste.Add( config );
+                    liste.Add(this[i]);
                 }
             }
 
@@ -85,13 +85,13 @@ namespace Apache.Ibatis.Common.Configuration
         {
             ConfigurationCollection list = new ConfigurationCollection();
 
-            foreach (IConfiguration config in this)
+            for (int i = 0; i < Count; i++)
             {
-                if (elementType.Equals(config.Type))
+                if (elementType.Equals(this[i].Type))
                 {
-                    list.Add(config);
+                    list.Add(this[i]);
                 }
-                list.AddRange(config.Children.RecursiveFind(elementType));
+                list.AddRange(this[i].Children.RecursiveFind(elementType));
             }
 
             return list;
@@ -107,11 +107,11 @@ namespace Apache.Ibatis.Common.Configuration
         public ConfigurationCollection Remove(string elementType)
         {
             ConfigurationCollection newCollection = new ConfigurationCollection();
-            foreach (IConfiguration configuration in this)
+            for (int i = 0; i < Count; i++)
             {
-                if (configuration.Type != elementType)
+                if (this[i].Type != elementType)
                 {
-                    newCollection.Add(configuration);
+                    newCollection.Add(this[i]);
                 }
             }
             return newCollection;

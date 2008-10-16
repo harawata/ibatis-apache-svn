@@ -171,9 +171,9 @@ namespace Apache.Ibatis.DataMapper.Configuration.Serializers
         private static ConstructorInfo GetConstructor(string resultMapId, Type type, string[] parametersName)
         {
             ConstructorInfo[] candidates = type.GetConstructors(ANY_VISIBILITY_INSTANCE);
-            foreach (ConstructorInfo constructor in candidates)
+            for (int i = 0; i < candidates.Length; i++)
             {
-                ParameterInfo[] parameters = constructor.GetParameters();
+                ParameterInfo[] parameters = candidates[i].GetParameters();
 
                 if (parameters.Length == parametersName.Length)
                 {
@@ -191,7 +191,7 @@ namespace Apache.Ibatis.DataMapper.Configuration.Serializers
 
                     if (found)
                     {
-                        return constructor;
+                        return candidates[i];
                     }
                 }
             }
@@ -221,16 +221,16 @@ namespace Apache.Ibatis.DataMapper.Configuration.Serializers
             ResultPropertyCollection properties = new ResultPropertyCollection();
 
             ConfigurationCollection resultsConfig = resultMapConfig.Children.Find(ConfigConstants.ELEMENT_RESULT);
-            foreach (IConfiguration result in resultsConfig)
+            for (int i = 0; i < resultsConfig.Count; i++)
             {
                 ResultProperty mapping = null;
                 try
                 {
-                    mapping = ResultPropertyDeSerializer.Deserialize(result, resultClass, prefix, suffix, dataExchangeFactory);
+                    mapping = ResultPropertyDeSerializer.Deserialize(resultsConfig[i], resultClass, prefix, suffix, dataExchangeFactory);
                 }
                 catch(Exception e)
                 {
-                    throw new ConfigurationException("In ResultMap (" + resultMapId + ") can't build the result property: " + ConfigurationUtils.GetStringAttribute(result.Attributes, ConfigConstants.ATTRIBUTE_PROPERTY) + ". Cause " + e.Message, e);
+                    throw new ConfigurationException("In ResultMap (" + resultMapId + ") can't build the result property: " + ConfigurationUtils.GetStringAttribute(resultsConfig[i].Attributes, ConfigConstants.ATTRIBUTE_PROPERTY) + ". Cause " + e.Message, e);
                 }
                 if (mapping.NestedResultMapName.Length > 0)
                 {
@@ -267,9 +267,9 @@ namespace Apache.Ibatis.DataMapper.Configuration.Serializers
                 // Find the cases
                 IList<Case> cases = new List<Case>();
                 ConfigurationCollection caseConfigs = discriminatorsConfig[0].Children.Find(ConfigConstants.ELEMENT_CASE);
-                foreach (IConfiguration caseConfig in caseConfigs)
+                for (int i = 0; i < caseConfigs.Count; i++)
                 {
-                    Case caseElement = CaseDeSerializer.Deserialize(caseConfig);
+                    Case caseElement = CaseDeSerializer.Deserialize(caseConfigs[i]);
                     cases.Add(caseElement);
                 }
 

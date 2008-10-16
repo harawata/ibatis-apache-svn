@@ -25,7 +25,6 @@
 #endregion
 
 using System;
-using System.Collections;
 using System.Data;
 using System.Reflection;
 using Apache.Ibatis.Common.Exceptions;
@@ -54,7 +53,7 @@ namespace Apache.Ibatis.DataMapper.Data
         /// <param name="spName">the name of the stored procedure</param>
         /// <param name="includeReturnValueParameter">whether or not to include their return value parameter</param>
         /// <returns></returns>
-        private IDataParameter[] DiscoverSpParameterSet(ISession session, string spName, bool includeReturnValueParameter)
+        private static IDataParameter[] DiscoverSpParameterSet(ISession session, string spName, bool includeReturnValueParameter)
 		{
 			return InternalDiscoverSpParameterSet(
                 session,
@@ -71,7 +70,7 @@ namespace Apache.Ibatis.DataMapper.Data
         /// <param name="spName">Name of the stored procedure.</param>
         /// <param name="includeReturnValueParameter">if set to <c>true</c> [include return value parameter].</param>
         /// <returns>The stored procedure parameters.</returns>
-		private IDataParameter[] InternalDiscoverSpParameterSet(
+		private static IDataParameter[] InternalDiscoverSpParameterSet(
             ISession session, 
             string spName, 
             bool includeReturnValueParameter)
@@ -112,19 +111,27 @@ namespace Apache.Ibatis.DataMapper.Data
 				return discoveredParameters;
 			}
 		}
-		
-		private void DeriveParameters(IDbProvider provider, IDbCommand command)
-		{
-			Type commandBuilderType;
 
-			// Find the CommandBuilder
-			if (provider == null)
-				throw new ArgumentNullException("provider");
-			if ((provider.CommandBuilderClass == null) || (provider.CommandBuilderClass.Length < 1))
-				throw new Exception(String.Format(
-					"CommandBuilderClass not defined for provider \"{0}\".",
-					provider.Id));
-			commandBuilderType = provider.CommandBuilderType;
+        /// <summary>
+        /// Derives the parameters.
+        /// </summary>
+        /// <param name="provider">The provider.</param>
+        /// <param name="command">The command.</param>
+		private static void DeriveParameters(IDbProvider provider, IDbCommand command)
+        {
+            // Find the CommandBuilder
+            if (provider == null)
+            {
+                throw new ArgumentNullException("provider");
+            }
+            if (string.IsNullOrEmpty(provider.CommandBuilderClass))
+            {
+                throw new Exception(String.Format(
+                                        "CommandBuilderClass not defined for provider \"{0}\".",
+                                        provider.Id));
+            }
+
+	        Type commandBuilderType = provider.CommandBuilderType;
 
 			// Invoke the static DeriveParameter method on the CommandBuilder class
 			// NOTE: OracleCommandBuilder has no DeriveParameter method
@@ -145,7 +152,7 @@ namespace Apache.Ibatis.DataMapper.Data
 		/// </summary>
 		/// <param name="originalParameters"></param>
 		/// <returns></returns>
-		private IDataParameter[] CloneParameters(IDataParameter[] originalParameters)
+		private static IDataParameter[] CloneParameters(IDataParameter[] originalParameters)
 		{
 			IDataParameter[] clonedParameters = new IDataParameter[originalParameters.Length];
 
@@ -204,10 +211,7 @@ namespace Apache.Ibatis.DataMapper.Data
 			{			
 				return null;
 			}
-			else
-			{
-				return CloneParameters(cachedParameters);
-			}
+		    return CloneParameters(cachedParameters);
 		}
 
 		#endregion caching functions

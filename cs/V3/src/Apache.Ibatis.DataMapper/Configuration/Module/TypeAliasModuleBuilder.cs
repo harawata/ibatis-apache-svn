@@ -77,9 +77,9 @@ namespace Apache.Ibatis.DataMapper.Configuration.Module
 
         private void BuildTypeAlias(IConfigurationStore configurationStore)
         {
-            foreach(IConfiguration configuration in store.Alias)
+            for (int i = 0; i < store.Alias.Length; i++)
             {
-                configurationStore.AddAliasConfiguration(configuration);
+                configurationStore.AddAliasConfiguration(store.Alias[i]);
             }
         }
     }

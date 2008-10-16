@@ -37,10 +37,10 @@ namespace Apache.Ibatis.DataMapper.Configuration
         /// <param name="store">The store.</param>
         private void BuildResultMaps(IConfigurationStore store)
         {
-            foreach (IConfiguration resultMapConfig in store.ResultMaps)
+            for (int i = 0; i < store.ResultMaps.Length; i++)
             {
                 ResultMap resultMap = ResultMapDeSerializer.Deserialize(
-                    resultMapConfig,
+                    store.ResultMaps[i],
                     modelStore.DataExchangeFactory,
                     waitResultPropertyResolution,
                     waitDiscriminatorResolution);

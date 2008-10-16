@@ -62,9 +62,9 @@ namespace Apache.Ibatis.DataMapper.Configuration.Module
 
         private void BuildParameterMap(IConfigurationStore configurationStore)
         {
-            foreach (IConfiguration configuration in store.ParameterMaps)
+            for (int i = 0; i < store.ParameterMaps.Length; i++)
             {
-                configurationStore.AddParameterMapConfiguration(configuration);
+                configurationStore.AddParameterMapConfiguration(store.ParameterMaps[i]);
             }
         }
     }

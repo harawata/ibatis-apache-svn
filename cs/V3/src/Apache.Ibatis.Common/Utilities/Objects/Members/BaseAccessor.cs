@@ -94,8 +94,9 @@ namespace Apache.Ibatis.Common.Utilities.Objects.Members
                     // JIRA 210
                     // Fix for interface inheriting
                     // Loop through interfaces of the type
-                    foreach (Type interfaceType in target.GetInterfaces())
+                    for (int i = 0; i < target.GetInterfaces().Length; i++)
                     {
+                        Type interfaceType = target.GetInterfaces()[i];
                         // Get propertyinfo and if found the break out of loop
                         propertyInfo = GetPropertyInfo(interfaceType);
                         if (propertyInfo != null)

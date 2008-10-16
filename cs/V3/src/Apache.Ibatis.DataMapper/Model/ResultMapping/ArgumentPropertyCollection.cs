@@ -39,9 +39,9 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
         /// <returns>True if is in else false</returns>
         public bool Contains(string argumentName)
         {
-            foreach (ArgumentProperty argumentProperty in this)
+            for(int i=0;i<Count;i++)
             {
-                if (argumentProperty.ArgumentName == argumentName)
+                if (this[i].ArgumentName == argumentName)
                 {
                     return true;
                 }
@@ -57,11 +57,11 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
         public ArgumentProperty FindByPropertyName(string argumentName)
         {
             ArgumentProperty argumentProperty = null;
-            foreach (ArgumentProperty argument in this)
+            for (int i = 0; i < Count; i++)
             {
-                if (argument.ArgumentName == argumentName)
+                if (this[i].ArgumentName == argumentName)
                 {
-                    argumentProperty = argument;
+                    argumentProperty = this[i];
                     break;
                 }
             }

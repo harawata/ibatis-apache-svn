@@ -42,7 +42,6 @@ using Apache.Ibatis.DataMapper.Model.ParameterMapping;
 using Apache.Ibatis.DataMapper.Configuration.Serializers;
 using Apache.Ibatis.DataMapper.Session;
 using Apache.Ibatis.DataMapper.Model.ResultMapping;
-using Apache.Ibatis.Common.Configuration;
 using Apache.Ibatis.DataMapper.Model.Cache;
 using Apache.Ibatis.DataMapper.MappedStatements;
 using Apache.Ibatis.Common.Logging;
@@ -201,21 +200,27 @@ namespace Apache.Ibatis.DataMapper.Configuration
             BuildTypeHandlers(store);
             BuildCacheModels(store);
             BuildResultMaps(store);
-            foreach (ResultProperty property in nestedProperties)
+
+            for (int i = 0; i < nestedProperties.Count; i++)
             {
+                ResultProperty property = nestedProperties[i];
                 property.NestedResultMap = modelStore.GetResultMap(property.NestedResultMapName);
             }
-            foreach (Discriminator discriminator in discriminators)
+
+            for (int i = 0; i < discriminators.Count; i++)
             {
-                discriminator.Initialize(modelStore);
+                discriminators[i].Initialize(modelStore);
             }
             BuildParameterMaps(store);
             BuildMappedStatements(store);
-            foreach (IConfiguration cacheConfig in store.CacheModels)
+
+            for (int i = 0; i < store.CacheModels.Length; i++)
             {
-                CacheModel cacheModel = modelStore.GetCacheModel(cacheConfig.Id);
-                foreach (string statement in cacheModel.StatementFlushNames)
+                CacheModel cacheModel = modelStore.GetCacheModel(store.CacheModels[i].Id);
+
+                for (int j = 0; j < cacheModel.StatementFlushNames.Count; j++)
                 {
+                    string statement = cacheModel.StatementFlushNames[j];
                     IMappedStatement mappedStatement = modelStore.GetMappedStatement(statement);
                     if (mappedStatement != null)
                     {

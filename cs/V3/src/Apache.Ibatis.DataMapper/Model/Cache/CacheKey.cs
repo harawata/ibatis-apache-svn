@@ -90,9 +90,9 @@ namespace Apache.Ibatis.DataMapper.Model.Cache
         /// <param name="objects">The objects.</param>
           public void UpdateAll(object[] objects) 
           {
-                foreach(object o in objects) 
+                for(int i=0; i<objects.Length;i++) 
                 {
-                  Update(o);
+                    Update(objects[i]);
                 }
             }
 

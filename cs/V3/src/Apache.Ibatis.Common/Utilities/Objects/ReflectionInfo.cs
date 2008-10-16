@@ -181,9 +181,9 @@ namespace Apache.Ibatis.Common.Utilities.Objects
             {
                 // Loop through interfaces for the type and add members from
                 // these types too
-                foreach (Type interf in type.GetInterfaces())
+                for (int i = 0; i < type.GetInterfaces().Length; i++)
                 {
-                    AddMembers(interf);
+                    AddMembers(type.GetInterfaces()[i]);
                 }
             }
 		}

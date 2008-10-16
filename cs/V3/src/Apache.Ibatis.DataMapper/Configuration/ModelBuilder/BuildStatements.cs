@@ -54,8 +54,9 @@ namespace Apache.Ibatis.DataMapper.Configuration
         /// <param name="store">The store.</param>
         private void BuildMappedStatements(IConfigurationStore store)
         {
-            foreach (IConfiguration statementConfig in store.Statements)
+            for (int i = 0; i < store.Statements.Length; i++)
             {
+                IConfiguration statementConfig = store.Statements[i];
                 IMappedStatement mappedStatement = null;
 
                 switch (statementConfig.Type)

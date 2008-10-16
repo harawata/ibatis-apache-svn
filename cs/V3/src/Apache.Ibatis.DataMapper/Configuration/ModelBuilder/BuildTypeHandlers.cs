@@ -41,8 +41,9 @@ namespace Apache.Ibatis.DataMapper.Configuration
         /// <param name="store">The store.</param>
         private void BuildTypeHandlers(IConfigurationStore store)
         {
-            foreach (IConfiguration handlerConfig in store.TypeHandlers)
+            for (int i = 0; i < store.TypeHandlers.Length ; i++)
             {
+                IConfiguration handlerConfig = store.TypeHandlers[i];
                 try
                 {
                     //_configScope.ErrorContext.Activity = "loading typeHandler";

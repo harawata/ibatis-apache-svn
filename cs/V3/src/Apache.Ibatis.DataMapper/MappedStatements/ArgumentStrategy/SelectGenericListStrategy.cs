@@ -69,13 +69,13 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.ArgumentStrategy
 
             MethodInfo[] mis = mappedStatementType.GetMethods(BindingFlags.InvokeMethod | BindingFlags.Public | BindingFlags.Instance);
             MethodInfo mi = null;
-            foreach (MethodInfo m in mis)
+            for (int i = 0; i < mis.Length; i++)
             {
-                if (m.IsGenericMethod &&
-                    m.Name == "ExecuteQueryForList" &&
-                    m.GetParameters().Length == 2)
+                if (mis[i].IsGenericMethod &&
+                    mis[i].Name == "ExecuteQueryForList" &&
+                    mis[i].GetParameters().Length == 2)
                 {
-                    mi = m;
+                    mi = mis[i];
                     break;
                 }
             }

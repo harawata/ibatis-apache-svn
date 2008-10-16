@@ -166,29 +166,29 @@ namespace Apache.Ibatis.DataMapper.Configuration
             }
 
             // Registers code configuration element
-            foreach (IModule module in modules)
+            for(int i=0;i<modules.Count;i++)
             {
-                module.Configure(this);
+                modules[i].Configure(this);
             }
 
             // Process Extends ResultMap
             List<IConfiguration> resolved = new List<IConfiguration>();
-            foreach (IConfiguration resultMap in configurationStore.ResultMaps)
+            for (int i = 0; i < configurationStore.ResultMaps.Length; i++)
             {
-                ResolveExtendResultMap(resolved, resultMap);
+                ResolveExtendResultMap(resolved, configurationStore.ResultMaps[i]);
             }
 
             // Process Extends ParameterMap
             resolved = new List<IConfiguration>();
-            foreach (IConfiguration parameterMap in configurationStore.ParameterMaps)
+            for (int i = 0; i < configurationStore.ParameterMaps.Length; i++)
             {
-                ResolveExtendParameterMap(resolved, parameterMap);
+                ResolveExtendParameterMap(resolved, configurationStore.ParameterMaps[i]);
             }
 
             // Process Include Sql statement
-            foreach (IConfiguration statement in configurationStore.Statements)
+            for (int i = 0; i < configurationStore.Statements.Length; i++)
             {
-                ConfigurationCollection includes = statement.Children.RecursiveFind(ConfigConstants.ELEMENT_INCLUDE);
+                ConfigurationCollection includes = configurationStore.Statements[i].Children.RecursiveFind(ConfigConstants.ELEMENT_INCLUDE);
 
                 if (includes.Count > 0)
                 {
@@ -198,9 +198,9 @@ namespace Apache.Ibatis.DataMapper.Configuration
 
             // Process Extends statement
             resolved = new List<IConfiguration>();
-            foreach (IConfiguration statement in configurationStore.Statements)
+            for (int i = 0; i < configurationStore.Statements.Length; i++)
             {
-                ResolveExtendStatement(resolved, statement);
+                ResolveExtendStatement(resolved, configurationStore.Statements[i]);
             }
 
             modelStore = new DefaultModelStore();
@@ -271,14 +271,15 @@ namespace Apache.Ibatis.DataMapper.Configuration
 
         private void ResolveIncludeStatement(ConfigurationCollection includes)
         {
-            foreach (IConfiguration include in includes)
+            for (int i = 0; i < includes.Count;i++ )
             {
-              IConfiguration toInclude =
-                        configurationStore.GetStatementConfiguration(include.Id);
-              if (toInclude == null)
-              {
-                  throw new ConfigurationException("There's no include statement named '" + include.Id + "'");
-              }
+                IConfiguration include = includes[i];
+                IConfiguration toInclude =
+                          configurationStore.GetStatementConfiguration(include.Id);
+                if (toInclude == null)
+                {
+                    throw new ConfigurationException("There's no include statement named '" + include.Id + "'");
+                }
                 IConfiguration parent = include.Parent;
                 int childIndex = include.Parent.Children.IndexOf(include);
                 parent.Children.RemoveAt(childIndex);

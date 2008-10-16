@@ -258,9 +258,9 @@ namespace Apache.Ibatis.Common.Utilities
             }
             // check if one of the derived interfaces is IList<>
             Type[] interfaceTypes = type.GetInterfaces();
-            foreach (Type interfaceType in interfaceTypes)
+            for (int i = 0; i < interfaceTypes.Length; i++)
             {
-                ret = IsImplementGenericIListInterface(interfaceType);
+                ret = IsImplementGenericIListInterface(interfaceTypes[i]);
                 if (ret)
                 {
                     break;
