@@ -79,7 +79,7 @@ public class ConnectionFactory {
 		Driver driver;
         
 		try {
-			Class<?> clazz = IbatorObjectFactory.loadClass(driverClass);
+			Class<?> clazz = IbatorObjectFactory.externalClassForName(driverClass);
 			driver = (Driver) clazz.newInstance();
 		} catch (Exception e) {
 			throw new RuntimeException(Messages.getString("RuntimeError.8"), e); //$NON-NLS-1$

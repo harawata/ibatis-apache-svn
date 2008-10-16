@@ -279,8 +279,4 @@ public class DAOGenerator extends AbstractGeneratorImpl implements JavaGenerator
         methodGenerator.addImplementationElements(topLevelClass);
         methodGenerator.addInterfaceElements(interfaze);
     }
-
-    public int getNumberOfSubtasks() {
-        return 1;
-    }
 }

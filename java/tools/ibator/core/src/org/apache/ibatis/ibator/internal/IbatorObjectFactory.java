@@ -37,7 +37,7 @@ import org.apache.ibatis.ibator.internal.util.messages.Messages;
  * @author Jeff Butler
  */
 public class IbatorObjectFactory {
-    private static ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+    private static ClassLoader externalClassLoader;
     
     /**
      * Utility class.  No instances allowed 
@@ -46,17 +46,36 @@ public class IbatorObjectFactory {
         super();
     }
     
-    public static synchronized void setClassLoader(ClassLoader classLoader) {
-        IbatorObjectFactory.classLoader = classLoader;
+    private static ClassLoader getClassLoader() {
+        if (externalClassLoader != null) {
+            return externalClassLoader;
+        } else {
+            return Thread.currentThread().getContextClassLoader();
+        }
+    }
+    
+    public static synchronized void setExternalClassLoader(ClassLoader classLoader) {
+        IbatorObjectFactory.externalClassLoader = classLoader;
     }
 
-    public static Class<?> loadClass(String type) throws ClassNotFoundException {
+    /**
+     * This method returns a class loaded from the context classloader,
+     * or the classloader supplied by a client.  This is appropriate
+     * for JDBC drivers, model root classes, etc.
+     * It is not appropriate for any class that extends one of ibator's
+     * supplied classes or interfaces.
+     * 
+     * @param type
+     * @return
+     * @throws ClassNotFoundException
+     */
+    public static Class<?> externalClassForName(String type) throws ClassNotFoundException {
         
         Class<?> clazz;
 
         try {
-            clazz = classLoader.loadClass(type);
-        } catch (ClassNotFoundException e) {
+            clazz = getClassLoader().loadClass(type);
+        } catch (Throwable e) {
             // ignore - fail safe below
             clazz = null;
         }
@@ -68,11 +87,11 @@ public class IbatorObjectFactory {
         return clazz;
     }
     
-	public static Object createObject(String type) {
+	public static Object createExternalObject(String type) {
         Object answer;
         
         try {
-            Class<?> clazz = loadClass(type);
+            Class<?> clazz = externalClassForName(type);
             
             answer = clazz.newInstance();
         } catch (Exception e) {
@@ -83,6 +102,21 @@ public class IbatorObjectFactory {
         return answer;
 	}
 	
+    public static Object createInternalObject(String type) {
+        Object answer;
+        
+        try {
+            Class<?> clazz = Class.forName(type);
+            
+            answer = clazz.newInstance();
+        } catch (Exception e) {
+            throw new RuntimeException(
+              Messages.getString("RuntimeError.6", type), e); //$NON-NLS-1$
+        }
+        
+        return answer;
+    }
+    
 	public static JavaTypeResolver createJavaTypeResolver(IbatorContext context,
 			List<String> warnings) {
         JavaTypeResolverConfiguration config = context.getJavaTypeResolverConfiguration();
@@ -90,11 +124,14 @@ public class IbatorObjectFactory {
         
         if (config != null && config.getConfigurationType() != null) {
             type = config.getConfigurationType();
+            if ("DEFAULT".equalsIgnoreCase(type)) { //$NON-NLS-1$
+                type = JavaTypeResolverDefaultImpl.class.getName();
+            }
         } else {
             type = JavaTypeResolverDefaultImpl.class.getName();
         }
         
-	    JavaTypeResolver answer = (JavaTypeResolver) createObject(type);
+	    JavaTypeResolver answer = (JavaTypeResolver) createInternalObject(type);
 	    answer.setWarnings(warnings);
 
         if (config != null) {
@@ -107,7 +144,7 @@ public class IbatorObjectFactory {
 	}
     
     public static IbatorPlugin createIbatorPlugin(IbatorContext ibatorContext, IbatorPluginConfiguration ibatorPluginConfiguration) {
-        IbatorPlugin ibatorPlugin = (IbatorPlugin) createObject(ibatorPluginConfiguration.getConfigurationType());
+        IbatorPlugin ibatorPlugin = (IbatorPlugin) createInternalObject(ibatorPluginConfiguration.getConfigurationType());
         ibatorPlugin.setIbatorContext(ibatorContext);
         ibatorPlugin.setProperties(ibatorPluginConfiguration.getProperties());
         return ibatorPlugin;
@@ -125,7 +162,7 @@ public class IbatorObjectFactory {
             type = config.getConfigurationType();
         }
         
-        answer = (CommentGenerator) createObject(type);
+        answer = (CommentGenerator) createInternalObject(type);
         
         if (config != null) {
             answer.addConfigurationProperties(config.getProperties());
@@ -141,7 +178,7 @@ public class IbatorObjectFactory {
         // configuration setting (getting ready for iBATIS 3)
         String type = IntrospectedTableIbatis2Impl.class.getName();
         
-        IntrospectedTable answer = (IntrospectedTable) createObject(type);
+        IntrospectedTable answer = (IntrospectedTable) createInternalObject(type);
         answer.setFullyQualifiedTable(table);
         answer.setIbatorContext(ibatorContext);
         answer.setTableConfiguration(tableConfiguration);

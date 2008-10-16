@@ -24,7 +24,7 @@ simple DOM representation of Java and XML elements that is included with ibator.
 useful for generating simple to moderately complex Java and XML code.</p>
 
 <p>Using options in the ibator configuration file, you can provide your own implementations
-of any of ibator's key interfaces.  You can also subclass any of the provided implementations
+of many of ibator's key interfaces.  You can also subclass any of the provided implementations
 to provide customized behaviors.  This page will describe the public APIs available in
 ibator and provide pointers to the source code for further investigation.  If you have
 any difficulty understanding how to extend ibator, feel free to send a note to the
@@ -43,114 +43,14 @@ implementation for <i>all three</i> interfaces.  A good example of such an imple
 would be a FreeMarker or Velocity template based implementation of ibator.  In almost every
 other instance, a plugin is the better way to go.</p>
 
-<h2>org.apache.ibatis.ibator.api.JavaModelGenerator</h2>
-<p>Ibator calls methods in this interface to generate the Java model POJOs.
-   You can provide your own implementation, and the supplied implementations have
-   been designed for extensibility.  The default implementation of the interface
-   is dependant on the value of the <code>generatorSet</code>
-   property of the <a href="../configreference/ibatorContext.html">&lt;ibatorContext&gt;</a>
-   configuration element.  The following table shows the different possibilities:</p>
+<h2>org.apache.ibatis.ibator.generator.ibatis2.dao.templates.AbstractDAOTemplate</h2>
+<p>TODO</p>
 
-<table border="1" cellspacing="0" cellpadding="5">
-  <tr>
-    <th>generatorSet</th>
-    <th>Implementation Class</th>
-  </tr>
-  <tr>
-    <td>Java2 (the default value)</td>
-    <td><code>org.apache.ibatis.ibator.internal.java.model.JavaModelGeneratorJava2Impl</code></td>
-  </tr>
-  <tr>
-    <td>Java5</td>
-    <td><code>org.apache.ibatis.ibator.internal.java.model.JavaModelGeneratorJava5Impl</code></td>
-  </tr>
-</table>
+<h2>org.apache.ibatis.ibator.api.IntrospectedTable</h2>
+<p>TODO</p>
 
-<p>To provide your own implementation, specify the fully qualified class name
-   in the XML configuration like this:</p>
-<pre>
-    &lt;javaModelGenerator type="mypackage.MyImplementation"&gt;
-      ...
-    &lt;/javaModelGenerator&gt;
-</pre>
-
-<h2>org.apache.ibatis.ibator.api.SqlMapGenerator</h2>
-<p>Ibator calls methods in this interface to generate the SQL Maps.
-   The default implementation of this interface is
-   <code>org.apache.ibatis.ibator.internal.sqlmap.SqlMapGeneratorIterateImpl</code>
-   You can provide your own implementation, and the supplied implementation has
-   been designed for extensibility.</p>
-
-<p>To provide your own implementation, specify the fully qualified class name
-   in the XML configuration like this:</p>
-<pre>
-    &lt;sqlMapGenerator type="mypackage.MyImplementation"&gt;
-      ...
-    &lt;/sqlMapGenerator&gt;
-</pre>
-
-<h2>org.apache.ibatis.ibator.api.DAOGenerator</h2>
-<p>Ibator calls methods in this interface to generate the DAOs for each introspected
-table.  Ibator supplies eight implementations of this
-interface to match the four different types of DAOs, and the two different sets
-of code generators.  The implementation is selected based on the value of the
-<a href="../configreference/ibatorContext.html">&lt;ibatorContext&gt;</a>
-configuration element and the value of the <code>type</code> attribute
-of the <a href="../configreference/daoGenerator.html">&lt;daoGenerator&gt;</a> element.
-The implementations are:</p>
-
-<table border="1" cellspacing="0" cellpadding="5">
-  <tr>
-    <th>generatorSet/type</th>
-    <th>Implementation Class</th>
-  </tr>
-  <tr>
-    <td nowrap="nowrap">Java2/IBATIS</td>
-    <td><code>org.apache.ibatis.ibator.internal.java.dao.IbatisJava2DAOGenerator</code></td>
-  </tr>
-  <tr>
-    <td nowrap="nowrap">Java2/GENERIC-CI</td>
-    <td><code>org.apache.ibatis.ibator.internal.java.dao.GenericCIJava2DAOGenerator</code></td>
-  </tr>
-  <tr>
-    <td nowrap="nowrap">Java2/GENERIC-SI</td>
-    <td><code>org.apache.ibatis.ibator.internal.java.dao.GenericSIJava2DAOGenerator</code></td>
-  </tr>
-  <tr>
-    <td nowrap="nowrap">Java2/SPRING</td>
-    <td><code>org.apache.ibatis.ibator.internal.java.dao.SpringJava2DAOGenerator</code></td>
-  </tr>
-  <tr>
-    <td nowrap="nowrap">Java5/IBATIS</td>
-    <td><code>org.apache.ibatis.ibator.internal.java.dao.IbatisJava5DAOGenerator</code></td>
-  </tr>
-  <tr>
-    <td nowrap="nowrap">Java5/GENERIC-CI</td>
-    <td><code>org.apache.ibatis.ibator.internal.java.dao.GenericCIJava5DAOGenerator</code></td>
-  </tr>
-  <tr>
-    <td nowrap="nowrap">Java5/GENERIC-SI</td>
-    <td><code>org.apache.ibatis.ibator.internal.java.dao.GenericSIJava5DAOGenerator</code></td>
-  </tr>
-  <tr>
-    <td nowrap="nowrap">Java5/SPRING</td>
-    <td><code>org.apache.ibatis.ibator.internal.java.dao.SpringJava5DAOGenerator</code></td>
-  </tr>
-</table>
-
-<p>The different DAO implementations are "configured" through the use of
-   a template described in
-   <code>org.apache.ibatis.ibator.internal.java.dao.AbstractDAOTemplate</code>.
-   It should be fairly simple to provide a new template for a different type
-   of DAO if needed.</p>
-<p>The DAO generators are also designed for extensibility.  To provide your own
-   implementation, specify the fully qualified class name in the XML
-   configuration like this:</p>
-<pre>
-    &lt;daoGenerator type="mypackage.MyImplementation"&gt;
-      ...
-    &lt;/daoGenerator&gt;
-</pre>
+<h2>org.apache.ibatis.ibator.api.IntrospectedColumn</h2>
+<p>TODO</p>
 
 <h2>org.apache.ibatis.ibator.api.JavaTypeResolver</h2>
 <p>Ibator calls methods in this interface to map JDBC types to Java types

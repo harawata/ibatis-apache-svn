@@ -1,10 +1,3 @@
-1. Attribute "generatorSet" removed from <ibatorContext>,
-   new attribute "targetJRE" with similar meaning
+Undocumented changes:
 
-2. introspectedTableImplementation removed from <ibatorContext>
 
-3. type attribute removed from <javaModelGenerator>, <sqlMapGenerator>
-
-4. type attribute changed meaning on <daoGenerator>
-
-5. JavaTypeResolver interface changed

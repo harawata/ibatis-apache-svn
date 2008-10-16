@@ -221,8 +221,4 @@ public class SqlMapGenerator extends AbstractGeneratorImpl implements XmlGenerat
         
         return document;
     }
-
-    public int getNumberOfSubtasks() {
-        return 1;
-    }
 }

@@ -91,8 +91,4 @@ public class RecordWithBLOBsGenerator extends BaseModelClassGenerator implements
         }
         return answer;
     }
-
-    public int getNumberOfSubtasks() {
-        return 1;
-    }
 }

@@ -56,6 +56,7 @@ import java.util.List;
  */
 public class HierarchicalJava2Tests extends BaseHierarchicalJava2Test {
 
+    @SuppressWarnings("unchecked")
     public void testFieldsOnlyInsert() {
         FieldsonlyDAO dao = getFieldsonlyDAO();
 
@@ -83,6 +84,7 @@ public class HierarchicalJava2Tests extends BaseHierarchicalJava2Test {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testFieldsOnlySelectByExample() {
         FieldsonlyDAO dao = getFieldsonlyDAO();
 
@@ -119,6 +121,7 @@ public class HierarchicalJava2Tests extends BaseHierarchicalJava2Test {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testFieldsOnlySelectByExampleNoCriteria() {
         FieldsonlyDAO dao = getFieldsonlyDAO();
 
@@ -151,6 +154,7 @@ public class HierarchicalJava2Tests extends BaseHierarchicalJava2Test {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testFieldsOnlyDeleteByExample() {
         FieldsonlyDAO dao = getFieldsonlyDAO();
 
@@ -223,6 +227,7 @@ public class HierarchicalJava2Tests extends BaseHierarchicalJava2Test {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testPKOnlyInsert() {
         PkonlyDAO dao = getPkonlyDAO();
 
@@ -244,6 +249,7 @@ public class HierarchicalJava2Tests extends BaseHierarchicalJava2Test {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testPKOnlyDeleteByPrimaryKey() {
         PkonlyDAO dao = getPkonlyDAO();
 
@@ -275,6 +281,7 @@ public class HierarchicalJava2Tests extends BaseHierarchicalJava2Test {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testPKOnlyDeleteByExample() {
         PkonlyDAO dao = getPkonlyDAO();
 
@@ -307,6 +314,7 @@ public class HierarchicalJava2Tests extends BaseHierarchicalJava2Test {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testPKOnlySelectByExample() {
         PkonlyDAO dao = getPkonlyDAO();
 
@@ -335,6 +343,7 @@ public class HierarchicalJava2Tests extends BaseHierarchicalJava2Test {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testPKOnlySelectByExampleNoCriteria() {
         PkonlyDAO dao = getPkonlyDAO();
 
@@ -529,6 +538,7 @@ public class HierarchicalJava2Tests extends BaseHierarchicalJava2Test {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testPKfieldsDeleteByPrimaryKey() {
         PkfieldsDAO dao = getPkfieldsDAO();
 
@@ -556,6 +566,7 @@ public class HierarchicalJava2Tests extends BaseHierarchicalJava2Test {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testPKFieldsDeleteByExample() {
         PkfieldsDAO dao = getPkfieldsDAO();
 
@@ -625,6 +636,7 @@ public class HierarchicalJava2Tests extends BaseHierarchicalJava2Test {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testPKFieldsSelectByExampleLike() {
         PkfieldsDAO dao = getPkfieldsDAO();
 
@@ -690,6 +702,7 @@ public class HierarchicalJava2Tests extends BaseHierarchicalJava2Test {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testPKFieldsSelectByExampleNotLike() {
         PkfieldsDAO dao = getPkfieldsDAO();
 
@@ -755,6 +768,7 @@ public class HierarchicalJava2Tests extends BaseHierarchicalJava2Test {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testPKFieldsSelectByExampleComplexLike() {
         PkfieldsDAO dao = getPkfieldsDAO();
 
@@ -819,6 +833,7 @@ public class HierarchicalJava2Tests extends BaseHierarchicalJava2Test {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testPKFieldsSelectByExampleIn() {
         PkfieldsDAO dao = getPkfieldsDAO();
 
@@ -892,6 +907,7 @@ public class HierarchicalJava2Tests extends BaseHierarchicalJava2Test {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testPKFieldsSelectByExampleBetween() {
         PkfieldsDAO dao = getPkfieldsDAO();
 
@@ -949,6 +965,7 @@ public class HierarchicalJava2Tests extends BaseHierarchicalJava2Test {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testPKFieldsSelectByExampleNoCriteria() {
         PkfieldsDAO dao = getPkfieldsDAO();
 
@@ -1006,6 +1023,7 @@ public class HierarchicalJava2Tests extends BaseHierarchicalJava2Test {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testPKFieldsSelectByExampleEscapedFields() {
         PkfieldsDAO dao = getPkfieldsDAO();
 
@@ -1106,6 +1124,7 @@ public class HierarchicalJava2Tests extends BaseHierarchicalJava2Test {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testPKBlobsInsert() {
         PkblobsDAO dao = getPkblobsDAO();
 
@@ -1192,6 +1211,7 @@ public class HierarchicalJava2Tests extends BaseHierarchicalJava2Test {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testPKBlobsDeleteByPrimaryKey() {
         PkblobsDAO dao = getPkblobsDAO();
 
@@ -1219,6 +1239,7 @@ public class HierarchicalJava2Tests extends BaseHierarchicalJava2Test {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testPKBlobsDeleteByExample() {
         PkblobsDAO dao = getPkblobsDAO();
 
@@ -1280,6 +1301,7 @@ public class HierarchicalJava2Tests extends BaseHierarchicalJava2Test {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testPKBlobsSelectByExampleWithoutBlobs() {
         PkblobsDAO dao = getPkblobsDAO();
 
@@ -1310,6 +1332,7 @@ public class HierarchicalJava2Tests extends BaseHierarchicalJava2Test {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testPKBlobsSelectByExampleWithoutBlobsNoCriteria() {
         PkblobsDAO dao = getPkblobsDAO();
 
@@ -1336,6 +1359,7 @@ public class HierarchicalJava2Tests extends BaseHierarchicalJava2Test {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testPKBlobsSelectByExampleWithBlobs() {
         PkblobsDAO dao = getPkblobsDAO();
 
@@ -1396,6 +1420,7 @@ public class HierarchicalJava2Tests extends BaseHierarchicalJava2Test {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testPKFieldsBlobsInsert() {
         PkfieldsblobsDAO dao = getPkfieldsblobsDAO();
 
@@ -1533,6 +1558,7 @@ public class HierarchicalJava2Tests extends BaseHierarchicalJava2Test {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testPKFieldsBlobsDeleteByPrimaryKey() {
         PkfieldsblobsDAO dao = getPkfieldsblobsDAO();
 
@@ -1571,6 +1597,7 @@ public class HierarchicalJava2Tests extends BaseHierarchicalJava2Test {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testPKFieldsBlobsDeleteByExample() {
         PkfieldsblobsDAO dao = getPkfieldsblobsDAO();
 
@@ -1608,6 +1635,7 @@ public class HierarchicalJava2Tests extends BaseHierarchicalJava2Test {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testPKFieldsBlobsSelectByPrimaryKey() {
         PkfieldsblobsDAO dao = getPkfieldsblobsDAO();
 
@@ -1646,6 +1674,7 @@ public class HierarchicalJava2Tests extends BaseHierarchicalJava2Test {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testPKFieldsBlobsSelectByExampleWithoutBlobs() {
         PkfieldsblobsDAO dao = getPkfieldsblobsDAO();
 
@@ -1682,6 +1711,7 @@ public class HierarchicalJava2Tests extends BaseHierarchicalJava2Test {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testPKFieldsBlobsSelectByExampleWithBlobs() {
         PkfieldsblobsDAO dao = getPkfieldsblobsDAO();
 
@@ -1719,6 +1749,7 @@ public class HierarchicalJava2Tests extends BaseHierarchicalJava2Test {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testPKFieldsBlobsSelectByExampleWithBlobsNoCriteria() {
         PkfieldsblobsDAO dao = getPkfieldsblobsDAO();
 
@@ -1781,6 +1812,7 @@ public class HierarchicalJava2Tests extends BaseHierarchicalJava2Test {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testFieldsBlobsInsert() {
         FieldsblobsDAO dao = getFieldsblobsDAO();
 
@@ -1809,6 +1841,7 @@ public class HierarchicalJava2Tests extends BaseHierarchicalJava2Test {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testFieldsBlobsDeleteByExample() {
         FieldsblobsDAO dao = getFieldsblobsDAO();
 
@@ -1844,6 +1877,7 @@ public class HierarchicalJava2Tests extends BaseHierarchicalJava2Test {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testFieldsBlobsSelectByExampleWithoutBlobs() {
         FieldsblobsDAO dao = getFieldsblobsDAO();
 
@@ -1876,6 +1910,7 @@ public class HierarchicalJava2Tests extends BaseHierarchicalJava2Test {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testFieldsBlobsSelectByExampleWithBlobs() {
         FieldsblobsDAO dao = getFieldsblobsDAO();
 
@@ -1910,6 +1945,7 @@ public class HierarchicalJava2Tests extends BaseHierarchicalJava2Test {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testFieldsBlobsSelectByExampleWithBlobsNoCriteria() {
         FieldsblobsDAO dao = getFieldsblobsDAO();
 
@@ -2184,6 +2220,7 @@ public class HierarchicalJava2Tests extends BaseHierarchicalJava2Test {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testAwfulTableDeleteByPrimaryKey() {
         AwfulTableDAO dao = getAwfulTableDAO();
 
@@ -2218,6 +2255,7 @@ public class HierarchicalJava2Tests extends BaseHierarchicalJava2Test {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testAwfulTableDeleteByExample() {
         AwfulTableDAO dao = getAwfulTableDAO();
 
@@ -2341,6 +2379,7 @@ public class HierarchicalJava2Tests extends BaseHierarchicalJava2Test {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testAwfulTableSelectByExampleLike() {
         AwfulTableDAO dao = getAwfulTableDAO();
 
@@ -2460,6 +2499,7 @@ public class HierarchicalJava2Tests extends BaseHierarchicalJava2Test {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testAwfulTableSelectByExampleNotLike() {
         AwfulTableDAO dao = getAwfulTableDAO();
 
@@ -2579,6 +2619,7 @@ public class HierarchicalJava2Tests extends BaseHierarchicalJava2Test {
         }
     }
     
+    @SuppressWarnings("unchecked")
     public void testAwfulTableSelectByExampleComplexLike() {
         AwfulTableDAO dao = getAwfulTableDAO();
 
@@ -2696,6 +2737,7 @@ public class HierarchicalJava2Tests extends BaseHierarchicalJava2Test {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testAwfulTableSelectByExampleIn() {
         AwfulTableDAO dao = getAwfulTableDAO();
 
@@ -2817,6 +2859,7 @@ public class HierarchicalJava2Tests extends BaseHierarchicalJava2Test {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testAwfulTableSelectByExampleBetween() {
         AwfulTableDAO dao = getAwfulTableDAO();
 
@@ -2926,6 +2969,7 @@ public class HierarchicalJava2Tests extends BaseHierarchicalJava2Test {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testAwfulTableSelectByExampleNoCriteria() {
         AwfulTableDAO dao = getAwfulTableDAO();
 

@@ -44,8 +44,8 @@ public class EmmaDumperTask extends Task {
             File file = new File(fileName);
             
             //com.vladium.emma.rt.RT.dumpCoverageData(file, true, false);
-            Class clazz = Class.forName("com.vladium.emma.rt.RT"); //$NON-NLS-1$
-            Class[] parameters = new Class[3];
+            Class<?> clazz = Class.forName("com.vladium.emma.rt.RT"); //$NON-NLS-1$
+            Class<?>[] parameters = new Class<?>[3];
             parameters[0] = File.class;
             parameters[1] = boolean.class;
             parameters[2] = boolean.class;

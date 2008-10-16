@@ -64,7 +64,7 @@ public class RootClassInfo {
         }
         
         try {
-            Class<?> clazz = IbatorObjectFactory.loadClass(className);
+            Class<?> clazz = IbatorObjectFactory.externalClassForName(className);
             BeanInfo bi = Introspector.getBeanInfo(clazz);
             propertyDescriptors = bi.getPropertyDescriptors();
         } catch (Exception e) {

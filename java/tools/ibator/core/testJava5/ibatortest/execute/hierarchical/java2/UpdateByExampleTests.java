@@ -51,6 +51,7 @@ import java.util.List;
  */
 public class UpdateByExampleTests extends BaseHierarchicalJava2Test {
 
+    @SuppressWarnings("unchecked")
     public void testFieldsOnlyUpdateByExampleSelective() {
         FieldsonlyDAO dao = getFieldsonlyDAO();
 
@@ -112,6 +113,7 @@ public class UpdateByExampleTests extends BaseHierarchicalJava2Test {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testFieldsOnlyUpdateByExample() {
         FieldsonlyDAO dao = getFieldsonlyDAO();
 
@@ -326,6 +328,7 @@ public class UpdateByExampleTests extends BaseHierarchicalJava2Test {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testPKBlobsUpdateByExampleSelective() {
         PkblobsDAO dao = getPkblobsDAO();
     
@@ -363,6 +366,7 @@ public class UpdateByExampleTests extends BaseHierarchicalJava2Test {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testPKBlobsUpdateByExampleWithoutBLOBs() {
         PkblobsDAO dao = getPkblobsDAO();
     
@@ -400,6 +404,7 @@ public class UpdateByExampleTests extends BaseHierarchicalJava2Test {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testPKBlobsUpdateByExampleWithBLOBs() {
         PkblobsDAO dao = getPkblobsDAO();
     
@@ -437,6 +442,7 @@ public class UpdateByExampleTests extends BaseHierarchicalJava2Test {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testPKFieldsBlobsUpdateByExampleSelective() {
         PkfieldsblobsDAO dao = getPkfieldsblobsDAO();
     
@@ -480,6 +486,7 @@ public class UpdateByExampleTests extends BaseHierarchicalJava2Test {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testPKFieldsBlobsUpdateByExampleWithoutBLOBs() {
         PkfieldsblobsDAO dao = getPkfieldsblobsDAO();
     
@@ -525,6 +532,7 @@ public class UpdateByExampleTests extends BaseHierarchicalJava2Test {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testPKFieldsBlobsUpdateByExampleWithBLOBs() {
         PkfieldsblobsDAO dao = getPkfieldsblobsDAO();
     
@@ -570,6 +578,7 @@ public class UpdateByExampleTests extends BaseHierarchicalJava2Test {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testFieldsBlobsUpdateByExampleSelective() {
         FieldsblobsDAO dao = getFieldsblobsDAO();
     
@@ -609,6 +618,7 @@ public class UpdateByExampleTests extends BaseHierarchicalJava2Test {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testFieldsBlobsUpdateByExampleWithoutBLOBs() {
         FieldsblobsDAO dao = getFieldsblobsDAO();
     
@@ -649,6 +659,7 @@ public class UpdateByExampleTests extends BaseHierarchicalJava2Test {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testFieldsBlobsUpdateByExampleWithBLOBs() {
         FieldsblobsDAO dao = getFieldsblobsDAO();
     
@@ -689,6 +700,7 @@ public class UpdateByExampleTests extends BaseHierarchicalJava2Test {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testAwfulTableUpdateByExampleSelective() {
         AwfulTableDAO dao = getAwfulTableDAO();
     
@@ -759,6 +771,7 @@ public class UpdateByExampleTests extends BaseHierarchicalJava2Test {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testAwfulTableUpdateByExample() {
         AwfulTableDAO dao = getAwfulTableDAO();
     

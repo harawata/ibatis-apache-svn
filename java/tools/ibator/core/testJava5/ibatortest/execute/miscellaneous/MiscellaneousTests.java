@@ -201,6 +201,7 @@ public class MiscellaneousTests extends BaseMiscellaneousTest {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testMyObjectDeleteByPrimaryKey() {
         MyObjectDAO dao = getMyObjectDAO();
 
@@ -230,6 +231,7 @@ public class MiscellaneousTests extends BaseMiscellaneousTest {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testMyObjectDeleteByExample() {
         MyObjectDAO dao = getMyObjectDAO();
 
@@ -307,6 +309,7 @@ public class MiscellaneousTests extends BaseMiscellaneousTest {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testMyObjectSelectByExampleLike() {
         MyObjectDAO dao = getMyObjectDAO();
 
@@ -386,6 +389,7 @@ public class MiscellaneousTests extends BaseMiscellaneousTest {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testMyObjectSelectByExampleNotLike() {
         MyObjectDAO dao = getMyObjectDAO();
 
@@ -465,6 +469,7 @@ public class MiscellaneousTests extends BaseMiscellaneousTest {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testMyObjectSelectByExampleComplexLike() {
         MyObjectDAO dao = getMyObjectDAO();
 
@@ -637,6 +642,7 @@ public class MiscellaneousTests extends BaseMiscellaneousTest {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testMyObjectSelectByExampleBetween() {
         MyObjectDAO dao = getMyObjectDAO();
 

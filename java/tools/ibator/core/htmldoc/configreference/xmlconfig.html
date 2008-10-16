@@ -37,7 +37,7 @@ attributes.</p>
 &lt;ibatorConfiguration&gt;
   &lt;classPathEntry location="/Program Files/IBM/SQLLIB/java/db2java.zip" /&gt;
 
-  &lt;ibatorContext id="DB2Tables" generatorSet="Java2"&gt;
+  &lt;ibatorContext id="DB2Tables" targetJRE="Java2"&gt;
     &lt;jdbcConnection driverClass="COM.ibm.db2.jdbc.app.DB2Driver"
         connectionURL="jdbc:db2:TEST"
         userId="db2admin"
@@ -75,9 +75,8 @@ attributes.</p>
 </pre>
 <p>Important notes about this file follow:</p>
 <ul>
-  <li>ibator will use the <code>Java2</code> generator set to generate code.  This generator set
-      is more powerful then the original generator set shipped with early versions of
-      Abator.</li>
+  <li>ibator will generate code compatible with versions of Java before Java 5.0 (i.e. no generic
+      types).</li>
   <li>The file specifies that the legacy DB2 CLI driver will be used to connect to the database,
       and also specifies where the driver can be found.</li>
   <li>The Java Type Resolver should not force the use of BigDecimal fields - this means that

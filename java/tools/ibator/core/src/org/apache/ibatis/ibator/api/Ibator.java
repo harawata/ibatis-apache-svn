@@ -199,10 +199,12 @@ public class Ibator {
         
         callback.setNumberOfSubTasks(totalSteps);
         
-        // setup custom classloader
-        ClassLoader classLoader = 
-            ClassloaderUtility.getCustomClassloader(ibatorConfiguration.getClassPathEntries());
-        IbatorObjectFactory.setClassLoader(classLoader);
+        // setup custom classloader if required
+        if (ibatorConfiguration.getClassPathEntries().size() > 0) {
+            ClassLoader classLoader = 
+                ClassloaderUtility.getCustomClassloader(ibatorConfiguration.getClassPathEntries());
+            IbatorObjectFactory.setExternalClassLoader(classLoader);
+        }
 
         // now run the generates...
         for (IbatorContext ibatorContext : contextsToRun) {

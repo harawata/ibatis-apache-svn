@@ -24,5 +24,4 @@ import org.apache.ibatis.ibator.api.dom.xml.Document;
  */
 public interface XmlGenerator extends AbstractGenerator {
     Document getDocument();
-    int getNumberOfSubtasks();
 }

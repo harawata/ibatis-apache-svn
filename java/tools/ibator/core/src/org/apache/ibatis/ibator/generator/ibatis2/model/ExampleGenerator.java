@@ -29,6 +29,7 @@ import org.apache.ibatis.ibator.api.dom.java.Field;
 import org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.ibator.api.dom.java.InnerClass;
 import org.apache.ibatis.ibator.api.dom.java.JavaVisibility;
+import org.apache.ibatis.ibator.api.dom.java.JavaWildcardType;
 import org.apache.ibatis.ibator.api.dom.java.Method;
 import org.apache.ibatis.ibator.api.dom.java.Parameter;
 import org.apache.ibatis.ibator.api.dom.java.TopLevelClass;
@@ -71,6 +72,9 @@ public class ExampleGenerator extends BaseModelClassGenerator implements JavaGen
             method.addBodyLine("oredCriteria = new ArrayList<Criteria>();"); //$NON-NLS-1$
         } else {
             method.addBodyLine("oredCriteria = new ArrayList();"); //$NON-NLS-1$
+            if (ibatorContext.getSuppressTypeWarnings()) {
+                method.addSuppressTypeWarningsAnnotation();
+            }
         }
         
         commentGenerator.addGeneralMethodComment(method, table);
@@ -130,6 +134,9 @@ public class ExampleGenerator extends BaseModelClassGenerator implements JavaGen
         }
 
         field.setType(fqjt);
+        if (ibatorContext.getSuppressTypeWarnings()) {
+            field.addSuppressTypeWarningsAnnotation();
+        }
         field.setName("oredCriteria"); //$NON-NLS-1$
         commentGenerator.addFieldComment(field, table);
         topLevelClass.addField(field);
@@ -137,6 +144,9 @@ public class ExampleGenerator extends BaseModelClassGenerator implements JavaGen
         method = new Method();
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setReturnType(fqjt);
+        if (ibatorContext.getSuppressTypeWarnings()) {
+            method.addSuppressTypeWarningsAnnotation();
+        }
         method.setName("getOredCriteria"); //$NON-NLS-1$
         method.addBodyLine("return oredCriteria;"); //$NON-NLS-1$
         commentGenerator.addGeneralMethodComment(method, table);
@@ -205,6 +215,9 @@ public class ExampleGenerator extends BaseModelClassGenerator implements JavaGen
         InnerClass answer = new InnerClass(FullyQualifiedJavaType
                 .getCriteriaInstance());
 
+        if (ibatorContext.getSuppressTypeWarnings()) {
+            answer.addSuppressTypeWarningsAnnotation();
+        }
         answer.setVisibility(JavaVisibility.PUBLIC);
         answer.setStatic(true);
         ibatorContext.getCommentGenerator().addClassComment(answer,
@@ -351,9 +364,6 @@ public class ExampleGenerator extends BaseModelClassGenerator implements JavaGen
         // now add the methods for simplifying the individual field set methods
         method = new Method();
         method.setVisibility(JavaVisibility.PROTECTED);
-        if (ibatorContext.getSuppressTypeWarnings()) {
-            method.addSuppressTypeWarningsAnnotation();
-        }
         method.setName("addCriterion"); //$NON-NLS-1$
         method.addParameter(new Parameter(FullyQualifiedJavaType
                 .getStringInstance(), "condition")); //$NON-NLS-1$
@@ -366,9 +376,6 @@ public class ExampleGenerator extends BaseModelClassGenerator implements JavaGen
 
         method = new Method();
         method.setVisibility(JavaVisibility.PROTECTED);
-        if (ibatorContext.getSuppressTypeWarnings()) {
-            method.addSuppressTypeWarningsAnnotation();
-        }
         method.setName("addCriterion"); //$NON-NLS-1$
         method.addParameter(new Parameter(FullyQualifiedJavaType
                 .getStringInstance(), "condition")); //$NON-NLS-1$
@@ -393,12 +400,13 @@ public class ExampleGenerator extends BaseModelClassGenerator implements JavaGen
 
         FullyQualifiedJavaType listOfObjects = FullyQualifiedJavaType
                 .getNewListInstance();
+        if (generateForJava5) {
+            JavaWildcardType extendsObject = new JavaWildcardType("java.lang.Object", true); //$NON-NLS-1$
+            listOfObjects.addTypeArgument(extendsObject);
+        }
 
         method = new Method();
         method.setVisibility(JavaVisibility.PROTECTED);
-        if (ibatorContext.getSuppressTypeWarnings()) {
-            method.addSuppressTypeWarningsAnnotation();
-        }
         method.setName("addCriterion"); //$NON-NLS-1$
         method.addParameter(new Parameter(FullyQualifiedJavaType
                 .getStringInstance(), "condition")); //$NON-NLS-1$
@@ -422,9 +430,6 @@ public class ExampleGenerator extends BaseModelClassGenerator implements JavaGen
 
         method = new Method();
         method.setVisibility(JavaVisibility.PROTECTED);
-        if (ibatorContext.getSuppressTypeWarnings()) {
-            method.addSuppressTypeWarningsAnnotation();
-        }
         method.setName("addCriterion"); //$NON-NLS-1$
         method.addParameter(new Parameter(FullyQualifiedJavaType
                 .getStringInstance(), "condition")); //$NON-NLS-1$
@@ -482,9 +487,6 @@ public class ExampleGenerator extends BaseModelClassGenerator implements JavaGen
 
             method = new Method();
             method.setVisibility(JavaVisibility.PROTECTED);
-            if (ibatorContext.getSuppressTypeWarnings()) {
-                method.addSuppressTypeWarningsAnnotation();
-            }
             method.setName("addCriterionForJDBCDate"); //$NON-NLS-1$
             method.addParameter(new Parameter(FullyQualifiedJavaType
                     .getStringInstance(), "condition")); //$NON-NLS-1$
@@ -551,9 +553,6 @@ public class ExampleGenerator extends BaseModelClassGenerator implements JavaGen
 
             method = new Method();
             method.setVisibility(JavaVisibility.PROTECTED);
-            if (ibatorContext.getSuppressTypeWarnings()) {
-                method.addSuppressTypeWarningsAnnotation();
-            }
             method.setName("addCriterionForJDBCTime"); //$NON-NLS-1$
             method.addParameter(new Parameter(FullyQualifiedJavaType
                     .getStringInstance(), "condition")); //$NON-NLS-1$
@@ -1116,9 +1115,5 @@ public class ExampleGenerator extends BaseModelClassGenerator implements JavaGen
         method.addBodyLine("return this;"); //$NON-NLS-1$
 
         return method;
-    }
-
-    public int getNumberOfSubtasks() {
-        return 1;
     }
 }

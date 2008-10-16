@@ -77,16 +77,15 @@ databases, or with different generation parameters, in the same run of ibator.</
     </td>
   </tr>
   <tr>
-    <td valign="top">generatorSet</td>
+    <td valign="top">targetJRE</td>
     <td>
-      This property is used to select different sets of code generators,
-      with different behaviors.
+      This property is used to specify the JRE under which the generated code will run.
       The property supports these values:
       <table>
         <tr>
           <th valign="top">Java2</th>
           <td><i>This is the default value</i>
-            <br/>This set of code generators generate objects that are compatible
+            <br/>With this value, ibator will generate objects that are compatible
             with iBATIS versions 2.2.0 and higher, and all levels of Java 2.
             The "by example" methods in these generated objects support virtually
             unlimited dynamic where clauses.  The objects generated with
@@ -96,8 +95,9 @@ databases, or with different generation parameters, in the same run of ibator.</
         </tr>
         <tr>
           <th valign="top">Java5</th>
-          <td>This set of code generators generate objects that are compatible
-            with iBATIS versions 2.2.0 and higher, and JSE 5.0 and higher.
+          <td>With the value, ibator will generate objects that are compatible
+            with iBATIS versions 2.2.0 and higher, and JSE 5.0 and higher (e.g. the
+            Java model and DAO classes will use generic types).
             The "by example" methods in these generated objects support virtually
             unlimited dynamic where clauses.  Additionally, the Java objects
             generated with these generators support many JSE 5.0 features including
@@ -107,17 +107,6 @@ databases, or with different generation parameters, in the same run of ibator.</
             of the other sets of code generators.</td>
         </tr>
       </table>
-    </td>
-  </tr>
-  <tr>
-    <td valign="top">introspectedTableImplementation</td>
-    <td>This atribute can be used to configure a custom implementation of the
-        <code>org.apache.ibatis.ibator.api.IntrospectedTable</code> interface
-        for this context.  Implementations of this interface can provide
-        custom behavior for many of the core ibator functions.  The default
-        implementation of the interface is
-        <code>org.apache.ibatis.ibator.internal.db.IntrospectedTableDefaultImpl</code>
-        and that class is designed for extensibility.
     </td>
   </tr>
 </table>
@@ -147,11 +136,11 @@ specified with the <a href="property.html">&lt;property&gt;</a> child element:</
     <td valign="top">suppressTypeWarnings</td>
     <td>If true, then ibator will add an annotation to any method
       that uses a non-parameterized type to suppress compiler type warnings.
-      This is useful if you are using the Java2 generator set, but are
+      This is useful if you are using the Java2 targetJRE, but are
       compiling the generated objects with a JSE 5.0 compiler.  In that situation,
       the ibator generated code would generate many compiler warnings if the
       annotation is not allowed.  This property is not needed and will have
-      no effect when using the Java5 generator set.</p>
+      no effect when using the Java5 targetJRE.</p>
       <p><i>The default value is false.</i></p></td>
   </tr>
   <tr>

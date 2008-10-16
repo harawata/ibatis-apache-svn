@@ -132,8 +132,4 @@ public class BaseRecordGenerator extends BaseModelClassGenerator implements Java
         return !introspectedTable.getRules().generateRecordWithBLOBsClass()
             && introspectedTable.hasBLOBColumns();
     }
-
-    public int getNumberOfSubtasks() {
-        return 1;
-    }
 }

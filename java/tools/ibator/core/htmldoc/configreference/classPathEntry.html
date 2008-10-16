@@ -19,16 +19,21 @@
 <p>The &lt;classPathEntry&gt; element is used to add classpath locations to the
 classpath of the ibator run.  The &lt;classPathEntry&gt; element is an option child
 element of the <a href="ibatorConfiguration.html">&lt;ibatorConfiguration&gt;</a> element.
-ibator loads classes in several instances:</p>
+ibator loads classes from these locations in these instances:</p>
 <ul>
   <li>When loading the JDBC driver for database introspection</li>
-  <li>When loading custom JavaModelGenerator, JavaTypeResolvers, etc.</li>
   <li>When loading root classes in the JavaModelGenerator to check for overridden
       methods</li>
 </ul>
 
-<p>This element is option and is not required if you setup the classpath externally to ibator
+<p>This element is optional and is not required if you setup the classpath externally to ibator
 (e.g. with the <code>-cp</code> argument of the <code>java</code> command</p>
+
+<p><b>Important Note:</b> these locations are NOT used when loading classes that
+extend one of ibator's classes or implement one of ibator's interfaces.  In those cases
+you must add your external classes to the runtime classpath in the same way you
+add ibator to the classpath (e,g, with the <code>-cp</code> argument of the
+<code>java</code> command).</p>
 
 <h2>Required Attributes</h2>
 <table border="1" cellspacing="0" cellpadding="5">

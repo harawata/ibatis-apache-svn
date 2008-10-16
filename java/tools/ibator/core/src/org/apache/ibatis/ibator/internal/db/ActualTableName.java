@@ -30,11 +30,13 @@ public class ActualTableName {
     private String tableName;
     private String catalog;
     private String schema;
+    private String fullName;
     
     public ActualTableName (String catalog, String schema, String tableName) {
         this.catalog = catalog;
         this.schema = schema;
         this.tableName = tableName;
+        fullName = StringUtility.composeFullyQualifiedTableName(catalog, schema, tableName, '.'); 
     }
 
     public String getCatalog() {
@@ -60,11 +62,11 @@ public class ActualTableName {
 
     @Override
     public int hashCode() {
-        return toString().hashCode();
+        return fullName.hashCode();
     }
 
     @Override
     public String toString() {
-        return StringUtility.composeFullyQualifiedTableName(catalog, schema, tableName, '.');
+        return fullName;
     }
 }

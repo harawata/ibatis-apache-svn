@@ -107,7 +107,7 @@ public class FullyQualifiedJavaType implements Comparable<FullyQualifiedJavaType
     }
     /**
      * This method returns the fully qualified name that is suitable
-     * for an import statement (i.e. - without the genercs specified)
+     * for an import statement (i.e. - without the generics specified)
      * 
      * @return Returns the fullyQualifiedName.
      */

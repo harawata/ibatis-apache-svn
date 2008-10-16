@@ -365,7 +365,7 @@ public class IbatorContext extends PropertyHolder {
      *            the configuration will be used for code generation.
      * 
      * @throws SQLException
-     *             if some error arrises while introspecting the specified
+     *             if some error arises while introspecting the specified
      *             database tables.
      * 
      * @throws InterruptedException

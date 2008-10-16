@@ -61,7 +61,7 @@ public abstract class DAOElementGeneratorBaseImpl extends AbstractGeneratorImpl 
             
             try {
                 dAOMethodNameCalculator = (DAOMethodNameCalculator)
-                    IbatorObjectFactory.createObject(type);
+                    IbatorObjectFactory.createInternalObject(type);
             } catch (Exception e) {
                 dAOMethodNameCalculator = new DefaultDAOMethodNameCalculator();
                 warnings.add(Messages.getString("Warning.17", type, e.getMessage())); //$NON-NLS-1$

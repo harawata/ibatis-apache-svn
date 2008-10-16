@@ -90,8 +90,4 @@ public class PrimaryKeyGenerator extends BaseModelClassGenerator implements Java
         }
         return answer;
     }
-
-    public int getNumberOfSubtasks() {
-        return 1;
-    }
 }

@@ -26,5 +26,4 @@ import org.apache.ibatis.ibator.api.dom.java.CompilationUnit;
  */
 public interface JavaGenerator extends AbstractGenerator {
     List<CompilationUnit> getCompilationUnits();
-    int getNumberOfSubtasks();
 }

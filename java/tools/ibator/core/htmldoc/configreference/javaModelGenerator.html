@@ -21,11 +21,6 @@ generator.  The Java Model Generator builds primary key classes, record classes,
 Query by Example classes that match the introspected table. This element is a required
 child element
 of the <a href="ibatorContext.html">&lt;ibatorContext&gt;</a> element.</p>
-<p>If you don't specify a user defined type, ibator will select a default
-generator based on the value of the
-<code>generatorSet</code> property of the
-<a href="ibatorContext.html">&lt;ibatorContext&gt;</a> element.  See the notes on that
-page for features of the different types of generators.</p>
 <h2>Required Attributes</h2>
 <table border="1" cellspacing="0" cellpadding="5">
   <tr>
@@ -57,21 +52,7 @@ page for features of the different types of generators.</p>
 </table>
 
 <h2>Optional Attributes</h2>
-<table border="1" cellspacing="0" cellpadding="5">
-  <tr>
-    <th>Attribute</th>
-    <th>Description</th>
-  </tr>
-  <tr>
-    <td valign="top">type</td>
-    <td>This can be used to specify a user provided Java model generator.
-        The class must implement the interface
-        org.apache.ibatis.ibator.api.JavaModelGenerator,
-        and must have a public default constructor.  The attribute also accepts
-        the special value DEFAULT in which case the default implementation will
-        be used (this has the same effect as not specifying the type).</td>
-  </tr>
-</table>
+<p>None</p>
 
 <h2>Child Elements</h2>
 <ul>

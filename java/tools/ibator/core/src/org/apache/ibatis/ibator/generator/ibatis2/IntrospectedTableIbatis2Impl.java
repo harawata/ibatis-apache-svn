@@ -85,8 +85,7 @@ public class IntrospectedTableIbatis2Impl extends IntrospectedTable {
         } else if ("GENERIC-SI".equalsIgnoreCase(type)) {
             abstractDAOTemplate = new GenericSIDAOTemplate();
         } else {
-            // TODO - document this as a way to supply custom template for DAOs
-            abstractDAOTemplate = (AbstractDAOTemplate) IbatorObjectFactory.createObject(type);
+            abstractDAOTemplate = (AbstractDAOTemplate) IbatorObjectFactory.createInternalObject(type);
         }
 
         boolean generateForJava5 = "Java5".equalsIgnoreCase(ibatorContext.getTargetJRE());
@@ -166,23 +165,6 @@ public class IntrospectedTableIbatis2Impl extends IntrospectedTable {
         if (ibatorContext.getPlugins().sqlMapGenerated(gxf, this)) {
             answer.add(gxf);
         }
-        
-        return answer;
-    }
-
-    @Override
-    public int getNumberOfSubtasks() {
-        int answer = 0;
-        
-        for (JavaGenerator javaGenerator : javaModelGenerators) {
-            answer += javaGenerator.getNumberOfSubtasks();
-        }
-        
-        for (JavaGenerator javaGenerator : daoGenerators) {
-            answer += javaGenerator.getNumberOfSubtasks();
-        }
-        
-        answer += sqlMapGenerator.getNumberOfSubtasks();
         
         return answer;
     }
