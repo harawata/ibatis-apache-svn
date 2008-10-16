@@ -32,8 +32,9 @@ files:</p>
   &quot;http://ibatis.apache.org/dtd/ibator-config_1_0.dtd&quot;&gt;
     </pre>
   </li>
-  <li>All abator* elements are renamed to ibator*.  For example,
-    &lt;abatorConfiguration&gt; is renamed to &lt;ibatorConfiguration&gt;</li>
+  <li>The &lt;abatorConfiguration&gt; element is renamed to &lt;ibatorConfiguration&gt;</li>
+  <li>The &lt;abatorContext&gt; element is renamed to &lt;ibatorContext&gt;</li>
+  <li>&lt;ibatorContext&gt; elements now require an ID</li>
   <li>The <code>generatorSet</code> attribute is removed from the
     <code>&lt;ibatorContext&gt;</code> element and replaced with the
     <code>targetJRE</code> attribute.  Valid values for this
@@ -62,6 +63,20 @@ files:</p>
     simplified.  If you specified a custom implementation on the
     &lt;javaTypeResolver&gt; element, you must rework your implementation
     class.</li>
+  <li>The ibator classloading strategy has changed substantially, and we now recommend that
+      you manage the runtime classpath external to ibator.  If you manage the classpath with
+      configuration entries, you must make the
+      following changes from Abator:
+      <ul>
+        <li>Class path entries are specified at the configuration file level
+            with the <a href="configreference/classPathEntry.html">&lt;classPathEntry&gt;</a>
+            element - now a child element of <code>&lt;ibatorConfiguration&gt;</code> only.</li>
+        <li>A <code>&lt;classPathEntry&gt;</code> element is not longer allowed as a child
+            of <code>&lt;jdbcConnection&gt;</code></li>
+        <li>The "rootClasspath" property is no longer valid for the <code>&lt;javaModelGenerator&gt;</code>
+            element.</li>
+      </ul>
+  </li>
 </ul>
 </body>
 </html>
