@@ -1,14 +1,19 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.50727</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{72849281-1C73-4F05-96F5-05B0D859FFA6}</ProjectGuid>
+    <ProjectGuid>{DA5A59F0-DF1E-4653-BC64-5AEE32F5308E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Apache.Ibatis.DataMapper.OracleClient.Test</RootNamespace>
-    <AssemblyName>Apache.Ibatis.DataMapper.OracleClient.Test</AssemblyName>
+    <RootNamespace>Apache.Ibatis.DataMapper.PostgreSQL.Test</RootNamespace>
+    <AssemblyName>Apache.Ibatis.DataMapper.PostgreSQL.Test</AssemblyName>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -51,18 +56,17 @@
     <Content Include="Maps\ResultClass.xml" />
     <Content Include="Scripts\account-init.sql" />
     <Content Include="Scripts\account-procedure.sql" />
-    <Content Include="Scripts\account-refcursor-package-body.sql" />
-    <Content Include="Scripts\account-refcursor-package-spec.sql" />
     <Content Include="Scripts\category-init.sql" />
     <Content Include="Scripts\category-procedure.sql" />
     <Content Include="Scripts\DataBase.sql" />
-    <Content Include="Scripts\DataBaseNHibernate.sql" />
     <Content Include="Scripts\documents-init.sql" />
     <Content Include="Scripts\enumeration-init.sql" />
     <Content Include="Scripts\line-item-init.sql" />
     <Content Include="Scripts\more-account-records.sql" />
+    <Content Include="Scripts\nullable-init.sql" />
     <Content Include="Scripts\order-init.sql" />
     <Content Include="Scripts\other-init.sql" />
+    <Content Include="Scripts\simple-init.sql" />
     <Content Include="Scripts\swap-procedure.sql" />
     <Content Include="Scripts\user-init.sql" />
   </ItemGroup>

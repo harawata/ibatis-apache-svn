@@ -1,14 +1,19 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.50727</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{11867E8F-6E81-4A8A-8CD7-9B0FA146F7EB}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Apache.Ibatis.DataMapper.OleDb.Test</RootNamespace>
     <AssemblyName>Apache.Ibatis.DataMapper.OleDb.Test</AssemblyName>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -63,13 +68,13 @@
     <None Include="DataBase.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Apache.Ibatis.Common\Apache.Ibatis.Common.2005.csproj">
+    <ProjectReference Include="..\Apache.Ibatis.Common\Apache.Ibatis.Common.csproj">
       <Project>{BBC8DA4A-EA88-41D9-8B93-929B8F3ADADE}</Project>
-      <Name>Apache.Ibatis.Common.2005</Name>
+      <Name>Apache.Ibatis.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Apache.Ibatis.DataMapper\Apache.Ibatis.DataMapper.20005.csproj">
+    <ProjectReference Include="..\Apache.Ibatis.DataMapper\Apache.Ibatis.DataMapper.csproj">
       <Project>{F3E45F39-3224-4EAD-B138-EB5CC0E32824}</Project>
-      <Name>Apache.Ibatis.DataMapper.20005</Name>
+      <Name>Apache.Ibatis.DataMapper</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
