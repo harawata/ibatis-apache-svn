@@ -1,7 +1,9 @@
-package org.apache.ibatis.datasource;
+package org.apache.ibatis.datasource.unpooled;
 
 import org.apache.ibatis.jdbc.UnpooledDataSource;
 import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.datasource.DataSourceFactory;
+import org.apache.ibatis.datasource.DataSourceException;
 
 import javax.sql.DataSource;
 import java.util.Properties;

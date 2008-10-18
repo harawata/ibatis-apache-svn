@@ -1,4 +1,7 @@
-package org.apache.ibatis.datasource;
+package org.apache.ibatis.datasource.jndi;
+
+import org.apache.ibatis.datasource.DataSourceFactory;
+import org.apache.ibatis.datasource.DataSourceException;
 
 import javax.naming.*;
 import javax.sql.DataSource;
