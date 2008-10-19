@@ -34,16 +34,10 @@ namespace Apache.Ibatis.DataMapper.Model.Events
     /// </summary>
     public sealed class PreCreateEventArgs : EventArgs
     {
-        private object[] parameters = null;
-
         /// <summary>
         /// Gets or sets the parameters used for create the instance 
         /// </summary>
         /// <value>The parameters.</value>
-        public object[] Parameters
-        {
-            get { return parameters; }
-            set { parameters = value; }
-        }
+        public object[] Parameters { get; set; }
     }
 }

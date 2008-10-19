@@ -64,7 +64,16 @@ namespace Apache.Ibatis.DataMapper.Model.ParameterMapping
 		#endregion
 
 		#region Properties
-		/// <summary>
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this ParameterMap has output parameter.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if this instance has output parameter; otherwise, <c>false</c>.
+        /// </value>
+        public bool HasOutputParameter { get; set;}
+
+        /// <summary>
 		/// The parameter class name.
 		/// </summary>
 		public string ClassName
@@ -147,9 +156,11 @@ namespace Apache.Ibatis.DataMapper.Model.ParameterMapping
             Contract.Require.That(id, Is.Not.Null & Is.Not.Empty).When("retrieving argument id in ParameterMap constructor");
             Contract.Require.That(dataExchange, Is.Not.Null & Is.Not.Empty).When("retrieving argument dataExchange in ParameterMap constructor for id " + id );
 
+            HasOutputParameter = false;
+
             if (logger.IsInfoEnabled)
             {
-                if ((className == null) || (className.Length < 1))
+                if (string.IsNullOrEmpty(className))
                 {
                     logger.Info("The class attribute is recommended for better performance in a ParameterMap tag '" + id + "'.");
                 }
@@ -158,7 +169,7 @@ namespace Apache.Ibatis.DataMapper.Model.ParameterMapping
             this.id = id;
             this.className = className;
             this.usePositionalParameters = usePositionalParameters;
-            this.parameterClass = type;
+            parameterClass = type;
             this.dataExchange = dataExchange;
             this.extendMap = extendMap;
 		}
@@ -173,17 +184,14 @@ namespace Apache.Ibatis.DataMapper.Model.ParameterMapping
 		/// <returns>A ParameterProperty</returns>
 		public ParameterProperty GetProperty(int index)
 		{
-			if (usePositionalParameters) //obdc/oledb
+		    if (usePositionalParameters) //obdc/oledb
 			{
 				return properties[index];
 			}
-			else 
-			{
-				return propertiesList[index];
-			}
+		    return propertiesList[index];
 		}
 
-		/// <summary>
+	    /// <summary>
 		/// Get a ParameterProperty by his name.
 		/// </summary>
 		/// <param name="name">The name of the ParameterProperty</param>
@@ -200,7 +208,13 @@ namespace Apache.Ibatis.DataMapper.Model.ParameterMapping
 		/// <param name="property"></param>
 		public void AddParameterProperty(ParameterProperty property)
 		{
-			// These mappings will replace any mappings that this map 
+            if (property.Direction == ParameterDirection.Output ||
+                        property.Direction == ParameterDirection.InputOutput)
+            {
+                HasOutputParameter = true;
+            }
+
+		    // These mappings will replace any mappings that this map 
 			// had for any of the keys currently in the specified map. 
 			propertiesMap[property.PropertyName] = property;
 			properties.Add( property );
@@ -220,6 +234,12 @@ namespace Apache.Ibatis.DataMapper.Model.ParameterMapping
 		/// <param name="property">The ParameterProperty to insert. </param>
 		public void InsertParameterProperty(int index, ParameterProperty property)
 		{
+            if (property.Direction == ParameterDirection.Output ||
+            property.Direction == ParameterDirection.InputOutput)
+            {
+                HasOutputParameter = true;
+            }
+
 			// These mappings will replace any mappings that this map 
 			// had for any of the keys currently in the specified map. 
 			propertiesMap[property.PropertyName] = property;

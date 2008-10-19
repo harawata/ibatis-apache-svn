@@ -42,8 +42,8 @@ namespace Apache.Ibatis.DataMapper.Model.Sql.Dynamic.Handlers
 	public sealed class IterateContext : IEnumerator
 	{
 		#region Fields
-		private ICollection _collection;
-		private ArrayList _items = new ArrayList();
+		private readonly ICollection _collection;
+		private readonly ArrayList _items = new ArrayList();
 		int _index = -1;
 		#endregion
 
@@ -67,7 +67,7 @@ namespace Apache.Ibatis.DataMapper.Model.Sql.Dynamic.Handlers
 				{
 					list.Add(array[i]);
 				}
-				_collection = (ICollection)list;
+				_collection = list;
 			} 
 			else 
 			{
@@ -77,7 +77,7 @@ namespace Apache.Ibatis.DataMapper.Model.Sql.Dynamic.Handlers
 			IEnumerable enumerable = (IEnumerable)collection;
 			IEnumerator enumerator = enumerable.GetEnumerator();
 
-			while (enumerator.MoveNext() != false)
+			while (enumerator.MoveNext())
 			{
 				_items.Add(enumerator.Current);
 			}
@@ -165,11 +165,11 @@ namespace Apache.Ibatis.DataMapper.Model.Sql.Dynamic.Handlers
 		{
 			if (_collection is IList)
 			{
-				((IList)_collection).Remove(this.Current);
+				((IList)_collection).Remove(Current);
 			}
 			else if (_collection is IDictionary)
 			{
-				((IDictionary)_collection).Remove(this.Current);
+				((IDictionary)_collection).Remove(Current);
 			}
 		}
 
@@ -181,14 +181,11 @@ namespace Apache.Ibatis.DataMapper.Model.Sql.Dynamic.Handlers
 		{
 			get
 			{
-				if ( (_index >=-1) && (_index <(_items.Count-1)))
+			    if ( (_index >=-1) && (_index <(_items.Count-1)))
 				{
 					return true;
 				}
-				else
-				{
-					return false;
-				}
+			    return false;
 			}
 		}
 

@@ -33,30 +33,19 @@ namespace Apache.Ibatis.DataMapper.Model.Cache
     /// </summary>
     public abstract class BaseCache : ICache
     {
-        protected string id = string.Empty;
-        protected int size = 0;
-
         #region ICache Members
 
         /// <summary>
         /// Gets the id.
         /// </summary>
         /// <value>The id.</value>
-        public virtual string Id
-        {
-            get { return id; }
-            set { id = value;}
-        }
+        public virtual string Id { get; set; }
 
         /// <summary>
         /// Gets the size.
         /// </summary>
         /// <value>The size.</value>
-        public virtual int Size
-        {
-            get { return size; }
-            set { size = value; }
-        }
+        public virtual int Size { get; set; }
 
         /// <summary>
         /// Adds an item with the specified key and value into cached data.

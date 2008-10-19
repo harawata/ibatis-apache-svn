@@ -32,19 +32,13 @@ namespace Apache.Ibatis.DataMapper.Model.Events
     /// </summary>
     public abstract class BaseStatementEventArgs : EventArgs
     {
-        private object parameterObject = null;
-
         #region ISatementEvent Members
 
         /// <summary>
         /// Gets or sets the parameter object.
         /// </summary>
         /// <value>The parameter object.</value>
-        public object ParameterObject
-        {
-            get { return parameterObject; }
-            set { parameterObject = value; }
-        }
+        public object ParameterObject { get; set; }
 
         #endregion
     }

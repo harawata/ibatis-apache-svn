@@ -24,7 +24,6 @@
 #endregion
 
 using System.Data;
-using Apache.Ibatis.Common;
 using Apache.Ibatis.Common.Data;
 
 namespace Apache.Ibatis.DataMapper.Data
@@ -43,15 +42,12 @@ namespace Apache.Ibatis.DataMapper.Data
 		/// <param name="dbProvider">The databse provider <see cref="IDbProvider"/></param>
 		public static IDataReader Transform(IDataReader reader, IDbProvider dbProvider)
 		{
-            if (!dbProvider.AllowMARS && !(reader is InMemoryDataReader))
+		    if (!dbProvider.AllowMARS && !(reader is InMemoryDataReader))
 			{
 				// The underlying reader will be closed.
 				return new InMemoryDataReader(reader);
 			}
-			else
-			{
-				return reader;	
-			}
+		    return reader;
 		}
 	}
 }

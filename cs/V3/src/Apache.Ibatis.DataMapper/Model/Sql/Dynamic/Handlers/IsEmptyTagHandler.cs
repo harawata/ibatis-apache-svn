@@ -64,32 +64,26 @@ namespace Apache.Ibatis.DataMapper.Model.Sql.Dynamic.Handlers
 			if (parameterObject == null) 
 			{
 				return true;
-			} 
-			else 
-			{
-				string propertyName = ((BaseTag)tag).Property;
-				object value = null;
-				if (propertyName != null && propertyName.Length>0) 
-				{
-					value = ObjectProbe.GetMemberValue(parameterObject, propertyName, this.AccessorFactory);
-				} 
-				else 
-				{
-					value = parameterObject;
-				}
-				if (value is ICollection) 
-				{
-					return ((value == null) || (((ICollection) value).Count< 1));
-				} 
-				else if (value != null && typeof(Array).IsAssignableFrom(value.GetType())) //value.GetType().IsArray
-				{
-					return ((Array) value).GetLength(0) == 0;
-				}
-				else 
-				{
-					return ((value == null) || (System.Convert.ToString(value).Equals("")));
-				}
 			}
+		    string propertyName = ((BaseTag)tag).Property;
+		    object value = null;
+		    if (!string.IsNullOrEmpty(propertyName)) 
+		    {
+		        value = ObjectProbe.GetMemberValue(parameterObject, propertyName, AccessorFactory);
+		    } 
+		    else 
+		    {
+		        value = parameterObject;
+		    }
+		    if (value is ICollection) 
+		    {
+		        return ((value == null) || (((ICollection) value).Count< 1));
+		    }
+		    if (value != null && typeof(Array).IsAssignableFrom(value.GetType())) //value.GetType().IsArray
+		    {
+		        return ((Array) value).GetLength(0) == 0;
+		    }
+		    return ((value == null) || (Convert.ToString(value).Equals("")));
 		}
 		#endregion
 

@@ -129,7 +129,7 @@ namespace Apache.Ibatis.DataMapper.TypeHandlers
         /// </value>
 		public override bool IsSimpleType
 		{
-			get { return true; }
+			get { return false; }
 		}
 
         //public override object NullValue

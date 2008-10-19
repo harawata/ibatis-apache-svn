@@ -456,7 +456,7 @@ namespace Apache.Ibatis.Common.Utilities.Objects
 			} 
 			catch (ProbeException pe) 
 			{
-				throw pe;
+				throw;
 			} 
 			catch(Exception e)
 			{
@@ -560,7 +560,7 @@ namespace Apache.Ibatis.Common.Utilities.Objects
 			}
 			catch (ProbeException pe) 
 			{
-				throw pe;
+				throw;
 			} 
 			catch (Exception e) 
 			{

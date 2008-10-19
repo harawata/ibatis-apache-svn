@@ -131,7 +131,7 @@ namespace Apache.Ibatis.DataMapper.Model.Cache.Decorators
         {
             if (logger.IsDebugEnabled)
             {
-                logger.Debug("Clears cache :" + id);
+                logger.Debug("Clears cache :" + Id);
             }
 
             delegateCache.Clear();

@@ -30,16 +30,10 @@ namespace Apache.Ibatis.DataMapper.Model.Events
     /// </summary>
     public abstract class PostStatementEventArgs : BaseStatementEventArgs
     {
-        private object resultObject = null;
-
         /// <summary>
         /// Gets or sets the result object.
         /// </summary>
         /// <value>The result object.</value>
-        public object ResultObject
-        {
-            get { return resultObject; }
-            set { resultObject = value; }
-        }
+        public object ResultObject { get; set; }
     }
 }

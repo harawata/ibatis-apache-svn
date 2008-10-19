@@ -55,6 +55,7 @@ namespace Apache.Ibatis.DataMapper.TypeHandlers
 		private readonly ITypeHandler unknownTypeHandler = null;
 		private const string NULL = "NULLTYPE";
         private readonly IDictionary<string, TypeAlias> typeAliasMaps = new Dictionary<string, TypeAlias>();
+        private readonly IDictionary<Type, bool> simpleTypes = new Dictionary<Type, bool>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TypeHandlerFactory"/> class.
@@ -322,14 +323,20 @@ namespace Apache.Ibatis.DataMapper.TypeHandlers
 		public bool IsSimpleType(Type type) 
 		{
 			bool result = false;
-			if (type != null) 
-			{
-				ITypeHandler handler = GetTypeHandler(type, null);
-				if (handler != null) 
-				{
-					result = handler.IsSimpleType;
-				}
-			}
+		    
+            if (!simpleTypes.TryGetValue(type, out result))
+            {
+		        if (type != null) 
+			    {
+				    ITypeHandler handler = GetTypeHandler(type, null);
+				    if (handler != null) 
+				    {
+					    result = handler.IsSimpleType;
+				    }
+			        simpleTypes[type] = result;
+			    }
+            }
+
 			return result;
 		}
 

@@ -24,16 +24,10 @@
  ********************************************************************************/
 #endregion
 
-#region Imports
-
 using System.Collections;
 using System.Text;
 using Apache.Ibatis.DataMapper.Model.ParameterMapping;
 using Apache.Ibatis.DataMapper.Model.Sql.Dynamic.Elements;
-using System.Collections.Generic;
-
-#endregion
-
 
 namespace Apache.Ibatis.DataMapper.Model.Sql.Dynamic.Handlers
 {
@@ -42,18 +36,16 @@ namespace Apache.Ibatis.DataMapper.Model.Sql.Dynamic.Handlers
 	/// </summary>
 	public sealed class SqlTagContext
 	{
-        private Hashtable attributes = new Hashtable();
-		private bool _overridePrepend = false;
-		private SqlTag _firstNonDynamicTagWithPrepend = null;
-		private ArrayList _parameterMappings = new ArrayList();
-		private StringBuilder buffer = new StringBuilder();
+        private readonly Hashtable attributes = new Hashtable();
+	    private readonly ArrayList _parameterMappings = new ArrayList();
+		private readonly StringBuilder buffer = new StringBuilder();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SqlTagContext"/> class.
         /// </summary>
 		public SqlTagContext() 
 		{
-			_overridePrepend = false;
+			IsOverridePrepend = false;
 		}
 
         /// <summary>
@@ -74,31 +66,23 @@ namespace Apache.Ibatis.DataMapper.Model.Sql.Dynamic.Handlers
 			get { return buffer.ToString().Trim(); }
 		}
 
-        /// <summary>
-        /// Gets or sets a value indicating whether this instance is override prepend.
-        /// </summary>
-        /// <value>
-        /// 	<c>true</c> if this instance is override prepend; otherwise, <c>false</c>.
-        /// </value>
-		public bool IsOverridePrepend
-		{
-			set { _overridePrepend = value; }
-			get { return _overridePrepend; }
-		}
+	    /// <summary>
+	    /// Gets or sets a value indicating whether this instance is override prepend.
+	    /// </summary>
+	    /// <value>
+	    /// 	<c>true</c> if this instance is override prepend; otherwise, <c>false</c>.
+	    /// </value>
+	    public bool IsOverridePrepend { set; get; }
 
 
-        /// <summary>
-        /// Gets or sets the first non dynamic tag with prepend.
-        /// </summary>
-        /// <value>The first non dynamic tag with prepend.</value>
-		public SqlTag FirstNonDynamicTagWithPrepend
-		{
-			get { return _firstNonDynamicTagWithPrepend; }
-			set { _firstNonDynamicTagWithPrepend = value; }
-		}
+	    /// <summary>
+	    /// Gets or sets the first non dynamic tag with prepend.
+	    /// </summary>
+	    /// <value>The first non dynamic tag with prepend.</value>
+	    public SqlTag FirstNonDynamicTagWithPrepend { get; set; }
 
 
-        /// <summary>
+	    /// <summary>
         /// Adds the attribute.
         /// </summary>
         /// <param name="key">The key.</param>

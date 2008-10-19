@@ -81,10 +81,7 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
 
                 return evnt.DataBaseValue;
             }
-            else
-            {
-                return value;
-            }
+            return value;
         }
 
         /// <summary>

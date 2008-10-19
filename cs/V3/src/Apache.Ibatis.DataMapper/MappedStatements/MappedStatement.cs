@@ -1122,7 +1122,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         /// <param name="command">The command sql.</param>
         private static void RetrieveOutputParameters(RequestScope request, ISession session, IDbCommand command, object result)
         {
-            if (request.ParameterMap != null)
+            if (request.ParameterMap != null && request.ParameterMap.HasOutputParameter)
             {
                 int count = request.ParameterMap.PropertiesList.Count;
                 for (int i = 0; i < count; i++)

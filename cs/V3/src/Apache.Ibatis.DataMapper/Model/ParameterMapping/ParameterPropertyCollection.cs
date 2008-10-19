@@ -23,7 +23,6 @@
  ********************************************************************************/
 #endregion
 
-using System;
 using System.Collections.Generic;
 
 namespace Apache.Ibatis.DataMapper.Model.ParameterMapping

@@ -24,13 +24,7 @@
  ********************************************************************************/
 #endregion
 
-#region Using
-using System;
-
-using Apache.Ibatis.Common;
-using Apache.Ibatis.DataMapper.Model.Statements;
 using Apache.Ibatis.DataMapper.Model.ParameterMapping;
-#endregion
 
 namespace Apache.Ibatis.DataMapper.Model.Sql.Dynamic
 {
@@ -44,9 +38,8 @@ namespace Apache.Ibatis.DataMapper.Model.Sql.Dynamic
 
 		private string _text = string.Empty;
 		private bool _isWhiteSpace = false;
-		private ParameterProperty[] _parameters = null;
 
-		#endregion
+	    #endregion
 
 		#region Properties
 		/// <summary>
@@ -76,21 +69,12 @@ namespace Apache.Ibatis.DataMapper.Model.Sql.Dynamic
 			}
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
-		public ParameterProperty[] Parameters 
-		{
-			get
-			{
-				return _parameters;
-			}
-			set
-			{
-				_parameters = value;
-			}
-		}
-		#endregion
+	    /// <summary>
+	    /// 
+	    /// </summary>
+	    public ParameterProperty[] Parameters { get; set; }
+
+	    #endregion
 
 	}
 }

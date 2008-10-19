@@ -24,12 +24,9 @@
  ********************************************************************************/
 #endregion
 
-#region Imports
-using System;
 using Apache.Ibatis.Common.Utilities.Objects.Members;
 using Apache.Ibatis.DataMapper.Model.Sql.Dynamic.Elements;
 using Apache.Ibatis.Common.Utilities.Objects;
-#endregion
 
 namespace Apache.Ibatis.DataMapper.Model.Sql.Dynamic.Handlers
 {
@@ -56,16 +53,13 @@ namespace Apache.Ibatis.DataMapper.Model.Sql.Dynamic.Handlers
         /// <param name="parameterObject"></param>
         /// <returns></returns>
 		public override bool IsCondition(SqlTagContext ctx, SqlTag tag, object parameterObject)
-		{
-			if (parameterObject == null) 
+        {
+            if (parameterObject == null) 
 			{
 				return false;
-			} 
-			else 
-			{
-				return ObjectProbe.HasReadableProperty(parameterObject, ((BaseTag)tag).Property);
-			}		
-		}
+			}
+            return ObjectProbe.HasReadableProperty(parameterObject, ((BaseTag)tag).Property);
+        }
 	}
 
 }

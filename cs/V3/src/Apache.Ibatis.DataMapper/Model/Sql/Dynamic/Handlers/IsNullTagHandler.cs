@@ -57,21 +57,18 @@ namespace Apache.Ibatis.DataMapper.Model.Sql.Dynamic.Handlers
 			if (parameterObject == null) 
 			{
 				return true;
-			} 
-			else 
-			{
-				string propertyName = ((BaseTag)tag).Property;
-				object value;
-				if (propertyName != null && propertyName.Length>0 ) 
-				{
-					value = ObjectProbe.GetMemberValue(parameterObject, propertyName, this.AccessorFactory);
-				} 
-				else 
-				{
-					value = parameterObject;
-				}
-				return (value == null);
-			}		
+			}
+		    string propertyName = ((BaseTag)tag).Property;
+		    object value;
+		    if (!string.IsNullOrEmpty(propertyName) ) 
+		    {
+		        value = ObjectProbe.GetMemberValue(parameterObject, propertyName, AccessorFactory);
+		    } 
+		    else 
+		    {
+		        value = parameterObject;
+		    }
+		    return (value == null);
 		}
 	}
 }

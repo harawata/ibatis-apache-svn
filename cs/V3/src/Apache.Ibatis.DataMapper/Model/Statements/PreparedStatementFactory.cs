@@ -65,7 +65,7 @@ namespace Apache.Ibatis.DataMapper.Model.Statements
         private readonly DBHelperParameterCache dbHelperParameterCache = null;
 
         private readonly string commandText = string.Empty;
-		private RequestScope request = null;
+		private readonly RequestScope request = null;
 		// (property, DbParameter)
         private readonly HybridDictionary propertyDbParameterMap = new HybridDictionary();
 
@@ -130,26 +130,23 @@ namespace Apache.Ibatis.DataMapper.Model.Statements
 				{
 					throw new DataMapperException("A procedure statement tag must have a parameterMap attribute, which is not the case for the procedure '"+statement.Id+"."); 
 				}
-				else // use the parameterMap
-				{
-                    if (dbProvider.UseDeriveParameters)
-					{
-                        if (isDynamic)
-                        {
-                            DiscoverParameter(request.ParameterMap);                         
-                        }
-                        else
-                        {
-                            DiscoverParameter(statement.ParameterMap); 
-                        }
-					}
-					else
-					{
-						CreateParametersForProcedureCommand();
-					}
-				}
+			    if (dbProvider.UseDeriveParameters)
+			    {
+			        if (isDynamic)
+			        {
+			            DiscoverParameter(request.ParameterMap);                         
+			        }
+			        else
+			        {
+			            DiscoverParameter(statement.ParameterMap); 
+			        }
+			    }
+			    else
+			    {
+			        CreateParametersForProcedureCommand();
+			    }
 
-				#region Fix for Odbc
+			    #region Fix for Odbc
 				// Although executing a parameterized stored procedure using the ODBC .NET Provider 
 				// is slightly different from executing the same procedure using the SQL or 
 				// the OLE DB Provider, there is one important difference 
@@ -160,7 +157,7 @@ namespace Apache.Ibatis.DataMapper.Model.Statements
 				// in the MSDN Library. 
 				//http://support.microsoft.com/default.aspx?scid=kb;EN-US;Q309486
 
-                if (dbProvider.IsObdc == true)
+                if (dbProvider.IsObdc)
 				{
 					StringBuilder commandTextBuilder = new StringBuilder("{ call ");
 					commandTextBuilder.Append( commandText );
@@ -216,7 +213,12 @@ namespace Apache.Ibatis.DataMapper.Model.Statements
 					}
 				}
 				preparedStatement.DbParameters[i] = dataParameter;
-			}
+                if (dataParameter.Direction == ParameterDirection.Output ||
+                            dataParameter.Direction == ParameterDirection.InputOutput)
+                {
+                    parameterMap.HasOutputParameter = true;
+                }
+            }
 		    
             // Re-sort DbParameters to match order used in the parameterMap
             IDbDataParameter[] sortedDbParameters = new IDbDataParameter[parameterMap.Properties.Count];
@@ -229,7 +231,7 @@ namespace Apache.Ibatis.DataMapper.Model.Statements
 		}
 
         private IDbDataParameter Search(IDbDataParameter[] parameters, ParameterProperty property, int index)
-	    {
+        {
             if (property.ColumnName.Length>0)
             {
                 for (int i = 0; i < parameters.Length; i++)
@@ -250,15 +252,11 @@ namespace Apache.Ibatis.DataMapper.Model.Statements
                 }
                 throw new IndexOutOfRangeException("The parameter '" + property.ColumnName + "' does not exist in the stored procedure '" +statement.Id+"'. Check your parameterMap.");                
             }
-            else
-            {
-                return parameters[index];
-            }
-
-	    }
+            return parameters[index];
+        }
 
 
-		/// <summary>
+	    /// <summary>
 		/// Create IDataParameters for command text statement.
 		/// </summary>
 		private void CreateParametersForTextCommand()
@@ -296,7 +294,7 @@ namespace Apache.Ibatis.DataMapper.Model.Statements
                 IDbDataParameter dataParameter = dbProvider.CreateDataParameter();
 
 				// Manage dbType attribute if any
-				if (property.DbType != null && property.DbType.Length >0) 
+				if (!string.IsNullOrEmpty(property.DbType)) 
 				{
 					// Exemple : Enum.parse(System.Data.SqlDbType, 'VarChar')
 					object dbType = Enum.Parse( enumDbType, property.DbType, true );
@@ -384,7 +382,7 @@ namespace Apache.Ibatis.DataMapper.Model.Statements
                 IDbDataParameter dataParameter = dbProvider.CreateCommand().CreateParameter();
 
 				// Manage dbType attribute if any
-				if (property.DbType!=null && property.DbType.Length >0) 
+				if (!string.IsNullOrEmpty(property.DbType)) 
 				{
 					// Exemple : Enum.parse(System.Data.SqlDbType, 'VarChar')
 					object dbType = Enum.Parse( enumDbType, property.DbType, true );

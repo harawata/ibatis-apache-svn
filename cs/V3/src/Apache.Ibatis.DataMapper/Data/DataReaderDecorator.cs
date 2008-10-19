@@ -33,10 +33,10 @@ namespace Apache.Ibatis.DataMapper.Data
     /// Decorate an <see cref="System.Data.IDataReader"></see>
     /// to auto move to next ResultMap on NextResult call. 
     /// </summary>
-    public class DataReaderDecorator : IDataReader
+    public sealed class DataReaderDecorator : IDataReader
     {
-        private IDataReader _innerDataReader = null;
-        private RequestScope _request = null;
+        private readonly IDataReader _innerDataReader = null;
+        private readonly RequestScope _request = null;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataReaderDecorator"/> class.

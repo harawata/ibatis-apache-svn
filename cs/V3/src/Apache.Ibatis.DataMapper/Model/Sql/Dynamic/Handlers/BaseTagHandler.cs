@@ -53,7 +53,7 @@ namespace Apache.Ibatis.DataMapper.Model.Sql.Dynamic.Handlers
 		public const int REPEAT_BODY = 2;
 		#endregion
 
-        private AccessorFactory _accessorFactory = null;
+        private readonly AccessorFactory _accessorFactory = null;
 
 		/// <summary>
         /// The factory which build <see cref="IAccessor"/>
@@ -67,7 +67,7 @@ namespace Apache.Ibatis.DataMapper.Model.Sql.Dynamic.Handlers
         /// Initializes a new instance of the <see cref="BaseTagHandler"/> class.
         /// </summary>
         /// <param name="accessorFactory">The accessor factory.</param>
-        public BaseTagHandler(AccessorFactory accessorFactory)
+        protected BaseTagHandler(AccessorFactory accessorFactory)
 		{
             _accessorFactory = accessorFactory;
 		}
@@ -82,7 +82,7 @@ namespace Apache.Ibatis.DataMapper.Model.Sql.Dynamic.Handlers
 		/// <returns></returns>
 		public virtual int DoStartFragment(SqlTagContext ctx, SqlTag tag, object parameterObject) 
 		{
-			return BaseTagHandler.INCLUDE_BODY;
+			return INCLUDE_BODY;
 		}
 
 		/// <summary>
@@ -95,7 +95,7 @@ namespace Apache.Ibatis.DataMapper.Model.Sql.Dynamic.Handlers
 		/// <returns></returns>
 		public virtual int DoEndFragment(SqlTagContext ctx, SqlTag tag, object parameterObject, StringBuilder bodyContent) 
 		{
-			return BaseTagHandler.INCLUDE_BODY;
+			return INCLUDE_BODY;
 		}
 
 		/// <summary>

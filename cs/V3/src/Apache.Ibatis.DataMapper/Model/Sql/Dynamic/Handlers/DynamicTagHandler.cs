@@ -62,7 +62,7 @@ namespace Apache.Ibatis.DataMapper.Model.Sql.Dynamic.Handlers
 			{
 				ctx.IsOverridePrepend = true;
 			}
-			return BaseTagHandler.INCLUDE_BODY;
+			return INCLUDE_BODY;
 		}
 		#endregion
 

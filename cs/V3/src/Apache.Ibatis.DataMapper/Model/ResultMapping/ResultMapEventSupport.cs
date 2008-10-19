@@ -81,10 +81,7 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
                 
                 return eventArgs.Parameters;
             }
-            else
-            {
-                return parameters;
-            }
+            return parameters;
         }
 
         /// <summary>
@@ -107,10 +104,7 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
 
                 return eventArgs.Instance;
             }
-            else
-            {
-                return instance;
-            }
+            return instance;
         }
     }
 }

@@ -168,10 +168,7 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
             {
                 return resultClassFactory.CreateInstance(null);
             }
-            else
-            {
-                return TypeUtils.InstantiatePrimitiveType(resultClass);
-            }
+            return TypeUtils.InstantiatePrimitiveType(resultClass);
         }
 
         /// <summary>

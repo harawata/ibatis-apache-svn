@@ -42,19 +42,19 @@ namespace Apache.Ibatis.DataMapper.Model.Cache.Implementation
         /// </summary>
 		public LruCache() 
 		{
-			size = 256;
+			Size = 256;
             cache = new Dictionary<object, object>();
             keyList = new LinkedList<object>();
 		}
 
-        /// <summary>
-        /// Gets the size.
-        /// </summary>
-        /// <value>The size.</value>
-        public override int Size
-        {
-            set { size =value; }
-        }
+        ///// <summary>
+        ///// Gets the size.
+        ///// </summary>
+        ///// <value>The size.</value>
+        //public override int Size
+        //{
+        //    set { size =value; }
+        //}
 
 		/// <summary>
 		/// Remove an object from a cache model
@@ -103,7 +103,7 @@ namespace Apache.Ibatis.DataMapper.Model.Cache.Implementation
 			{
                 cache[key] = value;
                 keyList.AddLast(key);
-                if (keyList.Count > size)
+                if (keyList.Count > Size)
                 {
                     LinkedListNode<object> oldestKey = keyList.First;
                     keyList.RemoveFirst();

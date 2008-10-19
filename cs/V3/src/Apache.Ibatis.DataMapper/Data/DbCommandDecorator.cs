@@ -33,7 +33,7 @@ namespace Apache.Ibatis.DataMapper.Data
     /// Decorate an <see cref="System.Data.IDbCommand"></see>
     /// to auto move to next ResultMap on ExecuteReader call. 
     /// </summary>
-    public class DbCommandDecorator : IDbCommand
+    public sealed class DbCommandDecorator : IDbCommand
     {
         private readonly IDbCommand innerDbCommand = null;
         private readonly RequestScope request = null;

@@ -64,9 +64,9 @@ namespace Apache.Ibatis.DataMapper.Model.Sql.Dynamic.Handlers
 			{
 				string propertyName = ((BaseTag)tag).Property;
 				object collection;
-				if (propertyName != null && propertyName.Length>0) 
+				if (!string.IsNullOrEmpty(propertyName)) 
 				{
-					collection = ObjectProbe.GetMemberValue(parameterObject, propertyName, this.AccessorFactory);
+					collection = ObjectProbe.GetMemberValue(parameterObject, propertyName, AccessorFactory);
 				} 
 				else 
 				{
@@ -75,14 +75,11 @@ namespace Apache.Ibatis.DataMapper.Model.Sql.Dynamic.Handlers
 				iterate = new IterateContext(collection);
 				ctx.AddAttribute(tag, iterate);
 			}
-			if (iterate != null && iterate.HasNext) 
+			if (iterate.HasNext) 
 			{
-				return BaseTagHandler.INCLUDE_BODY;
-			} 
-			else 
-			{
-				return BaseTagHandler.SKIP_BODY;
+				return INCLUDE_BODY;
 			}
+		    return SKIP_BODY;
 		}
 
 
@@ -154,12 +151,9 @@ namespace Apache.Ibatis.DataMapper.Model.Sql.Dynamic.Handlers
 					}
 				}
 
-				return BaseTagHandler.REPEAT_BODY;
-			} 
-			else 
-			{
-				return BaseTagHandler.INCLUDE_BODY;
+				return REPEAT_BODY;
 			}
+		    return INCLUDE_BODY;
 		}
 
 		/// <summary>

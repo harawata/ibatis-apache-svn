@@ -29,7 +29,6 @@
 using System.Collections;
 using System.Text;
 
-using Apache.Ibatis.DataMapper.Model.Sql;
 using Apache.Ibatis.DataMapper.Model.Statements;
 using Apache.Ibatis.DataMapper.DataExchange;
 using Apache.Ibatis.DataMapper.MappedStatements;
@@ -51,8 +50,6 @@ namespace Apache.Ibatis.DataMapper.Model.Sql.SimpleDynamic
 	public sealed class SimpleDynamicSql : ISql
 	{
 		private const string ELEMENT_TOKEN = "$";
-        private const string NEW_BEGIN_ELEMENT_TOKEN = "${";
-        private const string NEW_END_ELEMENT_TOKEN = "}";
 
         private readonly string sqlStatement = string.Empty;
         private readonly IStatement statement = null;
@@ -193,23 +190,6 @@ namespace Apache.Ibatis.DataMapper.Model.Sql.SimpleDynamic
             }
 
             return newSql.ToString();
-        }
-
-        /// <summary>
-        /// Processes the dynamic elements with new syntax ${property}
-        /// </summary>
-        /// <param name="parameterObject">The parameter object.</param>
-        /// <returns></returns>
-        private string ProcessDynamicElementsWithNewSyntax(object parameterObject)
-        {
-            //    *****************
-            //    TO DO : ${property} (V3 syntax) support 
-            //    *********************
-            //    renommer cette classe en SubstitutionSql
-            //puis creer une classe ExternalSql.cs qui utilise un ISqlSource
-
-            // Remarks, on utilise deja ${property} pour remplacer les properties non ??? voir test avec {schema}
-            return null;
         }
 
 	    #region ISql Members

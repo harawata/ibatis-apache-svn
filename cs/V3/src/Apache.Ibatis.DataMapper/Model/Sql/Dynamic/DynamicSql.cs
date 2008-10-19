@@ -89,7 +89,7 @@ namespace Apache.Ibatis.DataMapper.Model.Sql.Dynamic
             this.usePositionalParameters = usePositionalParameters;
             this.dataExchangeFactory = dataExchangeFactory;
             this.dbHelperParameterCache = dbHelperParameterCache;
-            this.paramParser = new InlineParameterMapParser();
+            paramParser = new InlineParameterMapParser();
 		}
 
 		#region Methods

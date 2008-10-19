@@ -34,27 +34,16 @@ namespace Apache.Ibatis.DataMapper.Model.Events
     /// </summary>
     public sealed class PrePropertyEventArgs : EventArgs
     {
-        private object dataBaseValue = null;
-        private object target = null;
-
         /// <summary>
         /// Gets or sets the data base value.
         /// </summary>
         /// <value>The data base value.</value>
-        public object DataBaseValue
-        {
-            get { return dataBaseValue; }
-            set { dataBaseValue = value; }
-        }
+        public object DataBaseValue { get; set; }
 
         /// <summary>
         /// Gets or sets the target.
         /// </summary>
         /// <value>The target.</value>
-        public object Target
-        {
-            get { return target; }
-            set { target = value; }
-        }
+        public object Target { get; set; }
     }
 }

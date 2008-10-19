@@ -34,16 +34,10 @@ namespace Apache.Ibatis.DataMapper.Model.Events
     /// </summary>
     public sealed class PostPropertyEventArgs : EventArgs
     {
-        private object target = null;
-
         /// <summary>
         /// Gets or sets the target.
         /// </summary>
         /// <value>The target.</value>
-        public object Target
-        {
-            get { return target; }
-            set { target = value; }
-        }
+        public object Target { get; set; }
     }
 }

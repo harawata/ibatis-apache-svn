@@ -262,19 +262,16 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
                 {
                     return setAccessor.MemberType;
                 }
-                else if (nestedResultMap != null)
+                if (nestedResultMap != null)
                 {
                     return nestedResultMap.Class;
                 }
-                else
-                {
-                    throw new DataMapperException(
-                        String.Format(CultureInfo.InvariantCulture,
-                                      "Could not resolve member type for result property '{0}'. Neither nested result map nor typed setter was provided.",
-                                      PropertyName));
-                }
+                throw new DataMapperException(
+                    String.Format(CultureInfo.InvariantCulture,
+                                  "Could not resolve member type for result property '{0}'. Neither nested result map nor typed setter was provided.",
+                                  PropertyName));
             }
-        }
+		}
 
 		/// <summary>
 		/// Tell if a nullValue is defined.
@@ -473,7 +470,7 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
 			}
 
             #region TypeHandler
-            if (CallBackName != null && CallBackName.Length > 0)
+            if (!string.IsNullOrEmpty(CallBackName))
             {
                 try
                 {
@@ -503,7 +500,7 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
             } 
             #endregion
 
-            if (!this.GetType().IsSubclassOf(typeof(ResultProperty)))
+            if (!GetType().IsSubclassOf(typeof(ResultProperty)))
             {
                 propertyStrategy = PropertyStrategyFactory.Get(this);
             }
@@ -573,7 +570,7 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
 				}
 				else
 				{
-                    value = this.TypeHandler.NullValue;
+                    value = TypeHandler.NullValue;
 				}			
 			}
 
@@ -586,18 +583,15 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
         /// <param name="value">The value.</param>
         /// <returns></returns>
 		public object TranslateValue(object value)
-		{
-			if (value == null)
+        {
+            if (value == null)
 			{
                 return TypeHandler.NullValue;
 			}
-			else
-			{
-				return value;
-			}
-		}
+            return value;
+        }
 
-		#endregion
+	    #endregion
     
 	    /// <summary>
         /// <see cref="IFactory"/> that constructs <see cref="ArrayList"/> instance

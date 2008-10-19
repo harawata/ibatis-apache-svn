@@ -54,7 +54,7 @@ namespace Apache.Ibatis.DataMapper.Model.Sql.Dynamic.Handlers
         /// Initializes a new instance of the <see cref="ConditionalTagHandler"/> class.
         /// </summary>
         /// <param name="accessorFactory">The accessor factory.</param>
-        public ConditionalTagHandler(AccessorFactory accessorFactory)
+        protected ConditionalTagHandler(AccessorFactory accessorFactory)
             : base(accessorFactory)
 		{
 		}
@@ -76,19 +76,16 @@ namespace Apache.Ibatis.DataMapper.Model.Sql.Dynamic.Handlers
 		/// <param name="tag"></param>
 		/// <param name="parameterObject"></param>
 		/// <returns></returns>
-		public override int DoStartFragment(SqlTagContext ctx, SqlTag tag, Object parameterObject) 
+		public override int DoStartFragment(SqlTagContext ctx, SqlTag tag, Object parameterObject)
 		{
-			if (IsCondition(ctx, tag, parameterObject)) 
+		    if (IsCondition(ctx, tag, parameterObject)) 
 			{
-				return BaseTagHandler.INCLUDE_BODY;
-			} 
-			else 
-			{
-				return BaseTagHandler.SKIP_BODY;
+				return INCLUDE_BODY;
 			}
+		    return SKIP_BODY;
 		}
 
-		/// <summary>
+	    /// <summary>
 		/// 
 		/// </summary>
 		/// <param name="ctx"></param>
@@ -98,7 +95,7 @@ namespace Apache.Ibatis.DataMapper.Model.Sql.Dynamic.Handlers
 		/// <returns></returns>
 		public override int DoEndFragment(SqlTagContext ctx, SqlTag tag, Object parameterObject, StringBuilder bodyContent) 
 		{
-			return BaseTagHandler.INCLUDE_BODY;
+			return INCLUDE_BODY;
 		}
 
 		/// <summary>
@@ -117,9 +114,9 @@ namespace Apache.Ibatis.DataMapper.Model.Sql.Dynamic.Handlers
 
 			object value1 = null;
 			Type type = null;
-			if (propertyName != null && propertyName.Length > 0) 
+			if (!string.IsNullOrEmpty(propertyName)) 
 			{
-				value1 = ObjectProbe.GetMemberValue(parameterObject, propertyName, this.AccessorFactory);
+				value1 = ObjectProbe.GetMemberValue(parameterObject, propertyName, AccessorFactory);
 				type = value1.GetType();
 			} 
 			else 
@@ -134,19 +131,16 @@ namespace Apache.Ibatis.DataMapper.Model.Sql.Dynamic.Handlers
 					type = typeof(object);
 				}
 			}
-			if (comparePropertyName != null && comparePropertyName.Length > 0) 
+			if (!string.IsNullOrEmpty(comparePropertyName)) 
 			{
-                object value2 = ObjectProbe.GetMemberValue(parameterObject, comparePropertyName, this.AccessorFactory);
+                object value2 = ObjectProbe.GetMemberValue(parameterObject, comparePropertyName, AccessorFactory);
 				return CompareValues(type, value1, value2);
-			} 
-			else if (compareValue != null && compareValue != "") 
-			{
-				return CompareValues(type, value1, compareValue);
-			} 
-			else 
-			{
-				throw new DataMapperException("Error comparing in conditional fragment.  Uknown 'compare to' values.");
 			}
+		    if (!string.IsNullOrEmpty(compareValue)) 
+		    {
+		        return CompareValues(type, value1, compareValue);
+		    }
+		    throw new DataMapperException("Error comparing in conditional fragment.  Uknown 'compare to' values.");
 		}
 
 		/// <summary>
@@ -156,7 +150,7 @@ namespace Apache.Ibatis.DataMapper.Model.Sql.Dynamic.Handlers
 		/// <param name="value1"></param>
 		/// <param name="value2"></param>
 		/// <returns></returns>
-		protected long CompareValues(Type type, object value1, object value2) 
+		protected static long CompareValues(Type type, object value1, object value2) 
 		{
 			long result = NOT_COMPARABLE;
 
@@ -191,67 +185,63 @@ namespace Apache.Ibatis.DataMapper.Model.Sql.Dynamic.Handlers
 		/// <param name="type"></param>
 		/// <param name="value"></param>
 		/// <returns></returns>
-		protected object ConvertValue(Type type, string value) 
+		protected static object ConvertValue(Type type, string value)
 		{
-
-			if (type == typeof(String)) 
-			{
-				return value;
-			} 
-			else if (type == typeof(bool)) 
-			{
-				return System.Convert.ToBoolean(value);
-			} 
-			else if (type == typeof(Byte)) 
-			{
-				return System.Convert.ToByte(value);
-			} 
-			else if (type == typeof(Char)) 
-			{
-				return System.Convert.ToChar(value.Substring(0,1));//new Character(value.charAt(0));
-			}			
-			else if (type == typeof(DateTime)) 
-			{
-				try 
-				{
-					return System.Convert.ToDateTime(value);
-				} 
-				catch (Exception e) 
-				{
-					throw new DataMapperException("Error parsing date. Cause: " + e.Message, e);
-				}
-			} 
-			else if (type == typeof(Decimal)) 
-			{
-				return System.Convert.ToDecimal(value);
-			} 
-			else if (type == typeof(Double))  
-			{
-				return System.Convert.ToDouble(value);
-			} 
-			else if (type == typeof(Int16)) 
-			{
-				return System.Convert.ToInt16(value);
-			} 
-			else if (type == typeof(Int32)) 
-			{
-				return System.Convert.ToInt32(value);
-			} 
-			else if (type == typeof(Int64)) 
-			{
-				return System.Convert.ToInt64(value);
-			} 
-			else if (type == typeof(Single)) 
-			{
-				return System.Convert.ToSingle(value);
-			} 
-			else 
+		    if (type == typeof(String)) 
 			{
 				return value;
 			}
-
+		    if (type == typeof(bool)) 
+		    {
+		        return Convert.ToBoolean(value);
+		    }
+		    if (type == typeof(Byte)) 
+		    {
+		        return Convert.ToByte(value);
+		    }
+		    if (type == typeof(Char)) 
+		    {
+		        return Convert.ToChar(value.Substring(0,1));//new Character(value.charAt(0));
+		    }
+		    if (type == typeof(DateTime)) 
+		    {
+		        try 
+		        {
+		            return Convert.ToDateTime(value);
+		        } 
+		        catch (Exception e) 
+		        {
+		            throw new DataMapperException("Error parsing date. Cause: " + e.Message, e);
+		        }
+		    }
+		    if (type == typeof(Decimal)) 
+		    {
+		        return Convert.ToDecimal(value);
+		    }
+		    if (type == typeof(Double))  
+		    {
+		        return Convert.ToDouble(value);
+		    }
+		    if (type == typeof(Int16)) 
+		    {
+		        return Convert.ToInt16(value);
+		    }
+		    if (type == typeof(Int32)) 
+		    {
+		        return Convert.ToInt32(value);
+		    }
+		    if (type == typeof(Int64)) 
+		    {
+		        return Convert.ToInt64(value);
+		    }
+		    if (type == typeof(Single)) 
+		    {
+		        return Convert.ToSingle(value);
+		    }
+		    return value;
 		}
-		#endregion
+
+	    #endregion
 
 	}
 }

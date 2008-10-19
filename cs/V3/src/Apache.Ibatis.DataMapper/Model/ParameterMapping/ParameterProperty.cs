@@ -309,11 +309,11 @@ namespace Apache.Ibatis.DataMapper.Model.ParameterMapping
             #endregion 
 
             #region TypeHandler
-            if (this.CallBackName.Length > 0)
+            if (CallBackName.Length > 0)
             {
                 try
                 {
-                    Type type = dataExchangeFactory.TypeHandlerFactory.GetType(this.CallBackName);
+                    Type type = dataExchangeFactory.TypeHandlerFactory.GetType(CallBackName);
                     ITypeHandlerCallback typeHandlerCallback = (ITypeHandlerCallback)Activator.CreateInstance(type);
                     typeHandler = new CustomTypeHandler(typeHandlerCallback);
                 }
@@ -324,7 +324,7 @@ namespace Apache.Ibatis.DataMapper.Model.ParameterMapping
             }
             else
             {
-                if (this.CLRType.Length == 0)  // Unknown
+                if (CLRType.Length == 0)  // Unknown
                 {
                     if (getAccessor != null &&
                         dataExchangeFactory.TypeHandlerFactory.IsSimpleType(getAccessor.MemberType))
@@ -339,7 +339,7 @@ namespace Apache.Ibatis.DataMapper.Model.ParameterMapping
                 }
                 else // If we specify a CLR type, use it
                 {
-                    Type type = TypeUtils.ResolveType(this.CLRType);
+                    Type type = TypeUtils.ResolveType(CLRType);
 
                     if (dataExchangeFactory.TypeHandlerFactory.IsSimpleType(type))
                     {
@@ -349,7 +349,7 @@ namespace Apache.Ibatis.DataMapper.Model.ParameterMapping
                     else
                     {
                         // .NET object
-                        type = ObjectProbe.GetMemberTypeForGetter(parameterClass, this.PropertyName);
+                        type = ObjectProbe.GetMemberTypeForGetter(parameterClass, PropertyName);
                         typeHandler = dataExchangeFactory.TypeHandlerFactory.GetTypeHandler(type, dbType);
                     }
                 }
@@ -373,7 +373,7 @@ namespace Apache.Ibatis.DataMapper.Model.ParameterMapping
 			//Check for null and compare run-time types.
 			if (obj == null || GetType() != obj.GetType()) return false;
 			ParameterProperty p = (ParameterProperty)obj;
-			return (this.PropertyName == p.PropertyName);
+			return (PropertyName == p.PropertyName);
 		}
 
 

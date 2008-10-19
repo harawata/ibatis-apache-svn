@@ -34,16 +34,10 @@ namespace Apache.Ibatis.DataMapper.Model.Events
     /// </summary>
     public sealed class PostCreateEventArgs : EventArgs
     {
-        private object instance = null;
-
         /// <summary>
         /// Gets or sets the newly created instance.
         /// </summary>
         /// <value>The instance.</value>
-        public object Instance
-        {
-            get { return instance; }
-            set { instance = value; }
-        }
+        public object Instance { get; set; }
     }
 }

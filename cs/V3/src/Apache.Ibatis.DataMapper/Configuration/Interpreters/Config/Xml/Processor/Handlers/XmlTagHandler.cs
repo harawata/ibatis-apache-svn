@@ -23,10 +23,6 @@
  ********************************************************************************/
 #endregion
 
-using System;
-using System.Xml;
-using Apache.Ibatis.Common.Configuration;
-
 namespace Apache.Ibatis.DataMapper.Configuration.Interpreters.Config.Xml.Processor
 {
 

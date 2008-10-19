@@ -115,12 +115,9 @@ namespace Apache.Ibatis.DataMapper.TypeHandlers
 			if (obj == null || str == null) 
 			{
 				return (string)obj == str;
-			} 
-			else 
-			{
-				object castedObject = ValueOf(obj.GetType(), str);
-				return obj.Equals(castedObject);
 			}
+		    object castedObject = ValueOf(obj.GetType(), str);
+		    return obj.Equals(castedObject);
 		}
 	}
 }

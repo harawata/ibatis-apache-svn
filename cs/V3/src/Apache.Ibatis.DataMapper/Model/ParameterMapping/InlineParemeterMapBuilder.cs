@@ -81,7 +81,7 @@ namespace Apache.Ibatis.DataMapper.Model.ParameterMapping
                     {
                         className = statement.ParameterClass.Name;
                         classType = statement.ParameterClass;
-                        dataExchange = modelStore.DataExchangeFactory.GetDataExchangeForClass(classType);
+                        //dataExchange = modelStore.DataExchangeFactory.GetDataExchangeForClass(classType);
                     }
 
                     if (statement.ParameterClass == null &&
@@ -91,7 +91,7 @@ namespace Apache.Ibatis.DataMapper.Model.ParameterMapping
                     }
                     else
                     {
-                        dataExchange = modelStore.DataExchangeFactory.GetDataExchangeForClass(null);
+                        dataExchange = modelStore.DataExchangeFactory.GetDataExchangeForClass(statement.ParameterClass);
                     }
 
                     map = new ParameterMap(

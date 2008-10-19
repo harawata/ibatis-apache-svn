@@ -85,7 +85,7 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
         /// <summary>
         /// The discriminator used to choose the good Case
         /// </summary>
-        public Discriminator Discriminator
+        public static Discriminator Discriminator
         {
             get { throw new Exception("The method or operation is not implemented."); }
             set { throw new Exception("The method or operation is not implemented."); }
@@ -119,7 +119,7 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
         /// <summary>
         /// Extend ResultMap attribute
         /// </summary>
-        public string ExtendMap
+        public static string ExtendMap
         {
             get { throw new Exception("The method or operation is not implemented."); }
             set { throw new Exception("The method or operation is not implemented."); }

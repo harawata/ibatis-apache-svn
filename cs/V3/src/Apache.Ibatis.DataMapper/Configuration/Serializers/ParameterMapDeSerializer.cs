@@ -71,7 +71,7 @@ namespace Apache.Ibatis.DataMapper.Configuration.Serializers
             else
             {
                 // Get the ComplexDataExchange
-                dataExchange = dataExchangeFactory.GetDataExchangeForClass(null);
+                dataExchange = dataExchangeFactory.GetDataExchangeForClass(dataExchangeFactory.TypeHandlerFactory.GetTypeAlias(className).Type);
             }
 
             return new ParameterMap(

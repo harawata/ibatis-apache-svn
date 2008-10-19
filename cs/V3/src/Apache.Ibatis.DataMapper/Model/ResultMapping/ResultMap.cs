@@ -276,10 +276,7 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
 
                 return instance;
             }
-            else
-            {
-                return TypeUtils.InstantiatePrimitiveType(type);
-            }
+            return TypeUtils.InstantiatePrimitiveType(type);
         }
 
         /// <summary>

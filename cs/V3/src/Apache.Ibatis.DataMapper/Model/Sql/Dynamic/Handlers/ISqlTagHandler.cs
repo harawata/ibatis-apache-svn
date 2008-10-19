@@ -24,13 +24,8 @@
  ********************************************************************************/
 #endregion
 
-#region Imports
-using System;
 using System.Text;
-
 using Apache.Ibatis.DataMapper.Model.Sql.Dynamic.Elements;
-#endregion
-
 
 namespace Apache.Ibatis.DataMapper.Model.Sql.Dynamic.Handlers
 {

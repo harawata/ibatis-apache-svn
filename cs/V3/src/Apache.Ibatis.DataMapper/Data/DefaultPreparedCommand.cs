@@ -83,7 +83,7 @@ namespace Apache.Ibatis.DataMapper.Data
         /// <param name="session">The session.</param>
         /// <param name="commandType">Type of the command.</param>
         /// <returns>the command</returns>
-        private IDbCommand CreateCommand(ISession session, CommandType commandType)
+        private static IDbCommand CreateCommand(ISession session, CommandType commandType)
         {
             IDbCommand command = session.SessionFactory.DataSource.DbProvider.CreateCommand();
 
@@ -104,7 +104,7 @@ namespace Apache.Ibatis.DataMapper.Data
         /// </summary>
         /// <param name="cmd">The CMD.</param>
         /// <param name="commandTimeout">The command timeout.</param>
-        private void SetCommandTimeout(IDbCommand cmd, int commandTimeout)
+        private static void SetCommandTimeout(IDbCommand cmd, int commandTimeout)
         {
             if (commandTimeout >= 0)
             {
@@ -193,7 +193,7 @@ namespace Apache.Ibatis.DataMapper.Data
 				// With a ParameterMap, we could specify the ParameterDbTypeProperty
 				if (request.ParameterMap != null)
 				{
-                    if (property.DbType != null && property.DbType.Length > 0)
+                    if (!string.IsNullOrEmpty(property.DbType))
 					{
                         string dbTypePropertyName = dbProvider.ParameterDbTypeProperty;
 						object propertyValue = ObjectProbe.GetMemberValue(sqlParameter, dbTypePropertyName, request.DataExchangeFactory.AccessorFactory);
