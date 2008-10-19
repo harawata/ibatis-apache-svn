@@ -1,46 +1,60 @@
 <configuration>
 
-  <properties resource="" url="">
-    <property name="" value=""/>
+  <properties resource="org/apache/ibatis/monarch/example/mapper.properties"> <!-- url="" -->
+    <property name="driver" value="org.apache.derby.jdbc.EmbeddedDriver"/>
   </properties>
 
   <settings>
-    <property name="" value=""/>
+    <property name="cacheEnabled" value="true"/>
+    <property name="lazyLoadingEnabled" value="true"/>
+    <property name="multipleResultSetsEnabled" value="true"/>
+    <property name="useColumnLabel" value="true"/>
+    <property name="enhancementEnabled" value="false"/>
+    <property name="generatedKeysEnabled" value="false"/>
+    <property name="defaultExecutorType" value="SIMPLE"/>
+    <property name="defaultStatementTimeout" value="25000"/>
   </settings>
 
   <typeAliases>
-    <typeAlias alias="" type=""/>
+    <typeAlias alias="Author" type="domain.blog.Author"/>
+    <typeAlias alias="Blog" type="domain.blog.Blog"/>
+    <typeAlias alias="Comment" type="domain.blog.Comment"/>
+    <typeAlias alias="Post" type="domain.blog.Post"/>
+    <typeAlias alias="Section" type="domain.blog.Section"/>
+    <typeAlias alias="Tag" type="domain.blog.Tag"/>
   </typeAliases>
 
   <typeHandlers>
-    <typeHandler javaType="" jdbcType="" handler=""/>
+    <typeHandler javaType="String" jdbcType="VARCHAR" handler="org.apache.ibatis.monarch.example.TestTypeHandler"/>
   </typeHandlers>
 
-  <objectFactory type="">
-    <property name="" value=""/>
+  <objectFactory type="org.apache.ibatis.monarch.example.TestObjectFactory">
+    <property name="objectFactoryProperty" value="100"/>
   </objectFactory>
 
   <plugins>
-    <plugin interceptor="">
-      <property name="" value=""/>
+    <plugin interceptor="org.apache.ibatis.monarch.example.TestPlugin">
+      <property name="pluginProperty" value="100"/>
     </plugin>
   </plugins>
 
   <environments default="development">
     <environment id="development">
-      <transactionManager type="JDBC|JTA|EXTERNAL">
+      <transactionManager type="JDBC">
         <property name="" value=""/>
       </transactionManager>
-      <dataSource type="POOLED|UNPOOLED|JNDI">
-        <property name="" value=""/>
+      <dataSource type="UNPOOLED">
+        <property name="driver" value="${driver}"/>
+        <property name="url" value="${url}"/>
+        <property name="username" value="${username}"/>
+        <property name="password" value="${password}"/>
       </dataSource>
     </environment>
   </environments>
 
   <mappers>
-    <mapper type="com.domain.PersonMapper"/>
-    <mapper type="com.domain.AnotherMapper" xml="resources/AnotherMapper.xml"/>
-    <mapper xml="resources/AnonymousMapper.xml"/>
+    <mapper xml="org/apache/ibatis/monarch/example/AuthorMapper.xml"/>
+    <mapper xml="org/apache/ibatis/monarch/example/BlogMapper.xml"/>
   </mappers>
 
 </configuration>
