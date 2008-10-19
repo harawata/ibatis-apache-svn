@@ -11,8 +11,8 @@ import java.util.*;
  */
 public class MapperEntityResolver implements EntityResolver {
 
-  private static final String MAPPER_CONFIG_DTD_RESOURCE = "org/apache/ibatis/monarch/dtd/mapper-config.dtd";
-  private static final String MAPPER_DTD_RESOURCE = "org/apache/ibatis/monarch/dtd/mapper.dtd";
+  private static final String MAPPER_CONFIG_DTD_RESOURCE = "org/apache/ibatis/monarch/builder/mapper-config.dtd";
+  private static final String MAPPER_DTD_RESOURCE = "org/apache/ibatis/monarch/builder/mapper.dtd";
 
   private static final Map<String, String> doctypeMap = new HashMap<String, String>();
 
