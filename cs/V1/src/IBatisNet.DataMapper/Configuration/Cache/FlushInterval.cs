@@ -137,27 +137,29 @@ namespace IBatisNet.DataMapper.Configuration.Cache
 		/// </summary>
 		public void Initialize()
 		{
+            long interval = 0;
 			if (_milliseconds != 0) 
 			{
-				_interval += (_milliseconds * TimeSpan.TicksPerMillisecond) ;
+                interval += (_milliseconds * TimeSpan.TicksPerMillisecond);
 			}
 			if (_seconds != 0) 
 			{
-				_interval += (_seconds * TimeSpan.TicksPerSecond) ;
+                interval += (_seconds * TimeSpan.TicksPerSecond);
 			}
 			if (_minutes != 0) 
 			{
-				_interval += (_minutes * TimeSpan.TicksPerMinute) ;
+                interval += (_minutes * TimeSpan.TicksPerMinute);
 			}
 			if (_hours != 0) 
 			{
-				_interval += (_hours * TimeSpan.TicksPerHour) ;
+                interval += (_hours * TimeSpan.TicksPerHour);
 			}
 
-			if (_interval == 0)
+            if (interval == 0)
 			{
-				_interval = CacheModel.NO_FLUSH_INTERVAL;
+                interval = CacheModel.NO_FLUSH_INTERVAL;
 			}
+		    _interval = interval;
 		}
 		#endregion
 

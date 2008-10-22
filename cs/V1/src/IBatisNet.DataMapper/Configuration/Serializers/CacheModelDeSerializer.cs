@@ -68,8 +68,6 @@ namespace IBatisNet.DataMapper.Configuration.Serializers
 					flush.Milliseconds = NodeUtils.GetIntAttribute(props, "milliseconds", 0);
 					flush.Minutes = NodeUtils.GetIntAttribute(props, "minutes", 0);
 					flush.Seconds = NodeUtils.GetIntAttribute(props, "seconds", 0);
-
-					flush.Initialize();
 					
 					model.FlushInterval = flush;
 				}
