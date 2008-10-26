@@ -1,4 +1,4 @@
-package org.apache.ibatis.monarch.example;
+package org.apache.ibatis.monarch.builder;
 
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.plugin.Invocation;
