@@ -50,7 +50,8 @@ public class DatabaseFactory {
       }
 
     } finally {
-      conn.close();
+      try { conn.rollback(); } catch (Exception e) { /*ignore*/ }
+      try { conn.close(); } catch (Exception e) { /*ignore*/ }
     }
     return database;
   }

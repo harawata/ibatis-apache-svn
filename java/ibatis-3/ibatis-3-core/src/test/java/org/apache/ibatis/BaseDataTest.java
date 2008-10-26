@@ -1,8 +1,9 @@
 package org.apache.ibatis;
 
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.PooledDataSource;
 import org.apache.ibatis.jdbc.ScriptRunner;
+import org.apache.ibatis.jdbc.UnpooledDataSource;
+import org.apache.ibatis.jdbc.PooledDataSource;
 import org.junit.Test;
 
 import javax.sql.DataSource;
@@ -19,6 +20,16 @@ public class BaseDataTest {
   public static final String JPETSTORE_PROPERTIES = "databases/jpetstore/jpetstore-hsqldb.properties";
   public static final String JPETSTORE_DDL = "databases/jpetstore/jpetstore-hsqldb-schema.sql";
   public static final String JPETSTORE_DATA = "databases/jpetstore/jpetstore-hsqldb-dataload.sql";
+
+  public static UnpooledDataSource createUnpooledDataSource(String resource) throws IOException {
+    Properties props = Resources.getResourceAsProperties(resource);
+    UnpooledDataSource ds = new UnpooledDataSource();
+    ds.setDriver(props.getProperty("driver"));
+    ds.setUrl(props.getProperty("url"));
+    ds.setUsername(props.getProperty("username"));
+    ds.setPassword(props.getProperty("password"));
+    return ds;
+  }
 
   public static PooledDataSource createPooledDataSource(String resource) throws IOException {
     Properties props = Resources.getResourceAsProperties(resource);
@@ -50,6 +61,20 @@ public class BaseDataTest {
     } finally {
       reader.close();
     }
+  }
+
+  public static DataSource createBlogDataSource() throws IOException, SQLException {
+    DataSource ds = createUnpooledDataSource(BLOG_PROPERTIES);
+    runScript(ds, BLOG_DDL);
+    runScript(ds, BLOG_DATA);
+    return ds;
+  }
+
+  public static DataSource createJPetstoreDataSource() throws IOException, SQLException {
+    DataSource ds = createUnpooledDataSource(JPETSTORE_PROPERTIES);
+    runScript(ds, JPETSTORE_DDL);
+    runScript(ds, JPETSTORE_DATA);
+    return ds;
   }
 
   @Test

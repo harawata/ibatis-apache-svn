@@ -16,7 +16,7 @@ public class MetadataTest extends BaseDataTest {
 
   @Before
   public void setup() throws Exception {
-    dataSource = createPooledDataSource(BaseDataTest.BLOG_PROPERTIES);
+    dataSource = createUnpooledDataSource(BaseDataTest.BLOG_PROPERTIES);
   }
 
   @Test

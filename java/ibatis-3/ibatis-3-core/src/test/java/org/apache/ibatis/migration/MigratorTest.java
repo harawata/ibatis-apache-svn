@@ -2,7 +2,6 @@ package org.apache.ibatis.migration;
 
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.jdbc.SqlRunner;
-import org.apache.ibatis.jdbc.PooledDataSource;
 import org.apache.ibatis.io.Resources;
 import org.junit.*;
 
@@ -12,6 +11,8 @@ import java.net.URISyntaxException;
 import java.sql.Connection;
 
 import junit.framework.Assert;
+
+import javax.sql.DataSource;
 
 public class MigratorTest extends BaseDataTest {
 
@@ -24,7 +25,7 @@ public class MigratorTest extends BaseDataTest {
     buffer = new StringOutputStream();
     System.setOut(new PrintStream(buffer));
 
-    PooledDataSource ds = createPooledDataSource(BLOG_PROPERTIES);
+    DataSource ds = createUnpooledDataSource(BLOG_PROPERTIES);
     Connection conn = ds.getConnection();
     SqlRunner executor = new SqlRunner(conn);
     safeRun(executor, "DROP TABLE comment");

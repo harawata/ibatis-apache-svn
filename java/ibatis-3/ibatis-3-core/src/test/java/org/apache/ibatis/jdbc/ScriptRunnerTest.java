@@ -3,7 +3,6 @@ package org.apache.ibatis.jdbc;
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.jdbc.SqlRunner;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.*;
 import org.junit.*;
 
 import javax.sql.DataSource;
@@ -15,7 +14,7 @@ public class ScriptRunnerTest extends BaseDataTest {
 
   @Test
   public void shouldRunScriptsUsingConnection() throws Exception {
-    PooledDataSource ds = createPooledDataSource(JPETSTORE_PROPERTIES);
+    DataSource ds = createUnpooledDataSource(JPETSTORE_PROPERTIES);
     Connection conn = ds.getConnection();
     ScriptRunner runner = new ScriptRunner(conn);
     runner.setAutoCommit(true);
