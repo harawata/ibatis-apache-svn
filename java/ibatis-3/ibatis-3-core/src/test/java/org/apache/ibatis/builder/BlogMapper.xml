@@ -1,0 +1,45 @@
+<mapper namespace="com.domain.PersonMapper">
+
+  <cache-ref namespace=""/>
+
+  <cache type="PERPETUAL" eviction="LRU" flushInterval="3600000" size="1000" readOnly="false">
+    <property name="" value=""/>
+  </cache>
+  
+  <parameterMap id="" type="">
+    <param property="id" javaType="" jdbcType="" typeHandler=""
+           mode="" scale="" resultMap=""/>
+    <param property="dept" javaType="" jdbcType="" typeHandler=""
+           mode="" scale="" resultMap=""/>
+  </parameterMap>
+
+  <resultMap id="" type="" extends="">
+    <constructor>
+      <id column="" javaType="" jdbcType="" typeHandler=""/>
+      <result column="" javaType="" jdbcType="" typeHandler=""/>
+    </constructor>
+    <result property="" column="" javaType="" jdbcType="" typeHandler=""/>
+    <collection property="" column="" javaType="" select="" resultMap=""/>
+    <discriminator column="" javaType="" jdbcType="">
+      <case value="" resultMap=""/>
+      <case value="" resultMap=""/>
+    </discriminator>
+  </resultMap>
+
+  <select id="selectAllPeople" useCache="true" flushCache="false" parameterType="" resultType="" resultMap="">
+    select * from PERSON order by
+    ${opts.order,javaType="",jdbcType="",typeHandler="",mode="",scale="",resultMap=""}
+  </select>
+  
+  <select id="selectPersonInDept" parameterType="" resultType="" resultMap="">
+    select * from PERSON
+    where PERSON_ID = #param.id --or #{params.id}
+    <!-- if(expr) foreach(x,expr) dynamic() propavail(name)
+  ... common(prepend,open,conjuction,close) -->
+    <if expr="param.deptId != null">
+      and DEPT_ID =
+      #{param.deptId,javaType="",jdbcType="",typeHandler="",mode="",scale="",resultMap=""}
+    </if>
+  </select>
+
+</mapper>

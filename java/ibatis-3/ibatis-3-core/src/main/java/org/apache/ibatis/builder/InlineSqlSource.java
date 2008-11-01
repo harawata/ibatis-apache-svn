@@ -1,0 +1,24 @@
+package org.apache.ibatis.builder;
+
+import org.apache.ibatis.mapping.*;
+
+import java.util.List;
+
+public class InlineSqlSource implements SqlSource {
+
+  private String sql;
+  private List<ParameterMapping> parameterMappings;
+
+  public InlineSqlSource(String sql, List<ParameterMapping> parameterMappings) {
+    this.sql = sql;
+    this.parameterMappings = parameterMappings;
+  }
+
+  public String getSql(Object parameterObject) {
+    return sql;
+  }
+
+  public List<ParameterMapping> getParameterMappings(Object parameterObject) {
+    return parameterMappings;
+  }
+}

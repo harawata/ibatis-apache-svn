@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!ELEMENT mapper (cache-ref | cache | resultMap* | parameterMap* | sql* | statement* | insert* | update* | delete* | select* | procedure*)+>
+<!ATTLIST mapper
+xmlns:fo CDATA #IMPLIED
+namespace CDATA #IMPLIED
+>
+
+<!ELEMENT cache-ref EMPTY>
+<!ATTLIST cache-ref
+namespace CDATA #REQUIRED
+>
+
+<!ELEMENT cache (property*)>
+<!ATTLIST cache
+type CDATA #REQUIRED
+eviction CDATA #REQUIRED
+flushInterval CDATA #REQUIRED
+size CDATA #REQUIRED
+readOnly CDATA #REQUIRED
+>
+
+<!ELEMENT parameterMap (parameter+)>
+<!ATTLIST parameterMap
+id CDATA #REQUIRED
+type CDATA #REQUIRED
+>
+
+<!ELEMENT parameter EMPTY>
+<!ATTLIST parameter
+property CDATA #REQUIRED
+javaType CDATA #IMPLIED
+jdbcType CDATA #IMPLIED
+mode (IN | OUT | INOUT) #IMPLIED
+resultMap CDATA #IMPLIED
+scale CDATA #IMPLIED
+typeHandler CDATA #IMPLIED
+>
+
+<!ELEMENT resultMap (constructor,id*,result*,collection* discriminator?)>
+<!ATTLIST resultMap
+id CDATA #REQUIRED
+type CDATA #REQUIRED
+extends CDATA #IMPLIED
+>
+
+<!ELEMENT constructor (id*,result*)>
+<!ATTLIST resultMap
+id CDATA #REQUIRED
+type CDATA #REQUIRED
+extends CDATA #IMPLIED
+>
+
+<!ELEMENT id EMPTY>
+<!ATTLIST result
+property CDATA #REQUIRED
+javaType CDATA #IMPLIED
+column CDATA #IMPLIED
+jdbcType CDATA #IMPLIED
+typeHandler CDATA #IMPLIED
+>
+
+<!ELEMENT result EMPTY>
+<!ATTLIST result
+property CDATA #REQUIRED
+javaType CDATA #IMPLIED
+column CDATA #IMPLIED
+jdbcType CDATA #IMPLIED
+typeHandler CDATA #IMPLIED
+>
+
+<!ELEMENT collection EMPTY>
+<!ATTLIST result
+property CDATA #REQUIRED
+column CDATA #IMPLIED
+javaType CDATA #IMPLIED
+jdbcType CDATA #IMPLIED
+select CDATA #IMPLIED
+resultMap CDATA #IMPLIED
+typeHandler CDATA #IMPLIED
+>
+
+<!ELEMENT discriminator (case+)>
+<!ATTLIST discriminator
+column CDATA #IMPLIED
+javaType CDATA #REQUIRED
+jdbcType CDATA #IMPLIED
+typeHandler CDATA #IMPLIED
+>
+
+<!ELEMENT case EMPTY>
+<!ATTLIST case
+value CDATA #REQUIRED
+resultMap CDATA #REQUIRED
+>
+
+<!ELEMENT property EMPTY>
+<!ATTLIST property
+name CDATA #REQUIRED
+value CDATA #REQUIRED
+>
+
+<!ELEMENT typeAlias EMPTY>
+<!ATTLIST typeAlias
+alias CDATA #REQUIRED
+type CDATA #REQUIRED
+>
+
+<!ELEMENT include EMPTY>
+<!ATTLIST include
+refid CDATA #REQUIRED
+>
+
+<!ELEMENT sql (#PCDATA | include  | include)*>
+<!ATTLIST sql
+id CDATA #REQUIRED
+>
+
+<!ELEMENT statement (#PCDATA | include)*>
+<!ATTLIST statement
+id CDATA #REQUIRED
+parameterMap CDATA #IMPLIED
+parameterClass CDATA #IMPLIED
+resultMap CDATA #IMPLIED
+resultClass CDATA #IMPLIED
+resultSetType (FORWARD_ONLY | SCROLL_INSENSITIVE | SCROLL_SENSITIVE) #IMPLIED
+fetchSize CDATA #IMPLIED
+timeout CDATA #IMPLIED
+flushCache (true|false) #IMPLIED
+useCache (true|false) #IMPLIED
+>
+
+<!ELEMENT select (#PCDATA | include | include)*>
+<!ATTLIST select
+id CDATA #REQUIRED
+parameterMap CDATA #IMPLIED
+parameterClass CDATA #IMPLIED
+resultMap CDATA #IMPLIED
+resultClass CDATA #IMPLIED
+resultSetType (FORWARD_ONLY | SCROLL_INSENSITIVE | SCROLL_SENSITIVE) #IMPLIED
+fetchSize CDATA #IMPLIED
+timeout CDATA #IMPLIED
+flushCache (true|false) #IMPLIED
+useCache (true|false) #IMPLIED
+>
+
+<!ELEMENT insert (#PCDATA | selectKey | include)*>
+<!ATTLIST insert
+id CDATA #REQUIRED
+parameterMap CDATA #IMPLIED
+parameterClass CDATA #IMPLIED
+timeout CDATA #IMPLIED
+flushCache (true|false) #IMPLIED
+>
+
+<!ELEMENT selectKey (#PCDATA | include)*>
+<!ATTLIST selectKey
+resultClass CDATA #IMPLIED
+keyProperty CDATA #IMPLIED
+order (before|after) #IMPLIED
+>
+
+<!ELEMENT update (#PCDATA | include)*>
+<!ATTLIST update
+id CDATA #REQUIRED
+parameterMap CDATA #IMPLIED
+parameterClass CDATA #IMPLIED
+timeout CDATA #IMPLIED
+flushCache (true|false) #IMPLIED
+>
+
+<!ELEMENT delete (#PCDATA | include)*>
+<!ATTLIST delete
+id CDATA #REQUIRED
+parameterMap CDATA #IMPLIED
+parameterClass CDATA #IMPLIED
+timeout CDATA #IMPLIED
+flushCache (true|false) #IMPLIED
+>
+
+<!ELEMENT procedure (#PCDATA | include)*>
+<!ATTLIST procedure
+id CDATA #REQUIRED
+parameterMap CDATA #IMPLIED
+parameterClass CDATA #IMPLIED
+resultMap CDATA #IMPLIED
+resultClass CDATA #IMPLIED
+resultSetType (FORWARD_ONLY | SCROLL_INSENSITIVE | SCROLL_SENSITIVE) #IMPLIED
+fetchSize CDATA #IMPLIED
+timeout CDATA #IMPLIED
+flushCache (true|false) #IMPLIED
+useCache (true|false) #IMPLIED
+>
