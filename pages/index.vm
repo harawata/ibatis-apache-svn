@@ -49,6 +49,99 @@
 
   <h2>News</h2>
 
+<h3>iBATIS.NET DataMapper 1.6.2 and DataAccess 1.9.2 BETA</h3>
+
+<p>(November 1, 2008) The iBATIS.NET team is proud to announce that the BETA release of DataAccess V1.9.2 and DataMapper V1.6.2 are now available.</p>
+
+<p>This release includes bug fixes and enhancements.</p>
+<p>Vote to General Availability status is expecting in two weeks. Thanks once again for your feedback. Enjoy!</p>
+
+<a onclick="ShowHide('DataMapper')" class="release">View Release Notes</a>
+<div style="display:none" id="DataMapper"  class="release">       
+<h4>Bug</h4>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-17'>IBATISNET-17</a>] -         Different bugs using Complex Properties
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-211'>IBATISNET-211</a>] -         The behaviors inconsistence between CommitTransaction and RollbackTransaction in SqlMapSession
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-215'>IBATISNET-215</a>] -         Improve TypeResolver by ignoring space in type definition
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-229'>IBATISNET-229</a>] -         Namespace problems on resultMapping when used with discriminator
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-231'>IBATISNET-231</a>] -         sqlServer20005 misspelled in providers.config
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-232'>IBATISNET-232</a>] -         Nested left joins with group by cause NPE when two subsequent levels have null values
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-234'>IBATISNET-234</a>] -         typeAlias does not work for generics with 2 or more generic parameters
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-239'>IBATISNET-239</a>] -         System.InvalidCastException when Stored Procedure out parameters are null
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-241'>IBATISNET-241</a>] -         Group must use &quot;pre-instantiated&quot; result objects 
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-242'>IBATISNET-242</a>] -         Cache error with QueryForObject&lt;T&gt; 
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-243'>IBATISNET-243</a>] -         Lists of primitives in result maps doesn't work
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-246'>IBATISNET-246</a>] -         SqlMap.xsd is incorrect: sql element can have an include sub-element 
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-248'>IBATISNET-248</a>] -         DefaultPreparedCommand log not thread safe 
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-249'>IBATISNET-249</a>] -         Incorrect process of  &quot;extends&quot; in parameterMap nodes
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-252'>IBATISNET-252</a>] -         DefaultPreparedCommand.ApplyParameterMap logging errors when multiple threads call same statement at same time.
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-253'>IBATISNET-253</a>] -         N+1 issue when using sql timestamp data type
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-254'>IBATISNET-254</a>] -         Better support for nested result maps when using dictionary
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-260'>IBATISNET-260</a>] -         ResultMap extends not work for constructor
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-275'>IBATISNET-275</a>] -         SessionStore gets instantiated with wrong daoManagerId during configuration.
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-283'>IBATISNET-283</a>] -         Result mappings should work with interfaces when QueryForObject is passed an existing object
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-285'>IBATISNET-285</a>] -         flushInterval ist calculated wrong
+</li>
+</ul>
+<h4>        Improvement
+</h4>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-108'>IBATISNET-108</a>] -         Resources.GetEmbeddedResourceAsXmlDocument( )
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-233'>IBATISNET-233</a>] -         SQLite Provider node uses abandoned library. Updated node included
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-240'>IBATISNET-240</a>] -         Allows a properties.config file to begin by a root element appSettings
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-245'>IBATISNET-245</a>] -         Stored procedure parameter cache should be cleared when map is reset using ConfigureAndWatch.
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-251'>IBATISNET-251</a>] -         Support syntax &quot;Key1,Key2&quot; for composite key in result mapping (old syntax)
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-258'>IBATISNET-258</a>] -         Read encrypted database properties from web.config
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-270'>IBATISNET-270</a>] -         ParseGenericArguments IsMatch is very slow
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-279'>IBATISNET-279</a>] -         Cannot run iBatis query from timer handler
+</li>
+</ul> 
+<h4>        New Feature
+</h4>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-3'>IBATISNET-3</a>] -         Dyna SQL: Support for #value# parameter
+</li>
+</ul>
+                            
+</div>
+
+<p/>
+<p><b><a href="dotnetdownloads.cgi">Download iBATIS.NET DataMapper 1.6.2 and DataAccess 1.9.2 (BETA)!</a></b></p>
+
+<h3>iBATIS 2.3.4 GA Released.<h3>
+
+<p>(Sep 19, 2008) After releasing 2.3.3 some bugs were discovered. We quickly released a 2.3.4 fix release. After a couple weeks of no negative reports we are promoting the release to GA.
+<p>
+<a href="http://ibatis.apache.org/javadownloads.cgi">Get the 2.3.4 GA from the Java downloads page now!</a>
+<p/>
+
 <h3>Call for Official QA/Testing Team Members</h3>
 <p>(Jul 16, 2008) It seems that we have two very distinct types of teams using iBATIS:</p>
 <ul>
