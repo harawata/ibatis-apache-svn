@@ -37,4 +37,4 @@ using System.Reflection;
 [assembly: AssemblyTitle("IBatisNet.DataMapper")]
 [assembly: AssemblyDescription("Map objects to your SQL statements or stored procedures.")]
 
-[assembly: AssemblyVersion("1.6.1")]
+[assembly: AssemblyVersion("1.6.2")]
