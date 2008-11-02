@@ -4,7 +4,7 @@ import com.ibatis.common.resources.Resources;
 
 import java.util.*;
 
-import org.apache.ibatis.jdbc.PooledDataSource;
+import org.apache.ibatis.datasource.pooled.PooledDataSource;
 
 public class SimpleDataSource extends PooledDataSource {
 

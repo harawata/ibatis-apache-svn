@@ -1,4 +1,4 @@
-package org.apache.ibatis.jdbc;
+package org.apache.ibatis.datasource.unpooled;
 
 public class DataSourceException extends RuntimeException {
 

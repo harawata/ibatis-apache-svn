@@ -1,11 +1,12 @@
 package org.apache.ibatis.transaction;
 
+import java.sql.Connection;
 import java.util.Properties;
 
-public interface TransactionManagerFactory {
+public interface TransactionFactory {
 
   void setProperties(Properties props);
-
-  TransactionManager getTransactionManager();
+    
+  Transaction newTransaction(Connection conn);
 
 }

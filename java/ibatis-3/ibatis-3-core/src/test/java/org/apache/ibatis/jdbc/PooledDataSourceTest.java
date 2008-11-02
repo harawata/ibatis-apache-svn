@@ -1,6 +1,7 @@
 package org.apache.ibatis.jdbc;
 
 import org.apache.ibatis.BaseDataTest;
+import org.apache.ibatis.datasource.pooled.PooledDataSource;
 import org.junit.*;
 
 import java.sql.Connection;

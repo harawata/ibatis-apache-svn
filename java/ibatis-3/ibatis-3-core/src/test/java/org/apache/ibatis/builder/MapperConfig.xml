@@ -1,6 +1,6 @@
 <configuration>
 
-  <properties resource="org/apache/ibatis/monarch/example/mapper.properties"> <!-- url="" -->
+  <properties resource="org/apache/ibatis/builder/mapper.properties"> <!-- url="" -->
     <property name="driver" value="org.apache.derby.jdbc.EmbeddedDriver"/>
   </properties>
 
@@ -53,7 +53,7 @@
   </environments>
 
   <mappers>
-    <mapper xml="org/apache/ibatis/monarch/example/BlogMapper.xml"/>
+    <mapper xml="org/apache/ibatis/builder/BlogMapper.xml"/>
   </mappers>
 
 </configuration>

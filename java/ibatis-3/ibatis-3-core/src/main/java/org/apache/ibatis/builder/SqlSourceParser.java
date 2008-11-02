@@ -8,7 +8,7 @@ import java.util.*;
 
 public class SqlSourceParser extends BaseParser {
 
-  public SqlSourceParser(MonarchConfiguration configuration) {
+  public SqlSourceParser(Configuration configuration) {
     this.configuration = configuration;
     this.typeAliasRegistry = configuration.getTypeAliasRegistry();
     this.typeHandlerRegistry = configuration.getTypeHandlerRegistry();

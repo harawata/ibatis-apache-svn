@@ -26,7 +26,7 @@ public class MapperParser extends BaseParser {
 
   private Cache cache;
 
-  public MapperParser(Reader reader, MonarchConfiguration configuration) {
+  public MapperParser(Reader reader, Configuration configuration) {
     this.reader = reader;
 
     this.configuration = configuration;

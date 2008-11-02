@@ -1,25 +1,25 @@
 package org.apache.ibatis.mapping;
 
-import org.apache.ibatis.transaction.TransactionManager;
+import org.apache.ibatis.transaction.TransactionFactory;
 
 import javax.sql.DataSource;
 
 public class Environment {
   private String id;
-  private TransactionManager transactionManager;
+  private TransactionFactory transactionFactory;
   private DataSource dataSource;
 
   private Environment() {}
 
   public static class Builder {
     private Environment environment = new Environment();
-    public Builder(String id, TransactionManager transactionManager, DataSource dataSource) {
+    public Builder(String id, TransactionFactory transactionManager, DataSource dataSource) {
       environment.id = id;
-      environment.transactionManager = transactionManager;
+      environment.transactionFactory = transactionManager;
       environment.dataSource = dataSource;
     }
-    public Builder transactionManager(TransactionManager transactionManager) {
-      environment.transactionManager = transactionManager;
+    public Builder transactionFactory(TransactionFactory transactionFactory) {
+      environment.transactionFactory = transactionFactory;
       return this;
     }
     public Builder dataSource(DataSource dataSource) {
@@ -40,8 +40,8 @@ public class Environment {
     return id;
   }
 
-  public TransactionManager getTransactionManager() {
-    return transactionManager;
+  public TransactionFactory getTransactionFactory() {
+    return transactionFactory;
   }
 
   public DataSource getDataSource() {

@@ -7,8 +7,8 @@ import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.reflection.*;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.Environment;
-import org.apache.ibatis.transaction.TransactionManagerFactory;
 import org.apache.ibatis.datasource.DataSourceFactory;
+import org.apache.ibatis.transaction.TransactionFactory;
 
 import java.io.Reader;
 import java.util.*;
@@ -25,7 +25,7 @@ public class MapperConfigParser extends BaseParser {
   public MapperConfigParser(Reader reader, Properties props) {
     this.reader = reader;
 
-    this.configuration = new MonarchConfiguration();
+    this.configuration = new Configuration();
     this.configuration.setVariables(props);
     this.typeAliasRegistry = this.configuration.getTypeAliasRegistry();
     this.typeHandlerRegistry = this.configuration.getTypeHandlerRegistry();
@@ -45,7 +45,7 @@ public class MapperConfigParser extends BaseParser {
     parser.parse(reader);
   }
 
-  public MonarchConfiguration getConfiguration() {
+  public Configuration getConfiguration() {
     return configuration;
   }
 
@@ -146,10 +146,10 @@ public class MapperConfigParser extends BaseParser {
       String type = context.getStringAttribute("type");
       Properties props = context.getChildrenAsProperties();
 
-      TransactionManagerFactory factory = (TransactionManagerFactory) resolveClass(type).newInstance();
+      TransactionFactory factory = (TransactionFactory) resolveClass(type).newInstance();
       factory.setProperties(props);
 
-      environmentBuilder.transactionManager(factory.getTransactionManager());
+      environmentBuilder.transactionFactory(factory);
     }
   }
 

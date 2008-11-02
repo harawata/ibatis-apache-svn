@@ -2,12 +2,10 @@ package org.apache.ibatis.executor;
 
 import domain.blog.*;
 import org.apache.ibatis.BaseDataTest;
-import org.apache.ibatis.jdbc.PooledDataSource;
 import org.apache.ibatis.mapping.*;
 import org.junit.*;
 
 import javax.sql.DataSource;
-import java.io.IOException;
 import java.sql.*;
 import java.util.*;
 

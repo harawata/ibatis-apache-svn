@@ -2,9 +2,14 @@ package org.apache.ibatis.builder;
 
 import org.apache.ibatis.type.*;
 import org.apache.ibatis.mapping.*;
+import org.apache.ibatis.transaction.jdbc.JdbcTransaction;
+import org.apache.ibatis.transaction.managed.ManagedTransaction;
+import org.apache.ibatis.datasource.jndi.JndiDataSourceFactory;
+import org.apache.ibatis.datasource.pooled.PooledDataSourceFactory;
+import org.apache.ibatis.datasource.unpooled.UnpooledDataSourceFactory;
 
 public class BaseParser {
-  protected MonarchConfiguration configuration;
+  protected Configuration configuration;
   protected TypeAliasRegistry typeAliasRegistry;
   protected TypeHandlerRegistry typeHandlerRegistry;
 

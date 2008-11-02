@@ -1,6 +1,6 @@
 package com.ibatis.common.jdbc;
 
-import org.apache.ibatis.jdbc.UnpooledDataSource;
+import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
 
 import java.sql.*;
 

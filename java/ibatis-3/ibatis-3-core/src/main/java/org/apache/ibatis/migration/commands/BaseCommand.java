@@ -3,7 +3,7 @@ package org.apache.ibatis.migration.commands;
 import org.apache.ibatis.jdbc.SqlRunner;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.migration.*;
-import org.apache.ibatis.jdbc.UnpooledDataSource;
+import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.xml.PropertyParser;
 

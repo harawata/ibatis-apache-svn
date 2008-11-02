@@ -1,4 +1,4 @@
-package org.apache.ibatis.jdbc;
+package org.apache.ibatis.datasource.unpooled;
 
 import javax.sql.DataSource;
 import java.io.PrintWriter;
