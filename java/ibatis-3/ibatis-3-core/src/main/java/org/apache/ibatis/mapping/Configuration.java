@@ -10,7 +10,9 @@ import org.apache.ibatis.plugin.*;
 import org.apache.ibatis.reflection.*;
 import org.apache.ibatis.type.*;
 import org.apache.ibatis.transaction.jdbc.JdbcTransaction;
+import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.apache.ibatis.transaction.managed.ManagedTransaction;
+import org.apache.ibatis.transaction.managed.ManagedTransactionFactory;
 import org.apache.ibatis.datasource.jndi.JndiDataSourceFactory;
 import org.apache.ibatis.datasource.pooled.PooledDataSourceFactory;
 import org.apache.ibatis.datasource.unpooled.UnpooledDataSourceFactory;
@@ -43,8 +45,8 @@ public class Configuration {
   private final Map<String, ParameterMap> parameterMaps = new HashMap<String, ParameterMap>();
 
   public Configuration() {
-    typeAliasRegistry.registerAlias("JDBC", JdbcTransaction.class.getName());
-    typeAliasRegistry.registerAlias("MANAGED", ManagedTransaction.class.getName());
+    typeAliasRegistry.registerAlias("JDBC", JdbcTransactionFactory.class.getName());
+    typeAliasRegistry.registerAlias("MANAGED", ManagedTransactionFactory.class.getName());
     typeAliasRegistry.registerAlias("JNDI", JndiDataSourceFactory.class.getName());
     typeAliasRegistry.registerAlias("POOLED", PooledDataSourceFactory.class.getName());
     typeAliasRegistry.registerAlias("UNPOOLED", UnpooledDataSourceFactory.class.getName());    

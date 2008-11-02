@@ -53,7 +53,8 @@
   </environments>
 
   <mappers>
-    <mapper xml="org/apache/ibatis/builder/BlogMapper.xml"/>
+    <!-- mapperXML vs. mapperClass-->
+    <mapper resource="org/apache/ibatis/builder/BlogMapper.xml"/>
   </mappers>
 
 </configuration>
