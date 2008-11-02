@@ -15,7 +15,6 @@ import java.util.*;
 
 public class MapperConfigParser extends BaseParser {
 
-
   protected Reader reader;
   protected NodeletParser parser;
 
@@ -32,6 +31,7 @@ public class MapperConfigParser extends BaseParser {
 
     this.parser = new NodeletParser();
     this.parser.addNodeletHandler(this);
+    this.parser.setValidation(true);
     this.parser.setVariables(props);
     this.parser.setEntityResolver(new MapperEntityResolver());
   }

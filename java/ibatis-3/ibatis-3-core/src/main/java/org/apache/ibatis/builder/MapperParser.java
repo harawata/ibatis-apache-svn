@@ -35,6 +35,7 @@ public class MapperParser extends BaseParser {
 
     this.parser = new NodeletParser();
     this.parser.addNodeletHandler(this);
+    this.parser.setValidation(true);
     this.parser.setVariables(configuration.getVariables());
     this.parser.setEntityResolver(new MapperEntityResolver());
   }

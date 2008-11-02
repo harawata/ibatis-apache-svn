@@ -11,16 +11,16 @@ import java.util.*;
  */
 public class MapperEntityResolver implements EntityResolver {
 
-  private static final String MAPPER_CONFIG_DTD_RESOURCE = "org/apache/ibatis/monarch/builder/mapper-config.dtd";
-  private static final String MAPPER_DTD_RESOURCE = "org/apache/ibatis/monarch/builder/mapper.dtd";
+  private static final String MAPPER_CONFIG_DTD_RESOURCE = "org/apache/ibatis/builder/ibatis-config-3.dtd";
+  private static final String MAPPER_DTD_RESOURCE = "org/apache/ibatis/builder/ibatis-mapper-3.dtd";
 
   private static final Map<String, String> doctypeMap = new HashMap<String, String>();
 
   static {
-    doctypeMap.put("http://ibatis.apache.org/dtd/mapper-config-3.dtd".toUpperCase(), MAPPER_CONFIG_DTD_RESOURCE);
-    doctypeMap.put("-//ibatis.apache.org//DTD Mapper Config 2.0//EN".toUpperCase(), MAPPER_CONFIG_DTD_RESOURCE);
+    doctypeMap.put("http://ibatis.apache.org/dtd/ibatis-config-3.dtd".toUpperCase(), MAPPER_CONFIG_DTD_RESOURCE);
+    doctypeMap.put("-//ibatis.apache.org//DTD Config 3.0//EN".toUpperCase(), MAPPER_CONFIG_DTD_RESOURCE);
 
-    doctypeMap.put("http://ibatis.apache.org/dtd/mapper-3.dtd".toUpperCase(), MAPPER_DTD_RESOURCE);
+    doctypeMap.put("http://ibatis.apache.org/dtd/ibatis-mapper-3.dtd".toUpperCase(), MAPPER_DTD_RESOURCE);
     doctypeMap.put("-//ibatis.apache.org//DTD Mapper 3.0//EN".toUpperCase(), MAPPER_DTD_RESOURCE);
   }
 

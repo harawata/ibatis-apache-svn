@@ -1,3 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-mapper-3.dtd">
+
 <mapper namespace="com.domain.PersonMapper">
 
   <cache-ref namespace=""/>
@@ -7,15 +13,15 @@
   </cache>
   
   <parameterMap id="" type="">
-    <param property="id" javaType="" jdbcType="" typeHandler=""
-           mode="" scale="" resultMap=""/>
-    <param property="dept" javaType="" jdbcType="" typeHandler=""
-           mode="" scale="" resultMap=""/>
+    <parameter property="id" javaType="" jdbcType="" typeHandler=""
+           mode="IN" scale="" resultMap=""/>
+    <parameter property="dept" javaType="" jdbcType="" typeHandler=""
+           mode="IN" scale="" resultMap=""/>
   </parameterMap>
 
   <resultMap id="" type="" extends="">
     <constructor>
-      <id column="" javaType="" jdbcType="" typeHandler=""/>
+      <id column="" javaType="" jdbcType="" typeHandler="" />
       <result column="" javaType="" jdbcType="" typeHandler=""/>
     </constructor>
     <result property="" column="" javaType="" jdbcType="" typeHandler=""/>
@@ -34,12 +40,6 @@
   <select id="selectPersonInDept" parameterType="" resultType="" resultMap="">
     select * from PERSON
     where PERSON_ID = #param.id --or #{params.id}
-    <!-- if(expr) foreach(x,expr) dynamic() propavail(name)
-  ... common(prepend,open,conjuction,close) -->
-    <if expr="param.deptId != null">
-      and DEPT_ID =
-      #{param.deptId,javaType="",jdbcType="",typeHandler="",mode="",scale="",resultMap=""}
-    </if>
   </select>
 
 </mapper>

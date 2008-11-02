@@ -1,3 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE configuration
+    PUBLIC "-//ibatis.apache.org//DTD Config 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-config-3.dtd">
+
 <configuration>
 
   <properties resource="org/apache/ibatis/builder/mapper.properties"> <!-- url="" -->
@@ -5,14 +11,14 @@
   </properties>
 
   <settings>
-    <property name="cacheEnabled" value="true"/>
-    <property name="lazyLoadingEnabled" value="true"/>
-    <property name="multipleResultSetsEnabled" value="true"/>
-    <property name="useColumnLabel" value="true"/>
-    <property name="enhancementEnabled" value="false"/>
-    <property name="generatedKeysEnabled" value="false"/>
-    <property name="defaultExecutorType" value="SIMPLE"/>
-    <property name="defaultStatementTimeout" value="25000"/>
+    <setting name="cacheEnabled" value="true"/>
+    <setting name="lazyLoadingEnabled" value="true"/>
+    <setting name="multipleResultSetsEnabled" value="true"/>
+    <setting name="useColumnLabel" value="true"/>
+    <setting name="enhancementEnabled" value="false"/>
+    <setting name="generatedKeysEnabled" value="false"/>
+    <setting name="defaultExecutorType" value="SIMPLE"/>
+    <setting name="defaultStatementTimeout" value="25000"/>
   </settings>
 
   <typeAliases>
@@ -25,7 +31,7 @@
   </typeAliases>
 
   <typeHandlers>
-    <typeHandler javaType="String" jdbcType="VARCHAR" handler="org.apache.ibatis.builder.ExampleTypeHandler"/>
+    <typeHandler javaType="String" jdbcType="VARCHAR" handler="org.apache.ibatis.builder.ExampleTypeHandler" />
   </typeHandlers>
 
   <objectFactory type="org.apache.ibatis.builder.ExampleObjectFactory">

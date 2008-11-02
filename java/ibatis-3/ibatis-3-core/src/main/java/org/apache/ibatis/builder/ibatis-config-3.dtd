@@ -36,7 +36,7 @@ type CDATA #REQUIRED
 <!ATTLIST typeHandler
 javaType CDATA #REQUIRED
 jdbcType CDATA #IMPLIED
-callback CDATA #REQUIRED
+handler CDATA #REQUIRED
 >
 
 <!ELEMENT objectFactory (property*)>
