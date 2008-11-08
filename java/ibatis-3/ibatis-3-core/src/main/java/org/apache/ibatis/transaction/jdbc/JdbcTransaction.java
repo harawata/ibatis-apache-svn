@@ -24,4 +24,8 @@ public class JdbcTransaction implements Transaction {
   public void rollback() throws SQLException {
     connection.rollback();
   }
+
+  public void close() throws SQLException {
+    connection.close();
+  }
 }

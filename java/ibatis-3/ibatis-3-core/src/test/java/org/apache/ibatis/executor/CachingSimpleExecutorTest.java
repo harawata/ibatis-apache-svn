@@ -1,6 +1,7 @@
 package org.apache.ibatis.executor;
 
 import org.junit.Test;
+import org.apache.ibatis.transaction.Transaction;
 
 import java.sql.Connection;
 
@@ -10,8 +11,8 @@ public class CachingSimpleExecutorTest extends BaseExecutorTest {
   public void dummy() {
   }
 
-  protected Executor createExecutor(Connection connection) {
-    return new CachingExecutor(new SimpleExecutor(connection));
+  protected Executor createExecutor(Transaction transaction) {
+    return new CachingExecutor(new SimpleExecutor(transaction));
   }
 
 }

@@ -3,6 +3,7 @@ package com.ibatis.sqlmap.engine.transaction.user;
 import com.ibatis.sqlmap.engine.transaction.*;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.Configuration;
+import org.apache.ibatis.transaction.jdbc.JdbcTransaction;
 
 import java.sql.*;
 
@@ -11,7 +12,7 @@ public class UserProvidedTransaction extends BaseTransaction {
   private Executor executor;
 
   public UserProvidedTransaction(Configuration configuration, Connection connection) {
-    this.executor = configuration.newExecutor(connection);
+    this.executor = configuration.newExecutor(new JdbcTransaction(connection));
   }
 
   public void commit(boolean required) throws SQLException, TransactionException {

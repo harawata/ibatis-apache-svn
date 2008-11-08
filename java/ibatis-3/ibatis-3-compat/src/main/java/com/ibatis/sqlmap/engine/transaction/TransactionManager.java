@@ -74,7 +74,7 @@ public class TransactionManager {
   }
 
   public Connection getCurrentConnection() throws SQLException {
-    return getCurrentExecutor().getConnection();
+    return getCurrentExecutor().getTransaction().getConnection();
   }
 
   public Executor getCurrentExecutor() throws SQLException {

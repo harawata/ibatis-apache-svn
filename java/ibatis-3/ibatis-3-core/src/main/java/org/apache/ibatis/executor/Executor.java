@@ -4,6 +4,7 @@ import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.executor.result.ResultHandler;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.transaction.Transaction;
 
 import java.sql.*;
 import java.util.List;
@@ -30,7 +31,7 @@ public interface Executor {
 
   void deferLoad(MappedStatement ms, MetaObject resultObject, String property, CacheKey key);
 
-  Connection getConnection();
+  Transaction getTransaction();
 
   void close();
 

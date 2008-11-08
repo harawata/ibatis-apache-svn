@@ -36,7 +36,7 @@ public class JdbcTransaction extends BaseTransaction {
     if (connection.getAutoCommit()) {
       connection.setAutoCommit(false);
     }
-    executor = configuration.newExecutor(connection);
+    executor = configuration.newExecutor(new org.apache.ibatis.transaction.jdbc.JdbcTransaction(connection));
   }
 
   public void commit(boolean required) throws SQLException, TransactionException {
@@ -54,7 +54,7 @@ public class JdbcTransaction extends BaseTransaction {
   public void close() throws SQLException, TransactionException {
     if (executor != null) {
       try {
-        isolationLevel.restoreIsolationLevel(executor.getConnection());
+        isolationLevel.restoreIsolationLevel(executor.getTransaction().getConnection());
       } finally {
         executor.close();
         executor = null;

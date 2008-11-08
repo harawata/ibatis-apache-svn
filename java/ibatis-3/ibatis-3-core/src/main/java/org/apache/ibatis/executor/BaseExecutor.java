@@ -4,10 +4,10 @@ import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.cache.impl.PerpetualCache;
 import org.apache.ibatis.executor.result.ResultHandler;
 import org.apache.ibatis.logging.*;
-import org.apache.ibatis.logging.jdbc.ConnectionLogger;
 import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.type.TypeHandlerRegistry;
+import org.apache.ibatis.transaction.Transaction;
 
 import java.sql.*;
 import java.util.*;
@@ -17,7 +17,7 @@ public abstract class BaseExecutor implements Executor {
   private static final Log log = LogFactory.getLog(BaseExecutor.class);
   private static final Object EXECUTION_PLACEHOLDER = new Object();
 
-  protected final Connection connection;
+  protected final Transaction transaction;
 
   protected final List<DeferredLoad> deferredLoads;
   protected final PerpetualCache localCache;
@@ -26,23 +26,24 @@ public abstract class BaseExecutor implements Executor {
 
   protected List<BatchResult> batchResults = new ArrayList<BatchResult>();
 
-  protected BaseExecutor(Connection connection) {
-    if (log.isDebugEnabled()) {
-      this.connection = ConnectionLogger.newInstance(connection);
-    } else {
-      this.connection = connection;
-    }
+  protected BaseExecutor(Transaction transaction) {
+//    if (log.isDebugEnabled()) {
+//      this.connection = ConnectionLogger.newInstance(connection);
+//    } else {
+//      this.connection = connection;
+//    }
+    this.transaction = transaction;
     this.deferredLoads = new ArrayList<DeferredLoad>();
     this.localCache = new PerpetualCache("LocalCache");
   }
 
-  public Connection getConnection() {
-    return connection;
+  public Transaction getTransaction() {
+    return transaction;
   }
 
   public void close() {
     try {
-      connection.close();
+      transaction.close();
     } catch (SQLException e) {
       // Ignore.  There's nothing that can be done at this point.
     }
@@ -116,13 +117,13 @@ public abstract class BaseExecutor implements Executor {
   public void commit(boolean required) throws SQLException {
     flushStatements();
     if (required) {
-      connection.commit();
+      transaction.commit();
     }
   }
 
   public void rollback(boolean required) throws SQLException {
     if (required) {
-      connection.rollback();
+      transaction.rollback();
     }
   }
 

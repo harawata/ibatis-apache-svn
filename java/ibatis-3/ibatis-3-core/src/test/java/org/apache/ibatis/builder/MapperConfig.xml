@@ -60,7 +60,7 @@
 
   <mappers>
     <!-- mapperXML vs. mapperClass-->
-    <mapper resource="org/apache/ibatis/builder/BlogMapper.xml"/>
+    <mapper resource="org/apache/ibatis/builder/AuthorMapper.xml"/>
   </mappers>
 
 </configuration>

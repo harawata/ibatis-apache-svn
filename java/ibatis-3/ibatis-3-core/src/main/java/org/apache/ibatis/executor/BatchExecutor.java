@@ -3,6 +3,7 @@ package org.apache.ibatis.executor;
 import org.apache.ibatis.executor.result.ResultHandler;
 import org.apache.ibatis.executor.statement.StatementHandler;
 import org.apache.ibatis.mapping.*;
+import org.apache.ibatis.transaction.Transaction;
 
 import java.sql.*;
 import java.util.*;
@@ -15,8 +16,8 @@ public class BatchExecutor extends BaseExecutor {
   private final List<BatchResult> batchResultList = new ArrayList<BatchResult>();
   private String currentSql;
 
-  public BatchExecutor(Connection connection) {
-    super(connection);
+  public BatchExecutor(Transaction transaction) {
+    super(transaction);
   }
 
   public int doUpdate(MappedStatement ms, Object parameterObject)
@@ -29,6 +30,7 @@ public class BatchExecutor extends BaseExecutor {
       int last = statementList.size() - 1;
       stmt = statementList.get(last);
     } else {
+      Connection connection = transaction.getConnection();
       stmt = handler.prepare(connection);
       currentSql = sql;
       statementList.add(stmt);
@@ -44,6 +46,7 @@ public class BatchExecutor extends BaseExecutor {
     flushStatements();
     Configuration configuration = ms.getConfiguration();
     StatementHandler handler = configuration.newStatementHandler(this, ms, parameterObject, rowOffset, rowLimit, resultHandler);
+    Connection connection = transaction.getConnection();
     Statement stmt = handler.prepare(connection);
     handler.parameterize(stmt);
     return handler.query(stmt, resultHandler);

@@ -1,6 +1,7 @@
 package org.apache.ibatis.executor;
 
 import org.junit.Test;
+import org.apache.ibatis.transaction.Transaction;
 
 import java.sql.Connection;
 
@@ -10,7 +11,7 @@ public class BatchExecutorTest extends BaseExecutorTest {
   public void dummy() {
   }
 
-  protected Executor createExecutor(Connection connection) {
-    return new BatchExecutor(connection);
+  protected Executor createExecutor(Transaction transaction) {
+    return new BatchExecutor(transaction);
   }
 }

@@ -24,4 +24,9 @@ public class ManagedTransaction implements Transaction {
   public void rollback() throws SQLException {
     // Does nothing
   }
+
+  public void close() throws SQLException {
+    // Does nothing
+  }
+
 }

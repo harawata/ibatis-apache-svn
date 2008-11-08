@@ -3,14 +3,15 @@ package org.apache.ibatis.executor;
 import org.apache.ibatis.executor.result.ResultHandler;
 import org.apache.ibatis.executor.statement.StatementHandler;
 import org.apache.ibatis.mapping.*;
+import org.apache.ibatis.transaction.Transaction;
 
 import java.sql.*;
 import java.util.*;
 
 public class SimpleExecutor extends BaseExecutor {
 
-  public SimpleExecutor(Connection connection) {
-    super(connection);
+  public SimpleExecutor(Transaction transaction) {
+    super(transaction);
   }
 
   public int doUpdate(MappedStatement ms, Object parameter)
@@ -45,6 +46,7 @@ public class SimpleExecutor extends BaseExecutor {
 
   private Statement prepareStatement(StatementHandler handler) throws SQLException {
     Statement stmt;
+    Connection connection = transaction.getConnection();
     stmt = handler.prepare(connection);
     handler.parameterize(stmt);
     return stmt;

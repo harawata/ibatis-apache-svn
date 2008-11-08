@@ -13,6 +13,7 @@ import org.apache.ibatis.transaction.jdbc.JdbcTransaction;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.apache.ibatis.transaction.managed.ManagedTransaction;
 import org.apache.ibatis.transaction.managed.ManagedTransactionFactory;
+import org.apache.ibatis.transaction.Transaction;
 import org.apache.ibatis.datasource.jndi.JndiDataSourceFactory;
 import org.apache.ibatis.datasource.pooled.PooledDataSourceFactory;
 import org.apache.ibatis.datasource.unpooled.UnpooledDataSourceFactory;
@@ -166,20 +167,20 @@ public class Configuration {
     return statementHandler;
   }
 
-  public Executor newExecutor(Connection conn) {
-    return newExecutor(conn,defaultExecutorType);
+  public Executor newExecutor(Transaction transaction) {
+    return newExecutor(transaction, defaultExecutorType);
   }
   
-  public Executor newExecutor(Connection conn, ExecutorType executorType) {
+  public Executor newExecutor(Transaction transaction, ExecutorType executorType) {
     executorType = executorType == null ? defaultExecutorType : executorType;
     executorType = executorType == null ? ExecutorType.SIMPLE : executorType;
     Executor executor;
     if (ExecutorType.BATCH == executorType) {
-      executor = new BatchExecutor(conn);
+      executor = new BatchExecutor(transaction);
     } else if (ExecutorType.REUSE == executorType) {
-      executor = new ReuseExecutor(conn);
+      executor = new ReuseExecutor(transaction);
     } else {
-      executor = new SimpleExecutor(conn);
+      executor = new SimpleExecutor(transaction);
     }
     if (cacheEnabled) {
       executor = new CachingExecutor(executor);

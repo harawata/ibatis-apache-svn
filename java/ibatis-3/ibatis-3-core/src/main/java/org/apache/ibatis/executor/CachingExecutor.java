@@ -4,6 +4,7 @@ import org.apache.ibatis.cache.*;
 import org.apache.ibatis.executor.result.ResultHandler;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.transaction.Transaction;
 
 import java.sql.*;
 import java.util.*;
@@ -17,8 +18,8 @@ public class CachingExecutor implements Executor {
     this.delegate = delegate;
   }
 
-  public Connection getConnection() {
-    return delegate.getConnection();
+  public Transaction getTransaction() {
+    return delegate.getTransaction();
   }
 
   public void close() {

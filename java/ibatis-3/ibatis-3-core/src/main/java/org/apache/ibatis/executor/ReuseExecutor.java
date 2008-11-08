@@ -3,6 +3,7 @@ package org.apache.ibatis.executor;
 import org.apache.ibatis.executor.result.ResultHandler;
 import org.apache.ibatis.executor.statement.StatementHandler;
 import org.apache.ibatis.mapping.*;
+import org.apache.ibatis.transaction.Transaction;
 
 import java.sql.*;
 import java.util.*;
@@ -11,8 +12,8 @@ public class ReuseExecutor extends BaseExecutor {
 
   private final Map<String, Statement> statementMap = new HashMap<String, Statement>();
 
-  public ReuseExecutor(Connection connection) {
-    super(connection);
+  public ReuseExecutor(Transaction transaction) {
+    super(transaction);
   }
 
   public int doUpdate(MappedStatement ms, Object parameter)
@@ -45,6 +46,7 @@ public class ReuseExecutor extends BaseExecutor {
     if (hasStatementFor(sql)) {
       stmt = getStatement(sql);
     } else {
+      Connection connection = transaction.getConnection();
       stmt = handler.prepare(connection);
       putStatement(sql, stmt);
     }
