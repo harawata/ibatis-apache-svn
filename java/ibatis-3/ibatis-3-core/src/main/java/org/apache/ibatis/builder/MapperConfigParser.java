@@ -98,6 +98,7 @@ public class MapperConfigParser extends BaseParser {
     if (vars != null) {
       defaults.putAll(vars);
     }
+    parser.setVariables(defaults);
     configuration.setVariables(defaults);
   }
 
