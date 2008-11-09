@@ -12,7 +12,7 @@ public class JdbcTransactionFactory implements TransactionFactory {
   }
 
   public Transaction newTransaction(Connection conn) {
-    return null;
+    return new JdbcTransaction(conn);
   }
 
 }
