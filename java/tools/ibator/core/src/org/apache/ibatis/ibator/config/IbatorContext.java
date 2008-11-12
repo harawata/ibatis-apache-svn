@@ -73,20 +73,18 @@ public class IbatorContext extends PropertyHolder {
 
     private List<IbatorPluginConfiguration> pluginConfigurations;
 
-    private String targetJRE;
+    private String targetRuntime;
 
+    private String introspectedColumnImpl;
+    
     /**
      * Constructs an IbatorContext object.
      * 
-     * @param targetJRE -
-     *            may be null
      * @param defaultModelType -
      *            may be null
      */
-    public IbatorContext(String targetJRE, ModelType defaultModelType) {
+    public IbatorContext(ModelType defaultModelType) {
         super();
-
-        this.targetJRE = targetJRE;
 
         if (defaultModelType == null) {
             this.defaultModelType = ModelType.CONDITIONAL;
@@ -235,7 +233,7 @@ public class IbatorContext extends PropertyHolder {
 
     /**
      * Builds an XmlElement representation of this context. Note that the XML
-     * may not necessarity validate if the context is invalid. Call the
+     * may not necessarily validate if the context is invalid. Call the
      * <code>validate</code> method to check validity of this context.
      * 
      * @return the XML representation of this context
@@ -248,9 +246,14 @@ public class IbatorContext extends PropertyHolder {
                     "defaultModelType", defaultModelType.getModelType())); //$NON-NLS-1$
         }
 
-        if (StringUtility.stringHasValue(targetJRE)) {
+        if (StringUtility.stringHasValue(introspectedColumnImpl)) {
             xmlElement.addAttribute(new Attribute(
-                    "targetJRE", targetJRE)); //$NON-NLS-1$
+                    "introspectedColumnImpl", introspectedColumnImpl)); //$NON-NLS-1$
+        }
+
+        if (StringUtility.stringHasValue(targetRuntime)) {
+            xmlElement.addAttribute(new Attribute(
+                    "targetRuntime", targetRuntime)); //$NON-NLS-1$
         }
 
         addPropertyXmlElements(xmlElement);
@@ -311,10 +314,6 @@ public class IbatorContext extends PropertyHolder {
         }
     }
 
-    public boolean getSuppressTypeWarnings() {
-        return suppressTypeWarnings && !"Java5".equalsIgnoreCase(targetJRE);
-    }
-
     public CommentGenerator getCommentGenerator() {
         if (commentGenerator == null) {
             commentGenerator = IbatorObjectFactory.createCommentGenerator(this);
@@ -334,10 +333,6 @@ public class IbatorContext extends PropertyHolder {
 
     public IbatorPlugin getPlugins() {
         return pluginAggregator;
-    }
-
-    public String getTargetJRE() {
-        return targetJRE;
     }
 
     /**
@@ -508,5 +503,25 @@ public class IbatorContext extends PropertyHolder {
                 }
             }
         }
+    }
+
+    public String getTargetRuntime() {
+        return targetRuntime;
+    }
+
+    public void setTargetRuntime(String targetRuntime) {
+        this.targetRuntime = targetRuntime;
+    }
+
+    public String getIntrospectedColumnImpl() {
+        return introspectedColumnImpl;
+    }
+
+    public void setIntrospectedColumnImpl(String introspectedColumnImpl) {
+        this.introspectedColumnImpl = introspectedColumnImpl;
+    }
+
+    public boolean getSuppressTypeWarnings(IntrospectedTable introspectedTable) {
+        return suppressTypeWarnings && !introspectedTable.isJava5Targeted();
     }
 }

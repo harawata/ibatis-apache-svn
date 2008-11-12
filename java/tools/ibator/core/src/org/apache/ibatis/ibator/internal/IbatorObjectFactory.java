@@ -20,6 +20,7 @@ import java.util.List;
 import org.apache.ibatis.ibator.api.CommentGenerator;
 import org.apache.ibatis.ibator.api.FullyQualifiedTable;
 import org.apache.ibatis.ibator.api.IbatorPlugin;
+import org.apache.ibatis.ibator.api.IntrospectedColumn;
 import org.apache.ibatis.ibator.api.IntrospectedTable;
 import org.apache.ibatis.ibator.api.JavaTypeResolver;
 import org.apache.ibatis.ibator.config.CommentGeneratorConfiguration;
@@ -27,8 +28,10 @@ import org.apache.ibatis.ibator.config.IbatorContext;
 import org.apache.ibatis.ibator.config.IbatorPluginConfiguration;
 import org.apache.ibatis.ibator.config.JavaTypeResolverConfiguration;
 import org.apache.ibatis.ibator.config.TableConfiguration;
-import org.apache.ibatis.ibator.generator.ibatis2.IntrospectedTableIbatis2Impl;
+import org.apache.ibatis.ibator.generator.ibatis2.IntrospectedTableIbatis2Java2Impl;
+import org.apache.ibatis.ibator.generator.ibatis2.IntrospectedTableIbatis2Java5Impl;
 import org.apache.ibatis.ibator.internal.types.JavaTypeResolverDefaultImpl;
+import org.apache.ibatis.ibator.internal.util.StringUtility;
 import org.apache.ibatis.ibator.internal.util.messages.Messages;
 
 /**
@@ -174,9 +177,14 @@ public class IbatorObjectFactory {
     public static IntrospectedTable createIntrospectedTable(TableConfiguration tableConfiguration, 
             FullyQualifiedTable table, IbatorContext ibatorContext) {
 
-        // TODO - this method should decide what implementation based on some
-        // configuration setting (getting ready for iBATIS 3)
-        String type = IntrospectedTableIbatis2Impl.class.getName();
+        String type = ibatorContext.getTargetRuntime();
+        if (!StringUtility.stringHasValue(type)) {
+            type = IntrospectedTableIbatis2Java2Impl.class.getName();
+        } else if ("Ibatis2Java2".equalsIgnoreCase(type)) {
+            type = IntrospectedTableIbatis2Java2Impl.class.getName();
+        } else if ("Ibatis2Java5".equalsIgnoreCase(type)) {
+            type = IntrospectedTableIbatis2Java5Impl.class.getName();
+        }
         
         IntrospectedTable answer = (IntrospectedTable) createInternalObject(type);
         answer.setFullyQualifiedTable(table);
@@ -185,4 +193,16 @@ public class IbatorObjectFactory {
         
         return answer;
     }
+    
+    public static IntrospectedColumn createIntrospectedColumn(IbatorContext ibatorContext) {
+        String type = ibatorContext.getIntrospectedColumnImpl();
+        if (!StringUtility.stringHasValue(type)) {
+            type = IntrospectedColumn.class.getName();
+        }
+        
+        IntrospectedColumn answer = (IntrospectedColumn) createInternalObject(type);
+        answer.setIbatorContext(ibatorContext);
+        
+        return answer;
+   }
 }

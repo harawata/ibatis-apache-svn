@@ -36,7 +36,10 @@ import org.apache.ibatis.ibator.internal.rules.IbatorRules;
 import org.apache.ibatis.ibator.internal.util.StringUtility;
 
 /**
- * Read only interface for dealing with introspected tables.
+ * Base class for all code generator implementations.
+ * This class provides many of the ibator housekeeping methods needed
+ * to implement a code generator, with only the actual code generation
+ * methods left unimplemented.
  * 
  * @author Jeff Butler
  *
@@ -45,12 +48,12 @@ public abstract class IntrospectedTable {
     protected TableConfiguration tableConfiguration;
     protected FullyQualifiedTable fullyQualifiedTable;
     protected IbatorContext ibatorContext;
-    private IbatorRules rules;
-    private List<IntrospectedColumn> primaryKeyColumns;
-    private List<IntrospectedColumn> baseColumns;
-    private List<IntrospectedColumn> blobColumns;
-    private boolean hasJDBCDateColumns;
-    private boolean hasJDBCTimeColumns;
+    protected IbatorRules rules;
+    protected List<IntrospectedColumn> primaryKeyColumns;
+    protected List<IntrospectedColumn> baseColumns;
+    protected List<IntrospectedColumn> blobColumns;
+    protected boolean hasJDBCDateColumns;
+    protected boolean hasJDBCTimeColumns;
     
     public IntrospectedTable() {
         super();
@@ -410,6 +413,8 @@ public abstract class IntrospectedTable {
         if (introspectedColumn.isJDBCTimeColumn()) {
             hasJDBCTimeColumns = true;
         }
+        
+        introspectedColumn.setIntrospectedTable(this);
     }
     
     public void addPrimaryKeyColumn(String columnName) {
@@ -470,4 +475,12 @@ public abstract class IntrospectedTable {
      * @return the list of generated XML files for this table
      */
     public abstract List<GeneratedXmlFile> getGeneratedXmlFiles();
+    
+    /**
+     * Denotes whether generated code is targeted for Java version 5.0
+     * or higher.
+     *   
+     * @return true if the generated code makes use of Java5 features
+     */
+    public abstract boolean isJava5Targeted();
 }

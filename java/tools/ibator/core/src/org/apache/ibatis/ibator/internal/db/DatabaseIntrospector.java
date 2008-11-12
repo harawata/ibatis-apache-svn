@@ -398,9 +398,9 @@ public class DatabaseIntrospector {
                 localTableName, null);
 
         while (rs.next()) {
-            // TODO - needs to be configurable
-            IntrospectedColumn introspectedColumn = new IntrospectedColumn(tc.getAlias(), ibatorContext);
+            IntrospectedColumn introspectedColumn = IbatorObjectFactory.createIntrospectedColumn(ibatorContext);
 
+            introspectedColumn.setTableAlias(tc.getAlias());
             introspectedColumn.setJdbcType(rs.getInt("DATA_TYPE")); //$NON-NLS-1$
             introspectedColumn.setLength(rs.getInt("COLUMN_SIZE")); //$NON-NLS-1$
             introspectedColumn.setActualColumnName(rs.getString("COLUMN_NAME")); //$NON-NLS-1$

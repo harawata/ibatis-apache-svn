@@ -237,15 +237,22 @@ public class IbatorConfigurationParser {
             Node node) {
 
         Properties attributes = parseAttributes(node);
-        String targetJRE = attributes.getProperty("targetJRE"); //$NON-NLS-1$
         String defaultModelType = attributes.getProperty("defaultModelType"); //$NON-NLS-1$
+        String targetRuntime = attributes.getProperty("targetRuntime"); //$NON-NLS-1$
+        String introspectedColumnImpl = attributes.getProperty("introspectedColumnImpl"); //$NON-NLS-1$
         String id = attributes.getProperty("id"); //$NON-NLS-1$
 
         ModelType mt = defaultModelType == null ? null : ModelType
                 .getModelType(defaultModelType);
 
-        IbatorContext ibatorContext = new IbatorContext(targetJRE, mt);
+        IbatorContext ibatorContext = new IbatorContext(mt);
         ibatorContext.setId(id);
+        if (StringUtility.stringHasValue(introspectedColumnImpl)) {
+            ibatorContext.setIntrospectedColumnImpl(introspectedColumnImpl);
+        }
+        if (StringUtility.stringHasValue(targetRuntime)) {
+            ibatorContext.setTargetRuntime(targetRuntime);
+        }
 
         ibatorConfiguration.addIbatorContext(ibatorContext);
 

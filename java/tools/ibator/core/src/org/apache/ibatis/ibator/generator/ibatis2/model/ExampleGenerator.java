@@ -72,7 +72,7 @@ public class ExampleGenerator extends BaseModelClassGenerator implements JavaGen
             method.addBodyLine("oredCriteria = new ArrayList<Criteria>();"); //$NON-NLS-1$
         } else {
             method.addBodyLine("oredCriteria = new ArrayList();"); //$NON-NLS-1$
-            if (ibatorContext.getSuppressTypeWarnings()) {
+            if (ibatorContext.getSuppressTypeWarnings(introspectedTable)) {
                 method.addSuppressTypeWarningsAnnotation();
             }
         }
@@ -134,7 +134,7 @@ public class ExampleGenerator extends BaseModelClassGenerator implements JavaGen
         }
 
         field.setType(fqjt);
-        if (ibatorContext.getSuppressTypeWarnings()) {
+        if (ibatorContext.getSuppressTypeWarnings(introspectedTable)) {
             field.addSuppressTypeWarningsAnnotation();
         }
         field.setName("oredCriteria"); //$NON-NLS-1$
@@ -144,7 +144,7 @@ public class ExampleGenerator extends BaseModelClassGenerator implements JavaGen
         method = new Method();
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setReturnType(fqjt);
-        if (ibatorContext.getSuppressTypeWarnings()) {
+        if (ibatorContext.getSuppressTypeWarnings(introspectedTable)) {
             method.addSuppressTypeWarningsAnnotation();
         }
         method.setName("getOredCriteria"); //$NON-NLS-1$
@@ -154,7 +154,7 @@ public class ExampleGenerator extends BaseModelClassGenerator implements JavaGen
 
         method = new Method();
         method.setVisibility(JavaVisibility.PUBLIC);
-        if (ibatorContext.getSuppressTypeWarnings()) {
+        if (ibatorContext.getSuppressTypeWarnings(introspectedTable)) {
             method.addSuppressTypeWarningsAnnotation();
         }
         method.setName("or"); //$NON-NLS-1$
@@ -167,7 +167,7 @@ public class ExampleGenerator extends BaseModelClassGenerator implements JavaGen
 
         method = new Method();
         method.setVisibility(JavaVisibility.PUBLIC);
-        if (ibatorContext.getSuppressTypeWarnings()) {
+        if (ibatorContext.getSuppressTypeWarnings(introspectedTable)) {
             method.addSuppressTypeWarningsAnnotation();
         }
         method.setName("createCriteria"); //$NON-NLS-1$
@@ -215,7 +215,7 @@ public class ExampleGenerator extends BaseModelClassGenerator implements JavaGen
         InnerClass answer = new InnerClass(FullyQualifiedJavaType
                 .getCriteriaInstance());
 
-        if (ibatorContext.getSuppressTypeWarnings()) {
+        if (ibatorContext.getSuppressTypeWarnings(introspectedTable)) {
             answer.addSuppressTypeWarningsAnnotation();
         }
         answer.setVisibility(JavaVisibility.PUBLIC);

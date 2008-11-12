@@ -32,27 +32,58 @@ support mailing list at
 <a href="mailto:user-java@ibatis.apache.org">user-java@ibatis.apache.org</a>.</p>
 
 <h2>Extending Versus Plugging In</h2>
-<p>Although it is possible to implement ibator's key interfaces as shown on this
+<p>Although there are a number of different extension points for ibator, as shown on this
 page, in most cases it will be far easier to extend ibator through the use of a plugin.  See the
 <a href="pluggingIn.html">Implementing Ibator Plugins</a> reference page for more information.</p>
-<p>The DAO, Java Model, and SQL Map generator interfaces are interrelated and the code
-behind the interfaces is quite complex.  In the years since the original release of Abator,
-very few enhancement requests have appeared that could not be handled by a plugin.  If you
-intend to supply your own implementation of these interfaces, you should plan to supply an
-implementation for <i>all three</i> interfaces.  A good example of such an implementation
-would be a FreeMarker or Velocity template based implementation of ibator.  In almost every
-other instance, a plugin is the better way to go.</p>
+<p>The primary extension point for code generation is
+<code>org.apache.ibatis.ibator.api.IntrospectedTable</code>.  Implementing a code generator
+is a non-trivial task and should only be contemplated when you want to completely replace
+the code generation activities of ibator.  In the years since the original release of Abator,
+very few enhancement requests have appeared that could not be handled by a plugin.</p>
 
-<h2>org.apache.ibatis.ibator.generator.ibatis2.dao.templates.AbstractDAOTemplate</h2>
-<p>TODO</p>
+<h2>Extension Points</h2>
+<p>Ibator includes a number of different extension points.  The following sections
+list the different methods of extending ibator, and describes the types of
+activities that can be accomplished with the different extensions.  If you
+need some help understanding the different options, feel free to ask a question
+on the iBATIS user mailing list.</p>
+<h3>org.apache.ibatis.ibator.generator.ibatis2.dao.templates.AbstractDAOTemplate</h3>
+<p>Use this extension point if you need to generate DAO objects that are different from
+one of ibator's built-in options.  Classes that extend <code>AbstractDAOTemplate</code>
+have the opportunity to override and implement a variety of different methods that
+define how the DAO objects should be constructed, and how the DOAs interact with iBATIS.</p>
+<p>If you implement this extension point, then you should specify the fully qualified
+name of the implementing class on the <code>type</code> attribute of the
+<code>&lt;daoGenerator&gt;</code> configuration element.</p>
 
-<h2>org.apache.ibatis.ibator.api.IntrospectedTable</h2>
-<p>TODO</p>
+<h3>org.apache.ibatis.ibator.api.IntrospectedTable</h3>
+<p><code>IntrospectedTable</code> is an abstract class that can be extended to supply
+different code generators than the versions supplied with ibator.  A good example of
+such an implementation would be a FreeMarker or Velocity template based
+implementation of ibator.  In most other instances, coding a plugin is the better way to go.</p>
+<p>If you choose to extend this class, you must supply code to generate Java model classes,
+DAO classes, and SQL Map XML files.  You may choose to generated those generators with the
+technology of your choice.  You should also ensure that you follow all the ibator rules for
+code generation (for example, do not generate a primary key class if the table doesn't have
+a primary key).  The base <code>IntrospectedTable</code> class holds an instance
+of <code>org.apache.ibatis.ibator.internal.rules.IbatorRules</code> that can be queried
+to determine many of the rules for code generation.</p>
+<p>If you choose to implement this extension point, specify the fully qualified
+class name of your implementation with the <code>targetRuntime</code>
+attribute of the <code>&lt;ibatorContext&gt;</code> element.</p>
 
-<h2>org.apache.ibatis.ibator.api.IntrospectedColumn</h2>
-<p>TODO</p>
+<h3>org.apache.ibatis.ibator.api.IntrospectedColumn</h3>
+<p><code>IntrospectedColumn</code> is a class that holds information about a
+column as it is returned from database metadata, as well as methods used
+during code generation to generate specific phrases for iBATIS.  In some rare
+circumstances it might be desirable to override this class to provide
+your own implementation - especially if you create a new set of code
+generators for ibator.</p>
+<p>If you choose to implement this extension point, specify the fully qualified
+class name of your implementation with the <code>introspectedColumnImpl</code>
+attribute of the <code>&lt;ibatorContext&gt;</code> element.</p>
 
-<h2>org.apache.ibatis.ibator.api.JavaTypeResolver</h2>
+<h3>org.apache.ibatis.ibator.api.JavaTypeResolver</h3>
 <p>Ibator calls methods in this interface to map JDBC types to Java types
    during database introspection.  The default implementation of this
    interface is <code>org.apache.ibatis.ibator.internal.types.JavaTypeResolverDefaultImpl</code>.
@@ -67,7 +98,7 @@ other instance, a plugin is the better way to go.</p>
     &lt;/javaTypeResolver&gt;
 </pre>
 
-<h2>org.apache.ibatis.ibator.api.ShellCallback</h2>
+<h3>org.apache.ibatis.ibator.api.ShellCallback</h3>
 <p>Ibator calls methods in this interface to perform functions that it cannot
    do on its own.  The most important of these functions are:</p>
 <ul>
@@ -94,7 +125,7 @@ other instance, a plugin is the better way to go.</p>
    also providing some collateral code (like a new Ant task) to run
    your implementation.</p>
 
-<h2>org.apache.ibatis.ibator.api.ProgressCallback</h2>
+<h3>org.apache.ibatis.ibator.api.ProgressCallback</h3>
 <p>Ibator calls methods in this interface to report progress during the
    generation of files (a long running process).  The default implementation
    of this interface is

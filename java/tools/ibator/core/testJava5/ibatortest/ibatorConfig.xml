@@ -6,7 +6,7 @@
 <ibatorConfiguration>
   <classPathEntry location="${generated.bin.dir.java5}"/>
   
-  <ibatorContext id="FlatJava5" targetJRE="Java5" defaultModelType="flat">
+  <ibatorContext id="FlatJava5" targetRuntime="Ibatis2Java5" defaultModelType="flat">
     <property name="suppressTypeWarnings" value="true" /> <!-- should be ignored -->
     
     <ibatorPlugin type="org.apache.ibatis.ibator.plugins.EqualsHashCodePlugin" />
@@ -52,7 +52,7 @@
     </table>
   </ibatorContext>
 
-  <ibatorContext id="FlatJava2" targetJRE="Java2" defaultModelType="flat">
+  <ibatorContext id="FlatJava2" targetRuntime="Ibatis2Java2" defaultModelType="flat">
     <property name="suppressTypeWarnings" value="true" />
     
     <ibatorPlugin type="org.apache.ibatis.ibator.plugins.EqualsHashCodePlugin" />
@@ -94,7 +94,7 @@
     </table>
   </ibatorContext>
 
-  <ibatorContext id="HierarchicalJava5" targetJRE="Java5" defaultModelType="hierarchical">
+  <ibatorContext id="HierarchicalJava5" targetRuntime="Ibatis2Java5" defaultModelType="hierarchical">
     <ibatorPlugin type="org.apache.ibatis.ibator.plugins.EqualsHashCodePlugin" />
 
     <jdbcConnection driverClass="org.hsqldb.jdbcDriver"
@@ -134,7 +134,7 @@
     </table>
   </ibatorContext>
 
-  <ibatorContext id="HierarchicalJava2" targetJRE="Java2" defaultModelType="hierarchical">
+  <ibatorContext id="HierarchicalJava2" targetRuntime="Ibatis2Java2" defaultModelType="hierarchical">
     <property name="suppressTypeWarnings" value="true" />
     
     <ibatorPlugin type="org.apache.ibatis.ibator.plugins.EqualsHashCodePlugin" />
@@ -176,7 +176,7 @@
     </table>
   </ibatorContext>
 
-  <ibatorContext id="ConditionalJava5" targetJRE="Java5" defaultModelType="conditional">
+  <ibatorContext id="ConditionalJava5" targetRuntime="Ibatis2Java5" defaultModelType="conditional">
     <ibatorPlugin type="org.apache.ibatis.ibator.plugins.EqualsHashCodePlugin" />
     <ibatorPlugin type="org.apache.ibatis.ibator.plugins.SerializablePlugin" />
 
@@ -217,7 +217,7 @@
     </table>
   </ibatorContext>
 
-  <ibatorContext id="ConditionalJava2" targetJRE="Java2" defaultModelType="conditional">
+  <ibatorContext id="ConditionalJava2" targetRuntime="Ibatis2Java2" defaultModelType="conditional">
     <property name="suppressTypeWarnings" value="true" />
     
     <ibatorPlugin type="org.apache.ibatis.ibator.plugins.EqualsHashCodePlugin" />
@@ -259,7 +259,7 @@
     </table>
   </ibatorContext>
 
-  <ibatorContext id="miscellaneousTests" targetJRE="Java5">
+  <ibatorContext id="miscellaneousTests" targetRuntime="Ibatis2Java5">
     <ibatorPlugin type="org.apache.ibatis.ibator.plugins.EqualsHashCodePlugin" />
 
     <commentGenerator>

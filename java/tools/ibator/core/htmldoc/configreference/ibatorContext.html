@@ -77,13 +77,13 @@ databases, or with different generation parameters, in the same run of ibator.</
     </td>
   </tr>
   <tr>
-    <td valign="top">targetJRE</td>
+    <td valign="top">targetRuntime</td>
     <td>
-      This property is used to specify the JRE under which the generated code will run.
-      The property supports these values:
+      This property is used to specify the runtime target for generated code.
+      The property supports these special values:
       <table>
         <tr>
-          <th valign="top">Java2</th>
+          <th valign="top">Ibatis2Java2</th>
           <td><i>This is the default value</i>
             <br/>With this value, ibator will generate objects that are compatible
             with iBATIS versions 2.2.0 and higher, and all levels of Java 2.
@@ -94,7 +94,7 @@ databases, or with different generation parameters, in the same run of ibator.</
             of the other sets of code generators.</td>
         </tr>
         <tr>
-          <th valign="top">Java5</th>
+          <th valign="top">Ibatis2Java5</th>
           <td>With the value, ibator will generate objects that are compatible
             with iBATIS versions 2.2.0 and higher, and JSE 5.0 and higher (e.g. the
             Java model and DAO classes will use generic types).
@@ -107,7 +107,22 @@ databases, or with different generation parameters, in the same run of ibator.</
             of the other sets of code generators.</td>
         </tr>
       </table>
+      <p>If you want to create a different code generator in entirety,
+         then use this value to specify the fully qualified name of a
+         class that extends <code>org.apache.ibatis.ibator.api.IntrospectedTable</code>.
+         With this, you can create your own code generator and plug
+         it in to the ibator engine.  See the
+         <a href="../reference/extending.html">Extending Ibator</a> page for more information.
+      </p>
     </td>
+  </tr>
+  <tr>
+    <td valign="top">introspectedColumnImpl</td>
+    <td>Use this value to specify the fully qualified name of a
+        class that extends <code>org.apache.ibatis.ibator.api.IntrospectedColumn</code>.
+        This is used if you want to change the behavior of the code generators
+        when calculating column information.  See the
+        <a href="../reference/extending.html">Extending Ibator</a> page for more information.</td>
   </tr>
 </table>
 

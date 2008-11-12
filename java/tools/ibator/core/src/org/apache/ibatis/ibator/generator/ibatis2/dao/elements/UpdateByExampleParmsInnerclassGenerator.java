@@ -75,8 +75,6 @@ public class UpdateByExampleParmsInnerclassGenerator extends
         method.addBodyLine("return record;"); //$NON-NLS-1$
         innerClass.addMethod(method);
         
-        // TODO - plugin method?
-        
         topLevelClass.addInnerClass(innerClass);
     }
 

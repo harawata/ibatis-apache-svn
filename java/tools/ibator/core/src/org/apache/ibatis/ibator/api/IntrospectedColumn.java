@@ -16,7 +16,6 @@
 package org.apache.ibatis.ibator.api;
 
 import java.sql.Types;
-import java.util.StringTokenizer;
 
 import org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.ibator.config.IbatorContext;
@@ -30,31 +29,33 @@ import org.apache.ibatis.ibator.internal.util.StringUtility;
  * @author Jeff Butler
  */
 public class IntrospectedColumn {
-    private String actualColumnName;
+    protected String actualColumnName;
     
-    private int jdbcType;
+    protected int jdbcType;
     
-    private String jdbcTypeName;
+    protected String jdbcTypeName;
 
-    private boolean nullable;
+    protected boolean nullable;
 
-    private int length;
+    protected int length;
 
-    private int scale;
+    protected int scale;
 
-    private boolean identity;
+    protected boolean identity;
 
-    private String javaProperty;
+    protected String javaProperty;
     
-    private FullyQualifiedJavaType fullyQualifiedJavaType;
+    protected FullyQualifiedJavaType fullyQualifiedJavaType;
     
-    private String tableAlias;
+    protected String tableAlias;
     
-    private String typeHandler;
+    protected String typeHandler;
     
-    private IbatorContext ibatorContext;
+    protected IbatorContext ibatorContext;
     
-    private boolean isColumnNameDelimited;
+    protected boolean isColumnNameDelimited;
+    
+    protected IntrospectedTable introspectedTable;
 
     /**
      * Constructs a Column definition.  This object holds all the 
@@ -64,10 +65,8 @@ public class IntrospectedColumn {
      * @param tableAlias The specified table alias, or null.  This
      *   value is used to rename and alias column names for select statements
      */
-    public IntrospectedColumn(String tableAlias, IbatorContext ibatorContext) {
+    public IntrospectedColumn() {
         super();
-        this.tableAlias = tableAlias;
-        this.ibatorContext = ibatorContext;
     }
 
     public int getJdbcType() {
@@ -223,7 +222,7 @@ public class IntrospectedColumn {
             }
             sb.append(tableAlias);
             sb.append('_');
-            sb.append(escapeStringForIbatis(actualColumnName));
+            sb.append(StringUtility.escapeStringForIbatis(actualColumnName));
             if (isColumnNameDelimited) {
                 sb.append(ibatorContext.getEndingDelimiter());
             }
@@ -276,22 +275,6 @@ public class IntrospectedColumn {
         this.typeHandler = typeHandler;
     }
     
-    private String escapeStringForIbatis(String s) {
-        StringTokenizer st = new StringTokenizer(s, "$#", true); //$NON-NLS-1$
-        StringBuilder sb = new StringBuilder();
-        while (st.hasMoreTokens()) {
-            String token = st.nextToken();
-            if ("$".equals(token)) { //$NON-NLS-1$
-                sb.append("$$"); //$NON-NLS-1$
-            } else if ("#".equals(token)) { //$NON-NLS-1$
-                sb.append("##"); //$NON-NLS-1$
-            } else {
-                sb.append(token);
-            }
-        }
-        
-        return sb.toString();
-    }
 
     public String getActualColumnName() {
         return actualColumnName;
@@ -299,7 +282,7 @@ public class IntrospectedColumn {
 
     public String getEscapedColumnName() {
         StringBuilder sb = new StringBuilder();
-        sb.append(escapeStringForIbatis(actualColumnName));
+        sb.append(StringUtility.escapeStringForIbatis(actualColumnName));
         
         if (isColumnNameDelimited) {
             sb.insert(0, ibatorContext.getBeginningDelimiter());
@@ -386,5 +369,29 @@ public class IntrospectedColumn {
     public void setFullyQualifiedJavaType(
             FullyQualifiedJavaType fullyQualifiedJavaType) {
         this.fullyQualifiedJavaType = fullyQualifiedJavaType;
+    }
+
+    public String getTableAlias() {
+        return tableAlias;
+    }
+
+    public void setTableAlias(String tableAlias) {
+        this.tableAlias = tableAlias;
+    }
+
+    public IbatorContext getIbatorContext() {
+        return ibatorContext;
+    }
+
+    public void setIbatorContext(IbatorContext ibatorContext) {
+        this.ibatorContext = ibatorContext;
+    }
+
+    public IntrospectedTable getIntrospectedTable() {
+        return introspectedTable;
+    }
+
+    public void setIntrospectedTable(IntrospectedTable introspectedTable) {
+        this.introspectedTable = introspectedTable;
     }
 }

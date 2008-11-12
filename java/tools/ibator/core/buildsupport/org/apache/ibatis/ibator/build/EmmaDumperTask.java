@@ -29,7 +29,7 @@ import org.apache.tools.ant.Task;
  * lost if not forced to dump.  BTW - this seems like a bug in emma!
  * <p>
  * This class is not intended to be used by clients.  The class uses
- * reflection to dump emma so that the build is not dependant on emma.
+ * reflection to dump emma so that the build is not dependent on emma.
  * 
  * @author Jeff Butler
  *

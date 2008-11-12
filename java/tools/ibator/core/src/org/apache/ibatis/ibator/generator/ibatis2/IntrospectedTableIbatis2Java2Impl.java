@@ -45,12 +45,12 @@ import org.apache.ibatis.ibator.internal.IbatorObjectFactory;
  * @author Jeff Butler
  *
  */
-public class IntrospectedTableIbatis2Impl extends IntrospectedTable {
+public class IntrospectedTableIbatis2Java2Impl extends IntrospectedTable {
     protected List<JavaGenerator> javaModelGenerators;
     protected List<JavaGenerator> daoGenerators;
     protected XmlGenerator sqlMapGenerator;
 
-    public IntrospectedTableIbatis2Impl() {
+    public IntrospectedTableIbatis2Java2Impl() {
         super();
         javaModelGenerators = new ArrayList<JavaGenerator>();
         daoGenerators = new ArrayList<JavaGenerator>();
@@ -88,17 +88,14 @@ public class IntrospectedTableIbatis2Impl extends IntrospectedTable {
             abstractDAOTemplate = (AbstractDAOTemplate) IbatorObjectFactory.createInternalObject(type);
         }
 
-        boolean generateForJava5 = "Java5".equalsIgnoreCase(ibatorContext.getTargetJRE());
-        JavaGenerator javaGenerator = new DAOGenerator(abstractDAOTemplate, generateForJava5);
+        JavaGenerator javaGenerator = new DAOGenerator(abstractDAOTemplate, isJava5Targeted());
         initializeAbstractGenerator(javaGenerator, warnings, progressCallback);
         daoGenerators.add(javaGenerator);
     }
     
     protected void calculateJavaModelGenerators(List<String> warnings, ProgressCallback progressCallback) {
-        boolean generateForJava5 = "Java5".equalsIgnoreCase(ibatorContext.getTargetJRE());
-        
         if (getRules().generateExampleClass()) {
-            JavaGenerator javaGenerator = new ExampleGenerator(generateForJava5);
+            JavaGenerator javaGenerator = new ExampleGenerator(isJava5Targeted());
             initializeAbstractGenerator(javaGenerator, warnings, progressCallback);
             javaModelGenerators.add(javaGenerator);
         }
@@ -167,5 +164,10 @@ public class IntrospectedTableIbatis2Impl extends IntrospectedTable {
         }
         
         return answer;
+    }
+
+    @Override
+    public boolean isJava5Targeted() {
+        return false;
     }
 }

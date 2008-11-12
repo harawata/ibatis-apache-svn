@@ -54,7 +54,8 @@
                          javaModelGenerator, sqlMapGenerator, daoGenerator?, table+)>
 <!ATTLIST ibatorContext id ID #REQUIRED
   defaultModelType CDATA #IMPLIED
-  targetJRE CDATA #IMPLIED>
+  targetRuntime CDATA #IMPLIED
+  introspectedColumnImpl CDATA #IMPLIED>
 
 <!--
   The jdbcConnection element is used to describe the JDBC connection that ibator

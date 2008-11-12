@@ -5,7 +5,7 @@
 
 <ibatorConfiguration>
   
-  <ibatorContext id="FlatJava2" targetJRE="Java2" defaultModelType="flat">
+  <ibatorContext id="FlatJava2" targetRuntime="Ibatis2Java2" defaultModelType="flat">
     <ibatorPlugin type="org.apache.ibatis.ibator.plugins.EqualsHashCodePlugin" />
     <ibatorPlugin type="org.apache.ibatis.ibator.plugins.SqlMapConfigPlugin" >
       <property name="targetPackage" value="ibatortest.java2.generated.flat" />
@@ -49,7 +49,7 @@
     </table>
   </ibatorContext>
 
-  <ibatorContext id="HierarchicalJava2" targetJRE="Java2" defaultModelType="hierarchical">
+  <ibatorContext id="HierarchicalJava2" targetRuntime="Ibatis2Java2" defaultModelType="hierarchical">
     <ibatorPlugin type="org.apache.ibatis.ibator.plugins.EqualsHashCodePlugin" />
 
     <jdbcConnection driverClass="org.hsqldb.jdbcDriver"
@@ -89,7 +89,7 @@
     </table>
   </ibatorContext>
 
-  <ibatorContext id="ConditionalJava2" targetJRE="Java2" defaultModelType="conditional">
+  <ibatorContext id="ConditionalJava2" targetRuntime="Ibatis2Java2" defaultModelType="conditional">
     <ibatorPlugin type="org.apache.ibatis.ibator.plugins.EqualsHashCodePlugin" />
 
     <jdbcConnection driverClass="org.hsqldb.jdbcDriver"
@@ -129,7 +129,7 @@
     </table>
   </ibatorContext>
 
-  <ibatorContext id="miscellaneousTests" targetJRE="Java2">
+  <ibatorContext id="miscellaneousTests" targetRuntime="Ibatis2Java2">
     <ibatorPlugin type="org.apache.ibatis.ibator.plugins.EqualsHashCodePlugin" />
 
     <jdbcConnection driverClass="org.hsqldb.jdbcDriver"

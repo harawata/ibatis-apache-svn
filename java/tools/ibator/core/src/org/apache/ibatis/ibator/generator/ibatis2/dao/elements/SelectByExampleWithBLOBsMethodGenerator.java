@@ -103,7 +103,7 @@ public class SelectByExampleWithBLOBsMethodGenerator extends
         }
         method.setReturnType(returnType);
 
-        if (ibatorContext.getSuppressTypeWarnings()) {
+        if (ibatorContext.getSuppressTypeWarnings(introspectedTable)) {
             method.addSuppressTypeWarningsAnnotation();
         }
         
