@@ -44,7 +44,7 @@ public class MapperConfigParserTest extends BaseDataTest {
       System.out.println(author);
     }
 
-    Assert.assertEquals(2,config.getCaches().size());
+    Assert.assertEquals(2,authors.size());
   }
 
 }
