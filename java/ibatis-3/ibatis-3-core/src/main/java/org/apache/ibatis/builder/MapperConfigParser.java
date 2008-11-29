@@ -15,14 +15,26 @@ import java.util.*;
 
 public class MapperConfigParser extends BaseParser {
 
+  private boolean parsed;
+
   protected Reader reader;
   protected NodeletParser parser;
 
   private String environment;
   private Environment.Builder environmentBuilder;
 
-  public MapperConfigParser(Reader reader, Properties props) {
+  public MapperConfigParser(Reader reader) {
+    this(reader,null,null);
+  }
+
+  public MapperConfigParser(Reader reader, String environment) {
+    this(reader,environment,null);
+  }
+
+  public MapperConfigParser(Reader reader, String environment, Properties props) {
+    this.parsed = false;
     this.reader = reader;
+    this.environment = environment;
 
     this.configuration = new Configuration();
     this.configuration.setVariables(props);
@@ -36,16 +48,17 @@ public class MapperConfigParser extends BaseParser {
     this.parser.setEntityResolver(new MapperEntityResolver());
   }
 
-  public void parse() {
+  public Configuration parse() {
     assert reader != null;
     assert parser != null;
     assert configuration != null;
     assert typeAliasRegistry != null;
     assert typeHandlerRegistry != null;
+    if (parsed) {
+      throw new BuilderException("Each MapperConfigParser can only be used once.");
+    }
+    parsed = true;
     parser.parse(reader);
-  }
-
-  public Configuration getConfiguration() {
     return configuration;
   }
 

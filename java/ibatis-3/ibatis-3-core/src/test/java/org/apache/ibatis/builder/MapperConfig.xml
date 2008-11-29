@@ -6,7 +6,7 @@
 
 <configuration>
 
-  <properties resource="org/apache/ibatis/builder/mapper.properties"> <!-- url="" -->
+  <properties resource="org/apache/ibatis/builder/mapper.properties">
     <property name="driver" value="org.apache.derby.jdbc.EmbeddedDriver"/>
   </properties>
 

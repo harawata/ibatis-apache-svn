@@ -13,6 +13,7 @@ public class ManagedTransactionFactory implements TransactionFactory {
   }
 
   public Transaction newTransaction(Connection conn) {
+
     return new ManagedTransaction(conn);
   }
 

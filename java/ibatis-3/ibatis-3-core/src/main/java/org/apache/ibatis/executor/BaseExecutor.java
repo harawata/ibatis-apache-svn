@@ -13,8 +13,7 @@ import java.sql.*;
 import java.util.*;
 
 public abstract class BaseExecutor implements Executor {
-
-  private static final Log log = LogFactory.getLog(BaseExecutor.class);
+  
   private static final Object EXECUTION_PLACEHOLDER = new Object();
 
   protected final Transaction transaction;
@@ -27,11 +26,6 @@ public abstract class BaseExecutor implements Executor {
   protected List<BatchResult> batchResults = new ArrayList<BatchResult>();
 
   protected BaseExecutor(Transaction transaction) {
-//    if (log.isDebugEnabled()) {
-//      this.connection = ConnectionLogger.newInstance(connection);
-//    } else {
-//      this.connection = connection;
-//    }
     this.transaction = transaction;
     this.deferredLoads = new ArrayList<DeferredLoad>();
     this.localCache = new PerpetualCache("LocalCache");

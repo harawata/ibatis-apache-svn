@@ -44,4 +44,10 @@ public class DefaultSqlMapper implements SqlMapper {
     return new DefaultSqlSession(configuration, executor);
   }
 
+  public Configuration getConfiguration() {
+    return configuration;
+  }
+
+
 }
+

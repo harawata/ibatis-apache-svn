@@ -1,6 +1,7 @@
 package org.apache.ibatis.transaction.jdbc;
 
 import org.apache.ibatis.transaction.Transaction;
+import org.apache.ibatis.api.exceptions.ExceptionFactory;
 
 import java.sql.Connection;
 import java.sql.SQLException;

@@ -10,7 +10,18 @@ API
  * Transaction Manager (REAL AutoCommit support...)
  * Mapper Interface Binding
  * Client / Mapper Factory
+ * Exception hierarchy returned from exceptionfactory
 
 Testing
  * Functional tests
  * Perf/Threaded Integration Tests
+
+Logging
+//  private static final Log log = LogFactory.getLog(BaseExecutor.class);
+//    if (log.isDebugEnabled()) {
+//      this.connection = ConnectionLogger.newInstance(connection);
+//    } else {
+//      this.connection = connection;
+//    }
+
+
