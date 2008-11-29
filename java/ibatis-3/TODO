@@ -1,13 +1,13 @@
 Core
  * Improved Error Messages
 
-Monarch XML
+XML Config
  * Named parameter parsing/merging
  * Loosely bound cache id to instance
    - (perhaps use late-binding lookup proxies for all config elements?)
 
-Monarch API
- * Transaction Manager
+API
+ * Transaction Manager (REAL AutoCommit support...)
  * Mapper Interface Binding
  * Client / Mapper Factory
 
