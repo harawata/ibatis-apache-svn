@@ -219,7 +219,7 @@ public class Ibator {
             String source;
             try {
                 File directory = shellCallback.getDirectory(gxf
-                        .getTargetProject(), gxf.getTargetPackage(), warnings);
+                        .getTargetProject(), gxf.getTargetPackage());
                 targetFile = new File(directory, gxf.getFileName());
                 if (targetFile.exists()) {
                     if (gxf.isMergeable()) {
@@ -247,13 +247,17 @@ public class Ibator {
             String source;
             try {
                 File directory = shellCallback.getDirectory(gjf
-                        .getTargetProject(), gjf.getTargetPackage(), warnings);
+                        .getTargetProject(), gjf.getTargetPackage());
                 targetFile = new File(directory, gjf.getFileName());
                 if (targetFile.exists()) {
-                    if (shellCallback.mergeSupported() && gjf.isMergeable()) {
-                        source = shellCallback.mergeJavaFile(gjf,
-                                MergeConstants.OLD_JAVA_ELEMENT_TAGS,
-                                warnings);
+                    if (shellCallback.isMergeSupported()) {
+                        source = shellCallback.mergeJavaFile(gjf.getFormattedContent(),
+                                targetFile.getAbsolutePath(),
+                                MergeConstants.OLD_JAVA_ELEMENT_TAGS);
+                    } else if (shellCallback.isOverwriteEnabled()) { 
+                        source = gjf.getFormattedContent();
+                        warnings.add(Messages.getString("Warning.11", //$NON-NLS-1$
+                                targetFile.getAbsolutePath()));
                     } else {
                         source = gjf.getFormattedContent();
                         targetFile = getUniqueFileName(directory, gjf.getFileName());

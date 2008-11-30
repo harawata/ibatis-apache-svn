@@ -68,6 +68,26 @@ code generation (for example, do not generate a primary key class if the table d
 a primary key).  The base <code>IntrospectedTable</code> class holds an instance
 of <code>org.apache.ibatis.ibator.internal.rules.IbatorRules</code> that can be queried
 to determine many of the rules for code generation.</p>
+<p>Ibator supplies two implementations of introspected table.  The implementation is chosen
+bases on the value of the <code>targetRuntime</code> attribute of the
+<code>&lt;ibatorContext&gt;</code> element.  In many cases it will be fer simpler
+to extend one of the built in implementations, rather than creating an implementation
+from scratch.  The following table shows the built in implementations:</p>
+<table cellspacing="0" cellpadding="5" border="1">
+  <tr>
+    <th>TargetRuntime</th>
+    <th>Implementation</th>
+  </tr>
+  <tr>
+    <td>Ibatis2Java2 (default)</td>
+    <td><code>org.apache.ibatis.ibator.generator.ibatis2.IntrospectedTableIbatis2Java2Impl</code></td>
+  </tr>
+  <tr>
+    <td>Ibatis2Java5</td>
+    <td><code>org.apache.ibatis.ibator.generator.ibatis2.IntrospectedTableIbatis2Java5Impl</code></td>
+  </tr>
+</table>
+
 <p>If you choose to implement this extension point, specify the fully qualified
 class name of your implementation with the <code>targetRuntime</code>
 attribute of the <code>&lt;ibatorContext&gt;</code> element.</p>

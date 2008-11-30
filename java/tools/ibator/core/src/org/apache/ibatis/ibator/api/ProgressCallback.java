@@ -24,7 +24,7 @@ package org.apache.ibatis.ibator.api;
  * <code>setNumberOfSubTasks</code> method first, and then repeatedly call <code>startSubTask</code.
  * When the long running method is complete, ibator will call <code>finished</code>.
  * Periodically, ibator will call <code>checkCancel</code> to see if the method should
- * be cancelled.
+ * be canceled.
  * 
  * @author Jeff Butler
  */
@@ -54,7 +54,7 @@ public interface ProgressCallback {
     /**
      * ibator will call this method periodically during a long running method.
      * If the the implementation throws InterruptedException, then the method
-     * will be cancelled.  Any files that have already been saved will remain on
+     * will be canceled.  Any files that have already been saved will remain on
      * the file system.
      * 
      * @throws InterruptedException if the main task should finish

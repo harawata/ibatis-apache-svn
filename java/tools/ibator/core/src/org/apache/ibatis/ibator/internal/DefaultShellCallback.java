@@ -16,10 +16,8 @@
 package org.apache.ibatis.ibator.internal;
 
 import java.io.File;
-import java.util.List;
 import java.util.StringTokenizer;
 
-import org.apache.ibatis.ibator.api.GeneratedJavaFile;
 import org.apache.ibatis.ibator.api.ShellCallback;
 import org.apache.ibatis.ibator.exception.ShellException;
 import org.apache.ibatis.ibator.internal.util.messages.Messages;
@@ -40,10 +38,9 @@ public class DefaultShellCallback implements ShellCallback {
 
     /*
      *  (non-Javadoc)
-     * @see org.apache.ibatis.ibator.api.ShellCallback#getDirectory(java.lang.String, java.lang.String, java.util.List)
+     * @see org.apache.ibatis.ibator.api.ShellCallback#getDirectory(java.lang.String, java.lang.String)
      */
-    public File getDirectory(String targetProject, String targetPackage,
-            List<String> warnings) throws ShellException {
+    public File getDirectory(String targetProject, String targetPackage) throws ShellException {
         // targetProject is interpreted as a directory that must exist
         //
         // targetPackage is interpreted as a sub directory, but in package
@@ -77,24 +74,6 @@ public class DefaultShellCallback implements ShellCallback {
 
     /*
      *  (non-Javadoc)
-     * @see org.apache.ibatis.ibator.api.ShellCallback#mergeJavaFile(org.apache.ibatis.ibator.api.GeneratedJavaFile, java.lang.String, java.util.List)
-     */
-    public String mergeJavaFile(GeneratedJavaFile newFile, String[] javadocTags,
-            List<String> warnings) throws ShellException {
-        if (overwrite) {
-            File directory = getDirectory(newFile.getTargetProject(), newFile.getTargetPackage(), warnings);
-            File file = new File(directory, newFile.getFileName());
-            warnings.add(Messages.getString("Warning.11", //$NON-NLS-1$
-                    file.getAbsolutePath()));
-            
-            return newFile.getFormattedContent();
-        } else {
-            return null;
-        }
-    }
-
-    /*
-     *  (non-Javadoc)
      * @see org.apache.ibatis.ibator.api.ShellCallback#refreshProject(java.lang.String)
      */
     public void refreshProject(String project) {
@@ -102,9 +81,23 @@ public class DefaultShellCallback implements ShellCallback {
     }
     
     /* (non-Javadoc)
-     * @see org.apache.ibatis.ibator.api.ShellCallback#mergeSupported()
+     * @see org.apache.ibatis.ibator.api.ShellCallback#isMergeSupported()
      */
-    public boolean mergeSupported() {
+    public boolean isMergeSupported() {
+        return false;
+    }
+
+    public boolean isOverwriteEnabled() {
         return overwrite;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.apache.ibatis.ibator.api.ShellCallback#mergeJavaFile(java.lang.String, java.lang.String, java.lang.String[])
+     */
+    public String mergeJavaFile(String newFileSource,
+            String existingFileFullPath, String[] javadocTags)
+            throws ShellException {
+        throw new UnsupportedOperationException();
     }
 }

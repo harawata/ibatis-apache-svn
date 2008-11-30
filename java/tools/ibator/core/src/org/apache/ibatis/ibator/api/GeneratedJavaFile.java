@@ -66,14 +66,14 @@ public class GeneratedJavaFile extends GeneratedFile {
      * Java merge function, you may return null from this method. 
      * 
      * @return the CompilationUnit associated with this file, or
-     *   null if the file is not mergable.
+     *   null if the file is not mergeable.
      */
     public CompilationUnit getCompilationUnit() {
         return compilationUnit;
     }
 
     /**
-     * A Java file is mergable if the getCompilationUnit() method
+     * A Java file is mergeable if the getCompilationUnit() method
      * returns a valid compilation unit.
      * 
      */
