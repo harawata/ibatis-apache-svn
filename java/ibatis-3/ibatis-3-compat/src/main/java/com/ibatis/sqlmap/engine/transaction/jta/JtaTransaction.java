@@ -56,7 +56,7 @@ public class JtaTransaction extends BaseTransaction {
     if (connection.getAutoCommit()) {
       connection.setAutoCommit(false);
     }
-    executor = configuration.newExecutor(new JdbcTransaction(connection));
+    executor = configuration.newExecutor(new JdbcTransaction(connection,false));
   }
 
   public void commit(boolean required) throws SQLException, TransactionException {

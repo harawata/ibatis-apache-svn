@@ -36,7 +36,7 @@ public class JdbcTransaction extends BaseTransaction {
     if (connection.getAutoCommit()) {
       connection.setAutoCommit(false);
     }
-    executor = configuration.newExecutor(new org.apache.ibatis.transaction.jdbc.JdbcTransaction(connection));
+    executor = configuration.newExecutor(new org.apache.ibatis.transaction.jdbc.JdbcTransaction(connection, false));
   }
 
   public void commit(boolean required) throws SQLException, TransactionException {

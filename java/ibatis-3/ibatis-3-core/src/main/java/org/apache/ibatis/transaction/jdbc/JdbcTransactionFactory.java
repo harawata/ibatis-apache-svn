@@ -11,8 +11,8 @@ public class JdbcTransactionFactory implements TransactionFactory {
   public void setProperties(Properties props) {
   }
 
-  public Transaction newTransaction(Connection conn) {
-    return new JdbcTransaction(conn);
+  public Transaction newTransaction(Connection conn, boolean autoCommit) {
+    return new JdbcTransaction(conn, autoCommit);
   }
 
 }

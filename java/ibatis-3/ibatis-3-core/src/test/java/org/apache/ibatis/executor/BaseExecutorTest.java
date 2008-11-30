@@ -28,7 +28,7 @@ public abstract class BaseExecutorTest extends BaseDataTest {
   public void shouldInsertNewAuthor() throws Exception {
     DataSource ds = createBlogDataSource();
     Connection connection = ds.getConnection();
-    Executor executor = createExecutor(new JdbcTransaction(connection));
+    Executor executor = createExecutor(new JdbcTransaction(connection,false));
     Author author = new Author(99, "someone", "******", "someone@apache.org", null, Section.NEWS);
     MappedStatement insertStatement = ExecutorTestHelper.prepareInsertAuthorMappedStatement(config);
     MappedStatement selectStatement = ExecutorTestHelper.prepareSelectOneAuthorMappedStatement(config);
@@ -45,7 +45,7 @@ public abstract class BaseExecutorTest extends BaseDataTest {
   public void shouldSelectAllAuthorsAutoMapped() throws Exception {
     DataSource ds = createBlogDataSource();
     Connection connection = ds.getConnection();
-    Executor executor = createExecutor(new JdbcTransaction(connection));
+    Executor executor = createExecutor(new JdbcTransaction(connection,false));
     MappedStatement selectStatement = ExecutorTestHelper.prepareSelectAllAuthorsAutoMappedStatement(config);
     List<Author> authors = executor.query(selectStatement, null, Executor.NO_ROW_OFFSET, Executor.NO_ROW_LIMIT, Executor.NO_RESULT_HANDLER);
     Assert.assertEquals(2, authors.size());
@@ -65,7 +65,7 @@ public abstract class BaseExecutorTest extends BaseDataTest {
     Connection connection = ds.getConnection();
     config.setGeneratedKeysEnabled(true);
     try {
-      Executor executor = createExecutor(new JdbcTransaction(connection));
+      Executor executor = createExecutor(new JdbcTransaction(connection,false));
       Author author = new Author(-1, "someone", "******", "someone@apache.org", null, Section.NEWS);
       MappedStatement insertStatement = ExecutorTestHelper.prepareInsertAuthorMappedStatementWithAutoKey(config);
       MappedStatement selectStatement = ExecutorTestHelper.prepareSelectOneAuthorMappedStatement(config);
@@ -88,7 +88,7 @@ public abstract class BaseExecutorTest extends BaseDataTest {
   public void shouldInsertNewAuthorByProc() throws Exception {
     DataSource ds = createBlogDataSource();
     Connection connection = ds.getConnection();
-    Executor executor = createExecutor(new JdbcTransaction(connection));
+    Executor executor = createExecutor(new JdbcTransaction(connection,false));
     Author author = new Author(97, "someone", "******", "someone@apache.org", null, null);
     MappedStatement insertStatement = ExecutorTestHelper.prepareInsertAuthorProc(config);
     MappedStatement selectStatement = ExecutorTestHelper.prepareSelectOneAuthorMappedStatement(config);
@@ -104,7 +104,7 @@ public abstract class BaseExecutorTest extends BaseDataTest {
   public void shouldInsertNewAuthorUsingSimpleNonPreparedStatements() throws Exception {
     DataSource ds = createBlogDataSource();
     Connection connection = ds.getConnection();
-    Executor executor = createExecutor(new JdbcTransaction(connection));
+    Executor executor = createExecutor(new JdbcTransaction(connection,false));
     Author author = new Author(99, "someone", "******", "someone@apache.org", null, null);
     MappedStatement insertStatement = ExecutorTestHelper.createInsertAuthorWithIDof99MappedStatement(config);
     MappedStatement selectStatement = ExecutorTestHelper.createSelectAuthorWithIDof99MappedStatement(config);
@@ -121,7 +121,7 @@ public abstract class BaseExecutorTest extends BaseDataTest {
   public void shouldUpdateAuthor() throws Exception {
     DataSource ds = createBlogDataSource();
     Connection connection = ds.getConnection();
-    Executor executor = createExecutor(new JdbcTransaction(connection));
+    Executor executor = createExecutor(new JdbcTransaction(connection,false));
     Author author = new Author(101, "someone", "******", "someone@apache.org", null, Section.NEWS);
     MappedStatement updateStatement = ExecutorTestHelper.prepareUpdateAuthorMappedStatement(config);
     MappedStatement selectStatement = ExecutorTestHelper.prepareSelectOneAuthorMappedStatement(config);
@@ -138,7 +138,7 @@ public abstract class BaseExecutorTest extends BaseDataTest {
   public void shouldDeleteAuthor() throws Exception {
     DataSource ds = createBlogDataSource();
     Connection connection = ds.getConnection();
-    Executor executor = createExecutor(new JdbcTransaction(connection));
+    Executor executor = createExecutor(new JdbcTransaction(connection,false));
     Author author = new Author(101, null, null, null, null, null);
     MappedStatement deleteStatement = ExecutorTestHelper.prepareDeleteAuthorMappedStatement(config);
     MappedStatement selectStatement = ExecutorTestHelper.prepareSelectOneAuthorMappedStatement(config);
@@ -154,7 +154,7 @@ public abstract class BaseExecutorTest extends BaseDataTest {
   public void shouldSelectDiscriminatedProduct() throws Exception {
     DataSource ds = createJPetstoreDataSource();
     Connection connection = ds.getConnection();
-    Executor executor = createExecutor(new JdbcTransaction(connection));
+    Executor executor = createExecutor(new JdbcTransaction(connection,false));
     MappedStatement selectStatement = ExecutorTestHelper.prepareSelectDiscriminatedProduct(config);
     List<Map> products = executor.query(selectStatement, null, Executor.NO_ROW_OFFSET, Executor.NO_ROW_LIMIT, Executor.NO_RESULT_HANDLER);
     connection.rollback();
@@ -172,7 +172,7 @@ public abstract class BaseExecutorTest extends BaseDataTest {
   public void shouldSelect10DiscriminatedProducts() throws Exception {
     DataSource ds = createJPetstoreDataSource();
     Connection connection = ds.getConnection();
-    Executor executor = createExecutor(new JdbcTransaction(connection));
+    Executor executor = createExecutor(new JdbcTransaction(connection,false));
     MappedStatement selectStatement = ExecutorTestHelper.prepareSelectDiscriminatedProduct(config);
     List<Map> products = executor.query(selectStatement, null, 4, 10, Executor.NO_RESULT_HANDLER);
     connection.rollback();
@@ -191,7 +191,7 @@ public abstract class BaseExecutorTest extends BaseDataTest {
     DataSource ds = createBlogDataSource();
     Connection connection = ds.getConnection();
     connection.setAutoCommit(false);
-    Executor executor = createExecutor(new JdbcTransaction(connection));
+    Executor executor = createExecutor(new JdbcTransaction(connection,false));
     MappedStatement selectStatement = ExecutorTestHelper.prepareSelectTwoSetsOfAuthorsProc(config);
     List<List> authorSets = executor.query(selectStatement, new HashMap() {
       {
@@ -214,7 +214,7 @@ public abstract class BaseExecutorTest extends BaseDataTest {
     DataSource ds = createBlogDataSource();
     Connection connection = ds.getConnection();
     connection.setAutoCommit(false);
-    Executor executor = createExecutor(new JdbcTransaction(connection));
+    Executor executor = createExecutor(new JdbcTransaction(connection,false));
     MappedStatement selectStatement = ExecutorTestHelper.prepareSelectAuthorViaOutParams(config);
     Author author = new Author(102, null, null, null, null, null);
     executor.query(selectStatement, author, Executor.NO_ROW_OFFSET, Executor.NO_ROW_LIMIT, Executor.NO_RESULT_HANDLER);
@@ -230,7 +230,7 @@ public abstract class BaseExecutorTest extends BaseDataTest {
   public void shouldFetchPostsForBlog() throws Exception {
     DataSource ds = createBlogDataSource();
     Connection connection = ds.getConnection();
-    Executor executor = createExecutor(new JdbcTransaction(connection));
+    Executor executor = createExecutor(new JdbcTransaction(connection,false));
     MappedStatement selectBlog = ExecutorTestHelper.prepareComplexSelectBlogMappedStatement(config);
     MappedStatement selectPosts = ExecutorTestHelper.prepareSelectPostsForBlogMappedStatement(config);
     config.addMappedStatement(selectBlog);
@@ -247,7 +247,7 @@ public abstract class BaseExecutorTest extends BaseDataTest {
   public void shouldFetchOneOrphanedPostWithNoBlog() throws Exception {
     DataSource ds = createBlogDataSource();
     Connection connection = ds.getConnection();
-    Executor executor = createExecutor(new JdbcTransaction(connection));
+    Executor executor = createExecutor(new JdbcTransaction(connection,false));
     MappedStatement selectBlog = ExecutorTestHelper.prepareComplexSelectBlogMappedStatement(config);
     MappedStatement selectPost = ExecutorTestHelper.prepareSelectPostMappedStatement(config);
     config.addMappedStatement(selectBlog);
@@ -264,7 +264,7 @@ public abstract class BaseExecutorTest extends BaseDataTest {
   public void shouldFetchPostWithBlogWithCompositeKey() throws Exception {
     DataSource ds = createBlogDataSource();
     Connection connection = ds.getConnection();
-    Executor executor = createExecutor(new JdbcTransaction(connection));
+    Executor executor = createExecutor(new JdbcTransaction(connection,false));
     MappedStatement selectBlog = ExecutorTestHelper.prepareSelectBlogByIdAndAuthor(config);
     MappedStatement selectPost = ExecutorTestHelper.prepareSelectPostWithBlogByAuthorMappedStatement(config);
     config.addMappedStatement(selectBlog);
@@ -284,7 +284,7 @@ public abstract class BaseExecutorTest extends BaseDataTest {
     DataSource ds = createBlogDataSource();
     Connection connection = ds.getConnection();
     try {
-      Executor executor = createExecutor(new JdbcTransaction(connection));
+      Executor executor = createExecutor(new JdbcTransaction(connection,false));
       MappedStatement selectBlog = ExecutorTestHelper.prepareComplexSelectBlogMappedStatement(config);
       MappedStatement selectPosts = ExecutorTestHelper.prepareSelectPostsForBlogMappedStatement(config);
       config.addMappedStatement(selectBlog);
@@ -305,7 +305,7 @@ public abstract class BaseExecutorTest extends BaseDataTest {
   public void shouldMapConstructorResults() throws Exception {
     DataSource ds = createBlogDataSource();
     Connection connection = ds.getConnection();
-    Executor executor = createExecutor(new JdbcTransaction(connection));
+    Executor executor = createExecutor(new JdbcTransaction(connection,false));
     MappedStatement selectStatement = ExecutorTestHelper.prepareSelectOneAuthorMappedStatementWithConstructorResults(config);
     List<Author> authors = executor.query(selectStatement, 102, Executor.NO_ROW_OFFSET, Executor.NO_ROW_LIMIT, Executor.NO_RESULT_HANDLER);
     executor.flushStatements();

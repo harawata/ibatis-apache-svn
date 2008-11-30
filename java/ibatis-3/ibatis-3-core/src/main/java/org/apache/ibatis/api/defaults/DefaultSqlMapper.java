@@ -28,9 +28,13 @@ public class DefaultSqlMapper implements SqlMapper {
   }
 
   public SqlSession openSession() {
+    return openSession(false);
+  }
+
+  public SqlSession openSession(boolean autoCommit) {
     try {
       Connection connection = dataSource.getConnection();
-      Transaction tx = transactionFactory.newTransaction(connection);
+      Transaction tx = transactionFactory.newTransaction(connection, autoCommit);
       Executor executor = configuration.newExecutor(tx);
       return new DefaultSqlSession(configuration, executor);
     } catch (SQLException e) {
@@ -39,7 +43,15 @@ public class DefaultSqlMapper implements SqlMapper {
   }
 
   public SqlSession openSession(Connection connection) {
-    Transaction tx = transactionFactory.newTransaction(connection);
+    boolean autoCommit;
+    try {
+      autoCommit = connection.getAutoCommit();
+    } catch (SQLException e) {
+      // Failover to true, as most poor drivers
+      // or databases won't support transactions
+      autoCommit = true;
+    }
+    Transaction tx = transactionFactory.newTransaction(connection, autoCommit);
     Executor executor = configuration.newExecutor(tx);
     return new DefaultSqlSession(configuration, executor);
   }
