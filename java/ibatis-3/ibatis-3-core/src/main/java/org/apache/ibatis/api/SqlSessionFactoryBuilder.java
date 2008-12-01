@@ -1,13 +1,14 @@
-package org.apache.ibatis.builder;
+package org.apache.ibatis.api;
 
 import org.apache.ibatis.mapping.Configuration;
 import org.apache.ibatis.api.defaults.DefaultSqlSessionFactory;
 import org.apache.ibatis.api.SqlSessionFactory;
+import org.apache.ibatis.builder.MapperConfigParser;
 
 import java.io.Reader;
 import java.util.Properties;
 
-public class SqlMapperBuilder {
+public class SqlSessionFactoryBuilder {
 
   public SqlSessionFactory build(Reader reader) {
     return build(reader,null,null);

@@ -2,11 +2,6 @@ package org.apache.ibatis.builder;
 
 import org.apache.ibatis.type.*;
 import org.apache.ibatis.mapping.*;
-import org.apache.ibatis.transaction.jdbc.JdbcTransaction;
-import org.apache.ibatis.transaction.managed.ManagedTransaction;
-import org.apache.ibatis.datasource.jndi.JndiDataSourceFactory;
-import org.apache.ibatis.datasource.pooled.PooledDataSourceFactory;
-import org.apache.ibatis.datasource.unpooled.UnpooledDataSourceFactory;
 
 public class BaseParser {
   protected Configuration configuration;
@@ -30,7 +25,7 @@ public class BaseParser {
     try {
       return JdbcType.valueOf(resolveAlias(alias));
     } catch (IllegalArgumentException e) {
-      throw new BuilderException("Error resolving JdbcType. Cause: " + e, e);
+      throw new ParserException("Error resolving JdbcType. Cause: " + e, e);
     }
   }
 
@@ -39,7 +34,7 @@ public class BaseParser {
     try {
       return ResultSetType.valueOf(resolveAlias(alias));
     } catch (IllegalArgumentException e) {
-      throw new BuilderException("Error resolving ResultSetType. Cause: " + e, e);
+      throw new ParserException("Error resolving ResultSetType. Cause: " + e, e);
     }
   }
 
@@ -48,7 +43,7 @@ public class BaseParser {
     try {
       return ParameterMode.valueOf(resolveAlias(alias));
     } catch (IllegalArgumentException e) {
-      throw new BuilderException("Error resolving ParameterMode. Cause: " + e, e);
+      throw new ParserException("Error resolving ParameterMode. Cause: " + e, e);
     }
   }
 
@@ -57,7 +52,7 @@ public class BaseParser {
     try {
       return Class.forName(resolveAlias(alias));
     } catch (ClassNotFoundException e) {
-      throw new BuilderException("Error resolving class . Cause: " + e, e);
+      throw new ParserException("Error resolving class . Cause: " + e, e);
     }
   }
 
@@ -67,7 +62,7 @@ public class BaseParser {
       Class type = resolveClass(alias);
       return type.newInstance();
     } catch (Exception e) {
-      throw new BuilderException("Error instantiating class. Cause: " + e, e);
+      throw new ParserException("Error instantiating class. Cause: " + e, e);
     }
   }
 

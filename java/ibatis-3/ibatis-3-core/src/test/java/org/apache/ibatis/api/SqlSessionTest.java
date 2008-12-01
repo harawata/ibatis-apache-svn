@@ -1,4 +1,4 @@
-package org.apache.ibatis.builder;
+package org.apache.ibatis.api;
 
 import org.junit.*;
 import org.apache.ibatis.BaseDataTest;
@@ -10,7 +10,7 @@ import java.util.List;
 
 import domain.blog.Author;
 
-public class SqlMapperBuilderTest extends BaseDataTest {
+public class SqlSessionTest extends BaseDataTest {
   private static SqlSessionFactory sqlMapper;
 
   @BeforeClass
@@ -18,7 +18,7 @@ public class SqlMapperBuilderTest extends BaseDataTest {
     createBlogDataSource();
     final String resource = "org/apache/ibatis/builder/MapperConfig.xml";
     final Reader reader = Resources.getResourceAsReader(resource);
-    sqlMapper = new SqlMapperBuilder().build(reader);
+    sqlMapper = new SqlSessionFactoryBuilder().build(reader);
   }
 
   @Test

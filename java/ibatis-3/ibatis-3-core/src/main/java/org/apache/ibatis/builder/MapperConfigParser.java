@@ -55,7 +55,7 @@ public class MapperConfigParser extends BaseParser {
     assert typeAliasRegistry != null;
     assert typeHandlerRegistry != null;
     if (parsed) {
-      throw new BuilderException("Each MapperConfigParser can only be used once.");
+      throw new ParserException("Each MapperConfigParser can only be used once.");
     }
     parsed = true;
     parser.parse(reader);
@@ -100,7 +100,7 @@ public class MapperConfigParser extends BaseParser {
     String resource = context.getStringAttribute("resource");
     String url = context.getStringAttribute("url");
     if (resource != null && url != null) {
-      throw new BuilderException("The properties element cannot specify both a URL and a resource based property file reference.  Please specify one or the other.");
+      throw new ParserException("The properties element cannot specify both a URL and a resource based property file reference.  Please specify one or the other.");
     }
     if (resource != null) {
       defaults.putAll(Resources.getResourceAsProperties(resource));
@@ -124,7 +124,7 @@ public class MapperConfigParser extends BaseParser {
     for (Map.Entry entry : props.entrySet()) {
       MetaClass metaConfig = MetaClass.forClass(Configuration.class);
       if (!metaConfig.hasSetter((String) entry.getKey())) {
-        throw new BuilderException("The setting " + entry.getKey() + " is not known.  Make sure you spelled it correctly (case sensitive).");
+        throw new ParserException("The setting " + entry.getKey() + " is not known.  Make sure you spelled it correctly (case sensitive).");
       }
     }
     configuration.setCacheEnabled(booleanValueOf(props.getProperty("cacheEnabled"), true));
@@ -218,7 +218,7 @@ public class MapperConfigParser extends BaseParser {
     } else if (url != null && resource == null) {
       reader = Resources.getUrlAsReader(url);
     } else {
-      throw new BuilderException("A mapper element may only specify a url or resource, but not both.");
+      throw new ParserException("A mapper element may only specify a url or resource, but not both.");
     }
     MapperParser mapperParser = new MapperParser(reader, configuration);
     mapperParser.parse();
@@ -226,9 +226,9 @@ public class MapperConfigParser extends BaseParser {
 
   private boolean isSpecifiedEnvironment() {
     if (environment == null) {
-      throw new BuilderException("No environment specified.");
+      throw new ParserException("No environment specified.");
     } else if (environmentBuilder.id() == null) {
-      throw new BuilderException("Environment requires an id attribute.");
+      throw new ParserException("Environment requires an id attribute.");
     } else if (environment.equals(environmentBuilder.id())) {
       return true;
     }

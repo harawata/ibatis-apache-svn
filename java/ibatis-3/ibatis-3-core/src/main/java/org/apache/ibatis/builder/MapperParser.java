@@ -54,7 +54,7 @@ public class MapperParser extends BaseParser {
   public void configurationElement(NodeletContext context) throws Exception {
     namespace = context.getStringAttribute("namespace");
     if (namespace == null) {
-      throw new BuilderException("The mapper element requires a namespace attribute to be specified.");
+      throw new ParserException("The mapper element requires a namespace attribute to be specified.");
     }
   }
 
@@ -63,11 +63,11 @@ public class MapperParser extends BaseParser {
   public void cacheRefElement(NodeletContext context) throws Exception {
     String ns = context.getStringAttribute("namespace");
     if (ns == null) {
-      throw new BuilderException("cache-ref element requires a namespace attribute.");
+      throw new ParserException("cache-ref element requires a namespace attribute.");
     }
     cache = configuration.getCache(namespaceCacheId(ns));
     if (cache == null) {
-      throw new BuilderException("No cache for namespace '"+ns+"' could be found.");
+      throw new ParserException("No cache for namespace '"+ns+"' could be found.");
     }
   }
 
@@ -144,7 +144,7 @@ public class MapperParser extends BaseParser {
     if (extend != null) {
       ResultMap resultMap = configuration.getResultMap(extend);
       if (resultMap == null) {
-        throw new BuilderException("ResultMap named in extends attribute of " + id + "does not exist or is not defined yet.");
+        throw new ParserException("ResultMap named in extends attribute of " + id + "does not exist or is not defined yet.");
       }
       resultMappings.addAll(resultMap.getResultMappings());
     }
@@ -398,7 +398,7 @@ public class MapperParser extends BaseParser {
       javaTypeClass = metaResultType.getSetterType(property);
     }
     if (javaTypeClass == null) {
-      throw new BuilderException("Could not determine javaType for result.  Specify property or javaType attribute.");
+      throw new ParserException("Could not determine javaType for result.  Specify property or javaType attribute.");
     }
     return javaTypeClass;
   }
@@ -436,7 +436,7 @@ public class MapperParser extends BaseParser {
       javaTypeClass = metaResultType.getGetterType(property);
     }
     if (javaTypeClass == null) {
-      throw new BuilderException("Could not determine javaType for result.  Specify property or javaType attribute.");
+      throw new ParserException("Could not determine javaType for result.  Specify property or javaType attribute.");
     }
     return javaTypeClass;
   }

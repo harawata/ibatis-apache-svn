@@ -57,7 +57,7 @@ public class SqlSourceParser extends BaseParser {
             builder.typeHandler((TypeHandler) resolveInstance(value));
           }
         } else {
-          throw new BuilderException("Improper inline parameter map format.  Should be: #{propName,attr1=val1,attr2=val2}");
+          throw new ParserException("Improper inline parameter map format.  Should be: #{propName,attr1=val1,attr2=val2}");
         }
       }
       return builder.build();
