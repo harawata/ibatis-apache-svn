@@ -1,4 +1,4 @@
-package org.apache.ibatis.builder;
+package org.apache.ibatis.parser;
 
 import org.xml.sax.*;
 import org.apache.ibatis.io.Resources;
@@ -11,8 +11,8 @@ import java.util.*;
  */
 public class MapperEntityResolver implements EntityResolver {
 
-  private static final String MAPPER_CONFIG_DTD_RESOURCE = "org/apache/ibatis/builder/ibatis-config-3.dtd";
-  private static final String MAPPER_DTD_RESOURCE = "org/apache/ibatis/builder/ibatis-mapper-3.dtd";
+  private static final String MAPPER_CONFIG_DTD_RESOURCE = "org/apache/ibatis/parser/ibatis-config-3.dtd";
+  private static final String MAPPER_DTD_RESOURCE = "org/apache/ibatis/parser/ibatis-mapper-3.dtd";
 
   private static final Map<String, String> doctypeMap = new HashMap<String, String>();
 

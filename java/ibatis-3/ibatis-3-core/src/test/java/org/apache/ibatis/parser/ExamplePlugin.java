@@ -1,4 +1,4 @@
-package org.apache.ibatis.builder;
+package org.apache.ibatis.parser;
 
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.plugin.Invocation;

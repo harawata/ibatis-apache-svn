@@ -1,4 +1,4 @@
-package org.apache.ibatis.builder;
+package org.apache.ibatis.parser;
 
 import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.reflection.MetaClass;

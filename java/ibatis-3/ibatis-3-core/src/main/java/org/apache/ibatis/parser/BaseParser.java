@@ -1,4 +1,4 @@
-package org.apache.ibatis.builder;
+package org.apache.ibatis.parser;
 
 import org.apache.ibatis.type.*;
 import org.apache.ibatis.mapping.*;
