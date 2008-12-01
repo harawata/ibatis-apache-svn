@@ -12,15 +12,12 @@ import java.sql.SQLException;
 
 public class DefaultSqlSession implements SqlSession {
 
-  private boolean commitRequired;
-
   private Configuration configuration;
   private Executor executor;
 
   public DefaultSqlSession(Configuration configuration, Executor executor) {
     this.configuration = configuration;
     this.executor = executor;
-    this.commitRequired = false;
   }
 
   public List selectList(String statement) {

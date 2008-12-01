@@ -11,7 +11,7 @@ import java.util.List;
 import domain.blog.Author;
 
 public class SqlMapperBuilderTest extends BaseDataTest {
-  private static SqlMapper sqlMapper;
+  private static SqlSessionFactory sqlMapper;
 
   @BeforeClass
   public static void setup() throws Exception {
