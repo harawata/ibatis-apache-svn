@@ -1,6 +1,7 @@
 package org.apache.ibatis.api.defaults;
 
 import org.apache.ibatis.api.SqlSession;
+import org.apache.ibatis.api.ApiException;
 import org.apache.ibatis.api.exceptions.ExceptionFactory;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.result.ResultHandler;
@@ -18,6 +19,18 @@ public class DefaultSqlSession implements SqlSession {
   public DefaultSqlSession(Configuration configuration, Executor executor) {
     this.configuration = configuration;
     this.executor = executor;
+  }
+
+  public Object selectOne(String statement) {
+    return selectOne(statement,null);
+  }
+
+  public Object selectOne(String statement, Object parameter) {
+    List list = selectList(statement, parameter);
+    if (list.size() != 1) {
+      throw new ApiException("Expected one result to be returned by selectOne(), but found: " + list.size());
+    }
+    return list.get(0);
   }
 
   public List selectList(String statement) {
