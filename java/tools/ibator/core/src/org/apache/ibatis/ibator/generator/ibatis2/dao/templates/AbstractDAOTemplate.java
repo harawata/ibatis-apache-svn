@@ -27,6 +27,10 @@ import org.apache.ibatis.ibator.api.dom.java.Method;
 import org.apache.ibatis.ibator.api.dom.java.Parameter;
 
 /**
+ * Base class for DAO templates.  Subclasses should override
+ * any of the configureXXX methods to specify the unique properties
+ * of the desired DAO objects.
+ * 
  * @author Jeff Butler
  */
 public abstract class AbstractDAOTemplate {
@@ -281,24 +285,180 @@ public abstract class AbstractDAOTemplate {
         }
     }
     
-    // TODO - fully document each of these methods
-    protected void configureCheckedExceptions() {
-    }
-    protected void configureFields() {
-    }
-    protected void configureImplementationImports() {
-    }
-    protected void configureInterfaceImports() {
-    }
-    protected void configureMethods() {
-    }
-    protected void configureSuperClass() {
-    }
+    /**
+     * Override this method to add checked exceptions to the
+     * throws clause of any generated DAO method.  When overriding
+     * this method, call <code>addCheckedException(FullyQualifiedJavaType)</code>
+     * one or more times to add checked exception(s) to all generated
+     * DAO methods.
+     */
+    protected void configureCheckedExceptions() { }
+    
+    /**
+     * Override this method to add fields to any
+     * generated DAO implementation class.  When overriding
+     * this method, call <code>addField(Field)</code> one
+     * or more times to add field(s) to the generated
+     * DAO implementation class.
+     */
+    protected void configureFields() {}
+    
+    /**
+     * Override this method to add imports to 
+     * generated DAO implementation classes.  When overriding
+     * this method, call
+     * <code>addImplementationImport(FullyQualifiedJavaType)</code> one
+     * or more times to add import(s) to generated
+     * DAO implementation classes.
+     */
+    protected void configureImplementationImports() {}
+    
+    /**
+     * Override this method to add imports to
+     * generated DAO interface classes.  When overriding
+     * this method, call
+     * <code>addInterfaceImport(FullyQualifiedJavaType)</code> one
+     * or more times to add import(s) to generated
+     * DAO interface classes.
+     */
+    protected void configureInterfaceImports() {}
 
-    protected abstract void configureInsertMethodTemplate();
-    protected abstract void configureQueryForListMethodTemplate();
-    protected abstract void configureQueryForObjectMethodTemplate();
-    protected abstract void configureUpdateMethodTemplate();
+    /**
+     * Override this method to add methods to
+     * generated DAO implementation classes.  When overriding
+     * this method, call
+     * <code>addMethod(Method)</code> one
+     * or more times to add method(s) to generated
+     * DAO implementation classes.
+     */
+    protected void configureMethods() {}
+    
+    /**
+     * Override this method to set the superclass for any
+     * generated DAO implementation class.  When overriding this
+     * method call <code>setSuperClass(FullyQualifiedJavaType)</code>
+     * to set the superclass for generated DAO implementation classes.
+     */
+    protected void configureSuperClass() {}
+    
+    /**
+     * Override this method to configure a constructor for generated
+     * DAO implementation classes.  During code generation, ibator will
+     * build a new constructor using the visibility, parameters, body lines,
+     * and exceptions set on the constructor template.  When overriding this
+     * method, call <code>setConstructorTemplate(Method)</code> to
+     * set the constructor template.
+     */
     protected abstract void configureConstructorTemplate();
+    
+    /**
+     * Override this method to configure an insert method template.
+     * A method template is a string with three substitution
+     * markers that ibator will fill in when generating code.  The
+     * substitution markers will be:
+     * <ul>
+     *   <li>{0} - The SqlMap namespace</li>
+     *   <li>{1} - The SqlMap statement id</li>
+     *   <li>{2} - The parameter object</li>
+     * </ul>
+     * 
+     * For example, when calling methods in the SqlMapClient interface,
+     * the template would be:
+     * 
+     * sqlMapClient.insert(\"{0}.{1}\", {2});
+     * 
+     * Overriding methods should call the
+     * <code>setInsertMethodTemplate(String)</code method to set the
+     * template.
+     *    
+     */
+    protected abstract void configureInsertMethodTemplate();
+    
+    /**
+     * Override this method to configure a queryForList method template.
+     * A method template is a string with three substitution
+     * markers that ibator will fill in when generating code.  The
+     * substitution markers will be:
+     * <ul>
+     *   <li>{0} - The SqlMap namespace</li>
+     *   <li>{1} - The SqlMap statement id</li>
+     *   <li>{2} - The parameter object</li>
+     * </ul>
+     * 
+     * For example, when calling methods in the SqlMapClient interface,
+     * the template would be:
+     * 
+     * sqlMapClient.queryForList(\"{0}.{1}\", {2});
+     *    
+     * Overriding methods should call the
+     * <code>setQueryForListMethodTemplate(String)</code method to set the
+     * template.
+     */
+    protected abstract void configureQueryForListMethodTemplate();
+    
+    /**
+     * Override this method to configure a queryForObject method template.
+     * A method template is a string with three substitution
+     * markers that ibator will fill in when generating code.  The
+     * substitution markers will be:
+     * <ul>
+     *   <li>{0} - The SqlMap namespace</li>
+     *   <li>{1} - The SqlMap statement id</li>
+     *   <li>{2} - The parameter object</li>
+     * </ul>
+     * 
+     * For example, when calling methods in the SqlMapClient interface,
+     * the template would be:
+     * 
+     * sqlMapClient.queryForObject(\"{0}.{1}\", {2});
+     *    
+     * Overriding methods should call the
+     * <code>setQueryForObjectMethodTemplate(String)</code method to set the
+     * template.
+     */
+    protected abstract void configureQueryForObjectMethodTemplate();
+    
+    /**
+     * Override this method to configure an update method template.
+     * A method template is a string with three substitution
+     * markers that ibator will fill in when generating code.  The
+     * substitution markers will be:
+     * <ul>
+     *   <li>{0} - The SqlMap namespace</li>
+     *   <li>{1} - The SqlMap statement id</li>
+     *   <li>{2} - The parameter object</li>
+     * </ul>
+     * 
+     * For example, when calling methods in the SqlMapClient interface,
+     * the template would be:
+     * 
+     * sqlMapClient.update(\"{0}.{1}\", {2});
+     *    
+     * Overriding methods should call the
+     * <code>setUpdateMethodTemplate(String)</code method to set the
+     * template.
+     */
+    protected abstract void configureUpdateMethodTemplate();
+    
+    /**
+     * Override this method to configure a delete method template.
+     * A method template is a string with three substitution
+     * markers that ibator will fill in when generating code.  The
+     * substitution markers will be:
+     * <ul>
+     *   <li>{0} - The SqlMap namespace</li>
+     *   <li>{1} - The SqlMap statement id</li>
+     *   <li>{2} - The parameter object</li>
+     * </ul>
+     * 
+     * For example, when calling methods in the SqlMapClient interface,
+     * the template would be:
+     * 
+     * sqlMapClient.delete(\"{0}.{1}\", {2});
+     *    
+     * Overriding methods should call the
+     * <code>setDeleteMethodTemplate(String)</code method to set the
+     * template.
+     */
     protected abstract void configureDeleteMethodTemplate();
 }

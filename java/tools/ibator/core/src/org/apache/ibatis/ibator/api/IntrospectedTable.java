@@ -483,4 +483,12 @@ public abstract class IntrospectedTable {
      * @return true if the generated code makes use of Java5 features
      */
     public abstract boolean isJava5Targeted();
+    
+    /**
+     * This method should return the number of progress messages that
+     * will be send during the generation phase.
+     * 
+     * @return the number of progress messages
+     */
+    public abstract int getGenerationSteps();
 }

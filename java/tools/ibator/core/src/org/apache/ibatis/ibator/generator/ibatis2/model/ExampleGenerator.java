@@ -55,7 +55,7 @@ public class ExampleGenerator extends BaseModelClassGenerator implements JavaGen
 
     public List<CompilationUnit> getCompilationUnits() {
         FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
-        progressCallback.startSubTask(Messages.getString("Progress.6", table.toString()));
+        progressCallback.startGenerationTask(Messages.getString("Progress.6", table.toString()));
         CommentGenerator commentGenerator = ibatorContext.getCommentGenerator();
 
         FullyQualifiedJavaType type = introspectedTable.getExampleType();

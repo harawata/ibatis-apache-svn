@@ -170,4 +170,11 @@ public class IntrospectedTableIbatis2Java2Impl extends IntrospectedTable {
     public boolean isJava5Targeted() {
         return false;
     }
+
+    @Override
+    public int getGenerationSteps() {
+        return javaModelGenerators.size()
+            + daoGenerators.size()
+            + 1;  // 1 for the sqlMapGenerator
+    }
 }

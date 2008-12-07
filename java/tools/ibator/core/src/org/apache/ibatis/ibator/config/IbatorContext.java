@@ -18,7 +18,6 @@ package org.apache.ibatis.ibator.config;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -33,7 +32,6 @@ import org.apache.ibatis.ibator.api.dom.xml.Attribute;
 import org.apache.ibatis.ibator.api.dom.xml.XmlElement;
 import org.apache.ibatis.ibator.internal.IbatorObjectFactory;
 import org.apache.ibatis.ibator.internal.IbatorPluginAggregator;
-import org.apache.ibatis.ibator.internal.NullProgressCallback;
 import org.apache.ibatis.ibator.internal.db.ConnectionFactory;
 import org.apache.ibatis.ibator.internal.db.DatabaseIntrospector;
 import org.apache.ibatis.ibator.internal.util.StringUtility;
@@ -335,176 +333,6 @@ public class IbatorContext extends PropertyHolder {
         return pluginAggregator;
     }
 
-    /**
-     * Generate iBATIS artifacts based on the configuration specified in the
-     * constructor. This method is long running.
-     * 
-     * @param callback
-     *            a progress callback if progress information is desired, or
-     *            <code>null</code>
-     * @param generatedJavaFiles
-     *            any Java file generated from this method will be added to
-     *            the List The objects will be of type GeneratedJavaFile.
-     * @param generatedXmlFiles
-     *            any XML file generated from this method will be added to
-     *            the List. The objects will be of type GeneratedXMLFile.
-     * @param warnings
-     *            any warning generated from this method will be added to
-     *            the List. Warnings are always Strings.
-     * @param fullyQualifiedTableNames
-     *            a set of table names to generate. The elements of the set
-     *            must be Strings that exactly match what's specified in the
-     *            configuration. For example, if table name = "foo" and
-     *            schema = "bar", then the fully qualified table name is
-     *            "foo.bar". If the Set is null or empty, then all tables in
-     *            the configuration will be used for code generation.
-     * 
-     * @throws SQLException
-     *             if some error arises while introspecting the specified
-     *             database tables.
-     * 
-     * @throws InterruptedException
-     *             if the progress callback reports a cancel
-     */
-    public void generateFiles(ProgressCallback callback,
-            List<GeneratedJavaFile> generatedJavaFiles,
-            List<GeneratedXmlFile> generatedXmlFiles,
-            List<String> warnings, Set<String> fullyQualifiedTableNames)
-            throws SQLException, InterruptedException {
-        IbatorEngine ibatorEngine = new IbatorEngine();
-        ibatorEngine.generateFiles(callback, generatedJavaFiles, generatedXmlFiles, warnings, fullyQualifiedTableNames);
-    }
-    
-    private class IbatorEngine {
-        public void generateFiles(ProgressCallback callback,
-                List<GeneratedJavaFile> generatedJavaFiles,
-                List<GeneratedXmlFile> generatedXmlFiles,
-                List<String> warnings, Set<String> fullyQualifiedTableNames)
-                throws SQLException, InterruptedException {
-
-            if (callback == null) {
-                callback = new NullProgressCallback();
-            }
-
-            JavaTypeResolver javaTypeResolver = IbatorObjectFactory
-                    .createJavaTypeResolver(IbatorContext.this, warnings);
-            pluginAggregator = new IbatorPluginAggregator();
-            for (IbatorPluginConfiguration ibatorPluginConfiguration : pluginConfigurations) {
-                IbatorPlugin plugin = IbatorObjectFactory.createIbatorPlugin(
-                        IbatorContext.this, ibatorPluginConfiguration);
-                if (plugin.validate(warnings)) {
-                    pluginAggregator.addPlugin(plugin);
-                } else {
-                    warnings.add(Messages.getString(
-                            "Warning.24", //$NON-NLS-1$
-                            ibatorPluginConfiguration.getConfigurationType(),
-                            id));
-                }
-            }
-
-            Connection connection = null;
-
-            try {
-                callback.startSubTask(Messages.getString("Progress.0")); //$NON-NLS-1$
-                connection = getConnection();
-
-                DatabaseIntrospector databaseIntrospector = new DatabaseIntrospector(
-                        IbatorContext.this, connection.getMetaData(), javaTypeResolver,
-                        warnings);
-
-                for (TableConfiguration tc : tableConfigurations) {
-                    String tableName = StringUtility
-                            .composeFullyQualifiedTableName(tc.getCatalog(), tc
-                                    .getSchema(), tc.getTableName(), '.');
-
-                    if (fullyQualifiedTableNames != null
-                            && fullyQualifiedTableNames.size() > 0) {
-                        if (!fullyQualifiedTableNames.contains(tableName)) {
-                            continue;
-                        }
-                    }
-
-                    if (!tc.areAnyStatementsEnabled()) {
-                        warnings
-                                .add(Messages.getString("Warning.0", tableName)); //$NON-NLS-1$
-                        continue;
-                    }
-
-                    Collection<? extends IntrospectedTable> introspectedTables;
-                    callback.startSubTask(Messages.getString(
-                            "Progress.1", tableName)); //$NON-NLS-1$
-                    introspectedTables = databaseIntrospector
-                            .introspectTables(tc);
-                    callback.checkCancel();
-
-                    if (introspectedTables != null) {
-                        for (IntrospectedTable introspectedTable : introspectedTables) {
-                            callback.checkCancel();
-                            
-                            introspectedTable.calculateGenerators(warnings, callback);
-                            generatedJavaFiles.addAll(introspectedTable.getGeneratedJavaFiles());
-                            generatedXmlFiles.addAll(introspectedTable.getGeneratedXmlFiles());
-
-                            generatedJavaFiles
-                                    .addAll(pluginAggregator
-                                            .contextGenerateAdditionalJavaFiles(introspectedTable));
-                            generatedXmlFiles
-                                    .addAll(pluginAggregator
-                                            .contextGenerateAdditionalXmlFiles(introspectedTable));
-                        }
-                    }
-                }
-
-                generatedJavaFiles.addAll(pluginAggregator
-                        .contextGenerateAdditionalJavaFiles());
-                generatedXmlFiles.addAll(pluginAggregator
-                        .contextGenerateAdditionalXmlFiles());
-            } finally {
-                closeConnection(connection);
-                callback.finished();
-            }
-        }
-
-        public int getTotalSteps() {
-            int steps = 0;
-
-            steps++; // connect to database
-
-            // for each table:
-            //
-            // 1. Introspect
-            // 2. Generate Example
-            // 3. Generate Primary Key
-            // 4. Generate Record
-            // 5. Generate Record with BLOBs
-            // 6. Generate SQL Map
-            // 7. Generate DAO Interface
-            // 8. Generate DAO Implementation
-
-            steps += tableConfigurations.size() * 8;
-
-            return steps;
-        }
-
-        private Connection getConnection() throws SQLException {
-            Connection connection = ConnectionFactory.getInstance()
-                    .getConnection(jdbcConnectionConfiguration);
-
-            return connection;
-        }
-
-        private void closeConnection(Connection connection) {
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) {
-                    // ignore
-                    ;
-                }
-            }
-        }
-    }
-
     public String getTargetRuntime() {
         return targetRuntime;
     }
@@ -523,5 +351,182 @@ public class IbatorContext extends PropertyHolder {
 
     public boolean getSuppressTypeWarnings(IntrospectedTable introspectedTable) {
         return suppressTypeWarnings && !introspectedTable.isJava5Targeted();
+    }
+
+    // methods related to code generation.
+    //
+    // Methods should be called in this order:
+    //
+    // 1. getIntrospectionSteps()
+    // 2. introspectTables()
+    // 3. getGenerationSteps()
+    // 4. generateFiles()
+    //
+    
+    private List<IntrospectedTable> introspectedTables;
+    
+    public int getIntrospectionSteps() {
+        int steps = 0;
+
+        steps++; // connect to database
+
+        // for each table:
+        //
+        // 1. Create introspected table implementation
+
+        steps += tableConfigurations.size() * 1;
+
+        return steps;
+    }
+
+    /**
+     * Introspect tables based on the configuration specified in the
+     * constructor. This method is long running.
+     * 
+     * @param callback
+     *            a progress callback if progress information is desired, or
+     *            <code>null</code>
+     * @param warnings
+     *            any warning generated from this method will be added to
+     *            the List. Warnings are always Strings.
+     * @param fullyQualifiedTableNames
+     *            a set of table names to generate. The elements of the set
+     *            must be Strings that exactly match what's specified in the
+     *            configuration. For example, if table name = "foo" and
+     *            schema = "bar", then the fully qualified table name is
+     *            "foo.bar". If the Set is null or empty, then all tables in
+     *            the configuration will be used for code generation.
+     * 
+     * @throws SQLException
+     *             if some error arises while introspecting the specified
+     *             database tables.
+     * @throws InterruptedException
+     *             if the progress callback reports a cancel
+     */
+    public void introspectTables(ProgressCallback callback,
+            List<String> warnings, Set<String> fullyQualifiedTableNames)
+    throws SQLException, InterruptedException {
+
+        introspectedTables = new ArrayList<IntrospectedTable>();
+        JavaTypeResolver javaTypeResolver = IbatorObjectFactory
+            .createJavaTypeResolver(IbatorContext.this, warnings);
+
+        Connection connection = null;
+
+        try {
+            callback.startTask(Messages.getString("Progress.0")); //$NON-NLS-1$
+            connection = getConnection();
+
+            DatabaseIntrospector databaseIntrospector = new DatabaseIntrospector(
+                    IbatorContext.this, connection.getMetaData(), javaTypeResolver,
+                    warnings);
+
+            for (TableConfiguration tc : tableConfigurations) {
+                String tableName = StringUtility
+                .composeFullyQualifiedTableName(tc.getCatalog(), tc
+                        .getSchema(), tc.getTableName(), '.');
+
+                if (fullyQualifiedTableNames != null
+                        && fullyQualifiedTableNames.size() > 0) {
+                    if (!fullyQualifiedTableNames.contains(tableName)) {
+                        continue;
+                    }
+                }
+
+                if (!tc.areAnyStatementsEnabled()) {
+                    warnings
+                    .add(Messages.getString("Warning.0", tableName)); //$NON-NLS-1$
+                    continue;
+                }
+
+                callback.startTask(Messages.getString(
+                        "Progress.1", tableName)); //$NON-NLS-1$
+                List<IntrospectedTable> tables = databaseIntrospector.introspectTables(tc);
+
+                if (tables != null) {
+                    introspectedTables.addAll(tables);
+                }
+                
+                callback.checkCancel();
+            }
+        } finally {
+            closeConnection(connection);
+        }
+        
+        for (IntrospectedTable introspectedTable : introspectedTables) {
+            introspectedTable.calculateGenerators(warnings, callback);
+        }
+    }
+
+    public int getGenerationSteps() {
+        int steps = 0;
+
+        if (introspectedTables != null) {
+            for (IntrospectedTable introspectedTable : introspectedTables) {
+                steps += introspectedTable.getGenerationSteps();
+            }
+        }
+        
+        return steps;
+    }
+    
+    public void generateFiles(ProgressCallback callback,
+            List<GeneratedJavaFile> generatedJavaFiles,
+            List<GeneratedXmlFile> generatedXmlFiles,
+            List<String> warnings)
+    throws InterruptedException {
+
+        pluginAggregator = new IbatorPluginAggregator();
+        for (IbatorPluginConfiguration ibatorPluginConfiguration : pluginConfigurations) {
+            IbatorPlugin plugin = IbatorObjectFactory.createIbatorPlugin(
+                    IbatorContext.this, ibatorPluginConfiguration);
+            if (plugin.validate(warnings)) {
+                pluginAggregator.addPlugin(plugin);
+            } else {
+                warnings.add(Messages.getString(
+                        "Warning.24", //$NON-NLS-1$
+                        ibatorPluginConfiguration.getConfigurationType(),
+                        id));
+            }
+        }
+
+        if (introspectedTables != null) {
+            for (IntrospectedTable introspectedTable : introspectedTables) {
+                callback.checkCancel();
+
+                generatedJavaFiles.addAll(introspectedTable.getGeneratedJavaFiles());
+                generatedXmlFiles.addAll(introspectedTable.getGeneratedXmlFiles());
+
+                generatedJavaFiles
+                    .addAll(pluginAggregator
+                                .contextGenerateAdditionalJavaFiles(introspectedTable));
+                generatedXmlFiles
+                    .addAll(pluginAggregator
+                            .contextGenerateAdditionalXmlFiles(introspectedTable));
+            }
+        }
+
+        generatedJavaFiles.addAll(pluginAggregator
+                .contextGenerateAdditionalJavaFiles());
+        generatedXmlFiles.addAll(pluginAggregator
+                .contextGenerateAdditionalXmlFiles());
+    }
+
+    private Connection getConnection() throws SQLException {
+        Connection connection = ConnectionFactory.getInstance()
+        .getConnection(jdbcConnectionConfiguration);
+
+        return connection;
+    }
+
+    private void closeConnection(Connection connection) {
+        if (connection != null) {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                // ignore
+                ;
+            }
+        }
     }
 }

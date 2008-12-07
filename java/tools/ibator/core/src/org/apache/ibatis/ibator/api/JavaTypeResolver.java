@@ -68,8 +68,9 @@ public interface JavaTypeResolver {
 	 * 
 	 * @param introspectedColumn the column whose Java type needs to be
 	 *        calculated
-     * @return true the calculated type, or null if an unsupported data type.  If null,
-     *   the column should be set to Object type and a warning will be issued.
+     * @return true the calculated type, or null if an unsupported data type.  If null
+     * is returned, ibator will set the type to Object and issue a warning
+     * unless the column is ignored or otherwise overridden
 	 */
     FullyQualifiedJavaType calculateJavaType(IntrospectedColumn introspectedColumn);
 }

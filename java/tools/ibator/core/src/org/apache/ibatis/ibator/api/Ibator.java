@@ -112,14 +112,14 @@ public class Ibator {
 
     /**
      * This is the main method for generating code.  This method is long running, but
-     * progress can be provided and the method can be cancelled through the ProgressCallback
+     * progress can be provided and the method can be canceled through the ProgressCallback
      * interface.  This version of the method runs all configured contexts.
      * 
      * @param callback an instance of the ProgressCallback interface, or <code>null</code>
      *   if you do not require progress information
      * @throws SQLException
      * @throws IOException
-     * @throws InterruptedException if the method is cancelled through the ProgressCallback
+     * @throws InterruptedException if the method is canceled through the ProgressCallback
      */
     public void generate(ProgressCallback callback)
             throws SQLException, IOException, InterruptedException {
@@ -128,7 +128,7 @@ public class Ibator {
     
     /**
      * This is the main method for generating code.  This method is long running, but
-     * progress can be provided and the method can be cancelled through the ProgressCallback
+     * progress can be provided and the method can be canceled through the ProgressCallback
      * interface.
      * 
      * @param callback an instance of the ProgressCallback interface, or <code>null</code>
@@ -139,7 +139,7 @@ public class Ibator {
      * @throws InvalidConfigurationException
      * @throws SQLException
      * @throws IOException
-     * @throws InterruptedException if the method is cancelled through the ProgressCallback
+     * @throws InterruptedException if the method is canceled through the ProgressCallback
      */
     public void generate(ProgressCallback callback, Set<String> contextIds)
             throws SQLException, IOException, InterruptedException {
@@ -165,7 +165,7 @@ public class Ibator {
      * @throws InvalidConfigurationException
      * @throws SQLException
      * @throws IOException
-     * @throws InterruptedException if the method is cancelled through the ProgressCallback
+     * @throws InterruptedException if the method is canceled through the ProgressCallback
      */
     public void generate(ProgressCallback callback, Set<String> contextIds, Set<String> fullyQualifiedTableNames)
             throws SQLException, IOException, InterruptedException {
@@ -190,15 +190,6 @@ public class Ibator {
             }
         }
 
-        int totalSteps = 0;
-
-        // TODO...
-//        for (IbatorContext ibatorContext : contextsToRun) {
-//            totalSteps += ibatorContext.getTotalSteps();
-//        }
-        
-        callback.setNumberOfSubTasks(totalSteps);
-        
         // setup custom classloader if required
         if (ibatorConfiguration.getClassPathEntries().size() > 0) {
             ClassLoader classLoader = 
@@ -206,12 +197,31 @@ public class Ibator {
             IbatorObjectFactory.setExternalClassLoader(classLoader);
         }
 
-        // now run the generates...
+        // now run the introspections...
+        int totalSteps = 0;
         for (IbatorContext ibatorContext : contextsToRun) {
-            ibatorContext.generateFiles(callback, generatedJavaFiles,
-                    generatedXmlFiles, warnings, fullyQualifiedTableNames);
+            totalSteps += ibatorContext.getIntrospectionSteps();
         }
-
+        callback.introspectionStarted(totalSteps);
+        
+        for (IbatorContext ibatorContext : contextsToRun) {
+            ibatorContext.introspectTables(callback, warnings, fullyQualifiedTableNames);
+        }
+        
+        // now run the generates
+        totalSteps = 0;
+        for (IbatorContext ibatorContext : contextsToRun) {
+            totalSteps += ibatorContext.getGenerationSteps();
+        }
+        callback.generationStarted(totalSteps);
+        
+        for (IbatorContext ibatorContext : contextsToRun) {
+            ibatorContext.generateFiles(callback, generatedJavaFiles, generatedXmlFiles, warnings);
+        }
+        
+        // now save the files
+        callback.saveStarted(generatedXmlFiles.size() + generatedJavaFiles.size());
+        
         for (GeneratedXmlFile gxf : generatedXmlFiles) {
             projects.add(gxf.getTargetProject());
 
@@ -237,6 +247,8 @@ public class Ibator {
                 continue;
             }
 
+            callback.checkCancel();
+            callback.startTask(Messages.getString("Progress.15", targetFile.getName())); //$NON-NLS-1$
             writeFile(targetFile, source);
         }
 
@@ -266,16 +278,20 @@ public class Ibator {
                 } else {
                     source = gjf.getFormattedContent();
                 }
-                
+
+                callback.checkCancel();
+                callback.startTask(Messages.getString("Progress.15", targetFile.getName())); //$NON-NLS-1$
                 writeFile(targetFile, source);
             } catch (ShellException e) {
                 warnings.add(e.getMessage());
             }
         }
-
+        
         for (String project : projects) {
             shellCallback.refreshProject(project);
         }
+
+        callback.done();
     }
 
     /**

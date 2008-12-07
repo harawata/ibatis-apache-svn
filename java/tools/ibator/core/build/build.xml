@@ -232,7 +232,7 @@
              classname="org.apache.ibatis.ibator.ant.IbatorAntTask"
              classpathref="emma.runtime.path"/>
   	
-  	<ibator configfile="${basedir}/../testJava2/ibatortest/java2/ibatorConfig.xml" >
+  	<ibator configfile="${basedir}/../testJava2/ibatortest/java2/ibatorConfig.xml" verbose="true">
   		<propertyset>
   			<propertyref name="generated.source.dir.java2"/>
   		</propertyset>
@@ -261,7 +261,7 @@
   	
     <echo message="Expect three warnings from ibator (BLOBSONLY, NonExistantTable, FRED)" />
     
-    <ibator configfile="${basedir}/../testJava5/ibatortest/ibatorConfig.xml" >
+    <ibator configfile="${basedir}/../testJava5/ibatortest/ibatorConfig.xml" verbose="true">
       <propertyset>
         <propertyref name="generated.source.dir.java5"/>
         <propertyref name="generated.bin.dir.java5"/>

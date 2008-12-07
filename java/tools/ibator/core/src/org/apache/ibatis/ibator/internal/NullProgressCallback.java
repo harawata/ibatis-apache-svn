@@ -32,29 +32,15 @@ public class NullProgressCallback implements ProgressCallback {
         super();
     }
 
-    /*
-     *  (non-Javadoc)
-     * @see org.apache.ibatis.ibator.api.ProgressCallback#finished()
-     */
-    public void finished() {
-    }
+    public void generationStarted(int totalTasks) { }
 
-    /*
-     *  (non-Javadoc)
-     * @see org.apache.ibatis.ibator.api.ProgressCallback#checkCancel()
-     */
-    public void checkCancel() throws InterruptedException {
-    }
+    public void introspectionStarted(int totalTasks) { }
+
+    public void saveStarted(int totalTasks) { }
+
+    public void startTask(String taskName) { }
     
-    /* (non-Javadoc)
-     * @see org.apache.ibatis.ibator.api.ProgressCallback#setNumberOfSubTasks(int)
-     */
-    public void setNumberOfSubTasks(int totalSubTasks) {
-    }
-    
-    /* (non-Javadoc)
-     * @see org.apache.ibatis.ibator.api.ProgressCallback#startSubTask(java.lang.String)
-     */
-    public void startSubTask(String subTaskName) {
-    }
+    public void checkCancel() throws InterruptedException { }
+
+    public void done() { }
 }

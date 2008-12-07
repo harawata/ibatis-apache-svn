@@ -16,7 +16,7 @@
 
 package org.apache.ibatis.ibator.ant;
 
-import org.apache.ibatis.ibator.api.ProgressCallback;
+import org.apache.ibatis.ibator.internal.NullProgressCallback;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 
@@ -26,7 +26,7 @@ import org.apache.tools.ant.Task;
  * @author Jeff Butler
  *
  */
-public class AntProgressCallback implements ProgressCallback {
+public class AntProgressCallback extends NullProgressCallback {
 
     private Task task;
     private boolean verbose;
@@ -40,30 +40,10 @@ public class AntProgressCallback implements ProgressCallback {
         this.verbose = verbose;
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.ibatis.ibator.api.ProgressCallback#setNumberOfSubTasks(int)
-     */
-    public void setNumberOfSubTasks(int totalSubTasks) {
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.ibatis.ibator.api.ProgressCallback#startSubTask(java.lang.String)
-     */
-    public void startSubTask(String subTaskName) {
+    @Override
+    public void startTask(String subTaskName) {
         if (verbose) {
             task.log(subTaskName, Project.MSG_VERBOSE);
         }
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.ibatis.ibator.api.ProgressCallback#finished()
-     */
-    public void finished() {
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.ibatis.ibator.api.ProgressCallback#checkCancel()
-     */
-    public void checkCancel() throws InterruptedException {
     }
 }

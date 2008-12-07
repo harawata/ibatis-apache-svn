@@ -1,5 +1,5 @@
 /*
- *  Copyright 2005 The Apache Software Foundation
+ *  Copyright 2008 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,47 +17,80 @@ package org.apache.ibatis.ibator.api;
 
 /**
  * This interface can be implemented to return progress information from the file generation
- * process.  This interface is loosely based on the standard Eclipse IProgressMonitor interface,
- * but does not implement all its methods.
+ * process.
  * 
- * During the execution of a long running method, ibator will call the 
- * <code>setNumberOfSubTasks</code> method first, and then repeatedly call <code>startSubTask</code.
- * When the long running method is complete, ibator will call <code>finished</code>.
- * Periodically, ibator will call <code>checkCancel</code> to see if the method should
+ * During the execution of code generation, there are three main operations:
+ * database introspection, code generation based on the results of
+ * introspection, and then merging/saving generated files.
+ * Ibator will call methods in this interface accordingly and in this order:
+ * <ol>
+ *   <li>introspectionStarted(int)</li>
+ *   <li>(Repeatedly) startTask(String)</li>
+ *   <li>generationStarted(int)</li>
+ *   <li>(Repeatedly) startTask(String)</li>
+ *   <li>saveStarted(int)</li>
+ *   <li>(Repeatedly) startTask(String)</li>
+ *   <li>done()</li>
+ * </ol>
+ * <p>
+ * Periodically, ibator will call <code>checkCancel()</code> to see if the method should
  * be canceled.
+ * <p>
+ * For planning purposes, the most common use case will have a ratio
+ * of 20% instrospection tasks, 40% generation tasks, and 40% save tasks.
  * 
  * @author Jeff Butler
  */
 public interface ProgressCallback {
     /**
-     * Called to designate the maximum number of startSubTask messages that will be sent.
-     * It is not guaranteed that this number startSubTask messages will be sent.  The
-     * actual number of messages depends on the objects generated from each table.
+     * Called to note the start of the introspection phase, and to note the
+     * maximum number of startTask messages that will be sent for the introspection
+     * phase.
      * 
-     * @param totalSubTasks
+     * @param totalTasks the maximum number of times startTask will be called for
+     *   the introspection phase. 
      */
-    
-    void setNumberOfSubTasks(int totalSubTasks);
+    void introspectionStarted(int totalTasks);
     
     /**
-     * Called to denote the beginning of another task
+     * Called to note the start of the generation phase, and to note the
+     * maximum number of startTask messages that will be sent for the generation
+     * phase.
      * 
-     * @param subTaskName a descriptive name of the current work step
+     * @param totalTasks the maximum number of times startTask will be called for
+     *   the generation phase. 
      */
-    void startSubTask(String subTaskName);
+    void generationStarted(int totalTasks);
     
     /**
-     * ibator calls this method when all subtasks are finished
+     * Called to note the start of the file saving phase, and to note the
+     * maximum number of startTask messages that will be sent for the
+     * file saving phase phase.
+     * 
+     * @param totalTasks the maximum number of times startTask will be called for
+     *   the file saving phase. 
      */
-    void finished();
-
+    void saveStarted(int totalTasks);
+    
+    /**
+     * Called to denote the beginning of a save task
+     * 
+     * @param taskName a descriptive name of the current work step
+     */
+    void startTask(String taskName);
+    
+    /**
+     * ibator calls this method when all generated files have been saved
+     */
+    void done();
+    
     /**
      * ibator will call this method periodically during a long running method.
-     * If the the implementation throws InterruptedException, then the method
+     * If the the implementation throws <code>InterruptedException</code> then the method
      * will be canceled.  Any files that have already been saved will remain on
      * the file system.
      * 
-     * @throws InterruptedException if the main task should finish
+     * @throws InterruptedException if the operation should be halted
      */
     void checkCancel() throws InterruptedException;
 }

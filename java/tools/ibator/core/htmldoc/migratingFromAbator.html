@@ -63,7 +63,7 @@ files:</p>
     page for full details.</li>
   <li>The <code>JavaTypeResolver</code> interface has changed and is
     simplified.  If you specified a custom implementation on the
-    &lt;javaTypeResolver&gt; element, you must rework your implementation
+    <code>&lt;javaTypeResolver&gt;</code> element, you must rework your implementation
     class.</li>
   <li>The ibator classloading strategy has changed substantially, and we now recommend that
       you manage the runtime classpath external to ibator.  If you manage the classpath with
@@ -79,6 +79,8 @@ files:</p>
             element.</li>
       </ul>
   </li>
+  <li>The <cde>ProgressCallback</code> interface has changed significantly.  If you implemented
+    this interface for some other execution environment, you will need to rework your implementation.</li>
 </ul>
 </body>
 </html>

@@ -47,7 +47,7 @@ public class RecordWithBLOBsGenerator extends BaseModelClassGenerator implements
      */
     public List<CompilationUnit> getCompilationUnits() {
         FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
-        progressCallback.startSubTask(Messages.getString("Progress.9", table.toString()));
+        progressCallback.startGenerationTask(Messages.getString("Progress.9", table.toString()));
         IbatorPlugin plugins = ibatorContext.getPlugins();
         CommentGenerator commentGenerator = ibatorContext.getCommentGenerator();
         
