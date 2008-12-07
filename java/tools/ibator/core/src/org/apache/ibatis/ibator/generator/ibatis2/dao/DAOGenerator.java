@@ -69,7 +69,7 @@ public class DAOGenerator extends AbstractGeneratorImpl implements JavaGenerator
     
     public List<CompilationUnit> getCompilationUnits() {
         FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
-        progressCallback.startGenerationTask(Messages.getString("Progress.14", table.toString()));
+        progressCallback.startTask(Messages.getString("Progress.14", table.toString()));
         TopLevelClass topLevelClass = getTopLevelClassShell();
         Interface interfaze = getInterfaceShell();
         

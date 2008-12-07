@@ -55,7 +55,7 @@ public class SqlMapGenerator extends AbstractGeneratorImpl implements XmlGenerat
 
     protected XmlElement getSqlMapElement() {
         FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
-        progressCallback.startGenerationTask(Messages.getString("Progress.12", table.toString()));
+        progressCallback.startTask(Messages.getString("Progress.12", table.toString()));
         XmlElement answer = new XmlElement("sqlMap"); //$NON-NLS-1$
         answer.addAttribute(new Attribute("namespace", //$NON-NLS-1$
                 table.getSqlMapNamespace()));

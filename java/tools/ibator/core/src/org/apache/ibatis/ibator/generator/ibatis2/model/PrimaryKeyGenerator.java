@@ -47,7 +47,7 @@ public class PrimaryKeyGenerator extends BaseModelClassGenerator implements Java
      */
     public List<CompilationUnit> getCompilationUnits() {
         FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
-        progressCallback.startGenerationTask(Messages.getString("Progress.7", table.toString()));
+        progressCallback.startTask(Messages.getString("Progress.7", table.toString()));
         IbatorPlugin plugins = ibatorContext.getPlugins();
         CommentGenerator commentGenerator = ibatorContext.getCommentGenerator();
         
