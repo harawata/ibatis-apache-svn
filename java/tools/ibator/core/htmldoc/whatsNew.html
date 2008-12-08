@@ -29,6 +29,8 @@
 <ul>
   <li>Fixed the JavaTypeResolver so that columns with unsupported data types
       may be overridden by configuration.</li>
+  <li>Fixed IBATIS-523 - a bug in the pre-release version of the EqualsHashCodePlugin</li>
+  <li>Fixed IBATIS-542 - upgrade the build to Ant version 1.7.1</li>
 </ul>
 
 <h3>Enhacements</h3>
@@ -48,6 +50,8 @@
       change many of the core behaviors of Ibator.  See the
       <a href="configreference/ibatorContext.html">&lt;ibatorContext&gt;</a> page
       for further information.</li>
+  <li>New generated method - insertSelective.  This method will allow you to use
+      column defaults on a table definition on insert</li>
 </ul>
 
 <h3>Changes from Abator</h3>
@@ -56,18 +60,18 @@ details the changes, and has methods of resolving the differences.</p>
 <ul>
   <li>JSE 5.0 or higher is required for Ibator</li>
   <li>Ibator does not contain the "legacy" code generators from Abator.  You must
-      choose "Java2" or "Java5" as a target JRE - and code generated from
+      choose "Ibatis2Java2" or "Ibatis2Java5" as a target runtime - and code generated from
       Ibator is compatible with iBATIS version 2.2.0 or higher only.  If you are
       using an earlier version of iBATIS - upgrade!  If you are not able to upgrade,
       then you must continue to use Abator.</li>
-  <li>The classloading strategy in Ibator is changed from Abator.  In all cases, we recommend
+  <li>The classloading strategy in Ibator is changed from Abator.  In all cases, we now recommend
       specifying the classpath external to Ibator and we further recommend that you do not use
       the <code>&lt;classPathEntry&gt;</code> element.  You may specify classpath entries
       if you feel you must, but those entries will only be used when loading JDBC drivers
       of Java model root classes.  If you write a custom extension to Ibator, or a plugin,
       you must specify that classpath entry external to Ibator.</li>
   <li>The API for extending Ibator is significantly changed from Abator.
-      In most cases, implementations of these interfaces should
+      In most cases, implementations of the old Abator interfaces should
       be converted to Ibator plugins.</li>
   <li>The <code>afterXXXGenerationHook</code> methods have been removed from
       all Ibator supplied implementations of the core interfaces.  If you
@@ -75,7 +79,7 @@ details the changes, and has methods of resolving the differences.</p>
       then you <em>must</em> migrate your code to an Ibator plugin.</li>
   <li>The build has been significantly modified and now includes an Emma based
       code coverage report.</li>
-  <li>Many changes to the XML configuration file are required.  See the
+  <li>Changes to the XML configuration file are required.  See the
       <a href="migratingFromAbator.html">Migrating from Abator</a> page for detailed
       information</li>
 </ul>

@@ -106,7 +106,7 @@ public class EqualsHashCodePlugin extends IbatorPluginAdapter {
      * </ul>
      * 
      * @param topLevelClass the class to which the method will be added
-     * @param columnDefinitions column definitions of this class and 
+     * @param introspectedColumns column definitions of this class and 
      *   any superclass of this class
      * @param introspectedTable the table corresponding to this class 
      */
@@ -200,7 +200,7 @@ public class EqualsHashCodePlugin extends IbatorPluginAdapter {
      * Note that this is a very simplistic implementation of hashCode.
      * 
      * @param topLevelClass the class to which the method will be added
-     * @param columnDefinitions column definitions of this class and 
+     * @param introspectedColumns column definitions of this class and 
      *   any superclass of this class
      * @param introspectedTable the table corresponding to this class 
      */

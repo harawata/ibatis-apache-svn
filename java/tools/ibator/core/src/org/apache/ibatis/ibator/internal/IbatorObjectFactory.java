@@ -69,7 +69,7 @@ public class IbatorObjectFactory {
      * supplied classes or interfaces.
      * 
      * @param type
-     * @return
+     * @return the Class loaded from the external classloader
      * @throws ClassNotFoundException
      */
     public static Class<?> externalClassForName(String type) throws ClassNotFoundException {

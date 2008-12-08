@@ -31,9 +31,11 @@ public class JdbcTypeNameTranslator {
 	}
 
 	/**
+	 * Translates from a java.sql.Types values to the proper iBATIS
+	 * string representation of the type. 
 	 * 
 	 * @param jdbcType a value from java.sql.Types
-	 * @return
+	 * @return the iBATIS String representation of a JDBC type
 	 */
 	public static String getJdbcTypeName(int jdbcType) {
 	    String answer;

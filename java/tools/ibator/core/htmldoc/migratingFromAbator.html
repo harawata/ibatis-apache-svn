@@ -16,13 +16,16 @@
 </div>
 
 <h1>Migrating from Abator</h1>
-<p>This page details changes to the XML configuration file between
+<p>This page details changes between
 Ibator and Abator.  For most users, the changes should be simple.
 If you extended any of Abator's classes to supply custom implementations
 of code generators or the Java type resolver, you will need to rework
 those custom classes.</p>
-<p>The following list details the required changes to the XML configuration
-files:</p>
+<p>The changes are listed in three categories: from required
+configuration changes to less common changes.  Note that most changes
+are described assuming you are using XML configuration for Ibator.  If you
+are using Java based configuration, then the changes are still required
+and should be easy to deduce from the description of the XML changes.</p>
 <h2>Required for All Users</h2>
 <ul>
   <li>The DTD has changed.  The new DOCTYPE should be
@@ -86,7 +89,7 @@ files:</p>
     simplified.  If you specified a custom implementation on the
     <code>&lt;javaTypeResolver&gt;</code> element, you must rework your implementation
     class.</li>
-  <li>The <cde>ProgressCallback</code> interface has changed significantly.  If you implemented
+  <li>The <code>ProgressCallback</code> interface has changed significantly.  If you implemented
     this interface for some other execution environment, you will need to rework your implementation.</li>
 </ul>
 </body>

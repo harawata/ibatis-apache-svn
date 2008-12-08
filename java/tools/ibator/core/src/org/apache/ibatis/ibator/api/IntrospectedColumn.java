@@ -61,9 +61,6 @@ public class IntrospectedColumn {
      * Constructs a Column definition.  This object holds all the 
      * information about a column that is required to generate
      * Java objects and SQL maps;
-     * 
-     * @param tableAlias The specified table alias, or null.  This
-     *   value is used to rename and alias column names for select statements
      */
     public IntrospectedColumn() {
         super();

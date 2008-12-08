@@ -43,7 +43,7 @@ public class ParserEntityResolver implements EntityResolver {
 	 */
 	public InputSource resolveEntity(String publicId, String systemId)
 			throws SAXException, IOException {
-		if (XmlConstants.IBATOR_CONFIG_PUBLIC_ID.equals(publicId)) {
+		if (XmlConstants.IBATOR_CONFIG_PUBLIC_ID.equalsIgnoreCase(publicId)) {
 			InputStream is = getClass()
 					.getClassLoader()
 					.getResourceAsStream(

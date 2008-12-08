@@ -39,7 +39,7 @@ public abstract class AbstractXmlElementGenerator extends AbstractGenerator {
      * This method should return an XmlElement for the select key used to
      * automatically generate keys.
      * 
-     * @param columnDefinition
+     * @param introspectedColumn
      *            the column related to the select key statement
      * @param generatedKey
      *            the generated key for the current table
