@@ -28,12 +28,13 @@ import org.apache.ibatis.ibator.internal.util.StringUtility;
  * @author Jeff Butler
  *
  */
-public class ResultMapWithoutBLOBsElementGenerator extends XmlElementGeneratorBaseImpl {
+public class ResultMapWithoutBLOBsElementGenerator extends AbstractXmlElementGenerator {
 
     public ResultMapWithoutBLOBsElementGenerator() {
         super();
     }
 
+    @Override
     public void addElements(XmlElement parentElement) {
         boolean useColumnIndex =
             StringUtility.isTrue(introspectedTable.getTableConfigurationProperty(PropertyRegistry.TABLE_USE_COLUMN_INDEXES));

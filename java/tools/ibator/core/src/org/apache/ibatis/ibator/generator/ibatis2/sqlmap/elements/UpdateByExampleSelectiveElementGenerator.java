@@ -28,12 +28,13 @@ import org.apache.ibatis.ibator.generator.ibatis2.XmlConstants;
  *
  */
 public class UpdateByExampleSelectiveElementGenerator extends
-        XmlElementGeneratorBaseImpl {
+        AbstractXmlElementGenerator {
 
     public UpdateByExampleSelectiveElementGenerator() {
         super();
     }
 
+    @Override
     public void addElements(XmlElement parentElement) {
         XmlElement answer = new XmlElement("update"); //$NON-NLS-1$
         FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();

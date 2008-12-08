@@ -27,12 +27,13 @@ import org.apache.ibatis.ibator.internal.util.StringUtility;
  * @author Jeff Butler
  *
  */
-public class ExampleWhereClauseElementGenerator extends XmlElementGeneratorBaseImpl {
+public class ExampleWhereClauseElementGenerator extends AbstractXmlElementGenerator {
 
     public ExampleWhereClauseElementGenerator() {
         super();
     }
 
+    @Override
     public void addElements(XmlElement parentElement) {
         XmlElement answer = new XmlElement("sql"); //$NON-NLS-1$
 

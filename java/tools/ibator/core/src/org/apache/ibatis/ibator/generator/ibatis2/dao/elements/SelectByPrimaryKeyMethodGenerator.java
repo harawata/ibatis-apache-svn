@@ -34,12 +34,13 @@ import org.apache.ibatis.ibator.internal.util.JavaBeansUtil;
  * @author Jeff Butler
  *
  */
-public class SelectByPrimaryKeyMethodGenerator extends DAOElementGeneratorBaseImpl {
+public class SelectByPrimaryKeyMethodGenerator extends AbstractDAOElementGenerator {
 
     public SelectByPrimaryKeyMethodGenerator() {
         super();
     }
 
+    @Override
     public void addImplementationElements(TopLevelClass topLevelClass) {
         Set<FullyQualifiedJavaType> importedTypes = new TreeSet<FullyQualifiedJavaType>();
         Method method = getMethodShell(importedTypes);
@@ -93,6 +94,7 @@ public class SelectByPrimaryKeyMethodGenerator extends DAOElementGeneratorBaseIm
         }
     }
 
+    @Override
     public void addInterfaceElements(Interface interfaze) {
         Set<FullyQualifiedJavaType> importedTypes = new TreeSet<FullyQualifiedJavaType>();
         Method method = getMethodShell(importedTypes);

@@ -30,12 +30,13 @@ import org.apache.ibatis.ibator.internal.util.StringUtility;
  *
  */
 public class SelectByExampleWithBLOBsElementGenerator extends
-        XmlElementGeneratorBaseImpl {
+        AbstractXmlElementGenerator {
 
     public SelectByExampleWithBLOBsElementGenerator() {
         super();
     }
 
+    @Override
     public void addElements(XmlElement parentElement) {
         FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
         FullyQualifiedJavaType fqjt = introspectedTable.getExampleType();

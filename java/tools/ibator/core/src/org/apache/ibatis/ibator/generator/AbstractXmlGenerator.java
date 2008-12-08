@@ -22,6 +22,6 @@ import org.apache.ibatis.ibator.api.dom.xml.Document;
  * @author Jeff Butler
  *
  */
-public interface XmlGenerator extends AbstractGenerator {
-    Document getDocument();
+public abstract class AbstractXmlGenerator extends AbstractGenerator {
+    public abstract Document getDocument();
 }

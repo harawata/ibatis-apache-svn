@@ -33,12 +33,13 @@ import org.apache.ibatis.ibator.generator.ibatis2.XmlConstants;
  *
  */
 public class UpdateByPrimaryKeySelectiveMethodGenerator extends
-        DAOElementGeneratorBaseImpl {
+        AbstractDAOElementGenerator {
 
     public UpdateByPrimaryKeySelectiveMethodGenerator() {
         super();
     }
 
+    @Override
     public void addImplementationElements(TopLevelClass topLevelClass) {
         Set<FullyQualifiedJavaType> importedTypes = new TreeSet<FullyQualifiedJavaType>();
         Method method = getMethodShell(importedTypes);
@@ -59,6 +60,7 @@ public class UpdateByPrimaryKeySelectiveMethodGenerator extends
         }
     }
 
+    @Override
     public void addInterfaceElements(Interface interfaze) {
         Set<FullyQualifiedJavaType> importedTypes = new TreeSet<FullyQualifiedJavaType>();
         Method method = getMethodShell(importedTypes);

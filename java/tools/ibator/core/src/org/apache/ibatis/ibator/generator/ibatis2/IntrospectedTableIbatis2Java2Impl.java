@@ -25,8 +25,8 @@ import org.apache.ibatis.ibator.api.ProgressCallback;
 import org.apache.ibatis.ibator.api.dom.java.CompilationUnit;
 import org.apache.ibatis.ibator.api.dom.xml.Document;
 import org.apache.ibatis.ibator.generator.AbstractGenerator;
-import org.apache.ibatis.ibator.generator.JavaGenerator;
-import org.apache.ibatis.ibator.generator.XmlGenerator;
+import org.apache.ibatis.ibator.generator.AbstractJavaGenerator;
+import org.apache.ibatis.ibator.generator.AbstractXmlGenerator;
 import org.apache.ibatis.ibator.generator.ibatis2.dao.DAOGenerator;
 import org.apache.ibatis.ibator.generator.ibatis2.dao.templates.AbstractDAOTemplate;
 import org.apache.ibatis.ibator.generator.ibatis2.dao.templates.GenericCIDAOTemplate;
@@ -46,14 +46,14 @@ import org.apache.ibatis.ibator.internal.IbatorObjectFactory;
  *
  */
 public class IntrospectedTableIbatis2Java2Impl extends IntrospectedTable {
-    protected List<JavaGenerator> javaModelGenerators;
-    protected List<JavaGenerator> daoGenerators;
-    protected XmlGenerator sqlMapGenerator;
+    protected List<AbstractJavaGenerator> javaModelGenerators;
+    protected List<AbstractJavaGenerator> daoGenerators;
+    protected AbstractXmlGenerator sqlMapGenerator;
 
     public IntrospectedTableIbatis2Java2Impl() {
         super();
-        javaModelGenerators = new ArrayList<JavaGenerator>();
-        daoGenerators = new ArrayList<JavaGenerator>();
+        javaModelGenerators = new ArrayList<AbstractJavaGenerator>();
+        daoGenerators = new ArrayList<AbstractJavaGenerator>();
     }
 
     @Override
@@ -88,32 +88,32 @@ public class IntrospectedTableIbatis2Java2Impl extends IntrospectedTable {
             abstractDAOTemplate = (AbstractDAOTemplate) IbatorObjectFactory.createInternalObject(type);
         }
 
-        JavaGenerator javaGenerator = new DAOGenerator(abstractDAOTemplate, isJava5Targeted());
+        AbstractJavaGenerator javaGenerator = new DAOGenerator(abstractDAOTemplate, isJava5Targeted());
         initializeAbstractGenerator(javaGenerator, warnings, progressCallback);
         daoGenerators.add(javaGenerator);
     }
     
     protected void calculateJavaModelGenerators(List<String> warnings, ProgressCallback progressCallback) {
         if (getRules().generateExampleClass()) {
-            JavaGenerator javaGenerator = new ExampleGenerator(isJava5Targeted());
+            AbstractJavaGenerator javaGenerator = new ExampleGenerator(isJava5Targeted());
             initializeAbstractGenerator(javaGenerator, warnings, progressCallback);
             javaModelGenerators.add(javaGenerator);
         }
         
         if (getRules().generatePrimaryKeyClass()) {
-            JavaGenerator javaGenerator = new PrimaryKeyGenerator();
+            AbstractJavaGenerator javaGenerator = new PrimaryKeyGenerator();
             initializeAbstractGenerator(javaGenerator, warnings, progressCallback);
             javaModelGenerators.add(javaGenerator);
         }
         
         if (getRules().generateBaseRecordClass()) {
-            JavaGenerator javaGenerator = new BaseRecordGenerator();
+            AbstractJavaGenerator javaGenerator = new BaseRecordGenerator();
             initializeAbstractGenerator(javaGenerator, warnings, progressCallback);
             javaModelGenerators.add(javaGenerator);
         }
         
         if (getRules().generateRecordWithBLOBsClass()) {
-            JavaGenerator javaGenerator = new RecordWithBLOBsGenerator();
+            AbstractJavaGenerator javaGenerator = new RecordWithBLOBsGenerator();
             initializeAbstractGenerator(javaGenerator, warnings, progressCallback);
             javaModelGenerators.add(javaGenerator);
         }
@@ -130,7 +130,7 @@ public class IntrospectedTableIbatis2Java2Impl extends IntrospectedTable {
     public List<GeneratedJavaFile> getGeneratedJavaFiles() {
         List<GeneratedJavaFile> answer = new ArrayList<GeneratedJavaFile>();
         
-        for (JavaGenerator javaGenerator : javaModelGenerators) {
+        for (AbstractJavaGenerator javaGenerator : javaModelGenerators) {
             List<CompilationUnit> compilationUnits = javaGenerator.getCompilationUnits();
             for (CompilationUnit compilationUnit : compilationUnits) {
                 GeneratedJavaFile gjf = new GeneratedJavaFile(compilationUnit, ibatorContext.getJavaModelGeneratorConfiguration().getTargetProject());
@@ -138,7 +138,7 @@ public class IntrospectedTableIbatis2Java2Impl extends IntrospectedTable {
             }
         }
         
-        for (JavaGenerator javaGenerator : daoGenerators) {
+        for (AbstractJavaGenerator javaGenerator : daoGenerators) {
             List<CompilationUnit> compilationUnits = javaGenerator.getCompilationUnits();
             for (CompilationUnit compilationUnit : compilationUnits) {
                 GeneratedJavaFile gjf = new GeneratedJavaFile(compilationUnit, ibatorContext.getDaoGeneratorConfiguration().getTargetProject());

@@ -26,9 +26,45 @@ import org.apache.ibatis.ibator.config.IbatorContext;
  * @author Jeff Butler
  *
  */
-public interface AbstractGenerator {
-    void setIbatorContext(IbatorContext ibatorContext);
-    void setIntrospectedTable(IntrospectedTable introspectedTable);
-    void setWarnings(List<String> warnings);
-    void setProgressCallback(ProgressCallback progressCallback);
+public abstract class AbstractGenerator {
+    protected IbatorContext ibatorContext;
+    protected IntrospectedTable introspectedTable;
+    protected List<String> warnings;
+    protected ProgressCallback progressCallback;
+
+    public AbstractGenerator() {
+        super();
+    }
+
+    public IbatorContext getIbatorContext() {
+        return ibatorContext;
+    }
+
+    public void setIbatorContext(IbatorContext ibatorContext) {
+        this.ibatorContext = ibatorContext;
+    }
+
+    public IntrospectedTable getIntrospectedTable() {
+        return introspectedTable;
+    }
+
+    public void setIntrospectedTable(IntrospectedTable introspectedTable) {
+        this.introspectedTable = introspectedTable;
+    }
+
+    public List<String> getWarnings() {
+        return warnings;
+    }
+
+    public void setWarnings(List<String> warnings) {
+        this.warnings = warnings;
+    }
+
+    public ProgressCallback getProgressCallback() {
+        return progressCallback;
+    }
+
+    public void setProgressCallback(ProgressCallback progressCallback) {
+        this.progressCallback = progressCallback;
+    }
 }

@@ -3,7 +3,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-  <title>ibator DB2 Usage Notes</title>
+  <title>Ibator DB2 Usage Notes</title>
   <link type="text/css" rel="stylesheet" href="../ibator.css"/>
 </head>
 <body>
@@ -15,9 +15,9 @@
   </p>
 </div>
 
-<h1>ibator DB2 Usage Notes</h1>
+<h1>Ibator DB2 Usage Notes</h1>
 <h2>LONG VARCHAR Fields</h2>
-<p>By default ibator will map LONG VARCHAR fields to the <code>java.lang.String</code> data type,
+<p>By default Ibator will map LONG VARCHAR fields to the <code>java.lang.String</code> data type,
 and will mark these fields as <code>jdbcType="LONGVARCHAR"</code>.  This
 mapping will cause errors when retrieving data from DB2.  DB2 LONG VARCHAR fields should be mapped
 to the <code>java.lang.String</code> data type with <code>jdbcType="VARCHAR"</code>.  To overcome

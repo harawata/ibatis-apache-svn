@@ -20,7 +20,7 @@ import org.apache.ibatis.ibator.api.dom.xml.Attribute;
 import org.apache.ibatis.ibator.api.dom.xml.TextElement;
 import org.apache.ibatis.ibator.api.dom.xml.XmlElement;
 import org.apache.ibatis.ibator.config.GeneratedKey;
-import org.apache.ibatis.ibator.generator.AbstractGeneratorImpl;
+import org.apache.ibatis.ibator.generator.AbstractGenerator;
 import org.apache.ibatis.ibator.internal.util.StringUtility;
 
 /**
@@ -28,9 +28,10 @@ import org.apache.ibatis.ibator.internal.util.StringUtility;
  * @author Jeff Butler
  *
  */
-public abstract class XmlElementGeneratorBaseImpl extends AbstractGeneratorImpl implements XmlElementGenerator {
+public abstract class AbstractXmlElementGenerator extends AbstractGenerator {
+    public abstract void addElements(XmlElement parentElement);
     
-    public XmlElementGeneratorBaseImpl() {
+    public AbstractXmlElementGenerator() {
         super();
     }
     

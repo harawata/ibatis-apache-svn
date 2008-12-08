@@ -27,12 +27,13 @@ import org.apache.ibatis.ibator.generator.ibatis2.XmlConstants;
  * @author Jeff Butler
  *
  */
-public class CountByExampleElementGenerator extends XmlElementGeneratorBaseImpl {
+public class CountByExampleElementGenerator extends AbstractXmlElementGenerator {
 
     public CountByExampleElementGenerator() {
         super();
     }
 
+    @Override
     public void addElements(XmlElement parentElement) {
         XmlElement answer = new XmlElement("select"); //$NON-NLS-1$
 

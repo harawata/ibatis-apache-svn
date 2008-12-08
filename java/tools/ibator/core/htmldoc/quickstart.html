@@ -3,7 +3,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-  <title>ibator Quick Start Guide</title>
+  <title>Ibator Quick Start Guide</title>
   <link type="text/css" rel="stylesheet" href="ibator.css"/>
 </head>
 <body>
@@ -15,8 +15,8 @@
   </p>
 </div>
 
-<h1>ibator Quick Start Guide</h1>
-<p>To get up and running quickly with ibator, follow these steps:</p>
+<h1>Ibator Quick Start Guide</h1>
+<p>To get up and running quickly with Ibator, follow these steps:</p>
 <ol>
   <li>Create and fill out a configuration file appropriately.
       At a minimum, you must specify:
@@ -33,26 +33,26 @@
       <li>At least one database <code>&lt;table&gt;</code> element</li>
     </ol>
     <p>See the <a href="configreference/xmlconfig.html">XML Configuration File Reference</a>
-       page for an example of an ibator configuration file.</p>
+       page for an example of an Ibator configuration file.</p>
   </li>
   <li>Save the file in some convenient location (like \temp\ibatorConfig.xml)</li>
-  <li>Run ibator from the command line with a command like this:
+  <li>Run Ibator from the command line with a command like this:
     <pre>
 
       java -jar ibator.jar -configfile \temp\ibatorConfig.xml -overwrite
     </pre>
-    <p>This will tell ibator to run using your configuration file.  It will also tell ibator
+    <p>This will tell Ibator to run using your configuration file.  It will also tell Ibator
     to overwrite any existing Java files with the same name.  If you want to save any existing
-    Java files, then omit the <code>-overwrite</code> parameter.  If there is a conflict, ibator
+    Java files, then omit the <code>-overwrite</code> parameter.  If there is a conflict, Ibator
     will save the newly generated file with a unique name (e.g. MyClass.java.1).</p>
   </li>
-  <li>After running ibator, you will need to create or modify the standard iBATIS
+  <li>After running Ibator, you will need to create or modify the standard iBATIS
       configuration files to make use of your newly generated code.  See the
-      <a href="afterRunning.html">Tasks After Running ibator</a> page for more
+      <a href="afterRunning.html">Tasks After Running Ibator</a> page for more
       information.</li>
 </ol>
-<p><b>Important:</b> ibator generated code requires that statement namespaces are enabled
-  in your iBATIS configuration.  See the <a href="afterRunning.html">Tasks After Running ibator</a>
+<p><b>Important:</b> Ibator generated code requires that statement namespaces are enabled
+  in your iBATIS configuration.  See the <a href="afterRunning.html">Tasks After Running Ibator</a>
   page for more information.</p>
 </body>
 </html>

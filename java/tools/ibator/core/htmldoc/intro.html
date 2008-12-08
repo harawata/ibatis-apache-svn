@@ -3,7 +3,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-  <title>Introduction to ibator</title>
+  <title>Introduction to Ibator</title>
   <link type="text/css" rel="stylesheet" href="ibator.css"/>
 </head>
 <body>
@@ -15,16 +15,16 @@
   </p>
 </div>
 
-<h1>Introduction to ibator</h1>
-<p>ibator is a code generator for <a target="_blank" href="http://ibatis.apache.org">iBATIS</a>.
- ibator will introspect a database
+<h1>Introduction to Ibator</h1>
+<p>Ibator is a code generator for <a target="_blank" href="http://ibatis.apache.org">iBATIS</a>.
+ Ibator will introspect a database
  table (or many tables) and will generate iBATIS artifacts that can be used to
  access the table(s).  This lessens the initial nuisance of setting up objects and configuration
- files to interact with database tables.  ibator seeks to make a major impact on the large
+ files to interact with database tables.  Ibator seeks to make a major impact on the large
 percentage of database operations that are simple CRUD (Create, Retrieve, Update, Delete).  You will
  still need to hand code SQL and objects for join queries, or stored procedures.
 </p>
-<p>ibator will generate:</p>
+<p>Ibator will generate:</p>
 <ul>
   <li>Java POJOs that match the table structure.  This may include:
     <ul>
@@ -34,12 +34,12 @@ percentage of database operations that are simple CRUD (Create, Retrieve, Update
       <li>a class to enable dynamic selects, updates, and deletes</li>
     </ul>
     <p>There is an inheritance relationship between these classes as appropriate.
-       Note that ibator may be configured to generate different types of POJO hierarchies -
+       Note that Ibator may be configured to generate different types of POJO hierarchies -
        for example, you may choose to tell
-       ibator to generate a single domain object for each table if you so
+       Ibator to generate a single domain object for each table if you so
        desire.</p>
   </li>
-  <li>iBATIS Compatible SQL Map XML Files.  ibator generates SQL for simple
+  <li>iBATIS Compatible SQL Map XML Files.  Ibator generates SQL for simple
    CRUD functions on each table in a configuration.  The generated SQL
    statements include:
     <ul>
@@ -53,10 +53,10 @@ percentage of database operations that are simple CRUD (Create, Retrieve, Update
     </ul>
    <p>There are different variations of these statements depending on the
    structure of the table (for example, if the table doesn't have a primary key,
-   then ibator will not generate an update by primary key function).</p>
+   then Ibator will not generate an update by primary key function).</p>
   </li>
   <li>DAO interface and implementation classes that make appropriate use of the
-    above objects.  The generation of DAO classes is optional.  ibator will
+    above objects.  The generation of DAO classes is optional.  Ibator will
     generate DAOs of the following types:
     <ul>
       <li>DAOs that conform to the
@@ -71,40 +71,40 @@ percentage of database operations that are simple CRUD (Create, Retrieve, Update
   </li>
 </ul>
 
-<p>ibator is designed to run well in an iterative development environment, and
-  ibator can even be included as an Ant task in a continuous build environment.
-  Important things to note when running ibator iteratively include:</p>
+<p>Ibator is designed to run well in an iterative development environment, and
+  Ibator can even be included as an Ant task in a continuous build environment.
+  Important things to note when running Ibator iteratively include:</p>
 
 <ol>
-  <li>ibator will automatically merge XML files if there is an existing file
-      with the same name as the newly generated XML file.  ibator will not overwrite
+  <li>Ibator will automatically merge XML files if there is an existing file
+      with the same name as the newly generated XML file.  Ibator will not overwrite
       any custom changes you make to the XML files it generates.
       You can run it over and over again without fear of losing custom changes to you XML.
-      ibator will replace any XML elements that were generated in a previous run.
+      Ibator will replace any XML elements that were generated in a previous run.
       </li>
-  <li>ibator will <b>not</b> merge Java files, it can either overwrite existing files
+  <li>Ibator will <b>not</b> merge Java files, it can either overwrite existing files
       or save newly generated files with a different unique name.  If you make changes
-      to the generated Java files and run ibator iteratively you will have to
+      to the generated Java files and run Ibator iteratively you will have to
       merge the changes by hand.  When run as an
       <a target="_blank" href="http://www.eclipse.org">Eclipse</a>
-      plugin, then ibator can automatically merge Java files.</li>
+      plugin, then Ibator can automatically merge Java files.</li>
 </ol>
 
 <h2>Dependencies</h2>
-<p>ibator has no dependencies beyond the JRE.  ibator does require JRE 5.0 or
-above.  ibator also requires that the JDBC driver implements the
+<p>Ibator has no dependencies beyond the JRE.  Ibator does require JRE 5.0 or
+above.  Ibator also requires that the JDBC driver implements the
 DatabaseMetaData interface, especially the <code>getColumns</code> and
 <code>getPrimaryKeys</code> methods.</p>
 
 <h2>About the Name</h2>
-<p>"ibator" is an iBATIS styled version of the noun Abator.  "Abator" means "one who
-abates a nuisance".  This describes the purpose of ibator - it abates some of the nuisance
+<p>"Ibator" is an iBATIS styled version of the noun abator.  "Abator" means "one who
+abates a nuisance".  This describes the purpose of Ibator - it abates some of the nuisance
 of creating object and configuration files for iBATIS.</p>
-<p>ibator was originally named "Abator", but the name was changed as the result of
+<p>Ibator was originally named "Abator", but the name was changed as the result of
 a federal trade registration dispute.</p>
 
 <h2>Support</h2>
-<p>Support for ibator is provided through the iBATIS user mailing list.
+<p>Support for Ibator is provided through the iBATIS user mailing list.
 You may subscribe to the mailing list by sending a note to:</p>
 
 <blockquote>
@@ -129,7 +129,7 @@ You may subscribe to the mailing list by sending a note to:</p>
 
 <p>If you think you have found a bug, please ask a question about it on the user list first,
 before creating a JIRA issue.  If you find a bug, or have a new feature request,
-you may open a JIRA issue for ibator at</p>
+you may open a JIRA issue for Ibator at</p>
 
 <blockquote>
   <p>
@@ -139,7 +139,7 @@ you may open a JIRA issue for ibator at</p>
   </p>
 </blockquote>
 
-<p>Please select the "Tools" component when creating any JIRA issues for ibator.</p>
+<p>Please select the "Tools" component when creating any JIRA issues for Ibator.</p>
 
 </body>
 </html>

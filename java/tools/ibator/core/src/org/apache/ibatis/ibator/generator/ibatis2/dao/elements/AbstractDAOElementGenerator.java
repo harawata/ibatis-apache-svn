@@ -16,9 +16,11 @@
 package org.apache.ibatis.ibator.generator.ibatis2.dao.elements;
 
 import org.apache.ibatis.ibator.api.DAOMethodNameCalculator;
+import org.apache.ibatis.ibator.api.dom.java.Interface;
 import org.apache.ibatis.ibator.api.dom.java.JavaVisibility;
+import org.apache.ibatis.ibator.api.dom.java.TopLevelClass;
 import org.apache.ibatis.ibator.config.PropertyRegistry;
-import org.apache.ibatis.ibator.generator.AbstractGeneratorImpl;
+import org.apache.ibatis.ibator.generator.AbstractGenerator;
 import org.apache.ibatis.ibator.generator.ibatis2.dao.templates.AbstractDAOTemplate;
 import org.apache.ibatis.ibator.internal.DefaultDAOMethodNameCalculator;
 import org.apache.ibatis.ibator.internal.ExtendedDAOMethodNameCalculator;
@@ -29,15 +31,16 @@ import org.apache.ibatis.ibator.internal.util.messages.Messages;
 /**
  * 
  * @author Jeff Butler
- *
  */
-public abstract class DAOElementGeneratorBaseImpl extends AbstractGeneratorImpl implements DAOElementGenerator {
-    
+public abstract class AbstractDAOElementGenerator extends AbstractGenerator {
+    public abstract void addInterfaceElements(Interface interfaze);
+    public abstract void addImplementationElements(TopLevelClass topLevelClass);
+
     protected AbstractDAOTemplate daoTemplate;
     private DAOMethodNameCalculator dAOMethodNameCalculator;
     private JavaVisibility exampleMethodVisibility;
 
-    public DAOElementGeneratorBaseImpl() {
+    public AbstractDAOElementGenerator() {
         super();
     }
 

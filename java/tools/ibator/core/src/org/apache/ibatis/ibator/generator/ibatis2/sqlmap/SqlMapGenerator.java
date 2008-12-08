@@ -19,9 +19,9 @@ import org.apache.ibatis.ibator.api.FullyQualifiedTable;
 import org.apache.ibatis.ibator.api.dom.xml.Attribute;
 import org.apache.ibatis.ibator.api.dom.xml.Document;
 import org.apache.ibatis.ibator.api.dom.xml.XmlElement;
-import org.apache.ibatis.ibator.generator.AbstractGeneratorImpl;
-import org.apache.ibatis.ibator.generator.XmlGenerator;
+import org.apache.ibatis.ibator.generator.AbstractXmlGenerator;
 import org.apache.ibatis.ibator.generator.ibatis2.XmlConstants;
+import org.apache.ibatis.ibator.generator.ibatis2.sqlmap.elements.AbstractXmlElementGenerator;
 import org.apache.ibatis.ibator.generator.ibatis2.sqlmap.elements.CountByExampleElementGenerator;
 import org.apache.ibatis.ibator.generator.ibatis2.sqlmap.elements.DeleteByExampleElementGenerator;
 import org.apache.ibatis.ibator.generator.ibatis2.sqlmap.elements.DeleteByPrimaryKeyElementGenerator;
@@ -39,7 +39,6 @@ import org.apache.ibatis.ibator.generator.ibatis2.sqlmap.elements.UpdateByExampl
 import org.apache.ibatis.ibator.generator.ibatis2.sqlmap.elements.UpdateByPrimaryKeySelectiveElementGenerator;
 import org.apache.ibatis.ibator.generator.ibatis2.sqlmap.elements.UpdateByPrimaryKeyWithBLOBsElementGenerator;
 import org.apache.ibatis.ibator.generator.ibatis2.sqlmap.elements.UpdateByPrimaryKeyWithoutBLOBsElementGenerator;
-import org.apache.ibatis.ibator.generator.ibatis2.sqlmap.elements.XmlElementGenerator;
 import org.apache.ibatis.ibator.internal.util.messages.Messages;
 
 /**
@@ -47,7 +46,7 @@ import org.apache.ibatis.ibator.internal.util.messages.Messages;
  * @author Jeff Butler
  *
  */
-public class SqlMapGenerator extends AbstractGeneratorImpl implements XmlGenerator {
+public class SqlMapGenerator extends AbstractXmlGenerator {
 
     public SqlMapGenerator() {
         super();
@@ -85,124 +84,124 @@ public class SqlMapGenerator extends AbstractGeneratorImpl implements XmlGenerat
     
     protected void addResultMapWithoutBLOBsElement(XmlElement parentElement) {
         if (introspectedTable.getRules().generateBaseResultMap()) {
-            XmlElementGenerator elementGenerator = new ResultMapWithoutBLOBsElementGenerator();
+            AbstractXmlElementGenerator elementGenerator = new ResultMapWithoutBLOBsElementGenerator();
             initializeAndExecuteGenerator(elementGenerator, parentElement);
         }
     }
     
     protected void addResultMapWithBLOBsElement(XmlElement parentElement) {
         if (introspectedTable.getRules().generateResultMapWithBLOBs()) {
-            XmlElementGenerator elementGenerator = new ResultMapWithBLOBsElementGenerator();
+            AbstractXmlElementGenerator elementGenerator = new ResultMapWithBLOBsElementGenerator();
             initializeAndExecuteGenerator(elementGenerator, parentElement);
         }
     }
     
     protected void addExampleWhereClauseElement(XmlElement parentElement) {
         if (introspectedTable.getRules().generateSQLExampleWhereClause()) {
-            XmlElementGenerator elementGenerator = new ExampleWhereClauseElementGenerator();
+            AbstractXmlElementGenerator elementGenerator = new ExampleWhereClauseElementGenerator();
             initializeAndExecuteGenerator(elementGenerator, parentElement);
         }
     }
     
     protected void addSelectByExampleWithoutBLOBsElement(XmlElement parentElement) {
         if (introspectedTable.getRules().generateSelectByExampleWithoutBLOBs()) {
-            XmlElementGenerator elementGenerator = new SelectByExampleWithoutBLOBsElementGenerator();
+            AbstractXmlElementGenerator elementGenerator = new SelectByExampleWithoutBLOBsElementGenerator();
             initializeAndExecuteGenerator(elementGenerator, parentElement);
         }
     }
     
     protected void addSelectByExampleWithBLOBsElement(XmlElement parentElement) {
         if (introspectedTable.getRules().generateSelectByExampleWithBLOBs()) {
-            XmlElementGenerator elementGenerator = new SelectByExampleWithBLOBsElementGenerator();
+            AbstractXmlElementGenerator elementGenerator = new SelectByExampleWithBLOBsElementGenerator();
             initializeAndExecuteGenerator(elementGenerator, parentElement);
         }
     }
 
     protected void addSelectByPrimaryKeyElement(XmlElement parentElement) {
         if (introspectedTable.getRules().generateSelectByPrimaryKey()) {
-            XmlElementGenerator elementGenerator = new SelectByPrimaryKeyElementGenerator();
+            AbstractXmlElementGenerator elementGenerator = new SelectByPrimaryKeyElementGenerator();
             initializeAndExecuteGenerator(elementGenerator, parentElement);
         }
     }
 
     protected void addDeleteByExampleElement(XmlElement parentElement) {
         if (introspectedTable.getRules().generateDeleteByExample()) {
-            XmlElementGenerator elementGenerator = new DeleteByExampleElementGenerator();
+            AbstractXmlElementGenerator elementGenerator = new DeleteByExampleElementGenerator();
             initializeAndExecuteGenerator(elementGenerator, parentElement);
         }
     }
 
     protected void addDeleteByPrimaryKeyElement(XmlElement parentElement) {
         if (introspectedTable.getRules().generateDeleteByPrimaryKey()) {
-            XmlElementGenerator elementGenerator = new DeleteByPrimaryKeyElementGenerator();
+            AbstractXmlElementGenerator elementGenerator = new DeleteByPrimaryKeyElementGenerator();
             initializeAndExecuteGenerator(elementGenerator, parentElement);
         }
     }
 
     protected void addInsertElement(XmlElement parentElement) {
         if (introspectedTable.getRules().generateInsert()) {
-            XmlElementGenerator elementGenerator = new InsertElementGenerator();
+            AbstractXmlElementGenerator elementGenerator = new InsertElementGenerator();
             initializeAndExecuteGenerator(elementGenerator, parentElement);
         }
     }
 
     protected void addInsertSelectiveElement(XmlElement parentElement) {
         if (introspectedTable.getRules().generateInsertSelective()) {
-            XmlElementGenerator elementGenerator = new InsertSelectiveElementGenerator();
+            AbstractXmlElementGenerator elementGenerator = new InsertSelectiveElementGenerator();
             initializeAndExecuteGenerator(elementGenerator, parentElement);
         }
     }
 
     protected void addCountByExampleElement(XmlElement parentElement) {
         if (introspectedTable.getRules().generateCountByExample()) {
-            XmlElementGenerator elementGenerator = new CountByExampleElementGenerator();
+            AbstractXmlElementGenerator elementGenerator = new CountByExampleElementGenerator();
             initializeAndExecuteGenerator(elementGenerator, parentElement);
         }
     }
 
     protected void addUpdateByExampleSelectiveElement(XmlElement parentElement) {
         if (introspectedTable.getRules().generateUpdateByExampleSelective()) {
-            XmlElementGenerator elementGenerator = new UpdateByExampleSelectiveElementGenerator();
+            AbstractXmlElementGenerator elementGenerator = new UpdateByExampleSelectiveElementGenerator();
             initializeAndExecuteGenerator(elementGenerator, parentElement);
         }
     }
 
     protected void addUpdateByExampleWithBLOBsElement(XmlElement parentElement) {
         if (introspectedTable.getRules().generateUpdateByExampleWithBLOBs()) {
-            XmlElementGenerator elementGenerator = new UpdateByExampleWithBLOBsElementGenerator();
+            AbstractXmlElementGenerator elementGenerator = new UpdateByExampleWithBLOBsElementGenerator();
             initializeAndExecuteGenerator(elementGenerator, parentElement);
         }
     }
 
     protected void addUpdateByExampleWithoutBLOBsElement(XmlElement parentElement) {
         if (introspectedTable.getRules().generateUpdateByExampleWithoutBLOBs()) {
-            XmlElementGenerator elementGenerator = new UpdateByExampleWithoutBLOBsElementGenerator();
+            AbstractXmlElementGenerator elementGenerator = new UpdateByExampleWithoutBLOBsElementGenerator();
             initializeAndExecuteGenerator(elementGenerator, parentElement);
         }
     }
 
     protected void addUpdateByPrimaryKeySelectiveElement(XmlElement parentElement) {
         if (introspectedTable.getRules().generateUpdateByPrimaryKeySelective()) {
-            XmlElementGenerator elementGenerator = new UpdateByPrimaryKeySelectiveElementGenerator();
+            AbstractXmlElementGenerator elementGenerator = new UpdateByPrimaryKeySelectiveElementGenerator();
             initializeAndExecuteGenerator(elementGenerator, parentElement);
         }
     }
 
     protected void addUpdateByPrimaryKeyWithBLOBsElement(XmlElement parentElement) {
         if (introspectedTable.getRules().generateUpdateByPrimaryKeyWithBLOBs()) {
-            XmlElementGenerator elementGenerator = new UpdateByPrimaryKeyWithBLOBsElementGenerator();
+            AbstractXmlElementGenerator elementGenerator = new UpdateByPrimaryKeyWithBLOBsElementGenerator();
             initializeAndExecuteGenerator(elementGenerator, parentElement);
         }
     }
 
     protected void addUpdateByPrimaryKeyWithoutBLOBsElement(XmlElement parentElement) {
         if (introspectedTable.getRules().generateUpdateByPrimaryKeyWithoutBLOBs()) {
-            XmlElementGenerator elementGenerator = new UpdateByPrimaryKeyWithoutBLOBsElementGenerator();
+            AbstractXmlElementGenerator elementGenerator = new UpdateByPrimaryKeyWithoutBLOBsElementGenerator();
             initializeAndExecuteGenerator(elementGenerator, parentElement);
         }
     }
     
-    protected void initializeAndExecuteGenerator(XmlElementGenerator elementGenerator, XmlElement parentElement) {
+    protected void initializeAndExecuteGenerator(AbstractXmlElementGenerator elementGenerator, XmlElement parentElement) {
         elementGenerator.setIbatorContext(ibatorContext);
         elementGenerator.setIntrospectedTable(introspectedTable);
         elementGenerator.setProgressCallback(progressCallback);
@@ -210,6 +209,7 @@ public class SqlMapGenerator extends AbstractGeneratorImpl implements XmlGenerat
         elementGenerator.addElements(parentElement);
     }
 
+    @Override
     public Document getDocument() {
         Document document = new Document(XmlConstants.SQL_MAP_PUBLIC_ID,
                 XmlConstants.SQL_MAP_SYSTEM_ID);

@@ -27,12 +27,13 @@ import org.apache.ibatis.ibator.generator.ibatis2.XmlConstants;
  * @author Jeff Butler
  *
  */
-public class DeleteByExampleElementGenerator extends XmlElementGeneratorBaseImpl {
+public class DeleteByExampleElementGenerator extends AbstractXmlElementGenerator {
 
     public DeleteByExampleElementGenerator() {
         super();
     }
 
+    @Override
     public void addElements(XmlElement parentElement) {
         XmlElement answer = new XmlElement("delete"); //$NON-NLS-1$
 

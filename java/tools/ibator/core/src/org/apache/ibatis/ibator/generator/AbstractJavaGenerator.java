@@ -24,6 +24,6 @@ import org.apache.ibatis.ibator.api.dom.java.CompilationUnit;
  * @author Jeff Butler
  *
  */
-public interface JavaGenerator extends AbstractGenerator {
-    List<CompilationUnit> getCompilationUnits();
+public abstract class AbstractJavaGenerator extends AbstractGenerator {
+    public abstract List<CompilationUnit> getCompilationUnits();
 }

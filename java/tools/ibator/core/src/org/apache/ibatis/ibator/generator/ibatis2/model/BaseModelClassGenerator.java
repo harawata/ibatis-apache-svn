@@ -24,7 +24,7 @@ import org.apache.ibatis.ibator.api.dom.java.JavaVisibility;
 import org.apache.ibatis.ibator.api.dom.java.Method;
 import org.apache.ibatis.ibator.api.dom.java.Parameter;
 import org.apache.ibatis.ibator.config.PropertyRegistry;
-import org.apache.ibatis.ibator.generator.AbstractGeneratorImpl;
+import org.apache.ibatis.ibator.generator.AbstractJavaGenerator;
 import org.apache.ibatis.ibator.internal.util.JavaBeansUtil;
 import org.apache.ibatis.ibator.internal.util.StringUtility;
 
@@ -33,7 +33,7 @@ import org.apache.ibatis.ibator.internal.util.StringUtility;
  * @author Jeff Butler
  *
  */
-public abstract class BaseModelClassGenerator extends AbstractGeneratorImpl {
+public abstract class BaseModelClassGenerator extends AbstractJavaGenerator {
     
     public BaseModelClassGenerator() {
         super();

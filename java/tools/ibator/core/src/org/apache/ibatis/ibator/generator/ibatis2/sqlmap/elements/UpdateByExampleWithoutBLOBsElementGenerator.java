@@ -31,12 +31,13 @@ import org.apache.ibatis.ibator.generator.ibatis2.XmlConstants;
  *
  */
 public class UpdateByExampleWithoutBLOBsElementGenerator extends
-        XmlElementGeneratorBaseImpl {
+        AbstractXmlElementGenerator {
 
     public UpdateByExampleWithoutBLOBsElementGenerator() {
         super();
     }
 
+    @Override
     public void addElements(XmlElement parentElement) {
         XmlElement answer = new XmlElement("update"); //$NON-NLS-1$
         FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();

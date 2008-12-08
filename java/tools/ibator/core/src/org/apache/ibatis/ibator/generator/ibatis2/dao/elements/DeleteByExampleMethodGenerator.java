@@ -32,12 +32,13 @@ import org.apache.ibatis.ibator.generator.ibatis2.XmlConstants;
  * @author Jeff Butler
  *
  */
-public class DeleteByExampleMethodGenerator extends DAOElementGeneratorBaseImpl {
+public class DeleteByExampleMethodGenerator extends AbstractDAOElementGenerator {
 
     public DeleteByExampleMethodGenerator() {
         super();
     }
 
+    @Override
     public void addImplementationElements(TopLevelClass topLevelClass) {
         Set<FullyQualifiedJavaType> importedTypes = new TreeSet<FullyQualifiedJavaType>();
         Method method = getMethodShell(importedTypes);
@@ -56,6 +57,7 @@ public class DeleteByExampleMethodGenerator extends DAOElementGeneratorBaseImpl 
         }
     }
 
+    @Override
     public void addInterfaceElements(Interface interfaze) {
         if (getExampleMethodVisibility() == JavaVisibility.PUBLIC) {
             Set<FullyQualifiedJavaType> importedTypes = new TreeSet<FullyQualifiedJavaType>();

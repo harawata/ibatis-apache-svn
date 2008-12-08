@@ -33,8 +33,9 @@ import org.apache.ibatis.ibator.generator.ibatis2.XmlConstants;
  *
  */
 public class UpdateByExampleSelectiveMethodGenerator extends
-        DAOElementGeneratorBaseImpl {
+        AbstractDAOElementGenerator {
 
+    @Override
     public void addImplementationElements(TopLevelClass topLevelClass) {
         Set<FullyQualifiedJavaType> importedTypes = new TreeSet<FullyQualifiedJavaType>();
         Method method = getMethodShell(importedTypes);
@@ -60,6 +61,7 @@ public class UpdateByExampleSelectiveMethodGenerator extends
         }
     }
 
+    @Override
     public void addInterfaceElements(Interface interfaze) {
         if (getExampleMethodVisibility() == JavaVisibility.PUBLIC) {
             Set<FullyQualifiedJavaType> importedTypes = new TreeSet<FullyQualifiedJavaType>();

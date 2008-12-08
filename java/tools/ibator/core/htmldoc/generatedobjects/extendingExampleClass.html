@@ -23,7 +23,7 @@ a case insensitive search).  In situations like these, you may extend the genera
 example class to add these additional criteria.</p>
 
 <h2>General Principles</h2>
-<p>ibator generates an "example" class for each table, unless instructed otherwise
+<p>Ibator generates an "example" class for each table, unless instructed otherwise
 in the configuration.  The "example" class is used to generate a dynamic where
 clause for use in the
 <code>selectByExample</code>, <code>deleteByExample</code>,
@@ -37,7 +37,7 @@ predicates, or for using database specific functions in your where clauses.</p>
 functionality of the predicates exists.  This inner class is always named <code>Criteria</code>.
 If you wish to add predicates to dynamic where clauses, you must extend
 both the "example" class and the <code>Criteria</code> class.  For example, suppose there is a
-table called CUSTOMER.  Typically, ibator would generate a class named
+table called CUSTOMER.  Typically, Ibator would generate a class named
 <code>CustomerExample</code>.  To add functionality to the <code>CustomerExample</code> class, you must
 follow these steps:</p>
 <ul>
@@ -73,7 +73,7 @@ public class ExtendedCustomerExample extends CustomerExample {
 of adding additional methods the the extended <code>Criteria</code> class.</p>
 
 <h2>Adding Predicates</h2>
-<p>ibator generates a dynamic SQL fragment that allows virtually unlimited
+<p>Ibator generates a dynamic SQL fragment that allows virtually unlimited
 where clauses to be created at run-time.  To accomplish this, the generated SQL
 fragment supports four broad types of SQL predicates.  For each type of
 SQL predicate, there is a corresponding method in the generated <code>Criteria</code> class

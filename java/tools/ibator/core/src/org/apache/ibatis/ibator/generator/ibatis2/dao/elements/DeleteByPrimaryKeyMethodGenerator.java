@@ -34,12 +34,13 @@ import org.apache.ibatis.ibator.internal.util.JavaBeansUtil;
  * @author Jeff Butler
  *
  */
-public class DeleteByPrimaryKeyMethodGenerator extends DAOElementGeneratorBaseImpl {
+public class DeleteByPrimaryKeyMethodGenerator extends AbstractDAOElementGenerator {
 
     public DeleteByPrimaryKeyMethodGenerator() {
         super();
     }
 
+    @Override
     public void addImplementationElements(TopLevelClass topLevelClass) {
         Set<FullyQualifiedJavaType> importedTypes = new TreeSet<FullyQualifiedJavaType>();
         Method method = getMethodShell(importedTypes);
@@ -86,6 +87,7 @@ public class DeleteByPrimaryKeyMethodGenerator extends DAOElementGeneratorBaseIm
         }
     }
 
+    @Override
     public void addInterfaceElements(Interface interfaze) {
         Set<FullyQualifiedJavaType> importedTypes = new TreeSet<FullyQualifiedJavaType>();
         Method method = getMethodShell(importedTypes);

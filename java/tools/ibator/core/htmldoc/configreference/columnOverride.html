@@ -41,8 +41,8 @@ element of the <a href="table.html">&lt;table&gt;</a> element.</p>
   <tr>
     <td valign="top">property</td>
     <td>The name of a Java property to be used.  If not specified,
-        ibator will generate properties based on the column name.
-        For example, if a table has a column named STRT_DTE, ibator
+        Ibator will generate properties based on the column name.
+        For example, if a table has a column named STRT_DTE, Ibator
         will generate the property name as either STRT_DTE or strtDte
         based on the value of the "useActualColumnNames" property (see the
         description of the <a href="table.html">&lt;table&gt;</a> element for more information).
@@ -72,22 +72,22 @@ element of the <a href="table.html">&lt;table&gt;</a> element.</p>
       interface (<code>TypeHandlerCallback</code> is simpler to implement).
       If unspecified, or blank,
       then iBATIS will use the default type facility for handling types.
-      <b>Important:</b> ibator does not verify that this type handler exists,
-      or is valid.  ibator simply inserts this value at the appropriate places
+      <b>Important:</b> Ibator does not verify that this type handler exists,
+      or is valid.  Ibator simply inserts this value at the appropriate places
       in the generated SQL Map configuration file.
     </td>
   </tr>
   <tr>
     <td valign="top">delimitedColumnName</td>
     <td>Specifies whether the column name should be delimited in the generated SQL.
-        ibator will automatically delimit the column name if the name contains a space,
+        Ibator will automatically delimit the column name if the name contains a space,
         so this override is only necessary when the column name is forces to a certain
         case, or when the column name is a reserved word in the database.
         <p>When "true", the <code>column</code> attribute for the override
         must exactly match the case of the column name returned from the database.</p>
         <p>The delimiter characters are specified on the
         <a href="ibatorContext.html">&lt;ibatorContext&gt;</a> element.</p>
-        <p><i>The default value is false.  However, ibator will automatically
+        <p><i>The default value is false.  However, Ibator will automatically
         delimit column names that contain a space, so no override is necessary
         in that case.</i></p>
     </td>

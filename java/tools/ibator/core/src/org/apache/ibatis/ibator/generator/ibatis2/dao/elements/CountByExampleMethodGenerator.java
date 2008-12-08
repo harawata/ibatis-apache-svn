@@ -32,7 +32,7 @@ import org.apache.ibatis.ibator.generator.ibatis2.XmlConstants;
  * @author Jeff Butler
  *
  */
-public class CountByExampleMethodGenerator extends DAOElementGeneratorBaseImpl {
+public class CountByExampleMethodGenerator extends AbstractDAOElementGenerator {
 
     private boolean generateForJava5;
     
@@ -41,6 +41,7 @@ public class CountByExampleMethodGenerator extends DAOElementGeneratorBaseImpl {
         this.generateForJava5 = generateForJava5;
     }
 
+    @Override
     public void addImplementationElements(TopLevelClass topLevelClass) {
         Set<FullyQualifiedJavaType> importedTypes = new TreeSet<FullyQualifiedJavaType>();
         Method method = getMethodShell(importedTypes);
@@ -67,6 +68,7 @@ public class CountByExampleMethodGenerator extends DAOElementGeneratorBaseImpl {
         }
     }
 
+    @Override
     public void addInterfaceElements(Interface interfaze) {
         if (getExampleMethodVisibility() == JavaVisibility.PUBLIC) {
             Set<FullyQualifiedJavaType> importedTypes = new TreeSet<FullyQualifiedJavaType>();

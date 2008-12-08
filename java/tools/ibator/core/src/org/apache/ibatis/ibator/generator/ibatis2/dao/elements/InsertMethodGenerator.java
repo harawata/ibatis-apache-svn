@@ -35,12 +35,13 @@ import org.apache.ibatis.ibator.generator.ibatis2.XmlConstants;
  * @author Jeff Butler
  *
  */
-public class InsertMethodGenerator extends DAOElementGeneratorBaseImpl {
+public class InsertMethodGenerator extends AbstractDAOElementGenerator {
 
     public InsertMethodGenerator() {
         super();
     }
 
+    @Override
     public void addImplementationElements(TopLevelClass topLevelClass) {
         Set<FullyQualifiedJavaType> importedTypes = new TreeSet<FullyQualifiedJavaType>();
         Method method = getMethodShell(importedTypes);
@@ -90,6 +91,7 @@ public class InsertMethodGenerator extends DAOElementGeneratorBaseImpl {
         }
     }
     
+    @Override
     public void addInterfaceElements(Interface interfaze) {
         Set<FullyQualifiedJavaType> importedTypes = new TreeSet<FullyQualifiedJavaType>();
         Method method = getMethodShell(importedTypes);

@@ -17,39 +17,39 @@
 
 <h1>Extending Ibator</h1>
 <p>Ibator is designed for extensibility.  All code generation is performed using a
-simple DOM representation of Java and XML elements that is included with ibator.</p>
+simple DOM representation of Java and XML elements that is included with Ibator.</p>
 <p>The Java DOM is included in the package <code>org.apache.ibatis.ibator.api.dom.java</code></p>
 <p>The XML DOM is included in the package <code>org.apache.ibatis.ibator.api.dom.xml</code></p>
 <p>These classes are not sufficient for every conceivable code generation possibility, but they are quite
 useful for generating simple to moderately complex Java and XML code.</p>
 
-<p>Using options in the ibator configuration file, you can provide your own implementations
-of many of ibator's key interfaces.  You can also subclass any of the provided implementations
+<p>Using options in the Ibator configuration file, you can provide your own implementations
+of many of Ibator's key interfaces.  You can also subclass any of the provided implementations
 to provide customized behaviors.  This page will describe the public APIs available in
-ibator and provide pointers to the source code for further investigation.  If you have
-any difficulty understanding how to extend ibator, feel free to send a note to the
+Ibator and provide pointers to the source code for further investigation.  If you have
+any difficulty understanding how to extend Ibator, feel free to send a note to the
 support mailing list at
 <a href="mailto:user-java@ibatis.apache.org">user-java@ibatis.apache.org</a>.</p>
 
 <h2>Extending Versus Plugging In</h2>
-<p>Although there are a number of different extension points for ibator, as shown on this
-page, in most cases it will be far easier to extend ibator through the use of a plugin.  See the
+<p>Although there are a number of different extension points for Ibator, as shown on this
+page, in most cases it will be far easier to extend Ibator through the use of a plugin.  See the
 <a href="pluggingIn.html">Implementing Ibator Plugins</a> reference page for more information.</p>
 <p>The primary extension point for code generation is
 <code>org.apache.ibatis.ibator.api.IntrospectedTable</code>.  Implementing a code generator
 is a non-trivial task and should only be contemplated when you want to completely replace
-the code generation activities of ibator.  In the years since the original release of Abator,
+the code generation activities of Ibator.  In the years since the original release of Abator,
 very few enhancement requests have appeared that could not be handled by a plugin.</p>
 
 <h2>Extension Points</h2>
 <p>Ibator includes a number of different extension points.  The following sections
-list the different methods of extending ibator, and describes the types of
+list the different methods of extending Ibator, and describes the types of
 activities that can be accomplished with the different extensions.  If you
 need some help understanding the different options, feel free to ask a question
 on the iBATIS user mailing list.</p>
 <h3>org.apache.ibatis.ibator.generator.ibatis2.dao.templates.AbstractDAOTemplate</h3>
 <p>Use this extension point if you need to generate DAO objects that are different from
-one of ibator's built-in options.  Classes that extend <code>AbstractDAOTemplate</code>
+one of Ibator's built-in options.  Classes that extend <code>AbstractDAOTemplate</code>
 have the opportunity to override and implement a variety of different methods that
 define how the DAO objects should be constructed, and how the DOAs interact with iBATIS.</p>
 <p>If you implement this extension point, then you should specify the fully qualified
@@ -58,12 +58,12 @@ name of the implementing class on the <code>type</code> attribute of the
 
 <h3>org.apache.ibatis.ibator.api.IntrospectedTable</h3>
 <p><code>IntrospectedTable</code> is an abstract class that can be extended to supply
-different code generators than the versions supplied with ibator.  A good example of
+different code generators than the versions supplied with Ibator.  A good example of
 such an implementation would be a FreeMarker or Velocity template based
-implementation of ibator.  In most other instances, coding a plugin is the better way to go.</p>
+implementation of Ibator.  In most other instances, coding a plugin is the better way to go.</p>
 <p>If you choose to extend this class, you must supply code to generate Java model classes,
 DAO classes, and SQL Map XML files.  You may choose to generated those generators with the
-technology of your choice.  You should also ensure that you follow all the ibator rules for
+technology of your choice.  You should also ensure that you follow all the Ibator rules for
 code generation (for example, do not generate a primary key class if the table doesn't have
 a primary key).  The base <code>IntrospectedTable</code> class holds an instance
 of <code>org.apache.ibatis.ibator.internal.rules.IbatorRules</code> that can be queried
@@ -98,7 +98,7 @@ column as it is returned from database metadata, as well as methods used
 during code generation to generate specific phrases for iBATIS.  In some rare
 circumstances it might be desirable to override this class to provide
 your own implementation - especially if you create a new set of code
-generators for ibator.</p>
+generators for Ibator.</p>
 <p>If you choose to implement this extension point, specify the fully qualified
 class name of your implementation with the <code>introspectedColumnImpl</code>
 attribute of the <code>&lt;ibatorContext&gt;</code> element.</p>
@@ -134,7 +134,7 @@ attribute of the <code>&lt;ibatorContext&gt;</code> element.</p>
    support merging of Java files, and will either overwrite or ignore files.</p>
 
 <p>You can provide your own implementation.  This would be the most important
-   class to write if you want to integrate ibator into some other environment.
+   class to write if you want to integrate Ibator into some other environment.
    For example, the Eclipse plugin provides an implementation of this interface that
    supports Java file merging when running in the Eclipse environment.</p>
 
@@ -154,7 +154,7 @@ attribute of the <code>&lt;ibatorContext&gt;</code> element.</p>
    implementation of this interface to support progress notifications and
    cancellation of file generation.</p>
 
-<p>Implementing this interface would be important when integrating ibator
+<p>Implementing this interface would be important when integrating Ibator
    into other IDE environments.  The Eclipse plugin provides an implementation
    of this interface that hooks into Eclipse's progress notification system.</p>
 

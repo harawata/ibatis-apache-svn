@@ -31,12 +31,13 @@ import org.apache.ibatis.ibator.api.dom.java.TopLevelClass;
  *
  */
 public class UpdateByExampleParmsInnerclassGenerator extends
-        DAOElementGeneratorBaseImpl {
+        AbstractDAOElementGenerator {
 
     public UpdateByExampleParmsInnerclassGenerator() {
         super();
     }
 
+    @Override
     public void addImplementationElements(TopLevelClass topLevelClass) {
         FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
         topLevelClass.addImportedType(introspectedTable.getExampleType());
@@ -78,6 +79,7 @@ public class UpdateByExampleParmsInnerclassGenerator extends
         topLevelClass.addInnerClass(innerClass);
     }
 
+    @Override
     public void addInterfaceElements(Interface interfaze) {
         // nothing to add to the interface
         ;

@@ -22,7 +22,7 @@ to connect to, the type of objects to generate, and the tables to introspect.
 Multiple &lt;ibatorContext&gt; elements can be listed inside an
 <a href="ibatorConfiguration.html">&lt;ibatorConfiguration&gt;</a>
 element to allow generating objects from different
-databases, or with different generation parameters, in the same run of ibator.</p>
+databases, or with different generation parameters, in the same run of Ibator.</p>
 
 <h2>Required Attributes</h2>
 <table border="1" cellspacing="0" cellpadding="5">
@@ -47,9 +47,9 @@ databases, or with different generation parameters, in the same run of ibator.</
     <td valign="top">defaultModelType</td>
     <td>
       This property is used to set the default for generated model types.
-      The model type defines how ibator will generate domain classes.  With some
-      model types ibator will generate a single domain class for each table,
-      with others ibator may generate different classes depending on the structure
+      The model type defines how Ibator will generate domain classes.  With some
+      model types Ibator will generate a single domain class for each table,
+      with others Ibator may generate different classes depending on the structure
       of the table.  The property supports these values:
       <table>
         <tr>
@@ -68,7 +68,7 @@ databases, or with different generation parameters, in the same run of ibator.</
         <tr>
           <th valign="top">hierarchical</th>
           <td>This model is the same as the model shipped with the initial versions
-              of ibator.  This model will generate a primary key class if the table has
+              of Ibator.  This model will generate a primary key class if the table has
               a primary key, another class that holds any BLOB columns in the table, and
               another class that holds the remaining fields.  There is an appropriate
               inheritance relationship between the classes.</td>
@@ -85,7 +85,7 @@ databases, or with different generation parameters, in the same run of ibator.</
         <tr>
           <th valign="top">Ibatis2Java2</th>
           <td><i>This is the default value</i>
-            <br/>With this value, ibator will generate objects that are compatible
+            <br/>With this value, Ibator will generate objects that are compatible
             with iBATIS versions 2.2.0 and higher, and all levels of Java 2.
             The "by example" methods in these generated objects support virtually
             unlimited dynamic where clauses.  The objects generated with
@@ -95,7 +95,7 @@ databases, or with different generation parameters, in the same run of ibator.</
         </tr>
         <tr>
           <th valign="top">Ibatis2Java5</th>
-          <td>With the value, ibator will generate objects that are compatible
+          <td>With the value, Ibator will generate objects that are compatible
             with iBATIS versions 2.2.0 and higher, and JSE 5.0 and higher (e.g. the
             Java model and DAO classes will use generic types).
             The "by example" methods in these generated objects support virtually
@@ -111,7 +111,7 @@ databases, or with different generation parameters, in the same run of ibator.</
          then use this value to specify the fully qualified name of a
          class that extends <code>org.apache.ibatis.ibator.api.IntrospectedTable</code>.
          With this, you can create your own code generator and plug
-         it in to the ibator engine.  See the
+         it in to the Ibator engine.  See the
          <a href="../reference/extending.html">Extending Ibator</a> page for more information.
       </p>
     </td>
@@ -149,11 +149,11 @@ specified with the <a href="property.html">&lt;property&gt;</a> child element:</
   </tr>
   <tr>
     <td valign="top">suppressTypeWarnings</td>
-    <td>If true, then ibator will add an annotation to any method
+    <td>If true, then Ibator will add an annotation to any method
       that uses a non-parameterized type to suppress compiler type warnings.
       This is useful if you are using the Java2 targetJRE, but are
       compiling the generated objects with a JSE 5.0 compiler.  In that situation,
-      the ibator generated code would generate many compiler warnings if the
+      the Ibator generated code would generate many compiler warnings if the
       annotation is not allowed.  This property is not needed and will have
       no effect when using the Java5 targetJRE.</p>
       <p><i>The default value is false.</i></p></td>
@@ -161,16 +161,16 @@ specified with the <a href="property.html">&lt;property&gt;</a> child element:</
   <tr>
     <td valign="top">beginningDelimiter</td>
     <td>The value to use as the beginning identifier delimiter for SQL identifiers that
-        require delimiters.  ibator will automatically delimit SQL identifiers if the
-        identifier contains a space.  ibator will also delimit SQL identifiers if
+        require delimiters.  Ibator will automatically delimit SQL identifiers if the
+        identifier contains a space.  Ibator will also delimit SQL identifiers if
         specifically requested in a &lt;table&gt; or  &lt;columnOverride&gt; configuration.</p>
       <p><i>The default value is double quotes (&quot;).</i></p></td>
   </tr>
   <tr>
     <td valign="top">endingDelimiter</td>
     <td>The value to use as the ending identifier delimiter for SQL identifiers that
-        require delimiters.  ibator will automatically delimit SQL identifiers if the
-        identifier contains a space.  ibator will also delimit SQL identifiers if
+        require delimiters.  Ibator will automatically delimit SQL identifiers if the
+        identifier contains a space.  Ibator will also delimit SQL identifiers if
         specifically requested in a &lt;table&gt; or  &lt;columnOverride&gt; configuration.</p>
       <p><i>The default value is double quotes (&quot;).</i></p></td>
   </tr>

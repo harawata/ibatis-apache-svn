@@ -29,12 +29,13 @@ import org.apache.ibatis.ibator.generator.ibatis2.XmlConstants;
  * @author Jeff Butler
  *
  */
-public class InsertElementGenerator extends XmlElementGeneratorBaseImpl {
+public class InsertElementGenerator extends AbstractXmlElementGenerator {
     
     public InsertElementGenerator() {
         super();
     }
     
+    @Override
     public void addElements(XmlElement parentElement) {
         XmlElement answer = new XmlElement("insert"); //$NON-NLS-1$
 

@@ -3,7 +3,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-  <title>ibator XML Configuration File Reference</title>
+  <title>Ibator XML Configuration File Reference</title>
   <link type="text/css" rel="stylesheet" href="../ibator.css"/>
 </head>
 <body>
@@ -16,8 +16,8 @@
 </div>
 
 <h1>XML Configuration File Reference</h1>
-<p>In the most common use case, ibator is driven by an XML configuration file.
-  The configuration file tells ibator:</p>
+<p>In the most common use case, Ibator is driven by an XML configuration file.
+  The configuration file tells Ibator:</p>
 
 <ul>
   <li>How to connect to the database</li>
@@ -25,19 +25,19 @@
   <li>What tables should be used for object generation</li>
 </ul>
 
-<p>The following is an example ibator configuration file.  See the individual pages
+<p>The following is an example Ibator configuration file.  See the individual pages
 for each element for more information about the elements and the values of the
 attributes.</p>
 <pre>
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;!DOCTYPE ibatorConfiguration
-  PUBLIC "-//Apache Software Foundation//DTD Apache iBATIS ibator Configuration 1.0//EN"
+  PUBLIC "-//Apache Software Foundation//DTD Apache iBATIS Ibator Configuration 1.0//EN"
   "http://ibatis.apache.org/dtd/ibator-config_1_0.dtd"&gt;
 
 &lt;ibatorConfiguration&gt;
   &lt;classPathEntry location="/Program Files/IBM/SQLLIB/java/db2java.zip" /&gt;
 
-  &lt;ibatorContext id="DB2Tables" targetJRE="Java2"&gt;
+  &lt;ibatorContext id="DB2Tables" targetRuntime="Ibatis2Java2"&gt;
     &lt;jdbcConnection driverClass="COM.ibm.db2.jdbc.app.DB2Driver"
         connectionURL="jdbc:db2:TEST"
         userId="db2admin"
@@ -75,7 +75,7 @@ attributes.</p>
 </pre>
 <p>Important notes about this file follow:</p>
 <ul>
-  <li>ibator will generate code compatible with versions of Java before Java 5.0 (i.e. no generic
+  <li>Ibator will generate code compatible with versions of Java before Java 5.0 (i.e. no generic
       types).</li>
   <li>The file specifies that the legacy DB2 CLI driver will be used to connect to the database,
       and also specifies where the driver can be found.</li>
@@ -115,14 +115,14 @@ attributes.</p>
           <code>Customer</code>,
           <code>CustomerDAO</code>, etc.) - rather than on the table name.</li>
       <li>Actual column names will be used as properties.  If this property were set to
-          <code>false</code> (or not specified), then ibator would attempt to camel case
+          <code>false</code> (or not specified), then Ibator would attempt to camel case
           the column
           names.  In either case, the name can be overridden by the
           <code>&lt;columnOverride&gt;</code>
           element</li>
       <li>The column has a generated key, it is an identity column, and the database type is DB2.
           This will cause
-          ibator to generate the proper
+          Ibator to generate the proper
           <code>&lt;selectKey&gt;</code> element in the generated
           <code>&lt;insert&gt;</code>
           statement so that the newly generated key can be returned (using DB2 specific SQL).</li>

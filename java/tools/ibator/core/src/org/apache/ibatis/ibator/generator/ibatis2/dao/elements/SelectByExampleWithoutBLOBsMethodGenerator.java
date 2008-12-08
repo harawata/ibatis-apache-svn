@@ -34,7 +34,7 @@ import org.apache.ibatis.ibator.internal.util.messages.Messages;
  *
  */
 public class SelectByExampleWithoutBLOBsMethodGenerator extends
-        DAOElementGeneratorBaseImpl {
+        AbstractDAOElementGenerator {
 
     private boolean generateForJava5;
 
@@ -43,6 +43,7 @@ public class SelectByExampleWithoutBLOBsMethodGenerator extends
         this.generateForJava5 = generateForJava5;
     }
 
+    @Override
     public void addImplementationElements(TopLevelClass topLevelClass) {
         Set<FullyQualifiedJavaType> importedTypes = new TreeSet<FullyQualifiedJavaType>();
         Method method = getMethodShell(importedTypes);
@@ -66,6 +67,7 @@ public class SelectByExampleWithoutBLOBsMethodGenerator extends
         }
     }
 
+    @Override
     public void addInterfaceElements(Interface interfaze) {
         if (getExampleMethodVisibility() == JavaVisibility.PUBLIC) {
             Set<FullyQualifiedJavaType> importedTypes = new TreeSet<FullyQualifiedJavaType>();

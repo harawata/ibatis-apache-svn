@@ -28,7 +28,6 @@ import org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.ibator.api.dom.java.JavaVisibility;
 import org.apache.ibatis.ibator.api.dom.java.Method;
 import org.apache.ibatis.ibator.api.dom.java.TopLevelClass;
-import org.apache.ibatis.ibator.generator.JavaGenerator;
 import org.apache.ibatis.ibator.internal.util.messages.Messages;
 
 /**
@@ -36,12 +35,13 @@ import org.apache.ibatis.ibator.internal.util.messages.Messages;
  * @author Jeff Butler
  *
  */
-public class BaseRecordGenerator extends BaseModelClassGenerator implements JavaGenerator {
+public class BaseRecordGenerator extends BaseModelClassGenerator {
 
     public BaseRecordGenerator() {
         super();
     }
 
+    @Override
     public List<CompilationUnit> getCompilationUnits() {
         FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
         progressCallback.startTask(Messages.getString("Progress.8", table.toString()));

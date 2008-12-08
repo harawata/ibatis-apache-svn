@@ -33,7 +33,7 @@ import org.apache.ibatis.ibator.generator.ibatis2.XmlConstants;
  *
  */
 public class SelectByExampleWithBLOBsMethodGenerator extends
-        DAOElementGeneratorBaseImpl {
+        AbstractDAOElementGenerator {
 
     private boolean generateForJava5;
     
@@ -42,6 +42,7 @@ public class SelectByExampleWithBLOBsMethodGenerator extends
         this.generateForJava5 = generateForJava5;
     }
 
+    @Override
     public void addImplementationElements(TopLevelClass topLevelClass) {
         Set<FullyQualifiedJavaType> importedTypes = new TreeSet<FullyQualifiedJavaType>();
         Method method = getMethodShell(importedTypes);
@@ -66,6 +67,7 @@ public class SelectByExampleWithBLOBsMethodGenerator extends
         }
     }
 
+    @Override
     public void addInterfaceElements(Interface interfaze) {
         if (getExampleMethodVisibility() == JavaVisibility.PUBLIC) {
             Set<FullyQualifiedJavaType> importedTypes = new TreeSet<FullyQualifiedJavaType>();

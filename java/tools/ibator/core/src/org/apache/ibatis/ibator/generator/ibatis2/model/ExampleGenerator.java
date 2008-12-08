@@ -33,7 +33,6 @@ import org.apache.ibatis.ibator.api.dom.java.JavaWildcardType;
 import org.apache.ibatis.ibator.api.dom.java.Method;
 import org.apache.ibatis.ibator.api.dom.java.Parameter;
 import org.apache.ibatis.ibator.api.dom.java.TopLevelClass;
-import org.apache.ibatis.ibator.generator.JavaGenerator;
 import org.apache.ibatis.ibator.internal.rules.IbatorRules;
 import org.apache.ibatis.ibator.internal.util.JavaBeansUtil;
 import org.apache.ibatis.ibator.internal.util.StringUtility;
@@ -44,7 +43,7 @@ import org.apache.ibatis.ibator.internal.util.messages.Messages;
  * @author Jeff Butler
  *
  */
-public class ExampleGenerator extends BaseModelClassGenerator implements JavaGenerator {
+public class ExampleGenerator extends BaseModelClassGenerator {
 
     private boolean generateForJava5;
 
@@ -53,6 +52,7 @@ public class ExampleGenerator extends BaseModelClassGenerator implements JavaGen
         this.generateForJava5 = generateForJava5;
     }
 
+    @Override
     public List<CompilationUnit> getCompilationUnits() {
         FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
         progressCallback.startTask(Messages.getString("Progress.6", table.toString()));

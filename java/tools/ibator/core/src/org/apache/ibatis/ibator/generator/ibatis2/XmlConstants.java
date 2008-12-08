@@ -127,7 +127,7 @@ public class XmlConstants {
     
     public static final String IBATOR_CONFIG_SYSTEM_ID = "http://ibatis.apache.org/dtd/ibator-config_1_0.dtd"; //$NON-NLS-1$
     
-    public static final String IBATOR_CONFIG_PUBLIC_ID = "-//Apache Software Foundation//DTD Apache iBATIS ibator Configuration 1.0//EN"; //$NON-NLS-1$
+    public static final String IBATOR_CONFIG_PUBLIC_ID = "-//Apache Software Foundation//DTD Apache iBATIS Ibator Configuration 1.0//EN"; //$NON-NLS-1$
     
     public static final String COUNT_BY_EXAMPLE_STATEMENT_ID;
     

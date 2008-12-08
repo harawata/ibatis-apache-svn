@@ -28,12 +28,13 @@ import org.apache.ibatis.ibator.generator.ibatis2.XmlConstants;
  * @author Jeff Butler
  *
  */
-public class DeleteByPrimaryKeyElementGenerator extends XmlElementGeneratorBaseImpl {
+public class DeleteByPrimaryKeyElementGenerator extends AbstractXmlElementGenerator {
 
     public DeleteByPrimaryKeyElementGenerator() {
         super();
     }
 
+    @Override
     public void addElements(XmlElement parentElement) {
         XmlElement answer = new XmlElement("delete"); //$NON-NLS-1$
         FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();

@@ -29,12 +29,13 @@ import org.apache.ibatis.ibator.internal.util.StringUtility;
  * @author Jeff Butler
  *
  */
-public class SelectByPrimaryKeyElementGenerator extends XmlElementGeneratorBaseImpl {
+public class SelectByPrimaryKeyElementGenerator extends AbstractXmlElementGenerator {
 
     public SelectByPrimaryKeyElementGenerator() {
         super();
     }
 
+    @Override
     public void addElements(XmlElement parentElement) {
         XmlElement answer = new XmlElement("select"); //$NON-NLS-1$
         FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
