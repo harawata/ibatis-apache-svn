@@ -24,7 +24,7 @@ import org.apache.ibatis.ibator.api.dom.xml.XmlElement;
  */
 public class DAOGeneratorConfiguration extends TypedPropertyHolder {
 	private String targetPackage;
-
+	private String implementationPackage;
 	private String targetProject;
 
 	/**
@@ -64,8 +64,20 @@ public class DAOGeneratorConfiguration extends TypedPropertyHolder {
             answer.addAttribute(new Attribute("targetProject", targetProject)); //$NON-NLS-1$
         }
         
+        if (implementationPackage != null) {
+            answer.addAttribute(new Attribute("implementationPackage", targetProject)); //$NON-NLS-1$
+        }
+        
         addPropertyXmlElements(answer);
         
         return answer;
+    }
+
+    public String getImplementationPackage() {
+        return implementationPackage;
+    }
+
+    public void setImplementationPackage(String implementationPackage) {
+        this.implementationPackage = implementationPackage;
     }
 }

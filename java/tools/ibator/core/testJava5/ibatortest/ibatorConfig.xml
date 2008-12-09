@@ -278,7 +278,8 @@
     <sqlMapGenerator targetPackage="ibatortest.generated.miscellaneous.xml"  targetProject="${generated.source.dir.java5}">
     </sqlMapGenerator>
 
-    <daoGenerator type="GENERIC-CI" targetPackage="ibatortest.generated.miscellaneous.dao"  targetProject="${generated.source.dir.java5}">
+    <daoGenerator type="GENERIC-CI" targetPackage="ibatortest.generated.miscellaneous.dao"  targetProject="${generated.source.dir.java5}"
+        implementationPackage="ibatortest.generated.miscellaneous.dao.impl">
       <property name="rootInterface" value="ibatortest.execute.miscellaneous.BaseInterface" />
       <property name="methodNameCalculator" value="EXTENDED"/>
     </daoGenerator>

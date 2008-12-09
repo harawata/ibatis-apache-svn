@@ -76,13 +76,13 @@ public class IntrospectedTableIbatis2Java2Impl extends IntrospectedTable {
         String type = ibatorContext.getDaoGeneratorConfiguration().getConfigurationType();
         
         AbstractDAOTemplate abstractDAOTemplate;
-        if ("IBATIS".equalsIgnoreCase(type)) {
+        if ("IBATIS".equalsIgnoreCase(type)) { //$NON-NLS-1$
             abstractDAOTemplate = new IbatisDAOTemplate();
-        } else if ("SPRING".equalsIgnoreCase(type)) {
+        } else if ("SPRING".equalsIgnoreCase(type)) { //$NON-NLS-1$
             abstractDAOTemplate = new SpringDAOTemplate();
-        } else if ("GENERIC-CI".equalsIgnoreCase(type)) {
+        } else if ("GENERIC-CI".equalsIgnoreCase(type)) { //$NON-NLS-1$
             abstractDAOTemplate = new GenericCIDAOTemplate();
-        } else if ("GENERIC-SI".equalsIgnoreCase(type)) {
+        } else if ("GENERIC-SI".equalsIgnoreCase(type)) { //$NON-NLS-1$
             abstractDAOTemplate = new GenericSIDAOTemplate();
         } else {
             abstractDAOTemplate = (AbstractDAOTemplate) IbatorObjectFactory.createInternalObject(type);

@@ -69,7 +69,8 @@ public class DAOGenerator extends AbstractJavaGenerator {
     @Override
     public List<CompilationUnit> getCompilationUnits() {
         FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
-        progressCallback.startTask(Messages.getString("Progress.14", table.toString()));
+        progressCallback.startTask(
+                Messages.getString("Progress.14", table.toString())); //$NON-NLS-1$
         TopLevelClass topLevelClass = getTopLevelClassShell();
         Interface interfaze = getInterfaceShell();
         

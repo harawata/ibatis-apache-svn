@@ -2,9 +2,9 @@ package ibatortest.execute.miscellaneous;
 
 import ibatortest.BaseTest;
 import ibatortest.generated.miscellaneous.dao.MyObjectDAO;
-import ibatortest.generated.miscellaneous.dao.MyObjectDAOImpl;
+import ibatortest.generated.miscellaneous.dao.impl.MyObjectDAOImpl;
 import ibatortest.generated.miscellaneous.dao.RegexrenameDAO;
-import ibatortest.generated.miscellaneous.dao.RegexrenameDAOImpl;
+import ibatortest.generated.miscellaneous.dao.impl.RegexrenameDAOImpl;
 
 public class BaseMiscellaneousTest extends BaseTest {
 

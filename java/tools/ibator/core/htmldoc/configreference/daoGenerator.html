@@ -63,15 +63,19 @@ specify this element, then Ibator will not generate DAO interfaces and classes.<
   </tr>
   <tr>
     <td valign="top">targetPackage</td>
-    <td>This is the package where the generated DAO interfaces and classes will be placed.  In
+    <td>This is the package where the generated DAO interfaces and implementation classes
+        will be placed.  In
         the default generators, the property "enableSubPackages"
         controls how the actual package is calculated.  If true,
         then the calculated package will be the targetPackage plus
         sub packages for the table's catalog and schema if they exist.
-        If false (the default) then the calculated package will be
+        If "enableSubPackages" is false (the default) then the calculated package will be
         exactly what is specified in the targetPackage attribute.
         Ibator will create folders as required for the generated
-        packages.</td>
+        packages.
+        <p><b>Note:</b> the package for DAO implementation classes may
+        be overridden by specifying the optional <code>implamentationPackage</code>
+        attribute as shown below.</p></td>
   </tr>
   <tr>
     <td valign="top">targetProject</td>
@@ -86,7 +90,24 @@ specify this element, then Ibator will not generate DAO interfaces and classes.<
 </table>
 
 <h2>Optional Attributes</h2>
-None.
+<table border="1" cellspacing="0" cellpadding="5">
+  <tr>
+    <th>Attribute</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td valign="top">implementationPackage</td>
+    <td>If specified, DAO implementation classes will be placed in this package.
+        In the default generators, the property "enableSubPackages"
+        controls how the actual package is calculated.  If true,
+        then the calculated package will be the implementationPackage plus
+        sub packages for the table's catalog and schema if they exist.
+        If "enableSubPackages" is false (the default) then the calculated package will be
+        exactly what is specified in the implementationPackage attribute.
+        Ibator will create folders as required for the generated
+        packages.</td>
+  </tr>
+</table>
 
 <h2>Child Elements</h2>
 <ul>

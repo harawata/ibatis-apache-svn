@@ -335,7 +335,7 @@ public abstract class IntrospectedTable {
     
     public FullyQualifiedJavaType getDAOImplementationType() {
         StringBuilder sb = new StringBuilder();
-        sb.append(getDAOPackage());
+        sb.append(getDAOImplementationPackage());
         sb.append('.');
         sb.append(fullyQualifiedTable.getDomainObjectName());
         sb.append("DAOImpl"); //$NON-NLS-1$
@@ -347,7 +347,7 @@ public abstract class IntrospectedTable {
 
     public FullyQualifiedJavaType getDAOInterfaceType() {
         StringBuilder sb = new StringBuilder();
-        sb.append(getDAOPackage());
+        sb.append(getDAOInterfacePackage());
         sb.append('.');
         sb.append(fullyQualifiedTable.getDomainObjectName());
         sb.append("DAO"); //$NON-NLS-1$
@@ -363,11 +363,27 @@ public abstract class IntrospectedTable {
             || blobColumns.size() > 0;
     }
     
-    protected String getDAOPackage() {
+    protected String getDAOInterfacePackage() {
         DAOGeneratorConfiguration config = ibatorContext.getDaoGeneratorConfiguration();
         
         StringBuilder sb = new StringBuilder();
         sb.append(config.getTargetPackage());
+        if (StringUtility.isTrue(config.getProperty(PropertyRegistry.ANY_ENABLE_SUB_PACKAGES))) {
+            sb.append(fullyQualifiedTable.getSubPackage());
+        }
+        
+        return sb.toString();
+    }
+    
+    protected String getDAOImplementationPackage() {
+        DAOGeneratorConfiguration config = ibatorContext.getDaoGeneratorConfiguration();
+        
+        StringBuilder sb = new StringBuilder();
+        if (StringUtility.stringHasValue(config.getImplementationPackage())) {
+            sb.append(config.getImplementationPackage());
+        } else {
+            sb.append(config.getTargetPackage());
+        }
         if (StringUtility.isTrue(config.getProperty(PropertyRegistry.ANY_ENABLE_SUB_PACKAGES))) {
             sb.append(fullyQualifiedTable.getSubPackage());
         }

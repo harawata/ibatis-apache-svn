@@ -133,7 +133,8 @@
 <!ATTLIST daoGenerator
   type CDATA #REQUIRED
   targetPackage CDATA #REQUIRED
-  targetProject CDATA #REQUIRED>
+  targetProject CDATA #REQUIRED
+  implementationPackage CDATA #IMPLIED>
 
 <!--
   The table element is used to specify a database table that will be the source information

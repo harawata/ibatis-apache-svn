@@ -604,10 +604,12 @@ public class IbatorConfigurationParser {
         String type = attributes.getProperty("type"); //$NON-NLS-1$
         String targetPackage = attributes.getProperty("targetPackage"); //$NON-NLS-1$
         String targetProject = attributes.getProperty("targetProject"); //$NON-NLS-1$
+        String implementationPackage = attributes.getProperty("implementationPackage"); //$NON-NLS-1$
 
         daoGeneratorConfiguration.setConfigurationType(type);
         daoGeneratorConfiguration.setTargetPackage(targetPackage);
         daoGeneratorConfiguration.setTargetProject(targetProject);
+        daoGeneratorConfiguration.setImplementationPackage(implementationPackage);
 
         NodeList nodeList = node.getChildNodes();
         for (int i = 0; i < nodeList.getLength(); i++) {

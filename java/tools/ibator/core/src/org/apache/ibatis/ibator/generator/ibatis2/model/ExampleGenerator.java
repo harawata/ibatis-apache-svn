@@ -55,7 +55,8 @@ public class ExampleGenerator extends BaseModelClassGenerator {
     @Override
     public List<CompilationUnit> getCompilationUnits() {
         FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
-        progressCallback.startTask(Messages.getString("Progress.6", table.toString()));
+        progressCallback.startTask(
+                Messages.getString("Progress.6", table.toString())); //$NON-NLS-1$
         CommentGenerator commentGenerator = ibatorContext.getCommentGenerator();
 
         FullyQualifiedJavaType type = introspectedTable.getExampleType();

@@ -44,7 +44,8 @@ public class BaseRecordGenerator extends BaseModelClassGenerator {
     @Override
     public List<CompilationUnit> getCompilationUnits() {
         FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
-        progressCallback.startTask(Messages.getString("Progress.8", table.toString()));
+        progressCallback.startTask(
+                Messages.getString("Progress.8", table.toString())); //$NON-NLS-1$
         IbatorPlugin plugins = ibatorContext.getPlugins();
         CommentGenerator commentGenerator = ibatorContext.getCommentGenerator();
 
