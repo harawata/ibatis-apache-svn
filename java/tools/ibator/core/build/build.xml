@@ -1,7 +1,7 @@
-<project name="Apache iBATIS ibator" default="buildIbator" basedir=".">
+<project name="Apache iBATIS Ibator" default="buildIbator" basedir=".">
 
   <!-- 
-    This is the build file for ibator.  To run the build,
+    This is the build file for Ibator.  To run the build,
     execute this command:
     
        ant -lib ../devlib
@@ -17,7 +17,7 @@
     
     Important: the build requires JDK 5.0 or greater.
     
-    Note: to update the version of ibator, change the 
+    Note: to update the version of Ibator, change the 
        version.properties file (the "version" property).
   -->
   
