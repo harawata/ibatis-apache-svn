@@ -15,8 +15,8 @@
     <th>Description</th>
   </tr>
   <tr>
-    <td><a href="ibator.html">iBATOR</a></td>
-    <td>iBATOR is a code generator for iBATIS (the Java version only).  It 
+    <td><a href="ibator.html">Ibator</a></td>
+    <td>Ibator is a code generator for iBATIS (the Java version only).  It 
         will generate SqlMaps, Java Domain classes, and DAO classes.
     </td>
   </tr>
