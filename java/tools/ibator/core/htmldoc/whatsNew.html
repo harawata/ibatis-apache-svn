@@ -41,15 +41,24 @@
       strongly suggest that you move to a plugin.  See the
       <a href="configreference/ibatorPlugin.html">&lt;ibatorPlugin&gt;</a> page
       for detailed information.</li>
+  <li>Ibator ships with the following plugins:
+    <ul>
+      <li>A plugin that will generate an SQL Map Config File
+        (<code>org.apache.ibatis.ibator.plugins.SqlMapConfigPlugin</code>)
+      </li>
+      <li>A plugin that will make generated model classes Serialiable
+        (<code>org.apache.ibatis.ibator.plugins.SerializablePlugin</code>)
+      </li>
+      <li>A plugin that will add <code>equals</code> and <code>hashCode</code>
+        methods to generated model classes
+        (<code>org.apache.ibatis.ibator.plugins.EqualsHashCodePlugin</code>)
+      </li>
+    </ul>
+  </li>
   <li>Added support for "runtimeCatalog" and "runtimeSchema" properties to the
       <a href="configreference/table.html">&lt;table&gt;</a>
       configuration element.  Thanks to Dan Turkenkopf for the idea and the
       patch!</li>
-  <li>Added the ability to provide a custom implementation of the
-      IntrospectedTable interface.  Implementations of this interface can
-      change many of the core behaviors of Ibator.  See the
-      <a href="configreference/ibatorContext.html">&lt;ibatorContext&gt;</a> page
-      for further information.</li>
   <li>New generated method - insertSelective.  This method will allow you to use
       column defaults on a table definition on insert</li>
   <li>Added the ability to specify a that DAO implementation classes be in a
@@ -74,7 +83,8 @@ details the changes, and has methods of resolving the differences.</p>
       you must specify that classpath entry external to Ibator.</li>
   <li>The API for extending Ibator is significantly changed from Abator.
       In most cases, implementations of the old Abator interfaces should
-      be converted to Ibator plugins.</li>
+      be converted to Ibator plugins.  See the
+      <a href="reference/extending.html">Extending Ibator</a> for more information.</li>
   <li>The <code>afterXXXGenerationHook</code> methods have been removed from
       all Ibator supplied implementations of the core interfaces.  If you
       were extending an Ibator supplied implementation to make use of these methods,

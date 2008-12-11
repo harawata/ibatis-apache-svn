@@ -26,6 +26,7 @@
       version="true"
       classpathref="org.abache.ibatis.ibator.doc.javadocclasspath">
     	<packageset dir="../../core/src" />
+    	<packageset dir="../org.apache.ibatis.ibator.eclipse.core/src" />
     	<packageset dir="../org.apache.ibatis.ibator.eclipse.ui/src" />
     	<packageset dir="../org.apache.ibatis.ibator.eclipse.ui/antsrc" />
     </javadoc>

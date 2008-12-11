@@ -8,22 +8,16 @@ Core:
        runtime, rather than requiring a connection in the 
        XML config.
 
-    3. Refactoring: Make a class for each type of method to be generated
-    
-    4. Comments generated through a plugin
-    
-    5. Checking in rootClass implemented through a plugin
-    
-    6. Relationships?
+    3. Relationships?
+
+    4. Java merger with ANTLR?
 
 Eclipse:
 
-  1.2
+  Future
   
-    1. Rename to ibator
-
-    2. Write a launch configuration for the plugin to allow better
+    1. Write a launch configuration for the plugin to allow better
        control of the class path.
        
-    3. Get rid of the "Generate iBATIS Artifacts" popup menu - should
+    2. Get rid of the "Generate iBATIS Artifacts" popup menu - should
        only run with a launch configuration or with Ant.

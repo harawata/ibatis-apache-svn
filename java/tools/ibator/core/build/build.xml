@@ -106,7 +106,7 @@
     <jar destfile="${deploy.files}/ibator.jar" basedir="${work.classes}">
       <manifest>
         <attribute name="Main-Class" value="org.apache.ibatis.ibator.api.IbatorRunner"/>
-        <attribute name="Specification-Title" value="Apache iBATIS ibator"/>
+        <attribute name="Specification-Title" value="Apache iBATIS Ibator"/>
         <attribute name="Specification-Version" value="${version}"/>
         <attribute name="Specification-Vendor" value="The Apache Software Foundation"/>
       </manifest>
