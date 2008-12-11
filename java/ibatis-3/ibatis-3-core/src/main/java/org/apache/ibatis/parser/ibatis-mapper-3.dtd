@@ -20,7 +20,7 @@ size CDATA #REQUIRED
 readOnly CDATA #REQUIRED
 >
 
-<!ELEMENT parameterMap (parameter+)>
+<!ELEMENT parameterMap (parameter+)?>
 <!ATTLIST parameterMap
 id CDATA #REQUIRED
 type CDATA #REQUIRED

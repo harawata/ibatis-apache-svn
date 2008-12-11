@@ -22,12 +22,23 @@ public class SqlSessionTest extends BaseDataTest {
   }
 
   @Test
-  public void shouldBuildBlogMappers() throws Exception {
+  public void shouldSelectAllAuthors() throws Exception {
     SqlSession session = sqlMapper.openSession();
     try {
       List<Author> authors = session.selectList("com.domain.AuthorMapper.selectAllAuthors");
       Assert.assertEquals(2,authors.size());
+    } finally {
+      session.close();
+    }
+  }
 
+  @Test
+  public void shouldSelectOneAuthor() throws Exception {
+    SqlSession session = sqlMapper.openSession();
+    try {
+      Author author = (Author) session.selectOne(
+          "com.domain.AuthorMapper.selectAuthor", new Author(101));
+      Assert.assertEquals(101, author.getId());
     } finally {
       session.close();
     }

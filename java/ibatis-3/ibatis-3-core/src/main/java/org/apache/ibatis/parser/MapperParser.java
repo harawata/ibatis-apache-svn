@@ -414,7 +414,7 @@ public class MapperParser extends BaseParser {
     Integer numericScale = context.getIntAttribute("numericScale",null);
 
     ParameterMode modeEnum = resolveParameterMode(mode);
-    Class resultType = resultMapBuilder.type();
+    Class resultType = parameterMapBuilder.type();
     Class javaTypeClass = resolveParameterJavaType(resultType, property, javaType);
     JdbcType jdbcTypeEnum = resolveJdbcType(jdbcType);
     TypeHandler typeHandlerInstance = (TypeHandler) resolveInstance(typeHandler);

@@ -9,5 +9,13 @@
   <select id="selectAllAuthors" resultType="domain.blog.Author">
     select * from author
   </select>
- 
+
+  <parameterMap id="selectAuthor" type="domain.blog.Author">
+    <parameter property="id" />
+  </parameterMap>
+
+  <select id="selectAuthor" parameterMap="selectAuthor" resultType="domain.blog.Author">
+    select * from author where id = ?
+  </select>
+
 </mapper>
