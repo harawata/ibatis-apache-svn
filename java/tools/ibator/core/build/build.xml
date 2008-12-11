@@ -1,15 +1,8 @@
 <project name="Apache iBATIS Ibator" default="buildIbator" basedir=".">
 
   <!-- 
-    This is the build file for Ibator.  To run the build,
-    execute this command:
-    
-       ant -lib ../devlib
-       
-       (This will execute the default build target of buildIbator)
-       
-       It is required to add the -lib parameter, the tests will not run
-       properly without it.
+    This is the build file for Ibator.  The default target will generate the
+    deployment files and run all the tests.
     
     You can also delete the generated artifacts with:
     
@@ -213,12 +206,12 @@
       </classpath>
     </taskdef>
   	
-  	<!-- create the test database -->
-  	<runscript driver="org.hsqldb.jdbcDriver"
-  		url="jdbc:hsqldb:mem:aname"
-  		userid="sa"
-  		password=""
-  		src="${basedir}/../testJava5/ibatortest/CreateDB.sql"/>
+    <!-- create the test database -->
+    <runscript driver="org.hsqldb.jdbcDriver"
+      url="jdbc:hsqldb:mem:aname"
+      userid="sa"
+      password=""
+      src="${basedir}/../testJava5/ibatortest/CreateDB.sql"/>
   	
   </target>
 	  

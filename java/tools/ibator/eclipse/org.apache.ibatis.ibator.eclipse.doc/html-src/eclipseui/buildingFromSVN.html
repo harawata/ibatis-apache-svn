@@ -71,6 +71,9 @@ code is not supported in versions of Eclipse prior to version 3.4.1.</p>
     </ol>
   </li>
   <li>Create a new Eclipse workspace directory (for example /EclipseWorkspaces/Ibator)</li>
+  <li><b>Important:</b> make sure that a version 5.0 or higher JDK is configured as the default
+     JRE in Eclipse (Window&gt;Preferences&gt;Java&gt;Installed JREs).  A JDK is required - a JRE
+     alone will cause problems.</li>
   <li>Start Eclipse and point it to the new workspace directory</li>
   <li>Import the plug-in projects into the workspace
     <ol type="a">
@@ -153,7 +156,9 @@ Java project for the core JAR by following these steps:</p>
     The other javac tasks are used during the normal Ibator build to compile tests
     and test support classes.
     Accept the default for the other fields and press "Finish".</li>
-  <li>Wait for the workspace to build.</li>
+  <li>Wait for the workspace to build.  <b>Note:</b> you will need to add Ant to the
+      build path for the project for a successful compile.  You can find an Ant JAR
+      in the ../core/devlib subdirectory of your SVN checkout directory.</li>
 </ol>
 
 <p>Note that Ibator is compiled with JDK 5.0 for distribution.</p>
