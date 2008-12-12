@@ -24,17 +24,17 @@
           If you absolutely require the last General Availability version, you can download it in the sidebar to the right. 
       </div>
 
-      <h4>Release  2.3.3 (JDK 1.5 Required)</h4>
+      <h4>Release  2.3.4 (JDK 1.5 Required)</h4>
       <ul>
         <li>
-		  <a href="[preferred]/ibatis/binaries/ibatis.java/ibatis-2.3.3.720.zip"><b>Download iBATIS Java 2.3.3</b></a> 
+		  <a href="[preferred]/ibatis/binaries/ibatis.java/ibatis-2.3.4.726.zip"><b>Download iBATIS Java 2.3.4</b></a> 
           <br/> Includes binaries, source, and documentation
-		  <br/> [Status: <b>Beta</b> | Jul 16, 2008]
+		  <br/> [Status: <b>GA</b> | Sep 19, 2008]
 		  <br/>
-          [<a href="http://www.apache.org/dist/ibatis/binaries/ibatis.java/ibatis-2.3.3.720.zip.md5">MD5</a>]
-          [<a href="http://www.apache.org/dist/ibatis/binaries/ibatis.java/ibatis-2.3.3.720.zip.asc">PGP</a>]
+          [<a href="http://www.apache.org/dist/ibatis/binaries/ibatis.java/ibatis-2.3.4.726.zip.md5">MD5</a>]
+          [<a href="http://www.apache.org/dist/ibatis/binaries/ibatis.java/ibatis-2.3.4.726.zip.asc">PGP</a>]
            
-          <a href="https://issues.apache.org/jira/secure/ReleaseNote.jspa?projectId=10601&styleName=Html&version=12313115">Release Notes </a>
+          <a href="https://issues.apache.org/jira/secure/ReleaseNote.jspa?projectId=10601&styleName=Html&version=12313310">Release Notes </a>
         </li>
       </ul>
       <h4>Developer Build</h4>
