@@ -45,7 +45,7 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
       Executor executor = configuration.newExecutor(tx,execType);
       return new DefaultSqlSession(configuration, executor);
     } catch (SQLException e) {
-      throw ExceptionFactory.wrapSQLException("Error opening session.  Cause: " + e, e);
+      throw ExceptionFactory.wrapException("Error opening session.  Cause: " + e, e);
     }
   }
 
@@ -54,17 +54,21 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
   }
 
   public SqlSession openSession(Connection connection, ExecutorType execType) {
-    boolean autoCommit;
     try {
-      autoCommit = connection.getAutoCommit();
-    } catch (SQLException e) {
-      // Failover to true, as most poor drivers
-      // or databases won't support transactions
-      autoCommit = true;
+      boolean autoCommit;
+      try {
+        autoCommit = connection.getAutoCommit();
+      } catch (SQLException e) {
+        // Failover to true, as most poor drivers
+        // or databases won't support transactions
+        autoCommit = true;
+      }
+      Transaction tx = transactionFactory.newTransaction(connection, autoCommit);
+      Executor executor = configuration.newExecutor(tx, execType);
+      return new DefaultSqlSession(configuration, executor);
+    } catch (Exception e) {
+      throw ExceptionFactory.wrapException("Error opening session.  Cause: " + e, e);
     }
-    Transaction tx = transactionFactory.newTransaction(connection, autoCommit);
-    Executor executor = configuration.newExecutor(tx, execType);
-    return new DefaultSqlSession(configuration, executor);
   }
 
   public Configuration getConfiguration() {

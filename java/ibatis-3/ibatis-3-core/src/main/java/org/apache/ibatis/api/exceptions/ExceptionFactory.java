@@ -4,7 +4,7 @@ import java.sql.SQLException;
 
 public class ExceptionFactory {
 
-  public static RuntimeException wrapSQLException(String message, SQLException e) {
+  public static RuntimeException wrapException(String message, Exception e) {
     return new RuntimeSqlException(message, e);
   }
 

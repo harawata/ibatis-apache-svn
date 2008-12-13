@@ -16,9 +16,12 @@ public class DefaultSqlSession implements SqlSession {
   private Configuration configuration;
   private Executor executor;
 
+  private boolean dirty;
+
   public DefaultSqlSession(Configuration configuration, Executor executor) {
     this.configuration = configuration;
     this.executor = executor;
+    this.dirty = false;
   }
 
   public Object selectOne(String statement) {
@@ -50,28 +53,67 @@ public class DefaultSqlSession implements SqlSession {
       MappedStatement ms = configuration.getMappedStatement(statement);
       return executor.query(ms, parameter , offset, limit, handler);
     } catch (SQLException e) {
-      throw ExceptionFactory.wrapSQLException("Error querying database.  Cause: " + e, e);
+      throw ExceptionFactory.wrapException("Error querying database.  Cause: " + e, e);
     }
   }
 
-  public void close() {
-    executor.close();
+  public Object insert(String statement) {
+    return insert(statement,null);
+  }
+
+  public Object insert(String statement, Object parameter) {
+    //TODO: Return selectKey or autogen key.
+    return update(statement,null);
+  }
+
+  public int update(String statement) {
+    return update(statement,null);
+  }
+
+  public int update(String statement, Object parameter) {
+    try {
+      //TODO: Need commitRequired option at the statement level
+      dirty = true;
+      MappedStatement ms = configuration.getMappedStatement(statement);
+      return executor.update(ms, parameter);
+    } catch (SQLException e) {
+      throw ExceptionFactory.wrapException("Error updating database.  Cause: " + e, e);
+    }
+  }
+
+  public int delete(String statement) {
+    return update(statement,null);
+  }
+
+  public int delete(String statement, Object parameter) {
+    return update(statement,null);
   }
 
   public void commit() {
     try {
-      executor.commit(false);
+      executor.commit(dirty);
+      dirty = false;
     } catch (SQLException e) {
-      throw ExceptionFactory.wrapSQLException("Error committing transaction.  Cause: " + e, e);
+      throw ExceptionFactory.wrapException("Error committing transaction.  Cause: " + e, e);
     }
   }
 
-  public void rollback() {
+  public void end() {
     try {
-      executor.rollback(false);
+      executor.rollback(dirty);
+      dirty = false;
     } catch (SQLException e) {
-      throw ExceptionFactory.wrapSQLException("Error rolling back transaction.  Cause: " + e, e);
+      throw ExceptionFactory.wrapException("Error rolling back transaction.  Cause: " + e, e);
     }
   }
+
+  public void close() {
+    try {
+      executor.close();
+    } catch (Exception e) {
+      throw ExceptionFactory.wrapException("Error closing transaction.  Cause: " + e, e);
+    }
+  }
+
 
 }
