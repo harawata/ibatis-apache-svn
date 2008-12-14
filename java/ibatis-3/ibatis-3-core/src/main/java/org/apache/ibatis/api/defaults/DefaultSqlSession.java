@@ -65,7 +65,7 @@ public class DefaultSqlSession implements SqlSession {
 
   public Object insert(String statement, Object parameter) {
     //TODO: Return selectKey or autogen key.
-    return update(statement,null);
+    return update(statement, parameter);
   }
 
   public int update(String statement) {
@@ -88,7 +88,7 @@ public class DefaultSqlSession implements SqlSession {
   }
 
   public int delete(String statement, Object parameter) {
-    return update(statement,null);
+    return update(statement,parameter);
   }
 
   public void commit() {

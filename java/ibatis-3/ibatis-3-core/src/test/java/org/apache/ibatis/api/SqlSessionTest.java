@@ -56,4 +56,21 @@ public class SqlSessionTest extends BaseDataTest {
     }
   }
 
+  @Test
+  public void shouldInsertAuthor() throws Exception {
+    SqlSession session = sqlMapper.openSession();
+    try {
+      Author expected = new Author(500, "cbegin", "******", "cbegin@somewhere.com", "Something...", null);
+      session.insert("com.domain.AuthorMapper.insertAuthor", expected);
+      Author actual = (Author) session.selectOne("com.domain.AuthorMapper.selectAuthor", new Author(500));
+      Assert.assertEquals(expected.getId(), actual.getId());
+      Assert.assertEquals(expected.getUsername(), actual.getUsername());
+      Assert.assertEquals(expected.getPassword(), actual.getPassword());
+      Assert.assertEquals(expected.getEmail(), actual.getEmail());
+      Assert.assertEquals(expected.getBio(), actual.getBio());
+    } finally {
+      session.close();
+    }
+  }
+
 }

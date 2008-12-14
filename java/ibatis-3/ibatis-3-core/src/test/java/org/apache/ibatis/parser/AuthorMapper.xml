@@ -22,4 +22,9 @@
     select * from author where id = #{id}
   </select>
 
+  <insert id="insertAuthor" parameterType="domain.blog.Author">
+    insert into Author (id,username,password,email,bio)
+    values (#{id},#{username},#{password},#{email},#{bio})
+  </insert>
+
 </mapper>
