@@ -1,3 +1,7 @@
+Known Issues
+  * Duplicate element IDs are clobbering each other in config
+  * Statement (other elements?) not found does not fail gracefully
+
 Core
  * Improved Error Messages
 

@@ -44,4 +44,16 @@ public class SqlSessionTest extends BaseDataTest {
     }
   }
 
+  @Test
+  public void shouldSelectOneAuthorWithInlineParams() throws Exception {
+    SqlSession session = sqlMapper.openSession();
+    try {
+      Author author = (Author) session.selectOne(
+          "com.domain.AuthorMapper.selectAuthorWithInlineParams", new Author(101));
+      Assert.assertEquals(101, author.getId());
+    } finally {
+      session.close();
+    }
+  }
+
 }

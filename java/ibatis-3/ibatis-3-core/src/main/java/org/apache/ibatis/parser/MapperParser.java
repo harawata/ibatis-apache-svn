@@ -284,7 +284,7 @@ public class MapperParser extends BaseParser {
     id = applyNamespace(id);
 
     String sql = context.getStringBody();
-    SqlSource sqlSource = new BasicSqlSource(sql);
+    SqlSource sqlSource = new SqlSourceParser(configuration).parse(context);
 
     MappedStatement.Builder statementBuilder = new MappedStatement.Builder(configuration, id, sqlSource);
     Integer fetchSize = context.getIntAttribute("fetchSize", null);

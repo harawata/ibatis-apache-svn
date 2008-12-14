@@ -16,11 +16,13 @@ public class DefaultSqlSession implements SqlSession {
   private Configuration configuration;
   private Executor executor;
 
+  private boolean autoCommit;
   private boolean dirty;
 
-  public DefaultSqlSession(Configuration configuration, Executor executor) {
+  public DefaultSqlSession(Configuration configuration, Executor executor, boolean autoCommit) {
     this.configuration = configuration;
     this.executor = executor;
+    this.autoCommit = autoCommit;
     this.dirty = false;
   }
 
@@ -91,7 +93,7 @@ public class DefaultSqlSession implements SqlSession {
 
   public void commit() {
     try {
-      executor.commit(dirty);
+      executor.commit(!autoCommit && dirty);
       dirty = false;
     } catch (SQLException e) {
       throw ExceptionFactory.wrapException("Error committing transaction.  Cause: " + e, e);
@@ -100,7 +102,7 @@ public class DefaultSqlSession implements SqlSession {
 
   public void end() {
     try {
-      executor.rollback(dirty);
+      executor.rollback(!autoCommit && dirty);
       dirty = false;
     } catch (SQLException e) {
       throw ExceptionFactory.wrapException("Error rolling back transaction.  Cause: " + e, e);

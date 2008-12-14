@@ -43,7 +43,7 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
       Connection connection = dataSource.getConnection();
       Transaction tx = transactionFactory.newTransaction(connection, autoCommit);
       Executor executor = configuration.newExecutor(tx,execType);
-      return new DefaultSqlSession(configuration, executor);
+      return new DefaultSqlSession(configuration, executor, autoCommit);
     } catch (SQLException e) {
       throw ExceptionFactory.wrapException("Error opening session.  Cause: " + e, e);
     }
@@ -65,7 +65,7 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
       }
       Transaction tx = transactionFactory.newTransaction(connection, autoCommit);
       Executor executor = configuration.newExecutor(tx, execType);
-      return new DefaultSqlSession(configuration, executor);
+      return new DefaultSqlSession(configuration, executor, autoCommit);
     } catch (Exception e) {
       throw ExceptionFactory.wrapException("Error opening session.  Cause: " + e, e);
     }
