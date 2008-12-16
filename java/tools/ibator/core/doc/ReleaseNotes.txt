@@ -4,6 +4,7 @@ Version 1.2.1:
 Bugs:
 1. Fixed IbatorObjectFactory so that it will find internal classes on the
    context classloader.
+2. Fixed IBATIS-565 - ill formed comment in the SqlMapConfigPlugin.
 
 Enhancements:
 1. Modified plugin methods for model fields, getters, and setters so that
