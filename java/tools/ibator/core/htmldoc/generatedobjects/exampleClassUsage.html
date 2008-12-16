@@ -17,21 +17,21 @@
 
 <h1>Example Class Usage Notes</h1>
 <p>The example class specifies how to build a dynamic where clause.  Each non-BLOB column in the
-can optionally be included in the where clause.  Examples are the best way
+table can optionally be included in the where clause.  Examples are the best way
 to demonstrate the usage of this class.</p>
 <p>The example class can be used to generate a virtually
 unlimited where clauses.</p>
 <p>The example classes contain
 an inner static class called <code>Criteria</code>
-that holds a list of conditions that will be <b>anded</b> together in the where clause.  The
+that holds a list of conditions that will be <code>anded</code> together in the where clause.  The
 outer class holds a list of <code>Criteria</code> objects and all the clauses
-from the inner classes will be <b>ored</b> together.  Using different sets of
+from the inner classes will be <code>ored</code> together.  Using different sets of
 <code>Criteria</code> classes allows you to generate virtually unlimited
 types of where clauses.</p>
 <p><code>Criteria</code> objects must be created with the <code>createCriteria</code> method
 in the example class.  When the first <code>Criteria</code> object is created it is automatically
 added to the list of <code>Criteria</code> objects - this makes it easy to write
-a simple where clause if you don't need to or several other clauses together.</p>
+a simple where clause if you don't need to <code>or</code> several other clauses together.</p>
 
 <p>This example shows how to generate a simple WHERE clause using the generated
 example class:</p>
@@ -82,7 +82,7 @@ example class (using JSE 5.0 parameterized types):</p>
 </pre>
 <p>Returned records will meet these criteria.</p>
 <p>The <code>Criteria</code> inner class includes <code>andXXX</code> methods for each field,
-and each possible SQL predicate including:</p>
+and each standard SQL predicate including:</p>
 <ul>
   <li>IS NULL - meaning the related column must be NULL</li>
   <li>IS NOT NULL - meaning the related column must not be NULL</li>

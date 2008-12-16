@@ -48,6 +48,7 @@ will generate these methods:</p>
   <li>deleteByPrimaryKey</li>
   <li>deleteByExample</li>
   <li>insert</li>
+  <li>insertSelective</li>
   <li>selectByPrimaryKey</li>
   <li>selectByExample</li>
   <li>selectByExampleWithBLOBs</li>
@@ -64,14 +65,15 @@ on the situation.</p>
 page for an example of using the <code>selectByExample</code> method.</p>
 
 <h2>IBATIS DAOs</h2>
-<p>iBATIS DAOs depend on the iBATIS DAO framework (an optional part of iBATIS).
+<p>iBATIS DAOs depend on the iBATIS DAO framework (an optional part of iBATIS - now deprecated).
 They extend the SqlMapDaoTemplate class and are
 constructed with an instance of the DAOManager object, and call methods in their super class
 to execute the different statements.</p>
 <p>Ibator does not update the "dao.xml" file for you - you must add the appropriate entries
 manually.</p>
-<p>The iBATIS DAO framework is a very elementary IoC container and is useful if you
-are not already using something like Spring or PicoContainer to manage dependencies.</p>
+<p>The iBATIS DAO framework is a very elementary IoC container and can be useful if you
+are not already using something like Spring or PicoContainer to manage dependencies.
+However, the framework is now deprecated and we suggest that you move to Spring.</p>
 
 <h2>SPRING DAOs</h2>
 <p>SPRING DAOs depend on the Spring framework.  They extend Spring's SqlMapClientDaoSupport class,

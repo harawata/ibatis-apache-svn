@@ -197,11 +197,13 @@ public abstract class IbatorPluginAdapter implements IbatorPlugin {
         return true;
     }
 
-    public boolean modelFieldGenerated(Field field, TopLevelClass topLevelClass, IntrospectedColumn introspectedColumn, IntrospectedTable introspectedTable) {
+    public boolean modelFieldGenerated(Field field, TopLevelClass topLevelClass, IntrospectedColumn introspectedColumn, IntrospectedTable introspectedTable,
+            IbatorPlugin.ModelClassType modelClassType) {
         return true;
     }
 
-    public boolean modelGetterMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedColumn introspectedColumn, IntrospectedTable introspectedTable) {
+    public boolean modelGetterMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedColumn introspectedColumn, IntrospectedTable introspectedTable,
+            IbatorPlugin.ModelClassType modelClassType) {
         return true;
     }
 
@@ -213,7 +215,8 @@ public abstract class IbatorPluginAdapter implements IbatorPlugin {
         return true;
     }
 
-    public boolean modelSetterMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedColumn introspectedColumn, IntrospectedTable introspectedTable) {
+    public boolean modelSetterMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedColumn introspectedColumn, IntrospectedTable introspectedTable,
+            IbatorPlugin.ModelClassType modelClassType) {
         return true;
     }
 

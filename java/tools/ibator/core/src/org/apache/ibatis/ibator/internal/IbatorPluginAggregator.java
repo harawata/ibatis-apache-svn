@@ -861,11 +861,12 @@ public final class IbatorPluginAggregator implements IbatorPlugin {
         return rc;
     }
 
-    public boolean modelFieldGenerated(Field field, TopLevelClass topLevelClass, IntrospectedColumn introspectedColumn, IntrospectedTable introspectedTable) {
+    public boolean modelFieldGenerated(Field field, TopLevelClass topLevelClass, IntrospectedColumn introspectedColumn, IntrospectedTable introspectedTable,
+            IbatorPlugin.ModelClassType modelClassType) {
         boolean rc = true;
 
         for (IbatorPlugin plugin : plugins) {
-            if (!plugin.modelFieldGenerated(field, topLevelClass, introspectedColumn, introspectedTable)) {
+            if (!plugin.modelFieldGenerated(field, topLevelClass, introspectedColumn, introspectedTable, modelClassType)) {
                 rc = false;
                 break;
             }
@@ -874,11 +875,12 @@ public final class IbatorPluginAggregator implements IbatorPlugin {
         return rc;
     }
 
-    public boolean modelGetterMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedColumn introspectedColumn, IntrospectedTable introspectedTable) {
+    public boolean modelGetterMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedColumn introspectedColumn, IntrospectedTable introspectedTable,
+            IbatorPlugin.ModelClassType modelClassType) {
         boolean rc = true;
 
         for (IbatorPlugin plugin : plugins) {
-            if (!plugin.modelGetterMethodGenerated(method, topLevelClass, introspectedColumn, introspectedTable)) {
+            if (!plugin.modelGetterMethodGenerated(method, topLevelClass, introspectedColumn, introspectedTable, modelClassType)) {
                 rc = false;
                 break;
             }
@@ -887,11 +889,12 @@ public final class IbatorPluginAggregator implements IbatorPlugin {
         return rc;
     }
 
-    public boolean modelSetterMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedColumn introspectedColumn, IntrospectedTable introspectedTable) {
+    public boolean modelSetterMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedColumn introspectedColumn, IntrospectedTable introspectedTable,
+            IbatorPlugin.ModelClassType modelClassType) {
         boolean rc = true;
 
         for (IbatorPlugin plugin : plugins) {
-            if (!plugin.modelSetterMethodGenerated(method, topLevelClass, introspectedColumn, introspectedTable)) {
+            if (!plugin.modelSetterMethodGenerated(method, topLevelClass, introspectedColumn, introspectedTable, modelClassType)) {
                 rc = false;
                 break;
             }

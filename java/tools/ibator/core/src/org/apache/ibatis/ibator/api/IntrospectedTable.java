@@ -363,7 +363,7 @@ public abstract class IntrospectedTable {
             || blobColumns.size() > 0;
     }
     
-    protected String getDAOInterfacePackage() {
+    public String getDAOInterfacePackage() {
         DAOGeneratorConfiguration config = ibatorContext.getDaoGeneratorConfiguration();
         
         StringBuilder sb = new StringBuilder();
@@ -375,7 +375,7 @@ public abstract class IntrospectedTable {
         return sb.toString();
     }
     
-    protected String getDAOImplementationPackage() {
+    public String getDAOImplementationPackage() {
         DAOGeneratorConfiguration config = ibatorContext.getDaoGeneratorConfiguration();
         
         StringBuilder sb = new StringBuilder();
@@ -391,7 +391,7 @@ public abstract class IntrospectedTable {
         return sb.toString();
     }
     
-    protected String getJavaModelPackage() {
+    public String getJavaModelPackage() {
         JavaModelGeneratorConfiguration config = ibatorContext.getJavaModelGeneratorConfiguration();
 
         StringBuilder sb = new StringBuilder();

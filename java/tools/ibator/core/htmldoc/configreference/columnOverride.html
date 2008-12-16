@@ -42,8 +42,8 @@ element of the <a href="table.html">&lt;table&gt;</a> element.</p>
     <td valign="top">property</td>
     <td>The name of a Java property to be used.  If not specified,
         Ibator will generate properties based on the column name.
-        For example, if a table has a column named STRT_DTE, Ibator
-        will generate the property name as either STRT_DTE or strtDte
+        For example, if a table has a column named "STRT_DTE" then Ibator
+        will generate the property name as either "STRT_DTE" or "strtDte"
         based on the value of the "useActualColumnNames" property (see the
         description of the <a href="table.html">&lt;table&gt;</a> element for more information).
         This property could be used to rename the column "startDate"</td>
@@ -81,7 +81,7 @@ element of the <a href="table.html">&lt;table&gt;</a> element.</p>
     <td valign="top">delimitedColumnName</td>
     <td>Specifies whether the column name should be delimited in the generated SQL.
         Ibator will automatically delimit the column name if the name contains a space,
-        so this override is only necessary when the column name is forces to a certain
+        so this override is only necessary when the column name must be forced to a certain
         case, or when the column name is a reserved word in the database.
         <p>When "true", the <code>column</code> attribute for the override
         must exactly match the case of the column name returned from the database.</p>

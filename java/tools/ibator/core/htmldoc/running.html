@@ -195,7 +195,7 @@ home page for information on installing the Eclipse plugin.</p>
    show exception handling, but that should be obvious from the compiler
    errors :)</p>
 <pre>
-   List warnings = new ArrayList();  // Ibator will add Strings to this list
+   List&lt;String&gt; warnings = new ArrayList&lt;String&gt;();
    boolean overwrite = true;
    File configFile = new File("ibatorConfig.xml");
    IbatorConfigurationParser cp = new IbatorConfigurationParser(warnings);
@@ -225,7 +225,7 @@ home page for information on installing the Eclipse plugin.</p>
    not show exception handling, but that should be obvious from the compiler
    errors :)</p>
 <pre>
-   List warnings = new ArrayList();  // Ibator will add Strings to this list
+   List&lt;String&gt; warnings = new ArrayList&lt;String&gt;();
    boolean overwrite = true;
    IbatorConfiguration config = new IbatorConfiguration();
 

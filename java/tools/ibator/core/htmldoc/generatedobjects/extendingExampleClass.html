@@ -25,9 +25,7 @@ example class to add these additional criteria.</p>
 <h2>General Principles</h2>
 <p>Ibator generates an "example" class for each table, unless instructed otherwise
 in the configuration.  The "example" class is used to generate a dynamic where
-clause for use in the
-<code>selectByExample</code>, <code>deleteByExample</code>,
-<code>updateByExample</code>, and <code>countByExample</code> statements.
+clause for use in the <code>xxxByExample</code> statements.
 The standard "example" class includes functionality for all standard SQL predicates.
 In some cases, it may be desirable to add additional predicates for the
 specific needs of your application.  This may include adding support for non-standard
@@ -123,7 +121,7 @@ However, it is generally better to use parameter substitution if possible becaus
 the problems of formatting different datatypes properly (most notably
 dates, times, and timestamps).  Also, there is a chance of SQL
 injection issues with this method if you expose a too generic method.
-If at all possible, we suggest using one of the other methods listed below.</p>
+If possible, we suggest using one of the other methods listed below.</p>
 
 <h3>2. Single Parameter Predicates</h3>
 <p>This type of predicate is used when there is a single property

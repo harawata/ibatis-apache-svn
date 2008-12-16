@@ -71,18 +71,21 @@ public class RecordWithBLOBsGenerator extends BaseModelClassGenerator {
             }
             
             Field field = getJavaBeansField(introspectedColumn);
-            if (plugins.modelFieldGenerated(field, topLevelClass, introspectedColumn, introspectedTable)) {
+            if (plugins.modelFieldGenerated(field, topLevelClass, introspectedColumn,
+                    introspectedTable, IbatorPlugin.ModelClassType.RECORD_WITH_BLOBS)) {
                 topLevelClass.addField(field);
                 topLevelClass.addImportedType(field.getType());
             }
             
             Method method = getJavaBeansGetter(introspectedColumn);
-            if (plugins.modelGetterMethodGenerated(method, topLevelClass, introspectedColumn, introspectedTable)) {
+            if (plugins.modelGetterMethodGenerated(method, topLevelClass, introspectedColumn,
+                    introspectedTable, IbatorPlugin.ModelClassType.RECORD_WITH_BLOBS)) {
                 topLevelClass.addMethod(method);
             }
             
             method = getJavaBeansSetter(introspectedColumn);
-            if (plugins.modelSetterMethodGenerated(method, topLevelClass, introspectedColumn, introspectedTable)) {
+            if (plugins.modelSetterMethodGenerated(method, topLevelClass, introspectedColumn,
+                    introspectedTable, IbatorPlugin.ModelClassType.RECORD_WITH_BLOBS)) {
                 topLevelClass.addMethod(method);
             }
         }

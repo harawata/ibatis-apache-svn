@@ -106,15 +106,27 @@ public class IbatorObjectFactory {
 	}
 	
     public static Object createInternalObject(String type) {
+        Class<?> clazz = null;
+        
+        try {
+            ClassLoader cl = Thread.currentThread().getContextClassLoader();
+            clazz = cl.loadClass(type);
+        } catch (Exception e) {
+            // ignore - failsafe below
+        }
+        
         Object answer;
         
         try {
-            Class<?> clazz = Class.forName(type);
-            
+            if (clazz == null) {
+                clazz = Class.forName(type);
+            }
+        
             answer = clazz.newInstance();
         } catch (Exception e) {
             throw new RuntimeException(
               Messages.getString("RuntimeError.6", type), e); //$NON-NLS-1$
+            
         }
         
         return answer;

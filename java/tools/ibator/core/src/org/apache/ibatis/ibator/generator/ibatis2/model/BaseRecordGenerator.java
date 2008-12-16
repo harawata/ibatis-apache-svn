@@ -83,20 +83,20 @@ public class BaseRecordGenerator extends BaseModelClassGenerator {
 
             Field field = getJavaBeansField(introspectedColumn);
             if (plugins.modelFieldGenerated(field, topLevelClass, introspectedColumn,
-                    introspectedTable)) {
+                    introspectedTable, IbatorPlugin.ModelClassType.BASE_RECORD)) {
                 topLevelClass.addField(field);
                 topLevelClass.addImportedType(field.getType());
             }
 
             Method method = getJavaBeansGetter(introspectedColumn);
             if (plugins.modelGetterMethodGenerated(method, topLevelClass,
-                    introspectedColumn, introspectedTable)) {
+                    introspectedColumn, introspectedTable, IbatorPlugin.ModelClassType.BASE_RECORD)) {
                 topLevelClass.addMethod(method);
             }
 
             method = getJavaBeansSetter(introspectedColumn);
             if (plugins.modelSetterMethodGenerated(method, topLevelClass,
-                    introspectedColumn, introspectedTable)) {
+                    introspectedColumn, introspectedTable, IbatorPlugin.ModelClassType.BASE_RECORD)) {
                 topLevelClass.addMethod(method);
             }
         }
