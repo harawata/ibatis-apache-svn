@@ -10,6 +10,9 @@ Enhancements:
 1. Modified plugin methods for model fields, getters, and setters so that
    the plugin will know which type of class (Primary Key, Base Record, or
    Record with BLOBs) is being generated. 
+2. Added methods to IntrospectedTable to get/set attributes.  This 
+   allows plugin classes to maintain table based state between
+   plugin calls.
 
 -------------------------------------------------------------------------------
 Version 1.2.0:  Renamed to Ibator

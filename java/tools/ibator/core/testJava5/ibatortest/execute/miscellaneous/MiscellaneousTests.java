@@ -34,7 +34,7 @@ package ibatortest.execute.miscellaneous;
 import ibatortest.generated.miscellaneous.dao.MyObjectDAO;
 import ibatortest.generated.miscellaneous.dao.RegexrenameDAO;
 import ibatortest.generated.miscellaneous.model.MyObject;
-import ibatortest.generated.miscellaneous.model.MyObjectExample;
+import ibatortest.generated.miscellaneous.model.MyObjectCriteria;
 import ibatortest.generated.miscellaneous.model.MyObjectKey;
 import ibatortest.generated.miscellaneous.model.Regexrename;
 
@@ -223,7 +223,7 @@ public class MiscellaneousTests extends BaseMiscellaneousTest {
             int rows = dao.deleteMyObjectByPrimaryKey(key);
             assertEquals(1, rows);
 
-            MyObjectExample example = new MyObjectExample();
+            MyObjectCriteria example = new MyObjectCriteria();
             List answer = dao.selectMyObjectByExample(example);
             assertEquals(0, answer.size());
         } catch (SQLException e) {
@@ -255,16 +255,16 @@ public class MiscellaneousTests extends BaseMiscellaneousTest {
 
             dao.insertMyObject(record);
 
-            MyObjectExample example = new MyObjectExample();
+            MyObjectCriteria example = new MyObjectCriteria();
             List answer = dao.selectMyObjectByExample(example);
             assertEquals(2, answer.size());
 
-            example = new MyObjectExample();
+            example = new MyObjectCriteria();
             example.createCriteria().andLastnameLike("J%");
             int rows = dao.deleteMyObjectByExample(example);
             assertEquals(1, rows);
 
-            example = new MyObjectExample();
+            example = new MyObjectCriteria();
             answer = dao.selectMyObjectByExample(example);
             assertEquals(1, answer.size());
         } catch (SQLException e) {
@@ -368,7 +368,7 @@ public class MiscellaneousTests extends BaseMiscellaneousTest {
             record.setId2(3);
             dao.insertMyObject(record);
 
-            MyObjectExample example = new MyObjectExample();
+            MyObjectCriteria example = new MyObjectCriteria();
             fn = new FirstName();
             fn.setValue("B%");
             example.createCriteria().andFirstnameLike(fn);
@@ -448,7 +448,7 @@ public class MiscellaneousTests extends BaseMiscellaneousTest {
             record.setId2(3);
             dao.insertMyObject(record);
 
-            MyObjectExample example = new MyObjectExample();
+            MyObjectCriteria example = new MyObjectCriteria();
             fn = new FirstName();
             fn.setValue("B%");
             example.createCriteria().andFirstnameNotLike(fn);
@@ -528,7 +528,7 @@ public class MiscellaneousTests extends BaseMiscellaneousTest {
             record.setId2(3);
             dao.insertMyObject(record);
 
-            MyObjectExample example = new MyObjectExample();
+            MyObjectCriteria example = new MyObjectCriteria();
             fn = new FirstName();
             fn.setValue("B%");
             example.createCriteria().andFirstnameLike(fn).andId2EqualTo(3);
@@ -612,7 +612,7 @@ public class MiscellaneousTests extends BaseMiscellaneousTest {
             ids.add(1);
             ids.add(3);
 
-            MyObjectExample example = new MyObjectExample();
+            MyObjectCriteria example = new MyObjectCriteria();
             example.createCriteria().andId2In(ids);
 
             example.setOrderByClause("ID1, ID2");
@@ -701,7 +701,7 @@ public class MiscellaneousTests extends BaseMiscellaneousTest {
             record.setId2(3);
             dao.insertMyObject(record);
 
-            MyObjectExample example = new MyObjectExample();
+            MyObjectCriteria example = new MyObjectCriteria();
             example.createCriteria().andId2Between(1, 3);
 
             example.setOrderByClause("ID1, ID2");
@@ -737,7 +737,7 @@ public class MiscellaneousTests extends BaseMiscellaneousTest {
 
             dao.insertMyObject(record);
 
-            MyObjectExample example = new MyObjectExample();
+            MyObjectCriteria example = new MyObjectCriteria();
             example.createCriteria().andTimefieldEqualTo(myTime);
             List<MyObject> results = dao.selectMyObjectByExample(example);
             assertEquals(1, results.size());
@@ -798,7 +798,7 @@ public class MiscellaneousTests extends BaseMiscellaneousTest {
             MyObject newRecord = new MyObject();
             newRecord.setLastname("Barker");
             
-            MyObjectExample example = new MyObjectExample();
+            MyObjectCriteria example = new MyObjectCriteria();
             fn = new FirstName();
             fn.setValue("B%");
             example.createCriteria().andFirstnameLike(fn);
@@ -847,7 +847,7 @@ public class MiscellaneousTests extends BaseMiscellaneousTest {
             newRecord.setId1(3);
             newRecord.setId2(4);
             
-            MyObjectExample example = new MyObjectExample();
+            MyObjectCriteria example = new MyObjectCriteria();
             example.createCriteria()
                 .andId1EqualTo(3)
                 .andId2EqualTo(4);

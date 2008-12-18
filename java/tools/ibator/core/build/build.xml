@@ -41,6 +41,7 @@
   <path id="emma.runtime.path">
     <pathelement location="${work.instrumented}"/>
     <pathelement location="${work.classes}"/>
+    <pathelement location="${work.buildsupport}"/>
     <path refid="emma.lib"/>
   </path>
 	
@@ -77,7 +78,7 @@
       </fileset>
     </copy>
   	
-    <propertyfile file="version.properties" comment="ibator build version info">
+    <propertyfile file="version.properties" comment="Ibator build version info">
       <entry key="buildNum" default="0" type="int" operation="+" value="1"/>
     </propertyfile>
   </target>

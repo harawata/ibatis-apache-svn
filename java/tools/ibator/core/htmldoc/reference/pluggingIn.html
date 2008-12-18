@@ -37,6 +37,7 @@ list shows the basic lifecycle of a plugin:</p>
       then no further methods in the plugin will be called</li>
   <li>For each table in the configuration:
     <ol type="a">
+      <li><code>attributesCalculated</code> method called</li>
       <li>DAO Methods:<sup>1,2</sup>
         <ol type="i">
           <li><code>daoXXXMethodGenerated(Method, TopLevelClass, IntrospectedTable)</code> - these methods

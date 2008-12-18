@@ -303,4 +303,7 @@ public abstract class IbatorPluginAdapter implements IbatorPlugin {
     public boolean daoInsertSelectiveMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
         return true;
     }
+
+    public void attributesCalculated(IntrospectedTable introspectedTable) {
+    }
 }

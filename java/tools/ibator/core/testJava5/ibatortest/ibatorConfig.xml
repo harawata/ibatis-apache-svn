@@ -261,6 +261,7 @@
 
   <ibatorContext id="miscellaneousTests" targetRuntime="Ibatis2Java5">
     <ibatorPlugin type="org.apache.ibatis.ibator.plugins.EqualsHashCodePlugin" />
+    <ibatorPlugin type="org.apache.ibatis.ibator.build.test.TestPlugin" />
 
     <commentGenerator>
       <property name="suppressDate" value="true"/>

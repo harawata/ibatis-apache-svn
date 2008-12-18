@@ -37,6 +37,7 @@ import org.apache.ibatis.ibator.config.IbatorContext;
  * <ol>
  *   <li>The setXXX methods are called one time</li>
  *   <li>The validate method is called one time</li>
+ *   <li>The attributesCalculated method is called for each introspected table</li>
  *   <li>The daoXXX methods are called for each introspected table</li>
  *   <li>The modelXXX methods are called for each introspected table</li>
  *   <li>The sqlMapXXX methods are called for each introspected table</li>
@@ -85,6 +86,28 @@ public interface IbatorPlugin {
      * @param properties
      */
     void setProperties(Properties properties);
+    
+    /**
+     * This method is called after the IntrospectedTable calculates all
+     * the attributes for code generation.  Attributes are listed as
+     * static Strings with the prefix ATTR_ in IntrospectedTable.  Plugins
+     * can implement this method to override any of the default attributes,
+     * or to add additional attributes for use by other plugin methods.
+     * <p>
+     * A good example of overriding an attribute would be the case where
+     * a user wanted to change the name of one of the generated classes,
+     * change the target package, or change the name of the generated SQL map file.
+     * <p>
+     * <b>Warning:</b> Anything that is listed as an attribute should
+     * not be changed by one of the other plugin methods.  For example,
+     * if you want to change the name of a generated example class, you
+     * should not simply change the Type in the 
+     * <code>modelExampleClassGenerated()</code> method.  If you do, the
+     * change will not be reflected in other generated artifacts.
+     *  
+     * @param introspectedTable
+     */
+    void attributesCalculated(IntrospectedTable introspectedTable);
     
     /**
      * This method is called after all the setXXX methods are called, but before any

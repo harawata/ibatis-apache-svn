@@ -28,8 +28,14 @@
   <li>Modified plugin methods for model fields, getters, and setters so that
    the plugin will know which type of class (Primary Key, Base Record, or
    Record with BLOBs) is being generated.</li>
+  <li>Added methods to IntrospectedTable to get/set attributes.  This
+      allows plugin classes to maintain table based state between
+      plugin calls.</li>
+  <li>Added <code>attributesCalculated</code> method to the plugin API.  This
+      allows plugins to alter some of the fundamental code generation items
+      (like the name of a generated class, for example).</li>
 </ul>
-   
+
 <h2>Version 1.2.0</h2>
 <h3>Announcements</h3>
 <ul>

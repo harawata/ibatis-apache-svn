@@ -17,8 +17,10 @@
 package org.apache.ibatis.ibator.api;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.ibator.config.DAOGeneratorConfiguration;
@@ -45,6 +47,67 @@ import org.apache.ibatis.ibator.internal.util.StringUtility;
  *
  */
 public abstract class IntrospectedTable {
+    /**
+     * This attribute must be a class of type java.lang.String
+     */
+    public static final String ATTR_DAO_IMPLEMENTATION_PACKAGE = "org.apache.ibatis.ibator.api.IntrospectedTable.ATTR_DAO_IMPLEMENTATION_PACKAGE"; //$NON-NLS-1$
+    
+    /**
+     * This attribute must be a class of type java.lang.String
+     */
+    public static final String ATTR_DAO_INTERFACE_PACKAGE = "org.apache.ibatis.ibator.api.IntrospectedTable.ATTR_DAO_INTERFACE_PACKAGE"; //$NON-NLS-1$
+    
+    /**
+     * This attribute must be a class of type
+     *   org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType
+     */
+    public static final String ATTR_DAO_IMPLEMENTATION_TYPE = "org.apache.ibatis.ibator.api.IntrospectedTable.ATTR_DAO_IMPLEMENTATION_TYPE"; //$NON-NLS-1$
+    
+    /**
+     * This attribute must be a class of type
+     *   org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType
+     */
+    public static final String ATTR_DAO_INTERFACE_TYPE = "org.apache.ibatis.ibator.api.IntrospectedTable.ATTR_DAO_INTERFACE_TYPE"; //$NON-NLS-1$
+    
+    /**
+     * This attribute must be a class of type java.lang.String
+     */
+    public static final String ATTR_JAVA_MODEL_PACKAGE = "org.apache.ibatis.ibator.api.IntrospectedTable.ATTR_JAVA_MODEL_PACKAGE"; //$NON-NLS-1$
+
+    /**
+     * This attribute must be a class of type
+     *   org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType
+     */
+    public static final String ATTR_PRIMARY_KEY_TYPE = "org.apache.ibatis.ibator.api.IntrospectedTable.ATTR_PRIMARY_KEY_TYPE"; //$NON-NLS-1$
+    
+    /**
+     * This attribute must be a class of type
+     *   org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType
+     */
+    public static final String ATTR_BASE_RECORD_TYPE = "org.apache.ibatis.ibator.api.IntrospectedTable.ATTR_BASE_RECORD_TYPE"; //$NON-NLS-1$
+    
+    /**
+     * This attribute must be a class of type
+     *   org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType
+     */
+    public static final String ATTR_RECORD_WITH_BLOBS_TYPE = "org.apache.ibatis.ibator.api.IntrospectedTable.ATTR_RECORD_WITH_BLOBS_TYPE"; //$NON-NLS-1$
+    
+    /**
+     * This attribute must be a class of type
+     *   org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType
+     */
+    public static final String ATTR_EXAMPLE_TYPE = "org.apache.ibatis.ibator.api.IntrospectedTable.ATTR_EXAMPLE_TYPE"; //$NON-NLS-1$
+    
+    /**
+     * This attribute must be a class of type java.lang.String
+     */
+    public static final String ATTR_SQL_MAP_PACKAGE = "org.apache.ibatis.ibator.api.IntrospectedTable.ATTR_SQL_MAP_PACKAGE"; //$NON-NLS-1$
+    
+    /**
+     * This attribute must be a class of type java.lang.String
+     */
+    public static final String ATTR_SQL_MAP_FILE_NAME = "org.apache.ibatis.ibator.api.IntrospectedTable.ATTR_SQL_MAP_FILE_NAME"; //$NON-NLS-1$
+    
     protected TableConfiguration tableConfiguration;
     protected FullyQualifiedTable fullyQualifiedTable;
     protected IbatorContext ibatorContext;
@@ -55,11 +118,19 @@ public abstract class IntrospectedTable {
     protected boolean hasJDBCDateColumns;
     protected boolean hasJDBCTimeColumns;
     
+    /**
+     * Attributes may be used by plugins to capture table related state
+     * between the different plugin calls.  Attibutes also are used
+     * to store commonly accessed items by all code generators
+     */
+    protected Map<String, Object> attributes;
+    
     public IntrospectedTable() {
         super();
         primaryKeyColumns = new ArrayList<IntrospectedColumn>();
         baseColumns = new ArrayList<IntrospectedColumn>();
         blobColumns = new ArrayList<IntrospectedColumn>();
+        attributes = new HashMap<String, Object>();
     }
     
     public FullyQualifiedTable getFullyQualifiedTable() {
@@ -241,15 +312,7 @@ public abstract class IntrospectedTable {
     }
 
     public FullyQualifiedJavaType getPrimaryKeyType() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getJavaModelPackage());
-        sb.append('.');
-        sb.append(fullyQualifiedTable.getDomainObjectName());
-        sb.append("Key"); //$NON-NLS-1$
-
-        FullyQualifiedJavaType fqjt = new FullyQualifiedJavaType(sb.toString());
-
-        return fqjt;
+        return (FullyQualifiedJavaType) getAttribute(ATTR_PRIMARY_KEY_TYPE);
     }
 
     /**
@@ -259,14 +322,7 @@ public abstract class IntrospectedTable {
      *  the value will be calculated regardless of whether the table has these columns or not.
      */
     public FullyQualifiedJavaType getBaseRecordType() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getJavaModelPackage());
-        sb.append('.');
-        sb.append(fullyQualifiedTable.getDomainObjectName());
-
-        FullyQualifiedJavaType fqjt = new FullyQualifiedJavaType(sb.toString());
-
-        return fqjt;
+        return (FullyQualifiedJavaType) getAttribute(ATTR_BASE_RECORD_TYPE);
     }
 
     /**
@@ -274,15 +330,7 @@ public abstract class IntrospectedTable {
      * @return the type for the example class.
      */
     public FullyQualifiedJavaType getExampleType() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getJavaModelPackage());
-        sb.append('.');
-        sb.append(fullyQualifiedTable.getDomainObjectName());
-        sb.append("Example"); //$NON-NLS-1$
-
-        FullyQualifiedJavaType fqjt = new FullyQualifiedJavaType(sb.toString());
-
-        return fqjt;
+        return (FullyQualifiedJavaType) getAttribute(ATTR_EXAMPLE_TYPE);
     }
 
     /**
@@ -291,15 +339,7 @@ public abstract class IntrospectedTable {
      *  the value will be calculated regardless of whether the table has BLOB columns or not.
      */
     public FullyQualifiedJavaType getRecordWithBLOBsType() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getJavaModelPackage());
-        sb.append('.');
-        sb.append(fullyQualifiedTable.getDomainObjectName());
-        sb.append("WithBLOBs"); //$NON-NLS-1$
-
-        FullyQualifiedJavaType fqjt = new FullyQualifiedJavaType(sb.toString());
-
-        return fqjt;
+        return (FullyQualifiedJavaType) getAttribute(ATTR_RECORD_WITH_BLOBS_TYPE);
     }
 
     /**
@@ -310,11 +350,7 @@ public abstract class IntrospectedTable {
      * @return the name of the SqlMap file
      */
     public String getSqlMapFileName() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(fullyQualifiedTable.getSqlMapNamespace());
-        sb.append("_SqlMap.xml"); //$NON-NLS-1$
-
-        return sb.toString();
+        return (String) getAttribute(ATTR_SQL_MAP_FILE_NAME);
     }
 
     /**
@@ -323,38 +359,15 @@ public abstract class IntrospectedTable {
      * @return the package for the SqlMap for the current table
      */
     public String getSqlMapPackage() {
-        SqlMapGeneratorConfiguration config = ibatorContext.getSqlMapGeneratorConfiguration();
-        
-        StringBuilder sb = new StringBuilder(config.getTargetPackage());
-        if (StringUtility.isTrue(config.getProperty(PropertyRegistry.ANY_ENABLE_SUB_PACKAGES))) {
-            sb.append(fullyQualifiedTable.getSubPackage());
-        }
-            
-        return sb.toString();
+        return (String) getAttribute(ATTR_SQL_MAP_PACKAGE);
     }
     
     public FullyQualifiedJavaType getDAOImplementationType() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getDAOImplementationPackage());
-        sb.append('.');
-        sb.append(fullyQualifiedTable.getDomainObjectName());
-        sb.append("DAOImpl"); //$NON-NLS-1$
-
-        FullyQualifiedJavaType fqjt = new FullyQualifiedJavaType(sb.toString());
-
-        return fqjt;
+        return (FullyQualifiedJavaType) getAttribute(ATTR_DAO_IMPLEMENTATION_TYPE);
     }
 
     public FullyQualifiedJavaType getDAOInterfaceType() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getDAOInterfacePackage());
-        sb.append('.');
-        sb.append(fullyQualifiedTable.getDomainObjectName());
-        sb.append("DAO"); //$NON-NLS-1$
-
-        FullyQualifiedJavaType fqjt = new FullyQualifiedJavaType(sb.toString());
-
-        return fqjt;
+        return (FullyQualifiedJavaType) getAttribute(ATTR_DAO_INTERFACE_TYPE);
     }
 
     public boolean hasAnyColumns() {
@@ -364,43 +377,15 @@ public abstract class IntrospectedTable {
     }
     
     public String getDAOInterfacePackage() {
-        DAOGeneratorConfiguration config = ibatorContext.getDaoGeneratorConfiguration();
-        
-        StringBuilder sb = new StringBuilder();
-        sb.append(config.getTargetPackage());
-        if (StringUtility.isTrue(config.getProperty(PropertyRegistry.ANY_ENABLE_SUB_PACKAGES))) {
-            sb.append(fullyQualifiedTable.getSubPackage());
-        }
-        
-        return sb.toString();
+        return (String) getAttribute(ATTR_DAO_INTERFACE_PACKAGE);
     }
     
     public String getDAOImplementationPackage() {
-        DAOGeneratorConfiguration config = ibatorContext.getDaoGeneratorConfiguration();
-        
-        StringBuilder sb = new StringBuilder();
-        if (StringUtility.stringHasValue(config.getImplementationPackage())) {
-            sb.append(config.getImplementationPackage());
-        } else {
-            sb.append(config.getTargetPackage());
-        }
-        if (StringUtility.isTrue(config.getProperty(PropertyRegistry.ANY_ENABLE_SUB_PACKAGES))) {
-            sb.append(fullyQualifiedTable.getSubPackage());
-        }
-        
-        return sb.toString();
+        return (String) getAttribute(ATTR_DAO_IMPLEMENTATION_PACKAGE);
     }
     
     public String getJavaModelPackage() {
-        JavaModelGeneratorConfiguration config = ibatorContext.getJavaModelGeneratorConfiguration();
-
-        StringBuilder sb = new StringBuilder();
-        sb.append(config.getTargetPackage());
-        if (StringUtility.isTrue(config.getProperty(PropertyRegistry.ANY_ENABLE_SUB_PACKAGES))) {
-            sb.append(fullyQualifiedTable.getSubPackage());
-        }
-        
-        return sb.toString();
+        return (String) getAttribute(ATTR_JAVA_MODEL_PACKAGE);
     }
     
     public void setTableConfiguration(TableConfiguration tableConfiguration) {
@@ -460,6 +445,166 @@ public abstract class IntrospectedTable {
                 }
             }
         }
+    }
+    
+    public Object getAttribute(String name) {
+        return attributes.get(name);
+    }
+    
+    public void removeAttribute(String name) {
+        attributes.remove(name);
+    }
+    
+    public void setAttribute(String name, Object value) {
+        attributes.put(name, value);
+    }
+    
+    public void calculateAttributes() {
+        calculateDAOImplementationPackage();
+        calculateDAOInterfacePackage();
+        calculateDAOImplementationType();
+        calculateDAOInterfaceType();
+        
+        calculateJavaModelPackage();
+        calculatePrimaryKeyType();
+        calculateBaseRecordType();
+        calculateRecordWithBLOBsType();
+        calculateExampleType();
+        
+        calculateSqlMapPackage();
+        calculateSqlMapFileName();
+        
+        ibatorContext.getPlugins().attributesCalculated(this);
+    }
+    
+    private void calculateDAOImplementationPackage() {
+        DAOGeneratorConfiguration config = ibatorContext.getDaoGeneratorConfiguration();
+        
+        StringBuilder sb = new StringBuilder();
+        if (StringUtility.stringHasValue(config.getImplementationPackage())) {
+            sb.append(config.getImplementationPackage());
+        } else {
+            sb.append(config.getTargetPackage());
+        }
+        if (StringUtility.isTrue(config.getProperty(PropertyRegistry.ANY_ENABLE_SUB_PACKAGES))) {
+            sb.append(fullyQualifiedTable.getSubPackage());
+        }
+        
+        setAttribute(ATTR_DAO_IMPLEMENTATION_PACKAGE, sb.toString());
+    }
+    
+    private void calculateDAOInterfacePackage() {
+        DAOGeneratorConfiguration config = ibatorContext.getDaoGeneratorConfiguration();
+        
+        StringBuilder sb = new StringBuilder();
+        sb.append(config.getTargetPackage());
+        if (StringUtility.isTrue(config.getProperty(PropertyRegistry.ANY_ENABLE_SUB_PACKAGES))) {
+            sb.append(fullyQualifiedTable.getSubPackage());
+        }
+        
+        setAttribute(ATTR_DAO_INTERFACE_PACKAGE, sb.toString());
+    }
+
+    private void calculateDAOImplementationType() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getDAOImplementationPackage());
+        sb.append('.');
+        sb.append(fullyQualifiedTable.getDomainObjectName());
+        sb.append("DAOImpl"); //$NON-NLS-1$
+
+        FullyQualifiedJavaType fqjt = new FullyQualifiedJavaType(sb.toString());
+
+        setAttribute(ATTR_DAO_IMPLEMENTATION_TYPE, fqjt);
+    }
+
+    private void calculateDAOInterfaceType() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getDAOInterfacePackage());
+        sb.append('.');
+        sb.append(fullyQualifiedTable.getDomainObjectName());
+        sb.append("DAO"); //$NON-NLS-1$
+
+        FullyQualifiedJavaType fqjt = new FullyQualifiedJavaType(sb.toString());
+
+        setAttribute(ATTR_DAO_INTERFACE_TYPE, fqjt);
+    }
+
+    private void calculateJavaModelPackage() {
+        JavaModelGeneratorConfiguration config = ibatorContext.getJavaModelGeneratorConfiguration();
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(config.getTargetPackage());
+        if (StringUtility.isTrue(config.getProperty(PropertyRegistry.ANY_ENABLE_SUB_PACKAGES))) {
+            sb.append(fullyQualifiedTable.getSubPackage());
+        }
+        
+        setAttribute(ATTR_JAVA_MODEL_PACKAGE, sb.toString());
+    }
+    
+    private void calculatePrimaryKeyType() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getJavaModelPackage());
+        sb.append('.');
+        sb.append(fullyQualifiedTable.getDomainObjectName());
+        sb.append("Key"); //$NON-NLS-1$
+
+        FullyQualifiedJavaType fqjt = new FullyQualifiedJavaType(sb.toString());
+
+        setAttribute(ATTR_PRIMARY_KEY_TYPE, fqjt);
+    }
+    
+    private void calculateBaseRecordType() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getJavaModelPackage());
+        sb.append('.');
+        sb.append(fullyQualifiedTable.getDomainObjectName());
+
+        FullyQualifiedJavaType fqjt = new FullyQualifiedJavaType(sb.toString());
+        
+        setAttribute(ATTR_BASE_RECORD_TYPE, fqjt);
+    }
+    
+    private void calculateRecordWithBLOBsType() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getJavaModelPackage());
+        sb.append('.');
+        sb.append(fullyQualifiedTable.getDomainObjectName());
+        sb.append("WithBLOBs"); //$NON-NLS-1$
+
+        FullyQualifiedJavaType fqjt = new FullyQualifiedJavaType(sb.toString());
+
+        setAttribute(ATTR_RECORD_WITH_BLOBS_TYPE, fqjt);
+    }
+
+    private void calculateExampleType() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getJavaModelPackage());
+        sb.append('.');
+        sb.append(fullyQualifiedTable.getDomainObjectName());
+        sb.append("Example"); //$NON-NLS-1$
+
+        FullyQualifiedJavaType fqjt = new FullyQualifiedJavaType(sb.toString());
+
+        setAttribute(ATTR_EXAMPLE_TYPE, fqjt);
+    }
+    
+    private void calculateSqlMapPackage() {
+        SqlMapGeneratorConfiguration config = ibatorContext.getSqlMapGeneratorConfiguration();
+        
+        StringBuilder sb = new StringBuilder(config.getTargetPackage());
+        if (StringUtility.isTrue(config.getProperty(PropertyRegistry.ANY_ENABLE_SUB_PACKAGES))) {
+            sb.append(fullyQualifiedTable.getSubPackage());
+        }
+            
+        setAttribute(ATTR_SQL_MAP_PACKAGE, sb.toString());;
+    }
+
+    private void calculateSqlMapFileName() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(fullyQualifiedTable.getSqlMapNamespace());
+        sb.append("_SqlMap.xml"); //$NON-NLS-1$
+
+        setAttribute(ATTR_SQL_MAP_FILE_NAME, sb.toString());
     }
     
     /**

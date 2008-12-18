@@ -494,6 +494,7 @@ public class IbatorContext extends PropertyHolder {
             for (IntrospectedTable introspectedTable : introspectedTables) {
                 callback.checkCancel();
 
+                introspectedTable.calculateAttributes();
                 generatedJavaFiles.addAll(introspectedTable.getGeneratedJavaFiles());
                 generatedXmlFiles.addAll(introspectedTable.getGeneratedXmlFiles());
 
