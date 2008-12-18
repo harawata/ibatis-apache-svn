@@ -945,9 +945,9 @@ public final class IbatorPluginAggregator implements IbatorPlugin {
         return rc;
     }
 
-    public void attributesCalculated(IntrospectedTable introspectedTable) {
+    public void initialized(IntrospectedTable introspectedTable) {
         for (IbatorPlugin plugin : plugins) {
-            plugin.attributesCalculated(introspectedTable);
+            plugin.initialized(introspectedTable);
         }
     }
 }

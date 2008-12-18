@@ -304,6 +304,6 @@ public abstract class IbatorPluginAdapter implements IbatorPlugin {
         return true;
     }
 
-    public void attributesCalculated(IntrospectedTable introspectedTable) {
+    public void initialized(IntrospectedTable introspectedTable) {
     }
 }

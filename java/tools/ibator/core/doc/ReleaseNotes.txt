@@ -13,6 +13,10 @@ Enhancements:
 2. Added methods to IntrospectedTable to get/set attributes.  This 
    allows plugin classes to maintain table based state between
    plugin calls.
+3. Added "initialized" method to the plugin API.  This
+   allows plugins to alter some of the fundamental code generation items
+   (like the name of a generated class, for example).
+4. Added an example plugin to show usage of the "initialized" method.
 
 -------------------------------------------------------------------------------
 Version 1.2.0:  Renamed to Ibator

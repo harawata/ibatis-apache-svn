@@ -39,7 +39,7 @@ import org.apache.ibatis.ibator.internal.util.StringUtility;
 
 /**
  * Base class for all code generator implementations.
- * This class provides many of the ibator housekeeping methods needed
+ * This class provides many of the Ibator housekeeping methods needed
  * to implement a code generator, with only the actual code generation
  * methods left unimplemented.
  * 
@@ -111,16 +111,14 @@ public abstract class IntrospectedTable {
     protected TableConfiguration tableConfiguration;
     protected FullyQualifiedTable fullyQualifiedTable;
     protected IbatorContext ibatorContext;
-    protected IbatorRules rules;
+    private IbatorRules rules;
     protected List<IntrospectedColumn> primaryKeyColumns;
     protected List<IntrospectedColumn> baseColumns;
     protected List<IntrospectedColumn> blobColumns;
-    protected boolean hasJDBCDateColumns;
-    protected boolean hasJDBCTimeColumns;
     
     /**
      * Attributes may be used by plugins to capture table related state
-     * between the different plugin calls.  Attibutes also are used
+     * between the different plugin calls.  Attributes also are used
      * to store commonly accessed items by all code generators
      */
     protected Map<String, Object> attributes;
@@ -203,7 +201,25 @@ public abstract class IntrospectedTable {
      * @return true if the table contains DATE columns
      */
     public boolean hasJDBCDateColumns() {
-        return hasJDBCDateColumns;
+        boolean rc = false;
+        
+        for (IntrospectedColumn introspectedColumn : primaryKeyColumns) {
+            if (introspectedColumn.isJDBCDateColumn()) {
+                rc = true;
+                break;
+            }
+        }
+        
+        if (!rc) {
+            for (IntrospectedColumn introspectedColumn : baseColumns) {
+                if (introspectedColumn.isJDBCDateColumn()) {
+                    rc = true;
+                    break;
+                }
+            }
+        }
+        
+        return rc;
     }
 
     /**
@@ -213,7 +229,25 @@ public abstract class IntrospectedTable {
      * @return true if the table contains TIME columns
      */
     public boolean hasJDBCTimeColumns() {
-        return hasJDBCTimeColumns;
+        boolean rc = false;
+        
+        for (IntrospectedColumn introspectedColumn : primaryKeyColumns) {
+            if (introspectedColumn.isJDBCTimeColumn()) {
+                rc = true;
+                break;
+            }
+        }
+        
+        if (!rc) {
+            for (IntrospectedColumn introspectedColumn : baseColumns) {
+                if (introspectedColumn.isJDBCTimeColumn()) {
+                    rc = true;
+                    break;
+                }
+            }
+        }
+        
+        return rc;
     }
     
     /**
@@ -407,14 +441,6 @@ public abstract class IntrospectedTable {
             baseColumns.add(introspectedColumn);
         }
         
-        if (introspectedColumn.isJDBCDateColumn()) {
-            hasJDBCDateColumns = true;
-        }
-        
-        if (introspectedColumn.isJDBCTimeColumn()) {
-            hasJDBCTimeColumns = true;
-        }
-        
         introspectedColumn.setIntrospectedTable(this);
     }
     
@@ -459,7 +485,7 @@ public abstract class IntrospectedTable {
         attributes.put(name, value);
     }
     
-    public void calculateAttributes() {
+    public void initialize() {
         calculateDAOImplementationPackage();
         calculateDAOInterfacePackage();
         calculateDAOImplementationType();
@@ -474,7 +500,7 @@ public abstract class IntrospectedTable {
         calculateSqlMapPackage();
         calculateSqlMapFileName();
         
-        ibatorContext.getPlugins().attributesCalculated(this);
+        ibatorContext.getPlugins().initialized(this);
     }
     
     private void calculateDAOImplementationPackage() {

@@ -41,7 +41,6 @@
   <path id="emma.runtime.path">
     <pathelement location="${work.instrumented}"/>
     <pathelement location="${work.classes}"/>
-    <pathelement location="${work.buildsupport}"/>
     <path refid="emma.lib"/>
   </path>
 	

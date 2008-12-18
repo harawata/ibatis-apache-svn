@@ -37,7 +37,7 @@ import org.apache.ibatis.ibator.config.IbatorContext;
  * <ol>
  *   <li>The setXXX methods are called one time</li>
  *   <li>The validate method is called one time</li>
- *   <li>The attributesCalculated method is called for each introspected table</li>
+ *   <li>The initialized method is called for each introspected table</li>
  *   <li>The daoXXX methods are called for each introspected table</li>
  *   <li>The modelXXX methods are called for each introspected table</li>
  *   <li>The sqlMapXXX methods are called for each introspected table</li>
@@ -88,11 +88,12 @@ public interface IbatorPlugin {
     void setProperties(Properties properties);
     
     /**
-     * This method is called after the IntrospectedTable calculates all
-     * the attributes for code generation.  Attributes are listed as
-     * static Strings with the prefix ATTR_ in IntrospectedTable.  Plugins
-     * can implement this method to override any of the default attributes,
-     * or to add additional attributes for use by other plugin methods.
+     * This method is called just before the getGeneratedXXXFiles methods
+     * are called on the introspected table.  Plugins can implement this
+     * method to override any of the default attributes, or change
+     * the results of database introspection, before any code
+     * generation activities occur.  Attributes are listed as
+     * static Strings with the prefix ATTR_ in IntrospectedTable.
      * <p>
      * A good example of overriding an attribute would be the case where
      * a user wanted to change the name of one of the generated classes,
@@ -107,7 +108,7 @@ public interface IbatorPlugin {
      *  
      * @param introspectedTable
      */
-    void attributesCalculated(IntrospectedTable introspectedTable);
+    void initialized(IntrospectedTable introspectedTable);
     
     /**
      * This method is called after all the setXXX methods are called, but before any

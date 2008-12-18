@@ -25,6 +25,14 @@ the adapter class <code>org.apache.ibatis.ibator.api.IbatorPluginAdapter</code>.
 class provides basic plugin support, and implements no-operation methods for most of the
 interface methods (similar to Swing adapter classes).</p>
 
+<p>Ibator supplies several plugins (all are in the package
+<code>org.apache.ibatis.ibator.plugins</code>).  The supplied plugins demonstrate
+different types of tasks that can be accomplished with Ibator plugins.  Source
+code for the plugins is available with the Ibator downloads, or can be viewed
+online
+<a target="_blank" href="http://svn.apache.org/repos/asf/ibatis/trunk/java/tools/ibator/core/src/org/apache/ibatis/ibator/plugins/">
+here</a>.</p>
+
 <h2>Plugin Lifecycle</h2>
 <p>Plugins have a lifecycle.  Plugins are created during the initialization of the code
 generation process and are called, in order, in different phases of the process.  The following
@@ -37,7 +45,7 @@ list shows the basic lifecycle of a plugin:</p>
       then no further methods in the plugin will be called</li>
   <li>For each table in the configuration:
     <ol type="a">
-      <li><code>attributesCalculated</code> method called</li>
+      <li><code>initialized</code> method called</li>
       <li>DAO Methods:<sup>1,2</sup>
         <ol type="i">
           <li><code>daoXXXMethodGenerated(Method, TopLevelClass, IntrospectedTable)</code> - these methods
