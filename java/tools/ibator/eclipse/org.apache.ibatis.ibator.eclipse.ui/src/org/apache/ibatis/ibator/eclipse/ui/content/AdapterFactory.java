@@ -18,9 +18,13 @@ package org.apache.ibatis.ibator.eclipse.ui.content;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.apache.ibatis.ibator.eclipse.ui.IbatorClasspathVariableInitializer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdapterFactory;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.jdt.core.IClasspathEntry;
+import org.eclipse.jdt.core.IJavaProject;
 
 /**
  * This class provides a factory for different adapters used in the plugin.
@@ -43,6 +47,12 @@ public class AdapterFactory implements IAdapterFactory {
                 return new IbatorConfigurationFileAdapter(
                         (IFile) adaptableObject);
             }
+        } else if (adaptableObject instanceof IJavaProject) {
+            if (adapterType == JavaProjectAdapter.class) {
+                if (!isIbatorProject((IJavaProject) adaptableObject)) {
+                    return new JavaProjectAdapter((IJavaProject) adaptableObject);
+                }
+            }
         }
 
         return null;
@@ -50,7 +60,8 @@ public class AdapterFactory implements IAdapterFactory {
 
     @SuppressWarnings("unchecked")
     public Class[] getAdapterList() {
-        return new Class[] { IbatorConfigurationFileAdapter.class };
+        return new Class[] { IbatorConfigurationFileAdapter.class,
+                JavaProjectAdapter.class};
     }
 
     private boolean isIbatorConfigurationFile(IFile file) {
@@ -78,6 +89,36 @@ public class AdapterFactory implements IAdapterFactory {
         try {
             is.close();
         } catch (IOException e) {
+            // ignore
+            ;
+        }
+        
+        return rc;
+    }
+    
+    /**
+     * returns true if the project has Ibator on it's classpath
+     * 
+     * @param project
+     * @return
+     */
+    private boolean isIbatorProject(IJavaProject project) {
+        boolean rc = false;
+        
+        try {
+            IClasspathEntry[] classpath = project.getRawClasspath();
+            for (IClasspathEntry iClasspathEntry : classpath) {
+                if (iClasspathEntry.getEntryKind() != IClasspathEntry.CPE_VARIABLE) {
+                    continue;
+                }
+                
+                IPath path = iClasspathEntry.getPath();
+                if (path.segment(0).equals(IbatorClasspathVariableInitializer.IBATOR_JAR)) {
+                    rc = true;
+                    break;
+                }
+            }
+        } catch (Exception e) {
             // ignore
             ;
         }

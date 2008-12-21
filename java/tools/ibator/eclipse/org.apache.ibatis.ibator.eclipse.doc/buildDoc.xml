@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <project default="refresh">
   <path id="org.abache.ibatis.ibator.doc.javadocclasspath">
   	<pathelement location="../org.apache.ibatis.ibator.eclipse.ui/bin"/>
@@ -14,7 +13,7 @@
       access="protected" 
       author="true" 
       destdir="html/javadoc" 
-      doctitle="Apache iBATIS Ibator" 
+      doctitle="Apache iBATIS Ibator API Specifications" 
       nodeprecated="false" 
       nodeprecatedlist="false" 
       noindex="false" 

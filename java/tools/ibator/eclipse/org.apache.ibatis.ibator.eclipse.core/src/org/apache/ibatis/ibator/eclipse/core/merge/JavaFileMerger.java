@@ -15,18 +15,15 @@
  */
 package org.apache.ibatis.ibator.eclipse.core.merge;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import org.apache.ibatis.ibator.exception.ShellException;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
@@ -78,20 +75,13 @@ public class JavaFileMerger {
         ASTParser astParser = ASTParser.newParser(AST.JLS3);
         NewJavaFileVisitor newJavaFileVisitor = visitNewJavaFile(astParser);
 
-        IFile existingFile = getFile();
-        
-        ICompilationUnit icu = JavaCore.createCompilationUnitFrom(existingFile);
-        IDocument document;
-        try {
-            document = new Document(icu.getSource());
-        } catch (CoreException e) {
-            throw new ShellException(e.getStatus().getMessage(), e);
-        }
+        String existingFile = getExistingFileContents();
+        IDocument document = new Document(existingFile);
 
         // delete ibator generated stuff, and collect imports
         ExistingJavaFileVisitor visitor = new ExistingJavaFileVisitor(javaDocTags);
 
-        astParser.setSource(icu);
+        astParser.setSource(existingFile.toCharArray());
         CompilationUnit cu = (CompilationUnit) astParser.createAST(null);
         AST ast = cu.getAST();
         cu.recordModifications();
@@ -101,7 +91,7 @@ public class JavaFileMerger {
         if (typeDeclaration == null) {
             StringBuffer sb = new StringBuffer();
             sb.append("No types defined in the file ");
-            sb.append(existingFile.getName());
+            sb.append(existingFilePath);
 
             throw new ShellException(sb.toString());
         }
@@ -276,20 +266,36 @@ public class JavaFileMerger {
         return newVisitor;
     }
     
-    private IFile getFile() throws ShellException {
-        IPath path = new Path(existingFilePath);
-        IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-        IFile file = root.getFileForLocation(path);
-        if (file != null && file.exists()) {
-            return file;
-        } else {
+    private String getExistingFileContents() throws ShellException {
+        File file = new File(existingFilePath);
+        
+        if (!file.exists()) {
             // this should not happen because ibator only returns the path
             // calculated by the eclipse callback
             StringBuilder sb = new StringBuilder();
             sb.append("The file ");
             sb.append(existingFilePath);
-            sb.append(" does not exist in this workspace");
+            sb.append(" does not exist");
             throw new ShellException(sb.toString());
+        }
+
+        try {
+            StringBuilder sb = new StringBuilder();
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            char[] buffer = new char[1024];
+            int returnedBytes = br.read(buffer);
+            while (returnedBytes != -1) {
+                sb.append(buffer, 0, returnedBytes);
+                returnedBytes = br.read(buffer);
+            }
+        
+            br.close();
+            return sb.toString();
+        } catch (IOException e) {
+            StringBuilder sb = new StringBuilder();
+            sb.append("IOException reading the file ");
+            sb.append(existingFilePath);
+            throw new ShellException(sb.toString(), e);
         }
     }
 }

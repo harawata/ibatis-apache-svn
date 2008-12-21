@@ -14,6 +14,7 @@
   <li>A new file wizard for creating configuration files</li>
   <li>An popup menu action to run Ibator</li>
   <li>An integrated Ant Task</li>
+  <li>Classpath Variables for Ibator</li>
 </ul>
 
 <h2>New Configuration File Wizard</h2>
@@ -33,6 +34,21 @@ for setting up a new configuration file.</p>
 <h2>Integrated Ant Task</h2>
 <p>See the page <a href="usingAnt.html">Using the Integrated Ant Task</a> for more
 information about using the integrated Ant task.</p>
+
+<h2>Classpath Variables</h2>
+<p>The plugin defines these classpath variables that will be useful for anyone
+implementing an Ibator extension:</p>
+<ul>
+  <li><code>IBATOR_JAR</code> - this points to the Ibator JAR file included
+      with the plugin.</li>
+  <li><code>IBATOR_JAR_SRC</code> - this points to the source archive for Ibator
+      included with the plugin.  You can attach this source archive to the
+      Ibator JAR file to browse the source code.</li>
+</ul>
+<p>You can uses these variables to easily add Ibator to the build path of your
+Ibator extension project.  Ibator also defines a menu option that will add these
+variables to any Java project.  Right click on any Java project, then
+take the menu option "Add Ibator to Build Path".</p>  
 
 </body>
 </html>

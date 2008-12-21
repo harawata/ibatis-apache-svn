@@ -12,4 +12,6 @@
       </topic>
       <topic href="html/eclipseui/buildingFromSVN.html" label="Building from SVN">
       </topic>
+      <topic href="html/eclipseui/manualTesting.html" label="Manual Test Scripts">
+      </topic>
 </toc>

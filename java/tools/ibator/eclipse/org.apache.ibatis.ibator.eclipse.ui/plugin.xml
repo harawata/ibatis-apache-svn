@@ -11,6 +11,13 @@
                type="org.apache.ibatis.ibator.eclipse.ui.content.IbatorConfigurationFileAdapter">
          </adapter>
       </factory>
+      <factory
+            adaptableType="org.eclipse.jdt.core.IJavaProject"
+            class="org.apache.ibatis.ibator.eclipse.ui.content.AdapterFactory">
+         <adapter
+               type="org.apache.ibatis.ibator.eclipse.ui.content.JavaProjectAdapter">
+         </adapter>
+      </factory>
    </extension>
    
    <extension
@@ -46,6 +53,19 @@
                menubarPath="additions">
          </action>
       </objectContribution>
+      <objectContribution
+            adaptable="true"
+            id="org.apache.ibatis.ibator.eclipse.ui.IbatorLessProjectContribution"
+            objectClass="org.apache.ibatis.ibator.eclipse.ui.content.JavaProjectAdapter">
+         <action
+               class="org.apache.ibatis.ibator.eclipse.ui.actions.AddIbatorAction"
+               enablesFor="1"
+               icon="icons/iBatisLogo.gif"
+               id="org.apache.ibatis.ibator.eclipse.ui.AddIbatorAction"
+               label="Add Ibator to Build Path"
+               menubarPath="additions">
+         </action>
+      </objectContribution>
    </extension>
    <extension
          point="org.eclipse.ant.core.antTasks">
@@ -68,5 +88,18 @@
             id="org.apache.ibatis.ibator.eclipse.ui.NewConfigFileWizard"
             name="Apache iBATIS Ibator Configuration File">
       </wizard>
+   </extension>
+   <extension
+         point="org.eclipse.jdt.core.classpathVariableInitializer">
+      <classpathVariableInitializer
+            class="org.apache.ibatis.ibator.eclipse.ui.IbatorClasspathVariableInitializer"
+            readOnly="true"
+            variable="IBATOR_JAR">
+      </classpathVariableInitializer>
+      <classpathVariableInitializer
+            class="org.apache.ibatis.ibator.eclipse.ui.IbatorClasspathVariableInitializer"
+            readOnly="true"
+            variable="IBATOR_JAR_SRC">
+      </classpathVariableInitializer>
    </extension>
 </plugin>

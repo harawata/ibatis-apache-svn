@@ -87,7 +87,7 @@ public class IbatorConfigVerifyer extends DefaultHandler {
             throw new SAXException("Not an Ibator configuration file");
         }
         
-        // return a null InpputSource - we don't want to go to the Internet
+        // return a null InputSource - we don't want to go to the Internet
         StringReader nullStringReader = new StringReader("");
         return new InputSource(nullStringReader);
     }
