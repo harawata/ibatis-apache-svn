@@ -23,7 +23,7 @@ interface, logging system, and progress notification system.</p>
    core Ibator interfaces.  For example, if you want to provide a custom implementation
    of the JavaTypeResolver interface.  When running Ibator from the simple menu option,
    you have no control over the classpath of the Ibator run.  When you run from
-   Ant, you have much more control over the runtime classpath./li>
+   Ant, you have much more control over the runtime classpath.</li>
 </ul>
 
 <h2>Integrated Ant Task Detail</h2>
@@ -36,8 +36,8 @@ interface, logging system, and progress notification system.</p>
     &lt;eclipse.convertPath resourcepath="IbatorTest/src/config/ibatorConfig.xml"
                          property="thePath"/&gt;
     &lt;ibator.generate configfile="${thePath}" /&gt;
-  &lt;/target>
-&lt;/project>
+  &lt;/target&gt;
+&lt;/project&gt;
 </pre>
 <p>This file uses the Eclipse supplied "eclipse.convertPath" task to calculate the
  actual path of the configuration file.  Then we use the

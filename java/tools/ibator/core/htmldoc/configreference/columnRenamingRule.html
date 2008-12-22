@@ -17,7 +17,7 @@
 
 <h1>The &lt;columnRenamingRule&gt; Element</h1>
 <p>The &lt;columnRenamingRule&gt; element is used to tell Ibator to rename
-database columns before calulating the corresponding property
+database columns before calculating the corresponding property
 name in an introspected table.  This is useful when all columns
 in a table have a common prefix that should be removed before
 calculating the property name.  For example, suppose a table
@@ -30,7 +30,7 @@ contains the following columns:</p>
  </ul>
 <p>It might be annoying to have the generated properties
  all containing the CUST prefix.  The prefix can be removed by
- specifying a renimg rule like this:</p>
+ specifying a renamimg rule like this:</p>
 
 <p><code>&lt;columnRenamingRule searchString="^CUST_" replaceString="" /&gt;</code></p>
 
@@ -103,7 +103,7 @@ element of the <a href="table.html">&lt;table&gt;</a> element.</p>
   </tr>
   <tr>
     <td>replaceString</td>
-    <td>This is a string to be substituted for every occurance of the
+    <td>This is a string to be substituted for every occurrence of the
         search string.  If not specified, the empty string is used.</td>
   </tr>
 </table>

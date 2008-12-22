@@ -16,7 +16,9 @@ of the Eclipse user interface for Ibator.</p>
   <li>Make sure that MySQL is installed and running.  The following scripts also assume
       that the password for <code>root</code> is also <code>root</code></li>
   <li>Make sure that you have downloaded the MySQL Connector for Java and unzipped
-      it somewhere on your local drive.</li>
+      it somewhere on your local drive.  The following scripts assume the
+      MySQL JDBC driver is located at
+      "/JavaTools/mysql-connector-java-5.0.6/mysql-connector-java-5.0.6-bin.jar".</li>
   <li>If you have not created the Ibator test database already, then execute the
       following script:
       <pre>
@@ -36,6 +38,8 @@ create table i (id int not null, description varchar(50), primary key(id));
 create table j (id int not null, description varchar(50), primary key(id));
       </pre>
   </li>
+  <li>Make sure that the new version of the plugin has been built in the
+      "IbatorUpdateSite" project.</li>
 </ol>
 
 <h2>Tests</h2>
@@ -50,22 +54,23 @@ tests build on items created in previous tests.</p>
   <li>Show all versions of the feature</li>
   <li>Install the oldest version of the feature</li>
   <li>Restart Eclipse</li>
-  <li>Do a regular software update and ensure that the newest version of the
-      feature is lasted as an install option (this may also install other Eclipse updates)</li>
+  <li>Do a regular software update and verify that the newest version of the
+      feature is listed as an install option (this may also install other Eclipse updates)</li>
   <li>Restart Eclipse</li>
-  <li>Ensure that the latest version of the feature is listed as installed</li>
+  <li>Verify that the latest version of the feature is listed as installed</li>
 </ol>
 
 <h3>Documentation</h3>
 <ol>
-  <li>Start Eclipse if not already started</li>
   <li>Open the Eclipse help (Help&gt;Help Contents)</li>
-  <li>Ensure that the book "Apache iBATIS Ibator User's Guide" appears
+  <li>Verify that the book "Apache iBATIS Ibator User's Guide" appears
       in the contents.</li>
-  <li>Ensure that every item in the contents points to a valid page,
+  <li>Verify that every item in the contents points to a valid page,
       and that all pages are referenced in the table of contents.  This is
       especially important if new packages or help pages have been added anywhere.</li>
-  <li>Ensure that the latest version of the release notes is shown both in the
+  <li>Verify that the core Ibator documentation pages do not show the options
+      to show or hide the menu.  These options should be disabled by the style sheet.</li>
+  <li>Verify that the latest version of the release notes is shown both in the
       Eclipse UI documentation, and the Core Ibator documentation.</li>
 </ol>
 
@@ -155,8 +160,8 @@ tests build on items created in previous tests.</p>
   <li>Save and close the file</li>
   <li>Right click on the Ibator configuration file, and then
       take the option "Generate iBATIS Artifacts"</li>
-  <li>Verify that <code>src.dao.ADAOImpl</code> now extends <code>SqlMapClientDaoSupport<.code>.
-      Note that there will be several errors in the workspace now because of the new dependancies
+  <li>Verify that <code>src.dao.ADAOImpl</code> now extends <code>SqlMapClientDaoSupport</code>.
+      Note that there will be several errors in the workspace now because of the new dependencies
       on Spring that were generated.</li>
 
   <li>Re open the Ibator configuration file.</li>
@@ -215,7 +220,7 @@ tests build on items created in previous tests.</p>
 <h3>Classpath Variables</h3>
 <ol>
   <li>Create a new Java project called "IbatorPlugin".  Make sure that there are
-      seperate folders for source and class files.</li>
+      separate folders for source and class files.</li>
   <li>Right click on the "IbatorPlugin" project, then take the menu option to
       "Add Ibator to Build Path".</li>
   <li>Verify that the IBATOR_JAR classpath variable has been added to the project's
@@ -223,9 +228,9 @@ tests build on items created in previous tests.</p>
   <li>Expand the Ibator JAR file, select any class and double click on the class.
       Verify that the source code is attached and that you see the source code for
       the class.</li>
-  <li>Make a new Java package called "plugin".</li>
-  <li>Make a new Java class called "plugin.TestPlugin" that extends
-      "IbatorPluginAdapter".</li>
+  <li>Make a new Java package called <code>plugin</code>.</li>
+  <li>Make a new Java class called <code>plugin.TestPlugin</code> that extends
+      <code>IbatorPluginAdapter</code>.</li>
   <li>Change the generated <code>validate</code> method so that it returns
       <code>true</code>.</li>
   <li>Override the <code>modelBaseRecordClassGenerated</code> method and make
@@ -245,6 +250,9 @@ public boolean modelBaseRecordClassGenerated(TopLevelClass topLevelClass,
 }
       </pre></li>
   <li>Save and close the Java file.</li>
+  <li>Export <code>plugin.TestPlugin</code> as a JAR file to "/Temp/TestPlugin.jar".
+      We need to export as a JAR file because Eclipse can't add class folders to an
+      Ant launch :(</li>
   <li>Open the <code>ibatorConfig.xml</code> file from the previous tests.</li>
   <li>Add the plugin to the configuration.  Add it after the first &lt;ibatorContext&gt;
       element like this:
@@ -258,10 +266,13 @@ public boolean modelBaseRecordClassGenerated(TopLevelClass topLevelClass,
   <li>Right click on the <code>build.xml</code> file from the previous tests, then select the
       menu option "Run As&gt;Ant Build...".  You should see the Ant launch configuration
       dialog open.</li>
-  <li>Select the "Classpath" tab, then add the "bin" directory of the "IbatorPlugin" project
-      to "User Entries"</li>
+  <li>Select the "Classpath" tab, then add "/Temp/TestPlugin.jar" file to the classpath as an
+     external JAR</li>
   <li>Press the "Run" button</li>
   <li>After Ibator runs, you should see a "BUILD SUCCESSFUL" message.</li>
+  <li>Verify that <code>gen.model.A.java</code> now implements <code>java.io.Serializable</code>.
+      Note that Eclipse may show a warning related to the missing <code>serialVersionUID</code>
+      field.  This is expected and can be ignored.</li>
 </ol>
 
 </body>
