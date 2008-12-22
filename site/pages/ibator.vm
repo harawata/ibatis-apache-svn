@@ -29,12 +29,16 @@
  Abator means "one who abates a nuisance".</p>
 
 <h3>Ibator News</h3>
+<p>(December 22, 2008) Ibator version 1.2.1 is released.  This version fixes a couple of bugs
+ that manifested in the Eclipse plugin, enhances the Plugin API, and adds a couple of features
+ to the Eclipse plugin.  Even though this is a relatively minor release, we recommend that
+ everyone upgrade.</p>
 <p>(December 11, 2008) Ibator version 1.2.0 is released.  This version has several important
  enhancements over Abator 1.1.0.  See the
  <a href="http://ibatis.apache.org/docs/tools/ibator/whatsNew.html">What's New?</a>
  section of the online documentation for full details.  Note that Ibator requires
  Java 5.0 or greater.  The Eclipse plugin requires Eclipse 3.4.1 or greater.  Ibator
- generates code compatible with iATIS version 2.2.0 or greater.</p>
+ generates code compatible with iBATIS version 2.2.0 or greater.</p>
 <p>(April 14, 2008) Due to a trade registration dispute, Abator is renamed to Ibator.
  iBATOR is currently under development.  The initial source code drop can be checked out from SVN 
  at <a href="http://svn.apache.org/repos/asf/ibatis/trunk/java/tools/ibator/" target="_blank">
@@ -56,8 +60,8 @@
  standalone JAR includes an Ant task to run Ibator, or you can run Ibator from the command
  line of from Java code.</p>
 <ul>
-  <li><a href="http://people.apache.org/builds/ibatis/alpha/ibator-1.2.0-665.zip">
-      Ibator 1.2.0 w/Binaries and Source</a>
+  <li><a href="http://people.apache.org/builds/ibatis/alpha/ibator-1.2.1-681.zip">
+      Ibator 1.2.1 w/Binaries and Source</a>
   </li>
 </ul>
 
@@ -74,7 +78,7 @@
 
 <p>When run as an Eclipse plugin, Ibator will persist the generated Java classes and SqlMap files
  in Eclipse projects.  Ibator can be run iteratively multiple time as the database design matures 
-- and any hand coded additions to generated Java classes or SqlMap files will remain undisturbed.</p>
+ - and any hand coded additions to generated Java classes or SqlMap files will remain undisturbed.</p>
 
 <p>Documentation for Ibator is integrated into the Eclipse help system.</p>
  
@@ -85,7 +89,10 @@
   <li>JDK 5.0 or Higher</li>
 </ul>
 <h3>Automatic Eclipse Install</h3>
-<p>Use the built in Eclipse install support by following these steps:</p>
+<p>If you've already installed a prior version of Ibator, simply run the Eclipse Update
+ tool and the new version will be found automatically.</p>
+<p>If you've not previously installed Ibator, use the built in Eclipse install support by
+ following these steps:</p>
 <ol>
   <li>Take the "Help&gt;Software Updates..." Menu Option</li>
   <li>Select the "Available Software" Tab</li>
@@ -105,7 +112,7 @@
 <h3>Manual Eclipse Install</h3>
 <p>The automatic install is much preferred, but you can also install Ibator manually if you
  desire. To install manually, download the file
- <a href="http://people.apache.org/builds/ibatis/alpha/IbatorForEclipse1.2.0.zip">IbatorForEclipse1.2.0.zip</a>
+ <a href="http://people.apache.org/builds/ibatis/alpha/IbatorForEclipse1.2.1.zip">IbatorForEclipse1.2.1.zip</a>
  and unzip
  the file to some convenient location.  After unzipping the
  update site archive, follow these steps in Eclipse:</p>

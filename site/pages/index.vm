@@ -49,13 +49,13 @@
 
   <h2>News</h2>
 
-<h3>Apache iBATIS Ibator Version 1.2.0 Released</h3>
-<p>(December 11, 2008) Ibator version 1.2.0 is released.  This version has several important
- enhancements over Abator 1.1.0.  See the
+<h3>Apache iBATIS Ibator Version 1.2.1 Released</h3>
+<p>(December 22, 2008) Ibator version 1.2.1 is released. This version fixes a couple of bugs
+ that manifested in the Eclipse plugin, enhances the Plugin API, and adds a couple of features
+ to the Eclipse plugin.  Even though this is a relatively minor release, we recommend that
+ everyone upgrade.  See the
  <a href="http://ibatis.apache.org/docs/tools/ibator/whatsNew.html">What's New?</a>
- section of the online documentation for full details.  Note that Ibator requires
- Java 5.0 or greater.  The Eclipse plugin requires Eclipse 3.4.1 or greater.  Ibator
- generates code compatible with iATIS version 2.2.0 or greater.</p>
+ section of the online documentation for full details.</p>
 
 <p><b><a href="ibator.html">Get Ibator Here</a></b></p>
 
