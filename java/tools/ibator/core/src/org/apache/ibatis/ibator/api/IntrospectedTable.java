@@ -111,7 +111,7 @@ public abstract class IntrospectedTable {
     protected TableConfiguration tableConfiguration;
     protected FullyQualifiedTable fullyQualifiedTable;
     protected IbatorContext ibatorContext;
-    private IbatorRules rules;
+    protected IbatorRules rules;
     protected List<IntrospectedColumn> primaryKeyColumns;
     protected List<IntrospectedColumn> baseColumns;
     protected List<IntrospectedColumn> blobColumns;
@@ -328,16 +328,6 @@ public abstract class IntrospectedTable {
     }
     
     public IbatorRules getRules() {
-        if (rules == null) {
-            if (tableConfiguration.getModelType() == ModelType.HIERARCHICAL) {
-                rules = new HierarchicalModelRules(tableConfiguration, this);
-            } else if (tableConfiguration.getModelType() == ModelType.FLAT) {
-                rules = new FlatModelRules(tableConfiguration, this);
-            } else {
-                rules = new ConditionalModelRules(tableConfiguration, this);
-            }
-        }
-        
         return rules;
     }
     
@@ -499,6 +489,14 @@ public abstract class IntrospectedTable {
         
         calculateSqlMapPackage();
         calculateSqlMapFileName();
+        
+        if (tableConfiguration.getModelType() == ModelType.HIERARCHICAL) {
+            rules = new HierarchicalModelRules(tableConfiguration, this);
+        } else if (tableConfiguration.getModelType() == ModelType.FLAT) {
+            rules = new FlatModelRules(tableConfiguration, this);
+        } else {
+            rules = new ConditionalModelRules(tableConfiguration, this);
+        }
         
         ibatorContext.getPlugins().initialized(this);
     }
@@ -678,4 +676,14 @@ public abstract class IntrospectedTable {
      * @return the number of progress messages
      */
     public abstract int getGenerationSteps();
+
+    /**
+     * This method exists to give plugins the opportunity
+     * to replace the calculated rules if necessary.
+     * 
+     * @param rules
+     */
+    public void setRules(IbatorRules rules) {
+        this.rules = rules;
+    }
 }

@@ -8,9 +8,9 @@
 </head>
 <body>
 <h1>Manual Test Scripts</h1>
-<p>This page details test scripts for testing the different parts of the Ibator UI.
-This information may also be helpfol in learning how to use the different parts
-of the Eclipse user interface.</p>
+<p>This page lists scripts for testing the different parts of the Ibator UI.
+This information may also be helpful in learning how to use the different parts
+of the Eclipse user interface for Ibator.</p>
 <h2>Setup</h2>
 <ol>
   <li>Make sure that MySQL is installed and running.  The following scripts also assume
@@ -60,12 +60,12 @@ tests build on items created in previous tests.</p>
 <ol>
   <li>Start Eclipse if not already started</li>
   <li>Open the Eclipse help (Help&gt;Help Contents)</li>
-  <li>Ensure that the book "Apache iBATIS Ibator User's Guide" apprears
+  <li>Ensure that the book "Apache iBATIS Ibator User's Guide" appears
       in the contents.</li>
   <li>Ensure that every item in the contents points to a valid page,
       and that all pages are referenced in the table of contents.  This is
       especially important if new packages or help pages have been added anywhere.</li>
-  <li>Ensure that the latest version of the relase notes is shown both in the
+  <li>Ensure that the latest version of the release notes is shown both in the
       Eclipse UI documentation, and the Core Ibator documentation.</li>
 </ol>
 
@@ -133,7 +133,7 @@ tests build on items created in previous tests.</p>
     <li>Right click on the file, then take the option "Generate iBATIS Artifacts"</li>
     <li>Verify that code is generated in the two different source folders.  Code for table "a"
         should be in the "src" folder, code for tables "a" through "j" should be in the
-        "generatedsrc" folder.  Verify that there are no compliation errors or warnings.</li>
+        "generatedsrc" folder.  Verify that there are no compilation errors or warnings.</li>
 </ol>
 
 <h3>Java File Merger</h3>
@@ -167,7 +167,7 @@ tests build on items created in previous tests.</p>
   <li>Verify that <code>src.dao.ADAOImpl</code> doesn't extend anything.  There will be one
       error in the file related to the Spring import (the Java merger does not reconcile all
       imports).  Delete the import and verify that there are no other errors in the
-      workspace.  Also, verigy that the field <code>mergetest</code> and its
+      workspace.  Also, verify that the field <code>mergetest</code> and its
       associated getter and setter still exist.</li>
 </ol>
 
@@ -214,7 +214,54 @@ tests build on items created in previous tests.</p>
 
 <h3>Classpath Variables</h3>
 <ol>
-  <li></li>
+  <li>Create a new Java project called "IbatorPlugin".  Make sure that there are
+      seperate folders for source and class files.</li>
+  <li>Right click on the "IbatorPlugin" project, then take the menu option to
+      "Add Ibator to Build Path".</li>
+  <li>Verify that the IBATOR_JAR classpath variable has been added to the project's
+      build path.</li>
+  <li>Expand the Ibator JAR file, select any class and double click on the class.
+      Verify that the source code is attached and that you see the source code for
+      the class.</li>
+  <li>Make a new Java package called "plugin".</li>
+  <li>Make a new Java class called "plugin.TestPlugin" that extends
+      "IbatorPluginAdapter".</li>
+  <li>Change the generated <code>validate</code> method so that it returns
+      <code>true</code>.</li>
+  <li>Override the <code>modelBaseRecordClassGenerated</code> method and make
+      the method match the following:
+      <pre>
+
+@Override
+public boolean modelBaseRecordClassGenerated(TopLevelClass topLevelClass,
+        IntrospectedTable introspectedTable) {
+
+    FullyQualifiedJavaType fqjt = new FullyQualifiedJavaType("java.io.Serializable");
+
+    topLevelClass.addImportedType(fqjt);
+    topLevelClass.addSuperInterface(fqjt);
+
+    return true;
+}
+      </pre></li>
+  <li>Save and close the Java file.</li>
+  <li>Open the <code>ibatorConfig.xml</code> file from the previous tests.</li>
+  <li>Add the plugin to the configuration.  Add it after the first &lt;ibatorContext&gt;
+      element like this:
+      <pre>
+
+&lt;ibatorContext id="context1" targetRuntime="Ibatis2Java5" &gt;
+  &lt;ibatorPlugin type="plugin.TestPlugin"/&gt;
+  ...
+      </pre></li>
+  <li>Save and close the configuration file.</li>
+  <li>Right click on the <code>build.xml</code> file from the previous tests, then select the
+      menu option "Run As&gt;Ant Build...".  You should see the Ant launch configuration
+      dialog open.</li>
+  <li>Select the "Classpath" tab, then add the "bin" directory of the "IbatorPlugin" project
+      to "User Entries"</li>
+  <li>Press the "Run" button</li>
+  <li>After Ibator runs, you should see a "BUILD SUCCESSFUL" message.</li>
 </ol>
 
 </body>

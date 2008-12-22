@@ -452,10 +452,6 @@ public class IbatorContext extends PropertyHolder {
         } finally {
             closeConnection(connection);
         }
-        
-        for (IntrospectedTable introspectedTable : introspectedTables) {
-            introspectedTable.calculateGenerators(warnings, callback);
-        }
     }
 
     public int getGenerationSteps() {
@@ -495,6 +491,7 @@ public class IbatorContext extends PropertyHolder {
                 callback.checkCancel();
 
                 introspectedTable.initialize();
+                introspectedTable.calculateGenerators(warnings, callback);
                 generatedJavaFiles.addAll(introspectedTable.getGeneratedJavaFiles());
                 generatedXmlFiles.addAll(introspectedTable.getGeneratedXmlFiles());
 
