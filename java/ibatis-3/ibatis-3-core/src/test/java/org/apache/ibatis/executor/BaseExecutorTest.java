@@ -292,10 +292,10 @@ public abstract class BaseExecutorTest extends BaseDataTest {
       config.setLazyLoadingEnabled(false);
       List<Blog> blogs = executor.query(selectBlog, 1, Executor.NO_ROW_OFFSET, Executor.NO_ROW_LIMIT, Executor.NO_RESULT_HANDLER);
       executor.flushStatements();
-      executor.rollback(true);
       Assert.assertEquals(1, blogs.size());
       Assert.assertEquals(2, blogs.get(0).getPosts().size());
       Assert.assertEquals(1, blogs.get(0).getPosts().get(1).getBlog().getPosts().get(1).getBlog().getId());
+      executor.rollback(true);
     } finally {
       config.setLazyLoadingEnabled(true);
     }
