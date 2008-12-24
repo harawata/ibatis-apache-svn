@@ -6,25 +6,37 @@
 
 <mapper namespace="com.domain.AuthorMapper">
 
-  <select id="selectAllAuthors" resultType="domain.blog.Author">
+  <select id="selectAllAuthors"
+          resultType="domain.blog.Author">
     select * from author
   </select>
 
-  <parameterMap id="selectAuthor" type="domain.blog.Author">
+  <parameterMap id="selectAuthor"
+                type="domain.blog.Author">
     <parameter property="id" />
   </parameterMap>
 
-  <select id="selectAuthor" parameterMap="selectAuthor" resultType="domain.blog.Author">
+  <select id="selectAuthor"
+          parameterMap="selectAuthor"
+          resultType="domain.blog.Author">
     select * from author where id = ?
   </select>
 
-  <select id="selectAuthorWithInlineParams" parameterType="int" resultType="domain.blog.Author">
+  <select id="selectAuthorWithInlineParams"
+          parameterType="int"
+          resultType="domain.blog.Author">
     select * from author where id = #{id}
   </select>
 
-  <insert id="insertAuthor" parameterType="domain.blog.Author">
+  <insert id="insertAuthor"
+          parameterType="domain.blog.Author">
     insert into Author (id,username,password,email,bio)
     values (#{id},#{username},#{password},#{email},#{bio})
   </insert>
+
+  <delete id="deleteAuthor"
+          parameterType="int">
+    delete from Author where id = #{id}
+  </delete>
 
 </mapper>

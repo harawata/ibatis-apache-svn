@@ -63,11 +63,34 @@ public class SqlSessionTest extends BaseDataTest {
       Author expected = new Author(500, "cbegin", "******", "cbegin@somewhere.com", "Something...", null);
       session.insert("com.domain.AuthorMapper.insertAuthor", expected);
       Author actual = (Author) session.selectOne("com.domain.AuthorMapper.selectAuthor", new Author(500));
+      Assert.assertNotNull(actual);
       Assert.assertEquals(expected.getId(), actual.getId());
       Assert.assertEquals(expected.getUsername(), actual.getUsername());
       Assert.assertEquals(expected.getPassword(), actual.getPassword());
       Assert.assertEquals(expected.getEmail(), actual.getEmail());
       Assert.assertEquals(expected.getBio(), actual.getBio());
+    } finally {
+      session.close();
+    }
+  }
+
+  @Test
+  public void shouldDeleteAuthor() throws Exception {
+    SqlSession session = sqlMapper.openSession();
+    try {
+      final int id = 102;
+
+      List<Author> authors = session.selectList("com.domain.AuthorMapper.selectAuthor", id);
+      Assert.assertEquals(1,authors.size());
+
+      session.delete("com.domain.AuthorMapper.deleteAuthor", id);
+      authors = session.selectList("com.domain.AuthorMapper.selectAuthor", id);
+      Assert.assertEquals(0,authors.size());
+
+      session.end();
+      authors = session.selectList("com.domain.AuthorMapper.selectAuthor", id);
+      Assert.assertEquals(1,authors.size());
+
     } finally {
       session.close();
     }

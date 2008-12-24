@@ -27,7 +27,7 @@ public class DefaultSqlSession implements SqlSession {
   }
 
   public Object selectOne(String statement) {
-    return selectOne(statement,null);
+    return selectOne(statement, null);
   }
 
   public Object selectOne(String statement, Object parameter) {
@@ -53,14 +53,14 @@ public class DefaultSqlSession implements SqlSession {
   public List selectList(String statement, Object parameter, int offset, int limit, ResultHandler handler) {
     try {
       MappedStatement ms = configuration.getMappedStatement(statement);
-      return executor.query(ms, parameter , offset, limit, handler);
+      return executor.query(ms, parameter, offset, limit, handler);
     } catch (SQLException e) {
       throw ExceptionFactory.wrapException("Error querying database.  Cause: " + e, e);
     }
   }
 
   public Object insert(String statement) {
-    return insert(statement,null);
+    return insert(statement, null);
   }
 
   public Object insert(String statement, Object parameter) {
@@ -69,7 +69,7 @@ public class DefaultSqlSession implements SqlSession {
   }
 
   public int update(String statement) {
-    return update(statement,null);
+    return update(statement, null);
   }
 
   public int update(String statement, Object parameter) {
@@ -84,11 +84,11 @@ public class DefaultSqlSession implements SqlSession {
   }
 
   public int delete(String statement) {
-    return update(statement,null);
+    return update(statement, null);
   }
 
   public int delete(String statement, Object parameter) {
-    return update(statement,parameter);
+    return update(statement, parameter);
   }
 
   public void commit() {
@@ -111,7 +111,13 @@ public class DefaultSqlSession implements SqlSession {
 
   public void close() {
     try {
-      executor.close();
+      try {
+        if (dirty) {
+          this.end();
+        }
+      } finally {
+        executor.close();
+      }
     } catch (Exception e) {
       throw ExceptionFactory.wrapException("Error closing transaction.  Cause: " + e, e);
     }

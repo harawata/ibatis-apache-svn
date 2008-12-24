@@ -109,6 +109,7 @@ public abstract class BaseExecutor implements Executor {
   }
 
   public void commit(boolean required) throws SQLException {
+    localCache.clear();
     flushStatements();
     if (required) {
       transaction.commit();
@@ -116,6 +117,7 @@ public abstract class BaseExecutor implements Executor {
   }
 
   public void rollback(boolean required) throws SQLException {
+    localCache.clear();
     if (required) {
       transaction.rollback();
     }
