@@ -1,20 +1,16 @@
-Known Issues
-  * Duplicate element IDs are clobbering each other in config
-  * Statement (other elements?) not found does not fail gracefully
-
-Core
+Improvements
+ * Duplicate element IDs are clobbering each other in config
+ * Statement (other elements?) not found does not fail gracefully
  * Improved Error Messages
+ * Exception hierarchy returned from exceptionfactory
 
-XML Config
+Incomplete
  * Named parameter parsing/merging
  * Loosely bound cache id to instance
    - (perhaps use late-binding lookup proxies for all config elements?)
 
 API
- * Transaction Manager (REAL AutoCommit support...)
  * Mapper Interface Binding
- * Client / Mapper Factory
- * Exception hierarchy returned from exceptionfactory
 
 Testing
  * Functional tests

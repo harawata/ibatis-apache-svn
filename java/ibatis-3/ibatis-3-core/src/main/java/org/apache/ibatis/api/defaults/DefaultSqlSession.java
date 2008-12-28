@@ -92,17 +92,25 @@ public class DefaultSqlSession implements SqlSession {
   }
 
   public void commit() {
+    commit(false);
+  }
+
+  public void commit(boolean force) {
     try {
-      executor.commit(!autoCommit && dirty);
+      executor.commit(isCommitOrRollbackRequired(force));
       dirty = false;
     } catch (SQLException e) {
       throw ExceptionFactory.wrapException("Error committing transaction.  Cause: " + e, e);
     }
   }
 
-  public void end() {
+  public void rollback() {
+    rollback(false);
+  }
+
+  public void rollback(boolean force) {
     try {
-      executor.rollback(!autoCommit && dirty);
+      executor.rollback(isCommitOrRollbackRequired(force));
       dirty = false;
     } catch (SQLException e) {
       throw ExceptionFactory.wrapException("Error rolling back transaction.  Cause: " + e, e);
@@ -112,9 +120,7 @@ public class DefaultSqlSession implements SqlSession {
   public void close() {
     try {
       try {
-        if (dirty) {
-          this.end();
-        }
+        rollback(false);
       } finally {
         executor.close();
       }
@@ -123,5 +129,8 @@ public class DefaultSqlSession implements SqlSession {
     }
   }
 
+  private boolean isCommitOrRollbackRequired(boolean force) {
+    return (!autoCommit && dirty) || force;
+  }
 
 }

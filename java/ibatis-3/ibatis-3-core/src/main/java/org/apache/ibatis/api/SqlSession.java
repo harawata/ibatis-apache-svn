@@ -24,7 +24,9 @@ public interface SqlSession {
   int delete(String statement, Object parameter);
 
   void commit();
-  void end();
+  void commit(boolean force);
+  void rollback();
+  void rollback(boolean force);
   void close();
 
 }

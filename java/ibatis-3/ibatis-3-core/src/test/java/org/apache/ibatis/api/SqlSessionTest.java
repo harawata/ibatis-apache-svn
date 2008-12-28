@@ -2,7 +2,6 @@ package org.apache.ibatis.api;
 
 import org.junit.*;
 import org.apache.ibatis.BaseDataTest;
-import org.apache.ibatis.api.*;
 import org.apache.ibatis.io.Resources;
 
 import java.io.Reader;
@@ -87,7 +86,7 @@ public class SqlSessionTest extends BaseDataTest {
       authors = session.selectList("com.domain.AuthorMapper.selectAuthor", id);
       Assert.assertEquals(0,authors.size());
 
-      session.end();
+      session.rollback();
       authors = session.selectList("com.domain.AuthorMapper.selectAuthor", id);
       Assert.assertEquals(1,authors.size());
 
