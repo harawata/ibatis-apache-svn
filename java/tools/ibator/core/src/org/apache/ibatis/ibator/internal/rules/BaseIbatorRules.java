@@ -17,15 +17,30 @@ package org.apache.ibatis.ibator.internal.rules;
 
 import org.apache.ibatis.ibator.api.IntrospectedTable;
 import org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType;
+import org.apache.ibatis.ibator.config.TableConfiguration;
 
 /**
- * This interface centralizes all the rules related to code generation - including
+ * This class centralizes all the rules related to code generation - including
  * the methods and objects to create, and certain attributes related to those
  * objects.
  * 
+ * See package JavaDoc for more information.
+ * 
  * @author Jeff Butler
  */
-public interface IbatorRules {
+public abstract class BaseIbatorRules implements IbatorRules {
+
+    protected TableConfiguration tableConfiguration;
+    protected IntrospectedTable introspectedTable;
+
+    /**
+     * 
+     */
+    public BaseIbatorRules(IntrospectedTable introspectedTable) {
+        super();
+        this.introspectedTable = introspectedTable;
+        this.tableConfiguration = introspectedTable.getTableConfiguration();
+    }
 
     /**
      * Implements the rule for generating the insert SQL Map element and DAO
@@ -34,7 +49,9 @@ public interface IbatorRules {
      * 
      * @return true if the element and method should be generated
      */
-    boolean generateInsert();
+    public boolean generateInsert() {
+        return tableConfiguration.isInsertStatementEnabled();
+    }
 
     /**
      * Implements the rule for generating the insert selective SQL Map element and DAO
@@ -43,7 +60,9 @@ public interface IbatorRules {
      * 
      * @return true if the element and method should be generated
      */
-    boolean generateInsertSelective();
+    public boolean generateInsertSelective() {
+        return tableConfiguration.isInsertStatementEnabled();
+    }
     
     /**
      * Calculates the class that contains all fields.  This class is used
@@ -53,7 +72,20 @@ public interface IbatorRules {
      * 
      * @return the type of the class that holds all fields
      */
-    FullyQualifiedJavaType calculateAllFieldsClass();
+    public FullyQualifiedJavaType calculateAllFieldsClass() {
+        
+        FullyQualifiedJavaType answer;
+        
+        if (generateRecordWithBLOBsClass()) {
+            answer = introspectedTable.getRecordWithBLOBsType();
+        } else if (generateBaseRecordClass()) {
+            answer = introspectedTable.getBaseRecordType();
+        } else {
+            answer = introspectedTable.getPrimaryKeyType();
+        }
+        
+        return answer;
+    }
     
     /**
      * Implements the rule for generating the update by primary key without
@@ -63,7 +95,13 @@ public interface IbatorRules {
      * 
      * @return true if the element and method should be generated
      */
-    boolean generateUpdateByPrimaryKeyWithoutBLOBs();
+    public boolean generateUpdateByPrimaryKeyWithoutBLOBs() {
+        boolean rc = tableConfiguration.isUpdateByPrimaryKeyStatementEnabled()
+            && introspectedTable.hasPrimaryKeyColumns()
+            && introspectedTable.hasBaseColumns();
+        
+        return rc;
+    }
     
     /**
      * Implements the rule for generating the update by primary key with BLOBs
@@ -73,7 +111,13 @@ public interface IbatorRules {
      * 
      * @return true if the element and method should be generated
      */
-    boolean generateUpdateByPrimaryKeyWithBLOBs();
+    public boolean generateUpdateByPrimaryKeyWithBLOBs() {
+        boolean rc = tableConfiguration.isUpdateByPrimaryKeyStatementEnabled()
+            && introspectedTable.hasPrimaryKeyColumns()
+            && introspectedTable.hasBLOBColumns();
+    
+        return rc;
+    }
 
     /**
      * Implements the rule for generating the update by primary key selective
@@ -83,7 +127,14 @@ public interface IbatorRules {
      * 
      * @return true if the element and method should be generated
      */
-    boolean generateUpdateByPrimaryKeySelective();
+    public boolean generateUpdateByPrimaryKeySelective() {
+        boolean rc = tableConfiguration.isUpdateByPrimaryKeyStatementEnabled()
+            && introspectedTable.hasPrimaryKeyColumns()
+            && (introspectedTable.hasBLOBColumns()
+                    || introspectedTable.hasBaseColumns());
+    
+        return rc;
+    }
 
     /**
      * Implements the rule for generating the delete by primary key SQL Map
@@ -93,7 +144,12 @@ public interface IbatorRules {
      * 
      * @return true if the element and method should be generated
      */
-    boolean generateDeleteByPrimaryKey();
+    public boolean generateDeleteByPrimaryKey() {
+        boolean rc = tableConfiguration.isDeleteByPrimaryKeyStatementEnabled()
+            && introspectedTable.hasPrimaryKeyColumns();
+
+        return rc;
+    }
     
     /**
      * Implements the rule for generating the delete by example SQL Map element
@@ -102,7 +158,11 @@ public interface IbatorRules {
      * 
      * @return true if the element and method should be generated
      */
-    boolean generateDeleteByExample();
+    public boolean generateDeleteByExample() {
+        boolean rc = tableConfiguration.isDeleteByExampleStatementEnabled();
+
+        return rc;
+    }
     
     /**
      * Implements the rule for generating the result map without BLOBs. If
@@ -110,7 +170,12 @@ public interface IbatorRules {
      * 
      * @return true if the result map should be generated
      */
-    boolean generateBaseResultMap();
+    public boolean generateBaseResultMap() {
+        boolean rc = tableConfiguration.isSelectByExampleStatementEnabled()
+            || tableConfiguration.isSelectByPrimaryKeyStatementEnabled();
+        
+        return rc;
+    }
     
     /**
      * Implements the rule for generating the result map with BLOBs. If the
@@ -119,7 +184,13 @@ public interface IbatorRules {
      * 
      * @return true if the result map should be generated
      */
-    boolean generateResultMapWithBLOBs();
+    public boolean generateResultMapWithBLOBs() {
+        boolean rc = (tableConfiguration.isSelectByExampleStatementEnabled()
+            || tableConfiguration.isSelectByPrimaryKeyStatementEnabled())
+            && introspectedTable.hasBLOBColumns();
+    
+        return rc;
+    }
     
     /**
      * Implements the rule for generating the SQL example where clause element.
@@ -128,7 +199,13 @@ public interface IbatorRules {
      * 
      * @return true if the SQL where clause element should be generated
      */
-    boolean generateSQLExampleWhereClause();
+    public boolean generateSQLExampleWhereClause() {
+        boolean rc = tableConfiguration.isSelectByExampleStatementEnabled()
+            || tableConfiguration.isDeleteByExampleStatementEnabled()
+            || tableConfiguration.isCountByExampleStatementEnabled();
+        
+        return rc;
+    }
     
     /**
      * Implements the rule for generating the select by primary key SQL Map
@@ -138,7 +215,14 @@ public interface IbatorRules {
      * 
      * @return true if the element and method should be generated
      */
-    boolean generateSelectByPrimaryKey();
+    public boolean generateSelectByPrimaryKey() {
+        boolean rc = tableConfiguration.isSelectByPrimaryKeyStatementEnabled()
+            && introspectedTable.hasPrimaryKeyColumns()
+            && (introspectedTable.hasBaseColumns()
+                    || introspectedTable.hasBLOBColumns());
+        
+        return rc;
+    }
     
     /**
      * Implements the rule for generating the select by example without BLOBs
@@ -147,7 +231,9 @@ public interface IbatorRules {
      * 
      * @return true if the element and method should be generated
      */
-    boolean generateSelectByExampleWithoutBLOBs();
+    public boolean generateSelectByExampleWithoutBLOBs() {
+        return tableConfiguration.isSelectByExampleStatementEnabled();
+    }
     
     /**
      * Implements the rule for generating the select by example with BLOBs SQL
@@ -157,7 +243,12 @@ public interface IbatorRules {
      * 
      * @return true if the element and method should be generated
      */
-    boolean generateSelectByExampleWithBLOBs();
+    public boolean generateSelectByExampleWithBLOBs() {
+        boolean rc = tableConfiguration.isSelectByExampleStatementEnabled()
+            && introspectedTable.hasBLOBColumns();
+        
+        return rc;
+    }
 
     /**
      * Implements the rule for generating an example class.
@@ -166,41 +257,43 @@ public interface IbatorRules {
      * 
      * @return true if the example class should be generated
      */
-    boolean generateExampleClass();
+    public boolean generateExampleClass() {
+        boolean rc = tableConfiguration.isSelectByExampleStatementEnabled()
+                || tableConfiguration.isDeleteByExampleStatementEnabled()
+                || tableConfiguration.isCountByExampleStatementEnabled()
+                || tableConfiguration.isUpdateByExampleStatementEnabled();
     
-    boolean generateCountByExample();
-
-    boolean generateUpdateByExampleSelective();
-
-    boolean generateUpdateByExampleWithoutBLOBs();
+        return rc;
+    }
     
-    boolean generateUpdateByExampleWithBLOBs();
-    
-    /**
-     * Implements the rule for determining whether to generate a primary key
-     * class.  If you return false from this method, and the table has
-     * primary key columns, then the primary key columns will be
-     * added to the base class.
-     * 
-     * @return true if a separate primary key class should be generated
-     */
-    boolean generatePrimaryKeyClass();
+    public boolean generateCountByExample() {
+        boolean rc = tableConfiguration.isCountByExampleStatementEnabled();
 
-    /**
-     * Implements the rule for generating a base record.
-     * 
-     * @return true if the class should be generated
-     */
-    boolean generateBaseRecordClass();
+        return rc;
+    }
 
-    /**
-     * Implements the rule for generating a record with BLOBs.  If you 
-     * return false from this method, and the table had BLOB columns,
-     * then the BLOB columns will be added to the base class.  
-     * 
-     * @return true if the record with BLOBs class should be generated
-     */
-    boolean generateRecordWithBLOBsClass();
+    public boolean generateUpdateByExampleSelective() {
+        boolean rc = tableConfiguration.isUpdateByExampleStatementEnabled();
+
+        return rc;
+    }
+
+    public boolean generateUpdateByExampleWithoutBLOBs() {
+        boolean rc = tableConfiguration.isUpdateByExampleStatementEnabled()
+            && (introspectedTable.hasPrimaryKeyColumns()
+            || introspectedTable.hasBaseColumns());
+        
+        return rc;
+    }
     
-    IntrospectedTable getIntrospectedTable();
+    public boolean generateUpdateByExampleWithBLOBs() {
+        boolean rc = tableConfiguration.isUpdateByExampleStatementEnabled()
+            && introspectedTable.hasBLOBColumns();
+    
+        return rc;
+    }
+
+    public IntrospectedTable getIntrospectedTable() {
+        return introspectedTable;
+    }
 }

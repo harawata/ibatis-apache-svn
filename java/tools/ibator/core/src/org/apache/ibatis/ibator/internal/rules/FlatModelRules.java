@@ -17,7 +17,6 @@
 package org.apache.ibatis.ibator.internal.rules;
 
 import org.apache.ibatis.ibator.api.IntrospectedTable;
-import org.apache.ibatis.ibator.config.TableConfiguration;
 
 /**
  * This class encapsulates all the code generation rules for 
@@ -26,14 +25,13 @@ import org.apache.ibatis.ibator.config.TableConfiguration;
  * @author Jeff Butler
  *
  */
-public class FlatModelRules extends IbatorRules {
+public class FlatModelRules extends BaseIbatorRules {
 
     /**
      * 
      */
-    public FlatModelRules(TableConfiguration tableConfiguration,
-            IntrospectedTable introspectedTable) {
-        super(tableConfiguration, introspectedTable);
+    public FlatModelRules(IntrospectedTable introspectedTable) {
+        super(introspectedTable);
     }
 
     /**
@@ -41,7 +39,6 @@ public class FlatModelRules extends IbatorRules {
      * 
      * @return true if the primary key should be generated
      */
-    @Override
     public boolean generatePrimaryKeyClass() {
         return false;
     }
@@ -51,7 +48,6 @@ public class FlatModelRules extends IbatorRules {
      * 
      * @return true if the class should be generated
      */
-    @Override
     public boolean generateBaseRecordClass() {
         return true;
     }
@@ -61,7 +57,6 @@ public class FlatModelRules extends IbatorRules {
      * 
      * @return true if the record with BLOBs class should be generated
      */
-    @Override
     public boolean generateRecordWithBLOBsClass() {
         return false;
     }

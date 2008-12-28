@@ -17,7 +17,6 @@
 package org.apache.ibatis.ibator.internal.rules;
 
 import org.apache.ibatis.ibator.api.IntrospectedTable;
-import org.apache.ibatis.ibator.config.TableConfiguration;
 
 /**
  * This class encapsulates all the code generation rules for 
@@ -26,14 +25,13 @@ import org.apache.ibatis.ibator.config.TableConfiguration;
  * @author Jeff Butler
  *
  */
-public class HierarchicalModelRules extends IbatorRules {
+public class HierarchicalModelRules extends BaseIbatorRules {
 
     /**
      * 
      */
-    public HierarchicalModelRules(TableConfiguration tableConfiguration,
-            IntrospectedTable introspectedTable) {
-        super(tableConfiguration, introspectedTable);
+    public HierarchicalModelRules(IntrospectedTable introspectedTable) {
+        super(introspectedTable);
     }
 
     /**
@@ -43,7 +41,6 @@ public class HierarchicalModelRules extends IbatorRules {
      * 
      * @return true if the primary key should be generated
      */
-    @Override
     public boolean generatePrimaryKeyClass() {
         return introspectedTable.hasPrimaryKeyColumns();
     }
@@ -55,7 +52,6 @@ public class HierarchicalModelRules extends IbatorRules {
      * 
      * @return true if the class should be generated
      */
-    @Override
     public boolean generateBaseRecordClass() {
         return introspectedTable.hasBaseColumns();
     }
@@ -66,7 +62,6 @@ public class HierarchicalModelRules extends IbatorRules {
      * 
      * @return true if the record with BLOBs class should be generated
      */
-    @Override
     public boolean generateRecordWithBLOBsClass() {
         return introspectedTable.hasBLOBColumns();
     }

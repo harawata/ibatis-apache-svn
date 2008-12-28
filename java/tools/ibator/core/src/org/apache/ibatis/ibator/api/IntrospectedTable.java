@@ -491,11 +491,11 @@ public abstract class IntrospectedTable {
         calculateSqlMapFileName();
         
         if (tableConfiguration.getModelType() == ModelType.HIERARCHICAL) {
-            rules = new HierarchicalModelRules(tableConfiguration, this);
+            rules = new HierarchicalModelRules(this);
         } else if (tableConfiguration.getModelType() == ModelType.FLAT) {
-            rules = new FlatModelRules(tableConfiguration, this);
+            rules = new FlatModelRules(this);
         } else {
-            rules = new ConditionalModelRules(tableConfiguration, this);
+            rules = new ConditionalModelRules(this);
         }
         
         ibatorContext.getPlugins().initialized(this);
@@ -685,5 +685,9 @@ public abstract class IntrospectedTable {
      */
     public void setRules(IbatorRules rules) {
         this.rules = rules;
+    }
+
+    public TableConfiguration getTableConfiguration() {
+        return tableConfiguration;
     }
 }

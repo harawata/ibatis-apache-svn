@@ -17,7 +17,6 @@
 package org.apache.ibatis.ibator.internal.rules;
 
 import org.apache.ibatis.ibator.api.IntrospectedTable;
-import org.apache.ibatis.ibator.config.TableConfiguration;
 
 /**
  * This class encapsulates all the code generation rules for 
@@ -28,14 +27,13 @@ import org.apache.ibatis.ibator.config.TableConfiguration;
  * @author Jeff Butler
  *
  */
-public class ConditionalModelRules extends IbatorRules {
+public class ConditionalModelRules extends BaseIbatorRules {
 
     /**
      * 
      */
-    public ConditionalModelRules(TableConfiguration tableConfiguration,
-            IntrospectedTable introspectedTable) {
-        super(tableConfiguration, introspectedTable);
+    public ConditionalModelRules(IntrospectedTable introspectedTable) {
+        super(introspectedTable);
     }
 
     /**
@@ -44,7 +42,6 @@ public class ConditionalModelRules extends IbatorRules {
      * 
      * @return true if the primary key should be generated
      */
-    @Override
     public boolean generatePrimaryKeyClass() {
         return introspectedTable.getPrimaryKeyColumns().size() > 1;
     }
@@ -58,7 +55,6 @@ public class ConditionalModelRules extends IbatorRules {
      * 
      * @return true if the class should be generated
      */
-    @Override
     public boolean generateBaseRecordClass() {
         return introspectedTable.getBaseColumns().size() > 0
             || introspectedTable.getPrimaryKeyColumns().size() == 1
@@ -74,7 +70,6 @@ public class ConditionalModelRules extends IbatorRules {
      * 
      * @return true if the record with BLOBs class should be generated
      */
-    @Override
     public boolean generateRecordWithBLOBsClass() {
         int otherColumnCount = introspectedTable.getPrimaryKeyColumns().size()
             + introspectedTable.getBaseColumns().size();
