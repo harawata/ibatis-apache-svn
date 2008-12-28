@@ -74,6 +74,55 @@ public class SqlSessionTest extends BaseDataTest {
   }
 
   @Test
+  public void shouldUpdateAuthorImplicitRollback() throws Exception {
+    SqlSession session = sqlMapper.openSession();
+    Author original;
+    Author updated;
+    try {
+      original = (Author) session.selectOne("com.domain.AuthorMapper.selectAuthor", 101);
+      original.setEmail("new@email.com");
+      session.update("com.domain.AuthorMapper.updateAuthor", original);
+
+      updated = (Author) session.selectOne("com.domain.AuthorMapper.selectAuthor", 101);
+      Assert.assertEquals(original.getEmail(), updated.getEmail());
+    } finally {
+      session.close();
+    }
+    try {
+      session = sqlMapper.openSession();
+      updated = (Author) session.selectOne("com.domain.AuthorMapper.selectAuthor", 101);
+      Assert.assertEquals("jim@ibatis.apache.org", updated.getEmail());
+    } finally {
+      session.close();
+    }
+  }
+
+  @Test
+  public void shouldUpdateAuthorCommit() throws Exception {
+    SqlSession session = sqlMapper.openSession();
+    Author original;
+    Author updated;
+    try {
+      original = (Author) session.selectOne("com.domain.AuthorMapper.selectAuthor", 101);
+      original.setEmail("new@email.com");
+      session.update("com.domain.AuthorMapper.updateAuthor", original);
+
+      updated = (Author) session.selectOne("com.domain.AuthorMapper.selectAuthor", 101);
+      Assert.assertEquals(original.getEmail(), updated.getEmail());
+      session.commit();
+    } finally {
+      session.close();
+    }
+    try {
+      session = sqlMapper.openSession();
+      updated = (Author) session.selectOne("com.domain.AuthorMapper.selectAuthor", 101);
+      Assert.assertEquals(original.getEmail(), updated.getEmail());
+    } finally {
+      session.close();
+    }
+  }
+
+  @Test
   public void shouldDeleteAuthor() throws Exception {
     SqlSession session = sqlMapper.openSession();
     try {
