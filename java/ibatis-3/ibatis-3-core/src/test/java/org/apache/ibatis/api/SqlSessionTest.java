@@ -9,6 +9,7 @@ import java.util.List;
 
 import domain.blog.Author;
 import domain.blog.Section;
+import domain.blog.ImmutableAuthor;
 
 public class SqlSessionTest extends BaseDataTest {
   private static SqlSessionFactory sqlMapper;
@@ -38,6 +39,19 @@ public class SqlSessionTest extends BaseDataTest {
     try {
       Author author = (Author) session.selectOne(
           "com.domain.AuthorMapper.selectAuthor", new Author(101));
+      Assert.assertEquals(101, author.getId());
+      Assert.assertEquals(Section.NEWS, author.getFavouriteSection());
+    } finally {
+      session.close();
+    }
+  }
+
+  @Test
+  public void shouldSelectOneImmutableAuthor() throws Exception {
+    SqlSession session = sqlMapper.openSession();
+    try {
+      ImmutableAuthor author = (ImmutableAuthor) session.selectOne(
+          "com.domain.AuthorMapper.selectImmutableAuthor", new Author(101));
       Assert.assertEquals(101, author.getId());
       Assert.assertEquals(Section.NEWS, author.getFavouriteSection());
     } finally {

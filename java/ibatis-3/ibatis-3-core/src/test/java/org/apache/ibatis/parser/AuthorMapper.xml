@@ -20,6 +20,17 @@
     <result property="favouriteSection" column="favourite_section" />
   </resultMap>
 
+  <resultMap id="selectImmutableAuthor" type="domain.blog.ImmutableAuthor">
+    <constructor>
+      <id column="id" property="id" />
+      <result property="username" column="username" />
+      <result property="password" column="password" />
+      <result property="email" column="email" />
+      <result property="bio" column="bio" />
+      <result property="favouriteSection" column="favourite_section" />
+    </constructor>
+  </resultMap>
+
   <select id="selectAllAuthors"
           resultType="domain.blog.Author">
     select * from author
@@ -28,6 +39,13 @@
   <select id="selectAuthor"
           parameterMap="selectAuthor"
           resultMap="selectAuthor">
+    select id, username, password, email, bio, favourite_section
+    from author where id = ?
+  </select>
+
+  <select id="selectImmutableAuthor"
+          parameterMap="selectAuthor"
+          resultMap="selectImmutableAuthor">
     select id, username, password, email, bio, favourite_section
     from author where id = ?
   </select>
