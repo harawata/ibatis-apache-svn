@@ -8,6 +8,7 @@ import java.io.Reader;
 import java.util.List;
 
 import domain.blog.Author;
+import domain.blog.Section;
 
 public class SqlSessionTest extends BaseDataTest {
   private static SqlSessionFactory sqlMapper;
@@ -38,6 +39,7 @@ public class SqlSessionTest extends BaseDataTest {
       Author author = (Author) session.selectOne(
           "com.domain.AuthorMapper.selectAuthor", new Author(101));
       Assert.assertEquals(101, author.getId());
+      Assert.assertEquals(Section.NEWS, author.getFavouriteSection());
     } finally {
       session.close();
     }

@@ -6,20 +6,30 @@
 
 <mapper namespace="com.domain.AuthorMapper">
 
-  <select id="selectAllAuthors"
-          resultType="domain.blog.Author">
-    select * from author
-  </select>
-
   <parameterMap id="selectAuthor"
                 type="domain.blog.Author">
     <parameter property="id" />
   </parameterMap>
 
+  <resultMap id="selectAuthor" type="domain.blog.Author">
+    <id column="id" property="id" />
+    <result property="username" column="username" />
+    <result property="password" column="password" />
+    <result property="email" column="email" />
+    <result property="bio" column="bio" />
+    <result property="favouriteSection" column="favourite_section" />
+  </resultMap>
+
+  <select id="selectAllAuthors"
+          resultType="domain.blog.Author">
+    select * from author
+  </select>
+
   <select id="selectAuthor"
           parameterMap="selectAuthor"
-          resultType="domain.blog.Author">
-    select * from author where id = ?
+          resultMap="selectAuthor">
+    select id, username, password, email, bio, favourite_section
+    from author where id = ?
   </select>
 
   <select id="selectAuthorWithInlineParams"
