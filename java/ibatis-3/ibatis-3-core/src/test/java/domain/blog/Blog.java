@@ -5,8 +5,8 @@ import java.util.List;
 public class Blog {
 
   private int id;
-  private Author author;
   private String title;
+  private Author author;
   private List<Post> posts;
 
   public int getId() {
@@ -17,20 +17,20 @@ public class Blog {
     this.id = id;
   }
 
-  public Author getAuthor() {
-    return author;
-  }
-
-  public void setAuthor(Author author) {
-    this.author = author;
-  }
-
   public String getTitle() {
     return title;
   }
 
   public void setTitle(String title) {
     this.title = title;
+  }
+
+  public Author getAuthor() {
+    return author;
+  }
+
+  public void setAuthor(Author author) {
+    this.author = author;
   }
 
   public List<Post> getPosts() {

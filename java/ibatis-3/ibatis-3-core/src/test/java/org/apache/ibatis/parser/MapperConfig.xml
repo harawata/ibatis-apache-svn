@@ -20,7 +20,7 @@
     <setting name="defaultExecutorType" value="SIMPLE"/>
     <setting name="defaultStatementTimeout" value="25000"/>
   </settings>
-
+  
   <typeAliases>
     <typeAlias alias="Author" type="domain.blog.Author"/>
     <typeAlias alias="Blog" type="domain.blog.Blog"/>
@@ -61,6 +61,7 @@
   <mappers>
     <!-- mapperXML vs. mapperClass-->
     <mapper resource="org/apache/ibatis/parser/AuthorMapper.xml"/>
+    <mapper resource="org/apache/ibatis/parser/BlogMapper.xml"/>
   </mappers>
 
 </configuration>

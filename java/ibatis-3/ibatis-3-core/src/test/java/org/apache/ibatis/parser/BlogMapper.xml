@@ -6,18 +6,18 @@
 
 <mapper namespace="com.domain.BlogMapper">
 
-  <resultMap id="" type="" extends="">
-    <constructor>
-      <id column="" javaType="" jdbcType="" typeHandler="" />
-      <result column="" javaType="" jdbcType="" typeHandler=""/>
-    </constructor>
-    <result property="" column="" javaType="" jdbcType="" typeHandler=""/>
-    <collection property="" column="" javaType="" select="" resultMap=""/>
+  <resultMap id="blogWithPosts" type="Blog">
+    <id property="id" column="id" />
+    <result property="title" column="title" />
+    <collection property="posts" column="id" javaType="Post" select="selectPostsForBlog" />
   </resultMap>
 
-  <select id="selectAllPeople" useCache="true" flushCache="false" parameterType="" resultType="" resultMap="">
-    select * from PERSON order by
-    ${opts.order,javaType="",jdbcType="",typeHandler="",mode="",scale="",resultMap=""}
+  <select id="selectBlogWithPostsUsingSubSelect" parameterType="int" resultMap="blogWithPosts">
+    select * from Blog where id = ${id}
   </select>
   
+  <select id="selectPostsForBlog" parameterType="int" resultType="Post" >
+    select * from Post where blog_id = ${blog_id}
+  </select>
+
 </mapper>

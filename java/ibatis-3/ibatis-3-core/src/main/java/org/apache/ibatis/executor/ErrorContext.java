@@ -2,39 +2,81 @@ package org.apache.ibatis.executor;
 
 public class ErrorContext {
 
+  private static final ThreadLocal<ErrorContext> local = new ThreadLocal<ErrorContext>();
+
+  public static void set(String resource, String activity, String objectId, String moreInfo) {
+    _local()._set(resource,activity,objectId,moreInfo);
+  }
+
+  public static void set(String activity, String objectId, String moreInfo) {
+    _local()._set(activity,objectId,moreInfo);
+  }
+
+  public static void set(String objectId, String moreInfo) {
+    _local()._set(objectId,moreInfo);
+  }
+
+  public static void set(String moreInfo) {
+    _local()._set(moreInfo);
+  }
+
+  public static void set(Throwable cause) {
+    _local()._set(cause);
+  }
+
+  public static String description() {
+    return _local()._toString();
+  }
+
+  public static void reset() {
+    _local()._reset();
+  }
+
+  private static ErrorContext _local() {
+    ErrorContext context = local.get();
+    if (context == null) {
+      context = new ErrorContext();
+      local.set(context);
+    }
+    return context;
+  }
+
   private String resource;
   private String activity;
   private String objectId;
   private String moreInfo;
   private Throwable cause;
 
-  public void set(String resource, String activity, String objectId, String moreInfo) {
+  private ErrorContext() {
+  }
+
+  private void _set(String resource, String activity, String objectId, String moreInfo) {
     this.resource = resource;
     this.activity = activity;
     this.objectId = objectId;
     this.moreInfo = moreInfo;
   }
 
-  public void set(String activity, String objectId, String moreInfo) {
+  private void _set(String activity, String objectId, String moreInfo) {
     this.activity = activity;
     this.objectId = objectId;
     this.moreInfo = moreInfo;
   }
 
-  public void set(String objectId, String moreInfo) {
+  private void _set(String objectId, String moreInfo) {
     this.objectId = objectId;
     this.moreInfo = moreInfo;
   }
 
-  public void set(String moreInfo) {
+  private void _set(String moreInfo) {
     this.moreInfo = moreInfo;
   }
 
-  public void set(Throwable cause) {
+  private void _set(Throwable cause) {
     this.cause = cause;
   }
 
-  public String toString() {
+  private String _toString() {
     StringBuffer message = new StringBuffer();
 
     // resource
@@ -73,7 +115,7 @@ public class ErrorContext {
     return message.toString();
   }
 
-  public void reset() {
+  private void _reset() {
     resource = null;
     activity = null;
     objectId = null;

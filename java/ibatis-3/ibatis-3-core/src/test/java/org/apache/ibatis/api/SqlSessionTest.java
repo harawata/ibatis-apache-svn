@@ -10,6 +10,7 @@ import java.util.List;
 import domain.blog.Author;
 import domain.blog.Section;
 import domain.blog.ImmutableAuthor;
+import domain.blog.Blog;
 
 public class SqlSessionTest extends BaseDataTest {
   private static SqlSessionFactory sqlMapper;
@@ -155,6 +156,18 @@ public class SqlSessionTest extends BaseDataTest {
       authors = session.selectList("com.domain.AuthorMapper.selectAuthor", id);
       Assert.assertEquals(1,authors.size());
 
+    } finally {
+      session.close();
+    }
+  }
+
+  @Test @Ignore
+  public void shouldSelectBlogWithPostsUsingSubSelect() throws Exception {
+    SqlSession session = sqlMapper.openSession();
+    try {
+      Blog blog = (Blog) session.selectOne("com.domain.BlogMapper.selectBlogWithPostsUsingSubSelect", 1);
+
+      System.out.println(blog.getTitle());
     } finally {
       session.close();
     }

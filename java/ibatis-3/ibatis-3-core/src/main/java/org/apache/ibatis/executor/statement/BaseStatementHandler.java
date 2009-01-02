@@ -12,7 +12,6 @@ import java.sql.*;
 
 public abstract class BaseStatementHandler implements StatementHandler {
 
-  protected final ErrorContext errorContext;
   protected final ObjectFactory objectFactory;
   protected final TypeHandlerRegistry typeHandlerRegistry;
   protected final ResultSetHandler resultSetHandler;
@@ -33,7 +32,6 @@ public abstract class BaseStatementHandler implements StatementHandler {
     this.rowLimit = rowLimit;
 
     Configuration configuration = mappedStatement.getConfiguration();
-    this.errorContext = new ErrorContext();
     this.typeHandlerRegistry = configuration.getTypeHandlerRegistry();
     this.objectFactory = configuration.getObjectFactory();
     this.parameterHandler = configuration.newParameterHandler(mappedStatement, parameterObject);
