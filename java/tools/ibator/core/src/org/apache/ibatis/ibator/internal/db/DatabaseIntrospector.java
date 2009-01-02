@@ -257,6 +257,12 @@ public class DatabaseIntrospector {
                     }
                     
                 }
+                
+                if (ibatorContext.autoDelimitKeywords()) {
+                    if (SqlReservedWords.containsWord(introspectedColumn.getActualColumnName())) {
+                        introspectedColumn.setColumnNameDelimited(true);
+                    }
+                }
             }
         }
     }

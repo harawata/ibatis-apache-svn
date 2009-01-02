@@ -23,7 +23,7 @@ import org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType;
  * This class can be used by plugins to easily implement a custom
  * rules implementation.  Plugins should respect the rules implementation
  * calculated by Ibator, as well as implementations from other plugins.
- * In general, if something is disabled by the default rules or is
+ * In general if something is disabled by the default rules, or is
  * disabled by some other plugin, it should not be re-enabled.
  * Therefore, the following pattern of use is recommended:
  * <pre>
@@ -36,7 +36,7 @@ import org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType;
  * }
  * 
  * public class MyRules extends IbatorRulesDelegate (
- *   public IbatorRulesDelegate(IbatorRules ibatorRules) {
+ *   public MyRules(IbatorRules ibatorRules) {
  *     super(ibatorRules);
  *   }
  *   
@@ -44,8 +44,9 @@ import org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType;
  *   public boolean generateInsert() {
  *     boolean rc = super.generateInsert();
  *     if (rc) {
- *       // other plugins and the default rules enable generation
- *       // we can decide to disable here.
+ *       // Other plugins, and the default rules, enable generation
+ *       // of the insert method.  We can decide to disable it here
+ *       // if needed.
  *     }
  *     
  *     return rc;

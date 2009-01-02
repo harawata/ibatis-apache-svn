@@ -19,5 +19,6 @@
 
   <sqlMap resource="ibatortest/generated/miscellaneous/xml/PKFIELDS_SqlMap.xml" />
   <sqlMap resource="ibatortest/generated/miscellaneous/xml/REGEXRENAME_SqlMap.xml" />
+  <sqlMap resource="ibatortest/generated/miscellaneous/xml/ANOTHERAWFULTABLE_SqlMap.xml" />
 
 </sqlMapConfig>

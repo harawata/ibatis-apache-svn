@@ -31,8 +31,10 @@ package ibatortest.execute.miscellaneous;
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+import ibatortest.generated.miscellaneous.dao.AnotherawfultableDAO;
 import ibatortest.generated.miscellaneous.dao.MyObjectDAO;
 import ibatortest.generated.miscellaneous.dao.RegexrenameDAO;
+import ibatortest.generated.miscellaneous.model.Anotherawfultable;
 import ibatortest.generated.miscellaneous.model.MyObject;
 import ibatortest.generated.miscellaneous.model.MyObjectCriteria;
 import ibatortest.generated.miscellaneous.model.MyObjectKey;
@@ -889,6 +891,28 @@ public class MiscellaneousTests extends BaseMiscellaneousTest {
         } catch (SQLException e) {
             fail(e.getMessage());
         }
+    }
+    
+    public void testAnotherAwfulTableInsert() {
+        AnotherawfultableDAO dao = getAnotherawfultableDAO();
         
+        try {
+            Anotherawfultable record = new Anotherawfultable();
+            record.setId(5);
+            record.setSelect("select");
+            record.setInsert("insert");
+            
+            dao.insertAnotherawfultable(record);
+            
+            Anotherawfultable returnedRecord = dao.selectAnotherawfultableByPrimaryKey(5);
+            
+            assertEquals(record.getId(), returnedRecord.getId());
+            assertEquals(record.getSelect(), returnedRecord.getSelect());
+            assertEquals(record.getInsert(), returnedRecord.getInsert());
+            assertEquals(record.getUpdate(), returnedRecord.getUpdate());
+            assertEquals(record.getDelete(), returnedRecord.getDelete());
+        } catch (SQLException e) {
+            fail(e.getMessage());
+        }
     }
 }

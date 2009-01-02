@@ -148,6 +148,20 @@ specified with the <a href="property.html">&lt;property&gt;</a> child element:</
     <th>Property Values</th>
   </tr>
   <tr>
+    <td valign="top">autoDelimitKeywords</td>
+    <td>If true, then Ibator will delimit SQL keywords if they are used as
+      column names in tables.
+      Ibator maintains a list of SQL keywords
+      for many different databases.  However, the list may not be
+      totally comprehensive.  If a particular keyword is not on Ibator's
+      list, you may force the column to be delimited with a
+      <code>&lt;columnOverride&gt;</code>.<p/>
+      <p>See the source code for the class
+      <code>org.apache.ibatis.ibator.internal.db.SqlReservedWords</code>
+      for a list of keywords recognized by Ibator.</p>
+      <p><i>The default value is false.</i></p></td>
+  </tr>
+  <tr>
     <td valign="top">suppressTypeWarnings</td>
     <td>If true, then Ibator will add an annotation to any method
       that uses a non-parameterized type to suppress compiler type warnings.

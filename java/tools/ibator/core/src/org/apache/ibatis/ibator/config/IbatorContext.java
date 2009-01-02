@@ -75,6 +75,8 @@ public class IbatorContext extends PropertyHolder {
 
     private String introspectedColumnImpl;
     
+    private Boolean autoDelimitKeywords;
+    
     /**
      * Constructs an IbatorContext object.
      * 
@@ -253,7 +255,7 @@ public class IbatorContext extends PropertyHolder {
             xmlElement.addAttribute(new Attribute(
                     "targetRuntime", targetRuntime)); //$NON-NLS-1$
         }
-
+        
         addPropertyXmlElements(xmlElement);
 
         if (commentGeneratorConfiguration != null) {
@@ -309,6 +311,10 @@ public class IbatorContext extends PropertyHolder {
             beginningDelimiter = value;
         } else if (PropertyRegistry.CONTEXT_ENDING_DELIMITER.equals(name)) {
             endingDelimiter = value;
+        } else if (PropertyRegistry.CONTEXT_AUTO_DELIMIT_KEYWORDS.equals(name)) {
+            if (StringUtility.stringHasValue(value)) {
+                autoDelimitKeywords = new Boolean(StringUtility.isTrue(value));
+            }
         }
     }
 
@@ -526,5 +532,9 @@ public class IbatorContext extends PropertyHolder {
                 ;
             }
         }
+    }
+    
+    public boolean autoDelimitKeywords() {
+        return autoDelimitKeywords != null && autoDelimitKeywords.booleanValue();
     }
 }

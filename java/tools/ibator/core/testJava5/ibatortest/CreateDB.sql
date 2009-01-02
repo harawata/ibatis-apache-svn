@@ -6,6 +6,8 @@ drop table PKFieldsBlobs if exists;
 drop table FieldsBlobs if exists;
 drop table "awful table" if exists;
 drop table BlobsOnly if exists;
+drop table RegexRename if exists;
+drop table AnotherAwfulTable if exists;
 
 create table FieldsOnly (
   IntegerField int,
@@ -32,6 +34,7 @@ create table PKFields (
   decimal100Field decimal(10, 0),
   decimal155Field decimal(15, 5),
   wierd$Field int,
+  "birth date" date,
   primary key (id1, id2)
 );
 
@@ -66,6 +69,7 @@ create table "awful table" (
   "first Name" varchar(20),
   first_name varchar(20),
   firstName varchar(20),
+  "last name" varchar(20),
   E_MAIL varchar(20),
   _id1 int not null,
   $id2 int not null,
@@ -90,4 +94,13 @@ create table RegexRename (
   CUST_ADDRESS varchar(30),
   ZIP_CODE char(5),
   primary key(CUST_ID)
+);
+
+create table AnotherAwfulTable (
+  id int not null,
+  "select" varchar(30),
+  "insert" varchar(30),
+  "update" varchar(30),
+  "delete" varchar(30),
+  primary key(id)
 );

@@ -32,6 +32,7 @@ create table PKFields (
   decimal100Field decimal(10, 0),
   decimal155Field decimal(15, 5),
   wierd$Field int,
+  "birth date" date,
   primary key (id1, id2)
 );
 
@@ -66,6 +67,7 @@ create table "awful table" (
   "first Name" varchar(20),
   first_name varchar(20),
   firstName varchar(20),
+  "last name" varchar(20),
   E_MAIL varchar(20),
   _id1 int not null,
   $id2 int not null,
