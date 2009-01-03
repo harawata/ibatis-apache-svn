@@ -2,18 +2,15 @@ Improvements
  * Duplicate element IDs are clobbering each other in config
  * Need to report on lookups of nonexisting config elements (e.g. config.getMappedStatement)
  * Statement (other elements?) not found does not fail gracefully
- * Improved Error Messages
- * Exception hierarchy returned from exceptionfactory
 
-Incomplete
+Parameter Maps
  * Named parameter parsing/merging
- * Loosely bound cache id to instance
-   - (perhaps use late-binding lookup proxies for all config elements?)
 
 API
  * Mapper Interface Binding
 
 Testing
+ * Improve test coverage
  * Functional tests
  * Perf/Threaded Integration Tests
 
