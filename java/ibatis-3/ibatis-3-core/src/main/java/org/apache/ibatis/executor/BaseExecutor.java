@@ -3,7 +3,6 @@ package org.apache.ibatis.executor;
 import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.cache.impl.PerpetualCache;
 import org.apache.ibatis.executor.result.ResultHandler;
-import org.apache.ibatis.logging.*;
 import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.type.TypeHandlerRegistry;
@@ -44,6 +43,7 @@ public abstract class BaseExecutor implements Executor {
   }
 
   public int update(MappedStatement ms, Object parameter) throws SQLException {
+    ErrorContext.instance().resource(ms.getResource()).activity("executing an update").object(ms.getId());
     localCache.clear();
     return doUpdate(ms, parameter);
   }
@@ -54,6 +54,7 @@ public abstract class BaseExecutor implements Executor {
   }
 
   public List query(MappedStatement ms, Object parameter, int offset, int limit, ResultHandler resultHandler) throws SQLException {
+    ErrorContext.instance().resource(ms.getResource()).activity("executing a query").object(ms.getId());
     List list;
     try {
       queryStack++;

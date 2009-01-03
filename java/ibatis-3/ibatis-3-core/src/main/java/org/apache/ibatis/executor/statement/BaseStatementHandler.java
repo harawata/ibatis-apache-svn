@@ -50,6 +50,7 @@ public abstract class BaseStatementHandler implements StatementHandler {
 
   public Statement prepare(Connection connection)
       throws SQLException {
+    ErrorContext.instance().sql(sql);
     Statement statement = null;
     try {
       statement = instantiateStatement(connection);

@@ -6,25 +6,26 @@ public class ErrorContextTest {
 
   @Test
   public void shouldShowProgressiveErrorContextBuilding() {
-    ErrorContext.set("somefile.xml", "some activity", "some object", "Here's more info.");
-    ErrorContext.description().startsWith("*** The error occurred in somefile.xml.");
-    ErrorContext.reset();
+    ErrorContext context = ErrorContext.instance();
+    context.resource("somefile.xml").activity("some activity").object("some object").message("Here's more info.");
+    context.toString().startsWith("### The error occurred in somefile.xml.");
+    context.reset();
 
-    ErrorContext.set("some activity", "some object", "Here's more info.");
-    ErrorContext.description().startsWith("*** The error occurred while some activity.");
-    ErrorContext.reset();
+    context.activity("some activity").object("some object").message("Here's more info.");
+    context.toString().startsWith("### The error occurred while some activity.");
+    context.reset();
 
-    ErrorContext.set("some object", "Here's more info.");
-    ErrorContext.description().startsWith("*** Check some object.");
-    ErrorContext.reset();
+    context.object("some object").message("Here's more info.");
+    context.toString().startsWith("### Check some object.");
+    context.reset();
 
-    ErrorContext.set("Here's more info.");
-    ErrorContext.description().startsWith("*** Here's more info.");
-    ErrorContext.reset();
+    context.message("Here's more info.");
+    context.toString().startsWith("### Here's more info.");
+    context.reset();
 
-    ErrorContext.set(new Exception("test"));
-    ErrorContext.description().startsWith("*** Cause: java.lang.Exception: test");
-    ErrorContext.reset();
+    context.cause(new Exception("test"));
+    context.toString().startsWith("### Cause: java.lang.Exception: test");
+    context.reset();
 
   }
 

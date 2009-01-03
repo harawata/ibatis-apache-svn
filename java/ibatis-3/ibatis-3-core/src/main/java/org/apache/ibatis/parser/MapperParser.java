@@ -5,6 +5,7 @@ import org.apache.ibatis.reflection.MetaClass;
 import org.apache.ibatis.type.*;
 import org.apache.ibatis.xml.*;
 import org.apache.ibatis.cache.Cache;
+import org.apache.ibatis.executor.ErrorContext;
 
 import java.io.Reader;
 import java.util.*;
@@ -14,6 +15,8 @@ public class MapperParser extends BaseParser {
   protected String namespace;
   protected Reader reader;
   protected NodeletParser parser;
+
+  private String resource;
 
   private ParameterMap.Builder parameterMapBuilder;
   private List<ParameterMapping> parameterMappings;
@@ -26,7 +29,9 @@ public class MapperParser extends BaseParser {
 
   private Cache cache;
 
-  public MapperParser(Reader reader, Configuration configuration) {
+  public MapperParser(Reader reader, Configuration configuration, String resource) {
+    ErrorContext.instance().resource(resource);
+    this.resource = resource;
     this.reader = reader;
 
     this.configuration = configuration;
@@ -283,10 +288,11 @@ public class MapperParser extends BaseParser {
     String id = context.getStringAttribute("id");
     id = applyNamespace(id);
 
-    String sql = context.getStringBody();
+    //String sql = context.getStringBody();
     SqlSource sqlSource = new SqlSourceParser(configuration).parse(context);
 
     MappedStatement.Builder statementBuilder = new MappedStatement.Builder(configuration, id, sqlSource);
+    statementBuilder.resource(resource);
     Integer fetchSize = context.getIntAttribute("fetchSize", null);
     statementBuilder.fetchSize(fetchSize);
     statementBuilder.statementType(statementType);
@@ -384,8 +390,8 @@ public class MapperParser extends BaseParser {
 
     ResultMapping.Builder builder = new ResultMapping.Builder(configuration, property, column, javaTypeClass);
     builder.jdbcType(jdbcTypeEnum);
-    builder.nestedQueryId(nestedSelect);
-    builder.nestedResultMapId(nestedResultMap);
+    builder.nestedQueryId(applyNamespace(nestedSelect));
+    builder.nestedResultMapId(applyNamespace(nestedResultMap));
     builder.typeHandler(typeHandlerInstance);
 
     return builder;

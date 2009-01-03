@@ -1,8 +1,7 @@
 package org.apache.ibatis.executor.resultset;
 
 import org.apache.ibatis.cache.CacheKey;
-import org.apache.ibatis.executor.Executor;
-import org.apache.ibatis.executor.ExecutorException;
+import org.apache.ibatis.executor.*;
 import org.apache.ibatis.executor.loader.*;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.executor.result.*;
@@ -54,6 +53,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       try {
         for (int i = 0, n = mappedStatement.getResultMaps().size(); i < n; i++) {
           ResultMap resultMap = mappedStatement.getResultMaps().get(i);
+          ErrorContext.instance().activity("handling result set").object(resultMap.getId());
           if (resultHandler == null) {
             DefaultResultHandler defaultResultHandler = new DefaultResultHandler();
             handleResults(rs, resultMap, defaultResultHandler, rowOffset, rowLimit);
@@ -80,7 +80,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   }
 
   public void handleOutputParameters(CallableStatement callableStatement) throws SQLException {
-    ParameterMap parameterMap = mappedStatement.getParameterMap();
+    ErrorContext.instance().activity("handling output parameters");
     MetaObject metaParam = MetaObject.forObject(parameterObject);
     List<ParameterMapping> parameterMappings = mappedStatement.getDynamicParameterMappings(parameterObject);
     for (int i = 0; i < parameterMappings.size(); i++) {

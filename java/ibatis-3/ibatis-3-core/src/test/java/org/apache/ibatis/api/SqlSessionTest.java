@@ -161,13 +161,14 @@ public class SqlSessionTest extends BaseDataTest {
     }
   }
 
-  @Test @Ignore
+  @Test
   public void shouldSelectBlogWithPostsUsingSubSelect() throws Exception {
     SqlSession session = sqlMapper.openSession();
     try {
       Blog blog = (Blog) session.selectOne("com.domain.BlogMapper.selectBlogWithPostsUsingSubSelect", 1);
-
-      System.out.println(blog.getTitle());
+      Assert.assertEquals("Jim Business", blog.getTitle());
+      Assert.assertEquals(2, blog.getPosts().size());
+      Assert.assertEquals("Corn nuts",blog.getPosts().get(0).getSubject());
     } finally {
       session.close();
     }

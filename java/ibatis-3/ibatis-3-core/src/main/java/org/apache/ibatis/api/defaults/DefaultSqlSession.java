@@ -9,7 +9,6 @@ import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.Configuration;
 
 import java.util.List;
-import java.sql.SQLException;
 
 public class DefaultSqlSession implements SqlSession {
 
@@ -54,7 +53,7 @@ public class DefaultSqlSession implements SqlSession {
     try {
       MappedStatement ms = configuration.getMappedStatement(statement);
       return executor.query(ms, parameter, offset, limit, handler);
-    } catch (SQLException e) {
+    } catch (Exception e) {
       throw ExceptionFactory.wrapException("Error querying database.  Cause: " + e, e);
     }
   }
@@ -78,7 +77,7 @@ public class DefaultSqlSession implements SqlSession {
       dirty = true;
       MappedStatement ms = configuration.getMappedStatement(statement);
       return executor.update(ms, parameter);
-    } catch (SQLException e) {
+    } catch (Exception e) {
       throw ExceptionFactory.wrapException("Error updating database.  Cause: " + e, e);
     }
   }
@@ -99,7 +98,7 @@ public class DefaultSqlSession implements SqlSession {
     try {
       executor.commit(isCommitOrRollbackRequired(force));
       dirty = false;
-    } catch (SQLException e) {
+    } catch (Exception e) {
       throw ExceptionFactory.wrapException("Error committing transaction.  Cause: " + e, e);
     }
   }
@@ -112,7 +111,7 @@ public class DefaultSqlSession implements SqlSession {
     try {
       executor.rollback(isCommitOrRollbackRequired(force));
       dirty = false;
-    } catch (SQLException e) {
+    } catch (Exception e) {
       throw ExceptionFactory.wrapException("Error rolling back transaction.  Cause: " + e, e);
     }
   }

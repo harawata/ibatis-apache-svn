@@ -6,6 +6,7 @@ import java.util.*;
 
 public class MappedStatement {
 
+  private String resource;
   private Configuration configuration;
   private String id;
   private Integer fetchSize;
@@ -33,6 +34,11 @@ public class MappedStatement {
       mappedStatement.parameterMap = new ParameterMap.Builder(configuration, "defaultParameterMap", Object.class, new ArrayList<ParameterMapping>()).build();
       mappedStatement.resultMaps = new ArrayList<ResultMap>();
       mappedStatement.timeout = configuration.getDefaultStatementTimeout();
+    }
+
+    public Builder resource(String resource) {
+      mappedStatement.resource = resource;
+      return this;
     }
 
     public String id() {
@@ -92,6 +98,10 @@ public class MappedStatement {
       return mappedStatement;
     }
 
+  }
+
+  public String getResource() {
+    return resource;
   }
 
   public Configuration getConfiguration() {

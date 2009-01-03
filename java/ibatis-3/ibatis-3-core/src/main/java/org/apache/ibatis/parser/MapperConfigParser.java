@@ -9,6 +9,7 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.datasource.DataSourceFactory;
 import org.apache.ibatis.transaction.TransactionFactory;
+import org.apache.ibatis.executor.ErrorContext;
 
 import java.io.Reader;
 import java.util.*;
@@ -32,6 +33,7 @@ public class MapperConfigParser extends BaseParser {
   }
 
   public MapperConfigParser(Reader reader, String environment, Properties props) {
+    ErrorContext.instance().resource("SQL Mapper Configuration");
     this.parsed = false;
     this.reader = reader;
     this.environment = environment;
@@ -214,14 +216,18 @@ public class MapperConfigParser extends BaseParser {
     String url = context.getStringAttribute("url");
     Reader reader;
     if (resource != null && url == null) {
+      ErrorContext.instance().resource(resource);
       reader = Resources.getResourceAsReader(resource);
+      MapperParser mapperParser = new MapperParser(reader, configuration, resource);
+      mapperParser.parse();
     } else if (url != null && resource == null) {
+      ErrorContext.instance().resource(url);
       reader = Resources.getUrlAsReader(url);
+      MapperParser mapperParser = new MapperParser(reader, configuration, url);
+      mapperParser.parse();
     } else {
       throw new ParserException("A mapper element may only specify a url or resource, but not both.");
     }
-    MapperParser mapperParser = new MapperParser(reader, configuration);
-    mapperParser.parse();
   }
 
   private boolean isSpecifiedEnvironment() {
