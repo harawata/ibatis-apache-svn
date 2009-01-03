@@ -2,6 +2,7 @@ package org.apache.ibatis.api;
 
 import org.junit.*;
 import org.apache.ibatis.BaseDataTest;
+import org.apache.ibatis.mapping.Configuration;
 import org.apache.ibatis.io.Resources;
 
 import java.io.Reader;
@@ -173,6 +174,30 @@ public class SqlSessionTest extends BaseDataTest {
       Assert.assertEquals("jim",blog.getAuthor().getUsername());
     } finally {
       session.close();
+    }
+  }
+
+  @Test
+  public void shouldThrowExceptionIfMappedStatementDoesNotExist() throws Exception {
+    SqlSession session = sqlMapper.openSession();
+    try {
+      session.selectList("ThisStatementDoesNotExist");
+      Assert.fail("Expected exception to be thrown due to statement that does not exist.");
+    } catch (Exception e) {
+      Assert.assertTrue(e.getMessage().contains("does not contain value for ThisStatementDoesNotExist"));
+    } finally {
+      session.close();
+    }
+  }
+
+  @Test
+  public void shouldThrowExceptionIfTryingToAddStatementWithSameName() throws Exception {
+    Configuration config = sqlMapper.getConfiguration();
+    try {
+      config.addMappedStatement(config.getMappedStatement("com.domain.BlogMapper.selectBlogWithPostsUsingSubSelect"));
+      Assert.fail("Expected exception to be thrown due to statement that already exists.");
+    } catch (Exception e) {
+      Assert.assertTrue(e.getMessage().contains("already contains value for com.domain.BlogMapper.selectBlogWithPostsUsingSubSelect"));
     }
   }
 

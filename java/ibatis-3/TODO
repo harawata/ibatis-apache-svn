@@ -1,8 +1,3 @@
-Improvements
- * Duplicate element IDs are clobbering each other in config
- * Need to report on lookups of nonexisting config elements (e.g. config.getMappedStatement)
- * Statement (other elements?) not found does not fail gracefully
-
 Parameter Maps
  * Named parameter parsing/merging
 
@@ -14,12 +9,6 @@ Testing
  * Functional tests
  * Perf/Threaded Integration Tests
 
-Logging
-//  private static final Log log = LogFactory.getLog(BaseExecutor.class);
-//    if (log.isDebugEnabled()) {
-//      this.connection = ConnectionLogger.newInstance(connection);
-//    } else {
-//      this.connection = connection;
-//    }
+
 
 

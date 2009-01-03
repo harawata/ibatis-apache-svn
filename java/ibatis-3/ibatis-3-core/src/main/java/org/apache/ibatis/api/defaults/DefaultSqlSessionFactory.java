@@ -6,13 +6,17 @@ import org.apache.ibatis.api.exceptions.ExceptionFactory;
 import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.transaction.TransactionFactory;
 import org.apache.ibatis.transaction.Transaction;
-import org.apache.ibatis.executor.Executor;
+import org.apache.ibatis.executor.*;
+import org.apache.ibatis.logging.*;
+import org.apache.ibatis.logging.jdbc.ConnectionLogger;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
 public class DefaultSqlSessionFactory implements SqlSessionFactory {
+
+  private static final Log log = LogFactory.getLog(Connection.class);
 
   private final Configuration configuration;
   private Environment environment;
@@ -41,6 +45,7 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
   public SqlSession openSession(boolean autoCommit, ExecutorType execType) {
     try {
       Connection connection = dataSource.getConnection();
+      connection = wrapConnection(connection);
       Transaction tx = transactionFactory.newTransaction(connection, autoCommit);
       Executor executor = configuration.newExecutor(tx,execType);
       return new DefaultSqlSession(configuration, executor, autoCommit);
@@ -63,6 +68,7 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
         // or databases won't support transactions
         autoCommit = true;
       }
+      connection = wrapConnection(connection);
       Transaction tx = transactionFactory.newTransaction(connection, autoCommit);
       Executor executor = configuration.newExecutor(tx, execType);
       return new DefaultSqlSession(configuration, executor, autoCommit);
@@ -75,8 +81,13 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
     return configuration;
   }
 
-
-
+  private Connection wrapConnection(Connection connection) {
+    if (log.isDebugEnabled()) {
+      return ConnectionLogger.newInstance(connection);
+    } else {
+      return connection;
+    }
+  }
 
 }
 

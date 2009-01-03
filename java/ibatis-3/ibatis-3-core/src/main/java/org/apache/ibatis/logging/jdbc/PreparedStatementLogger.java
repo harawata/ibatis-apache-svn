@@ -25,9 +25,9 @@ public class PreparedStatementLogger extends BaseJdbcLogger implements Invocatio
     try {
       if (EXECUTE_METHODS.contains(method.getName())) {
         if (log.isDebugEnabled()) {
-          log.debug("Executing Statement: " + removeBreakingWhitespace(sql));
-          log.debug("Parameter Types: " + getTypeString());
-          log.debug("Parameters: " + getValueString());
+          log.debug("==> Executing: " + removeBreakingWhitespace(sql));
+          log.debug("==> Parameter Types: " + getTypeString());
+          log.debug("==> Parameters: " + getValueString());
         }
         clearColumnInfo();
         if ("executeQuery".equals(method.getName())) {

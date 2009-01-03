@@ -20,7 +20,7 @@ public class ResultSetLogger extends BaseJdbcLogger implements InvocationHandler
     super();
     this.rs = rs;
     if (log.isDebugEnabled()) {
-      log.debug("ResultSet Returned");
+      log.debug("<== ResultSet Returned");
     }
   }
 
@@ -40,11 +40,11 @@ public class ResultSetLogger extends BaseJdbcLogger implements InvocationHandler
           if (first) {
             first = false;
             if (log.isDebugEnabled()) {
-              log.debug("Columns: " + getColumnString());
+              log.debug("<== Columns: " + getColumnString());
             }
           }
           if (log.isDebugEnabled()) {
-            log.debug("Row: " + s);
+            log.debug("<== Row: " + s);
           }
         }
         clearColumnInfo();

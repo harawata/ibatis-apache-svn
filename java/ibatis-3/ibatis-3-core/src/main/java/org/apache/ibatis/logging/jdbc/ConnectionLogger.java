@@ -19,7 +19,7 @@ public class ConnectionLogger extends BaseJdbcLogger implements InvocationHandle
     super();
     this.connection = conn;
     if (log.isDebugEnabled()) {
-      log.debug("Connection Opened");
+      log.debug("ooo Connection Opened");
     }
   }
 
@@ -38,6 +38,11 @@ public class ConnectionLogger extends BaseJdbcLogger implements InvocationHandle
         Statement stmt = (Statement) method.invoke(connection, params);
         stmt = StatementLogger.newInstance(stmt);
         return stmt;
+      } else if ("close".equals(method.getName())) {
+        if (log.isDebugEnabled()) {
+          log.debug("xxx Connection Closed");
+        }
+        return method.invoke(connection, params);
       } else {
         return method.invoke(connection, params);
       }

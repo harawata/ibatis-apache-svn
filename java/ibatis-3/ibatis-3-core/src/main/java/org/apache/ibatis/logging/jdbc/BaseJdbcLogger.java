@@ -110,7 +110,7 @@ public class BaseJdbcLogger {
   }
 
   protected String removeBreakingWhitespace(String original) {
-    return original.replace('\n', ' ').replace('\r', ' ').replace('\t', ' ');
+    return original.replace('\n', ' ').replace('\r', ' ').replace('\t', ' ').trim();
   }
 
 }
