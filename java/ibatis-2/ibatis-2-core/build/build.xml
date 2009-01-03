@@ -1,6 +1,30 @@
 <project name="iBATIS-DBL2" default="all" basedir=".">
 
-  <property file="build.properties"/>
+  <!-- INPUTS -->
+  <property name="src.rt" value="../src"/>
+  <property name="src.dev" value="../devsrc"/>
+  <property name="src.test" value="../test"/>
+  <property name="lib.rt" value="../lib"/>
+  <property name="lib.dev" value="../devlib"/>
+  <property name="res.txt" value="../doc"/>
+  <property name="res.javadoc" value="../javadoc"/>
+  <property name="coverage.enabled" value="true"/>
+  
+  <!-- OUTPUTS -->
+  <property name="work.root" value="./work"/>
+  <property name="work.classes" value="./work/classes"/>
+  <property name="work.tests" value="./work/testclasses"/>
+  <property name="work.instr" value="./work/instrumented"/>
+  <property name="work.javadoc.dev" value="./work/javadocs/dev"/>
+  <property name="work.javadoc.user" value="./work/javadocs/user"/>
+  <property name="reports.root" value="./reports"/>
+  <property name="reports.junit" value="./reports/junit"/>
+  <property name="reports.coverage" value="./reports/coverage"/>
+  <property name="deploy.path" value="./exploded"/>
+  <property name="deploy.prefix" value="ibatis-"/>
+  <property name="deploy.ext=" value=".zip"/>
+  <property name="deploy.files" value="./deploy"/>
+
 
   <path id="runtime.src">
     <pathelement location="${src.rt}"/>
