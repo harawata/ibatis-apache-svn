@@ -90,13 +90,14 @@ public class DefaultResultSetHandler implements ResultSetHandler {
           // TODO: We need an easy way to unit test this without installing Oracle.
           // Mocks are obvious, but will they be effective enough?  DBunit?
           ResultSet rs = (ResultSet) callableStatement.getObject(i + 1);
-          ResultMap resultMap = mappedStatement.getConfiguration().getResultMap(parameterMapping.getResultMapId());
-          if (resultMap == null) {
-            throw new ExecutorException("Parameter requires ResultMap for output types of java.sql.ResultSet");
-          } else {
+          String resultMapId = parameterMapping.getResultMapId();
+          if (resultMapId != null) {
+            ResultMap resultMap = mappedStatement.getConfiguration().getResultMap(resultMapId);
             DefaultResultHandler resultHandler = new DefaultResultHandler();
             handleResults(rs, resultMap, resultHandler, Executor.NO_ROW_OFFSET, Executor.NO_ROW_LIMIT);
             metaParam.setValue(parameterMapping.getProperty(), resultHandler.getResultList());
+          } else {
+            throw new ExecutorException("Parameter requires ResultMap for output types of java.sql.ResultSet");
           }
           rs.close();
         } else {
@@ -275,8 +276,9 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       if (knownResultObject != null && knownResultObject != NO_VALUE) {
         for (ResultMapping resultMapping : resultMappings) {
           Configuration configuration = mappedStatement.getConfiguration();
-          ResultMap nestedResultMap = configuration.getResultMap(resultMapping.getNestedResultMapId());
-          if (nestedResultMap != null) {
+          String nestedResultMapId = resultMapping.getNestedResultMapId();
+          if (nestedResultMapId != null) {
+            ResultMap nestedResultMap = configuration.getResultMap(nestedResultMapId);
             try {
 
               // get the discriminated submap if it exists
@@ -369,11 +371,14 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       ResultMapping resultMapping = discriminator.getResultMapping();
       Object value = getPrimitiveResultMappingValue(rs, resultMapping);
       String subMapId = discriminator.getMapIdFor(String.valueOf(value));
-      subMap = mappedStatement.getConfiguration().getResultMap(subMapId);
 
-      if (subMap == null) {
+      try {
+        subMap = mappedStatement.getConfiguration().getResultMap(subMapId);
+      } catch (Exception e) {
         subMap = rm;
-      } else if (subMap != rm) {
+      }
+       
+      if (subMap != rm) {
         subMap = resolveSubMap(rs, subMap);
       }
     }

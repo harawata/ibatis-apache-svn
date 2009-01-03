@@ -42,7 +42,7 @@ public class Configuration {
   private final TypeAliasRegistry typeAliasRegistry = new TypeAliasRegistry();
   private final Map<String, MappedStatement> mappedStatements = new StrictMap<String, MappedStatement>("Mapped Statements collection");
   private final Map<String, Cache> caches = new StrictMap<String, Cache>("Caches collection");
-  private final Map<String, ResultMap> resultMaps = new HashMap<String, ResultMap>();//("Result Maps collection");
+  private final Map<String, ResultMap> resultMaps = new StrictMap<String, ResultMap>("Result Maps collection");
   private final Map<String, ParameterMap> parameterMaps = new StrictMap<String, ParameterMap>("Parameter Maps collection");
 
   public Configuration() {
@@ -193,6 +193,10 @@ public class Configuration {
     caches.put(cache.getId(), cache);
   }
 
+  public Collection<String> getCacheNames() {
+    return caches.keySet();
+  }
+
   public Collection<Cache> getCaches() {
     return caches.values();
   }
@@ -203,6 +207,10 @@ public class Configuration {
 
   public void addResultMap(ResultMap rm) {
     resultMaps.put(rm.getId(), rm);
+  }
+
+  public Collection<String> getResultMapNames() {
+    return resultMaps.keySet();
   }
 
   public Collection<ResultMap> getResultMaps() {
@@ -217,6 +225,10 @@ public class Configuration {
     parameterMaps.put(pm.getId(), pm);
   }
 
+  public Collection<String> getParameterMapNames() {
+    return parameterMaps.keySet();
+  }
+
   public Collection<ParameterMap> getParameterMaps() {
     return parameterMaps.values();
   }
@@ -227,6 +239,10 @@ public class Configuration {
 
   public void addMappedStatement(MappedStatement ms) {
     mappedStatements.put(ms.getId(), ms);
+  }
+
+  public Collection<String> getMappedStatementNames() {
+    return mappedStatements.keySet();
   }
 
   public Collection<MappedStatement> getMappedStatements() {

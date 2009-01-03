@@ -148,9 +148,6 @@ public class MapperParser extends BaseParser {
 
     if (extend != null) {
       ResultMap resultMap = configuration.getResultMap(extend);
-      if (resultMap == null) {
-        throw new ParserException("ResultMap named in extends attribute of " + id + "does not exist or is not defined yet.");
-      }
       resultMappings.addAll(resultMap.getResultMappings());
     }
   }

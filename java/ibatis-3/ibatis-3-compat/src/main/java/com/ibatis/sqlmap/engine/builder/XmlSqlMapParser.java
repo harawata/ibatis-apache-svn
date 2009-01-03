@@ -178,14 +178,10 @@ public class XmlSqlMapParser {
 
     if (extendedId != null) {
       ResultMap extendedResultMap = config.getResultMap(extendedId);
-      if (extendedResultMap != null) {
-        for (ResultMapping mapping : extendedResultMap.getResultMappings()) {
-          resultMappingList.add(mapping);
-        }
-        resultMapBuilder.discriminator(extendedResultMap.getDiscriminator());
-      } else {
-        throw new SqlMapException("Could not extend non-existant result map named " + extendedId);
+      for (ResultMapping mapping : extendedResultMap.getResultMappings()) {
+        resultMappingList.add(mapping);
       }
+      resultMapBuilder.discriminator(extendedResultMap.getDiscriminator());
     }
 
   }

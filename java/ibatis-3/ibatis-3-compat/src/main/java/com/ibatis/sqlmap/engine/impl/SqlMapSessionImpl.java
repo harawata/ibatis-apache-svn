@@ -269,8 +269,15 @@ public class SqlMapSessionImpl implements SqlMapSession {
   }
 
   private int getKey(String id, final Object parameterObject) throws SQLException {
-    final MappedStatement keyStatement = configuration.getMappedStatement(selectKeyIdFor(id));
     int key = Integer.MIN_VALUE;
+    String selectKeyId = selectKeyIdFor(id);
+    final MappedStatement keyStatement;
+
+    if (configuration.getMappedStatementNames().contains(selectKeyId)) {
+      keyStatement = configuration.getMappedStatement(selectKeyId);
+    } else {
+      keyStatement = null;
+    }
     if (keyStatement != null) {
       List results = (List) transactionManager.doInTransaction(new TransactionScope() {
         public Object execute(Transaction transaction) throws SQLException {
