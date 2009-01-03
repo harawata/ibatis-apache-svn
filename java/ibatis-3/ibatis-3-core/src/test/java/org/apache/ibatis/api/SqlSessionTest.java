@@ -169,6 +169,8 @@ public class SqlSessionTest extends BaseDataTest {
       Assert.assertEquals("Jim Business", blog.getTitle());
       Assert.assertEquals(2, blog.getPosts().size());
       Assert.assertEquals("Corn nuts",blog.getPosts().get(0).getSubject());
+      Assert.assertEquals(101,blog.getAuthor().getId());
+      Assert.assertEquals("jim",blog.getAuthor().getUsername());
     } finally {
       session.close();
     }

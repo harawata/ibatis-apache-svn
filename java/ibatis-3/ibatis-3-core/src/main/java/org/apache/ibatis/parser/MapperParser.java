@@ -208,6 +208,13 @@ public class MapperParser extends BaseParser {
     resultMappings.add(builder.build());
   }
 
+  //  <association property="" column="" javaType="" select="" resultMap=""/>
+  @Nodelet("/mapper/resultMap/association")
+  public void resultMapAssociationElement(NodeletContext context) throws Exception {
+    ResultMapping.Builder builder = buildResultMappingFromContext(context);
+    resultMappings.add(builder.build());
+  }
+
   //  <discriminator column="" javaType="" jdbcType="">
   @Nodelet("/mapper/resultMap/discriminator")
   public void resultMapDiscriminatorElement(NodeletContext context) throws Exception {

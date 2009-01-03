@@ -37,7 +37,7 @@ scale CDATA #IMPLIED
 typeHandler CDATA #IMPLIED
 >
 
-<!ELEMENT resultMap (constructor?,id*,result*,collection*, discriminator?)>
+<!ELEMENT resultMap (constructor?,id*,result*,association*,collection*, discriminator?)>
 <!ATTLIST resultMap
 id CDATA #REQUIRED
 type CDATA #REQUIRED
@@ -66,6 +66,17 @@ typeHandler CDATA #IMPLIED
 
 <!ELEMENT collection EMPTY>
 <!ATTLIST collection
+property CDATA #REQUIRED
+column CDATA #IMPLIED
+javaType CDATA #IMPLIED
+jdbcType CDATA #IMPLIED
+select CDATA #IMPLIED
+resultMap CDATA #IMPLIED
+typeHandler CDATA #IMPLIED
+>
+
+<!ELEMENT association EMPTY>
+<!ATTLIST association
 property CDATA #REQUIRED
 column CDATA #IMPLIED
 javaType CDATA #IMPLIED
