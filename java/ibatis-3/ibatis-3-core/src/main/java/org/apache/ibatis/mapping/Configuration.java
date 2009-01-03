@@ -40,10 +40,10 @@ public class Configuration {
   private final InterceptorChain interceptorChain = new InterceptorChain();
   private final TypeHandlerRegistry typeHandlerRegistry = new TypeHandlerRegistry();
   private final TypeAliasRegistry typeAliasRegistry = new TypeAliasRegistry();
-  private final Map<String, MappedStatement> mappedStatements = new HashMap<String, MappedStatement>();
-  private final Map<String, Cache> caches = new HashMap<String, Cache>();
-  private final Map<String, ResultMap> resultMaps = new HashMap<String, ResultMap>();
-  private final Map<String, ParameterMap> parameterMaps = new HashMap<String, ParameterMap>();
+  private final Map<String, MappedStatement> mappedStatements = new StrictMap<String, MappedStatement>("Mapped Statements collection");
+  private final Map<String, Cache> caches = new StrictMap<String, Cache>("Caches collection");
+  private final Map<String, ResultMap> resultMaps = new HashMap<String, ResultMap>();//("Result Maps collection");
+  private final Map<String, ParameterMap> parameterMaps = new StrictMap<String, ParameterMap>("Parameter Maps collection");
 
   public Configuration() {
     typeAliasRegistry.registerAlias("JDBC", JdbcTransactionFactory.class.getName());
@@ -239,6 +239,43 @@ public class Configuration {
 
   public void addInterceptor(Interceptor interceptor) {
     interceptorChain.addInterceptor(interceptor);
+  }
+
+  private static class StrictMap<J,K> extends HashMap<J,K> {
+
+    private String name;
+
+    public StrictMap(String name, int initialCapacity, float loadFactor) {
+      super(initialCapacity, loadFactor);
+      this.name = name;
+    }
+
+    public StrictMap(String name, int initialCapacity) {
+      super(initialCapacity);
+      this.name = name;
+    }
+
+    public StrictMap(String name) {
+      super();
+      this.name = name;
+    }
+
+    public StrictMap(String name, Map<? extends J, ? extends K> m) {
+      super(m);
+      this.name = name;
+    }
+
+    public K put(J key, K value) {
+      if (containsKey(key)) throw new IllegalArgumentException(name + " already contains value for " + key);
+      return super.put(key, value);
+    }
+
+    public K get(Object key) {
+      K value = super.get(key);
+      if (value == null) throw new IllegalArgumentException(name + " does not contain value for " + key);
+      return value;
+    }
+
   }
 
 }
