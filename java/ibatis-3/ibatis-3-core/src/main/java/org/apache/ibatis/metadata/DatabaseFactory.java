@@ -7,9 +7,8 @@ public class DatabaseFactory {
   private DatabaseFactory() {
   }
 
-  public static Database newDatabase(DataSource dataSource, String catalogFilter, String schemaFilter) throws SQLException {
+  public static Database newDatabase(Connection conn, String catalogFilter, String schemaFilter) throws SQLException {
     Database database = new Database(catalogFilter, schemaFilter);
-    Connection conn = dataSource.getConnection();
     ResultSet rs = null;
     try {
       DatabaseMetaData dbmd = conn.getMetaData();
@@ -51,7 +50,6 @@ public class DatabaseFactory {
 
     } finally {
       try { conn.rollback(); } catch (Exception e) { /*ignore*/ }
-      try { conn.close(); } catch (Exception e) { /*ignore*/ }
     }
     return database;
   }
