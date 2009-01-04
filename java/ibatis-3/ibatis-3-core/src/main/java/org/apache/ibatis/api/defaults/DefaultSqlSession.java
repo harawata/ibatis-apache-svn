@@ -46,13 +46,18 @@ public class DefaultSqlSession implements SqlSession {
   }
 
   public List selectList(String statement, Object parameter, int offset, int limit) {
-    return selectList(statement, parameter, offset, limit, Executor.NO_RESULT_HANDLER);
-  }
-
-  public List selectList(String statement, Object parameter, int offset, int limit, ResultHandler handler) {
     try {
       MappedStatement ms = configuration.getMappedStatement(statement);
-      return executor.query(ms, parameter, offset, limit, handler);
+      return executor.query(ms, parameter, offset, limit, Executor.NO_RESULT_HANDLER);
+    } catch (Exception e) {
+      throw ExceptionFactory.wrapException("Error querying database.  Cause: " + e, e);
+    }
+  }
+
+  public void select(String statement, Object parameter, int offset, int limit, ResultHandler handler) {
+    try {
+      MappedStatement ms = configuration.getMappedStatement(statement);
+      executor.query(ms, parameter, offset, limit, handler);
     } catch (Exception e) {
       throw ExceptionFactory.wrapException("Error querying database.  Cause: " + e, e);
     }

@@ -49,6 +49,19 @@ public class SqlSessionTest extends BaseDataTest {
   }
 
   @Test
+  public void shouldSelectOneAuthorAsList() throws Exception {
+    SqlSession session = sqlMapper.openSession();
+    try {
+      List<Author> authors= session.selectList(
+          "com.domain.AuthorMapper.selectAuthor", new Author(101));
+      Assert.assertEquals(101, authors.get(0).getId());
+      Assert.assertEquals(Section.NEWS, authors.get(0).getFavouriteSection());
+    } finally {
+      session.close();
+    }
+  }
+
+  @Test
   public void shouldSelectOneImmutableAuthor() throws Exception {
     SqlSession session = sqlMapper.openSession();
     try {

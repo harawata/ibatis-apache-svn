@@ -59,11 +59,13 @@
   <target name="clean">
     <delete dir="${build.root}"/>
     <delete dir="ibderby"/>
+    <delete dir="${module}/ibderby"/>
     <delete>
       <fileset dir="./">
         <include name="junit*.properties"/>
         <include name="coverage.ec"/>
         <include name="derby.log"/>
+        <include name="${module}/derby.log"/>
       </fileset>
     </delete>
   </target>
