@@ -22,7 +22,7 @@
   <property name="reports.coverage" value="./reports/coverage"/>
   <property name="deploy.path" value="./exploded"/>
   <property name="deploy.prefix" value="ibatis-"/>
-  <property name="deploy.ext=" value=".zip"/>
+  <property name="deploy.ext" value=".zip"/>
   <property name="deploy.files" value="./deploy"/>
 
 
