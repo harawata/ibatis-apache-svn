@@ -1,13 +1,11 @@
-Parameter Maps
- * Named parameter parsing/merging
-
-API
- * Mapper Interface Binding
-
+TODO
+  * Mapper Interface Binding
+  * Named parameter parsing/merging
+  * Dynamic SQL
 Testing
- * Improve test coverage
- * Functional tests
- * Perf/Threaded Integration Tests
+  * Improve test coverage
+  * Functional tests
+  * Perf/Threaded Integration Tests
 
 
 
