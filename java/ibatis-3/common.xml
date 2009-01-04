@@ -29,8 +29,8 @@
 
   <artifact:pom id="${module}.pom" file="${module}/pom.xml" />
 
-  <artifact:dependencies pathId="runtime.src" usescope="compile" pomrefid="${module}.pom" />
-  <artifact:dependencies pathId="test.src" usescope="test" pomrefid="${module}.pom" />
+  <artifact:dependencies pathId="compile.dep" usescope="compile" pomrefid="${module}.pom" />
+  <artifact:dependencies pathId="test.dep" usescope="test" pomrefid="${module}.pom" />
 
   <!-- EMMA -->
 
@@ -52,8 +52,8 @@
     <pathelement location="${classes}"/>
     <pathelement location="${classes.test}"/>
     <path refid="emma.classpath"/>
-    <path refid="runtime.src"/>
-    <path refid="test.src"/>
+    <path refid="compile.dep"/>
+    <path refid="test.dep"/>
   </path>
 
   <target name="clean">
