@@ -54,6 +54,10 @@ public class DefaultSqlSession implements SqlSession {
     }
   }
 
+  public void select(String statement, Object parameter, ResultHandler handler) {
+    select(statement,parameter,Executor.NO_ROW_OFFSET, Executor.NO_ROW_LIMIT,handler);
+  }
+
   public void select(String statement, Object parameter, int offset, int limit, ResultHandler handler) {
     try {
       MappedStatement ms = configuration.getMappedStatement(statement);

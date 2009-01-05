@@ -13,6 +13,7 @@ public interface SqlSession {
   List selectList(String statement, Object parameter);
   List selectList(String statement, Object parameter, int offset, int limit);
 
+  void select(String statement, Object parameter, ResultHandler handler);
   void select(String statement, Object parameter, int offset, int limit, ResultHandler handler);
 
   Object insert(String statement);
