@@ -48,24 +48,36 @@ import org.apache.ibatis.ibator.internal.util.StringUtility;
  */
 public abstract class IntrospectedTable {
     /**
-     * This attribute must be a class of type java.lang.String
+     * This attribute must be a class of type java.lang.String.
+     * <p/>
+     * Note: this attribute will not be set if DAOs
+     * are not being generated for this table.
      */
     public static final String ATTR_DAO_IMPLEMENTATION_PACKAGE = "org.apache.ibatis.ibator.api.IntrospectedTable.ATTR_DAO_IMPLEMENTATION_PACKAGE"; //$NON-NLS-1$
     
     /**
      * This attribute must be a class of type java.lang.String
+     * <p/>
+     * Note: this attribute will not be set if DAOs
+     * are not being generated for this table.
      */
     public static final String ATTR_DAO_INTERFACE_PACKAGE = "org.apache.ibatis.ibator.api.IntrospectedTable.ATTR_DAO_INTERFACE_PACKAGE"; //$NON-NLS-1$
     
     /**
      * This attribute must be a class of type
      *   org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType
+     * <p/>
+     * Note: this attribute will not be set if DAOs
+     * are not being generated for this table.
      */
     public static final String ATTR_DAO_IMPLEMENTATION_TYPE = "org.apache.ibatis.ibator.api.IntrospectedTable.ATTR_DAO_IMPLEMENTATION_TYPE"; //$NON-NLS-1$
     
     /**
      * This attribute must be a class of type
      *   org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType
+     * <p/>
+     * Note: this attribute will not be set if DAOs
+     * are not being generated for this table.
      */
     public static final String ATTR_DAO_INTERFACE_TYPE = "org.apache.ibatis.ibator.api.IntrospectedTable.ATTR_DAO_INTERFACE_TYPE"; //$NON-NLS-1$
     
@@ -503,6 +515,9 @@ public abstract class IntrospectedTable {
     
     private void calculateDAOImplementationPackage() {
         DAOGeneratorConfiguration config = ibatorContext.getDaoGeneratorConfiguration();
+        if (config == null) {
+            return;
+        }
         
         StringBuilder sb = new StringBuilder();
         if (StringUtility.stringHasValue(config.getImplementationPackage())) {
@@ -519,6 +534,9 @@ public abstract class IntrospectedTable {
     
     private void calculateDAOInterfacePackage() {
         DAOGeneratorConfiguration config = ibatorContext.getDaoGeneratorConfiguration();
+        if (config == null) {
+            return;
+        }
         
         StringBuilder sb = new StringBuilder();
         sb.append(config.getTargetPackage());
@@ -530,6 +548,10 @@ public abstract class IntrospectedTable {
     }
 
     private void calculateDAOImplementationType() {
+        if (ibatorContext.getDaoGeneratorConfiguration() == null) {
+            return;
+        }
+        
         StringBuilder sb = new StringBuilder();
         sb.append(getDAOImplementationPackage());
         sb.append('.');
@@ -542,6 +564,10 @@ public abstract class IntrospectedTable {
     }
 
     private void calculateDAOInterfaceType() {
+        if (ibatorContext.getDaoGeneratorConfiguration() == null) {
+            return;
+        }
+        
         StringBuilder sb = new StringBuilder();
         sb.append(getDAOInterfacePackage());
         sb.append('.');

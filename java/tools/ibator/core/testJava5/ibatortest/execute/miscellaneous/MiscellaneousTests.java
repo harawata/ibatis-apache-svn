@@ -31,7 +31,6 @@ package ibatortest.execute.miscellaneous;
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-import ibatortest.generated.miscellaneous.dao.AnotherawfultableDAO;
 import ibatortest.generated.miscellaneous.dao.MyObjectDAO;
 import ibatortest.generated.miscellaneous.dao.RegexrenameDAO;
 import ibatortest.generated.miscellaneous.model.Anotherawfultable;
@@ -44,6 +43,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
  * @author Jeff Butler
@@ -894,7 +895,7 @@ public class MiscellaneousTests extends BaseMiscellaneousTest {
     }
     
     public void testAnotherAwfulTableInsert() {
-        AnotherawfultableDAO dao = getAnotherawfultableDAO();
+        SqlMapClient sqlMap = getSqlMapClient();
         
         try {
             Anotherawfultable record = new Anotherawfultable();
@@ -902,9 +903,14 @@ public class MiscellaneousTests extends BaseMiscellaneousTest {
             record.setSelect("select");
             record.setInsert("insert");
             
-            dao.insertAnotherawfultable(record);
+            sqlMap.insert("ANOTHERAWFULTABLE.ibatorgenerated_insert", record);
             
-            Anotherawfultable returnedRecord = dao.selectAnotherawfultableByPrimaryKey(5);
+            Anotherawfultable key = new Anotherawfultable();
+            key.setId(5);
+            
+            Anotherawfultable returnedRecord = (Anotherawfultable)
+                sqlMap.queryForObject("ANOTHERAWFULTABLE.ibatorgenerated_selectByPrimaryKey",
+                        key);
             
             assertEquals(record.getId(), returnedRecord.getId());
             assertEquals(record.getSelect(), returnedRecord.getSelect());

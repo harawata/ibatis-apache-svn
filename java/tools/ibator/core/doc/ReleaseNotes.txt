@@ -1,6 +1,9 @@
 -------------------------------------------------------------------------------
 Version 1.2.2:
 
+Bugs:
+1. Fixed NPE when no DAOs are generated
+
 Enhancements:
 1. IBATIS-569 - Make it easier to override IbatorRules in plugins
 2. IBATIS-571 - Added "autoDelimitKeywords" support to <ibatorContext>

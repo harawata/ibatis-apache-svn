@@ -260,8 +260,6 @@
   </ibatorContext>
 
   <ibatorContext id="miscellaneousTests" targetRuntime="Ibatis2Java5">
-    <property name="autoDelimitKeywords" value="true"/>
-    
     <ibatorPlugin type="org.apache.ibatis.ibator.plugins.EqualsHashCodePlugin" />
     <ibatorPlugin type="org.apache.ibatis.ibator.plugins.RenameExampleClassPlugin" >
       <property name="searchString" value="Example$"/>
@@ -306,6 +304,22 @@
     <table tableName="RegexRename">
       <columnRenamingRule searchString="^CUST" />
     </table>
+  </ibatorContext>
+
+  <ibatorContext id="miscellaneousTests_NoDAO" targetRuntime="Ibatis2Java5">
+    <property name="autoDelimitKeywords" value="true" />
+    
+    <jdbcConnection driverClass="org.hsqldb.jdbcDriver"
+        connectionURL="jdbc:hsqldb:mem:aname"
+        userId="sa" />
+
+    <javaModelGenerator targetPackage="ibatortest.generated.miscellaneous.model" targetProject="${generated.source.dir.java5}">
+      <property name="trimStrings" value="true" />
+    </javaModelGenerator>
+
+    <sqlMapGenerator targetPackage="ibatortest.generated.miscellaneous.xml"
+                     targetProject="${generated.source.dir.java5}"/>
+
     <table tableName="AnotherAwfulTable" />
   </ibatorContext>
 </ibatorConfiguration>
