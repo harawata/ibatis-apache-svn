@@ -21,4 +21,33 @@
     select * from Post where blog_id = #{blog_id}
   </select>
 
+  <resultMap id="joinedAuthor" type="domain.blog.Author">
+    <id column="id" property="id" />
+    <result property="username" column="username" />
+    <result property="password" column="password" />
+    <result property="email" column="email" />
+    <result property="bio" column="bio" />
+    <result property="favouriteSection" column="favourite_section" />
+  </resultMap>
+
+  <resultMap id="joinedPost" type="domain.blog.Post">
+    <id column="id" property="id" />
+  </resultMap>
+
+
+  <resultMap id="blogJoinedWithPostsAndAuthor" type="Blog">
+    <id property="id" column="id" />
+    <result property="title" column="title" />
+    <association property="author" column="author_id" resultMap="selectAuthorWithInlineParams"/>
+    <collection property="posts" column="id" resultMap="joinedPost" />
+  </resultMap>
+
+  <select id="selectBlogJoinedWithPostsAndAuthor" parameterType="int" resultMap="blogWithPosts">
+    select * from Blog B
+    inner join Post P on B.id = P.blog_id
+    inner join Author A on B.author_id = A.id
+    where B.id = #{id}
+  </select>
+
+
 </mapper>

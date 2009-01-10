@@ -176,10 +176,25 @@ public class SqlSessionTest extends BaseDataTest {
   }
 
   @Test
-  public void shouldSelectBlogWithPostsUsingSubSelect() throws Exception {
+  public void shouldSelectBlogWithPostsAndAuthorUsingSubSelects() throws Exception {
     SqlSession session = sqlMapper.openSession();
     try {
       Blog blog = (Blog) session.selectOne("com.domain.BlogMapper.selectBlogWithPostsUsingSubSelect", 1);
+      Assert.assertEquals("Jim Business", blog.getTitle());
+      Assert.assertEquals(2, blog.getPosts().size());
+      Assert.assertEquals("Corn nuts",blog.getPosts().get(0).getSubject());
+      Assert.assertEquals(101,blog.getAuthor().getId());
+      Assert.assertEquals("jim",blog.getAuthor().getUsername());
+    } finally {
+      session.close();
+    }
+  }
+
+  @Test
+  public void shouldSelectBlogWithPostsAndAuthorUsingJoin() throws Exception {
+    SqlSession session = sqlMapper.openSession();
+    try {
+      Blog blog = (Blog) session.selectOne("com.domain.BlogMapper.selectBlogJoinedWithPostsAndAuthor", 1);
       Assert.assertEquals("Jim Business", blog.getTitle());
       Assert.assertEquals(2, blog.getPosts().size());
       Assert.assertEquals("Corn nuts",blog.getPosts().get(0).getSubject());
