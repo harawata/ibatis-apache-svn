@@ -8,10 +8,10 @@ public interface SqlSessionFactory {
 
   SqlSession openSession();
   SqlSession openSession(boolean autoCommit);
-  SqlSession openSession(ExecutorType execType);
   SqlSession openSession(Connection connection);
-  SqlSession openSession(boolean autoCommit, ExecutorType execType);
-  SqlSession openSession(Connection connection, ExecutorType execType);
+  SqlSession openSession(ExecutorType execType);
+  SqlSession openSession(ExecutorType execType, boolean autoCommit);
+  SqlSession openSession(ExecutorType execType, Connection connection);
   Configuration getConfiguration();
 
 }

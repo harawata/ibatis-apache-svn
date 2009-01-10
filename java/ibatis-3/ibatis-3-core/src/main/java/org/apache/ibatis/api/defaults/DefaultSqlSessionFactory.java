@@ -31,18 +31,18 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
   }
 
   public SqlSession openSession() {
-    return openSession(false, configuration.getDefaultExecutorType());
+    return openSession(configuration.getDefaultExecutorType(), false);
   }
 
   public SqlSession openSession(boolean autoCommit) {
-    return openSession(autoCommit, configuration.getDefaultExecutorType());
+    return openSession(configuration.getDefaultExecutorType(), autoCommit);
   }
 
   public SqlSession openSession(ExecutorType execType) {
-    return openSession(false, execType);
+    return openSession(execType, false);
   }
 
-  public SqlSession openSession(boolean autoCommit, ExecutorType execType) {
+  public SqlSession openSession(ExecutorType execType, boolean autoCommit) {
     try {
       Connection connection = dataSource.getConnection();
       connection = wrapConnection(connection);
@@ -55,10 +55,10 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
   }
 
   public SqlSession openSession(Connection connection) {
-    return openSession(connection, configuration.getDefaultExecutorType());
+    return openSession(configuration.getDefaultExecutorType(), connection);
   }
 
-  public SqlSession openSession(Connection connection, ExecutorType execType) {
+  public SqlSession openSession(ExecutorType execType, Connection connection) {
     try {
       boolean autoCommit;
       try {
