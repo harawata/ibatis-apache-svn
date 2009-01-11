@@ -8,17 +8,18 @@ import org.apache.ibatis.io.Resources;
 import java.io.Reader;
 import java.util.List;
 
-import domain.blog.Author;
-import domain.blog.Section;
-import domain.blog.ImmutableAuthor;
-import domain.blog.Blog;
+import domain.blog.*;
+
+import javax.sql.DataSource;
 
 public class SqlSessionTest extends BaseDataTest {
   private static SqlSessionFactory sqlMapper;
 
+  private static DataSource blogDataSource;
+
   @BeforeClass
   public static void setup() throws Exception {
-    createBlogDataSource();
+    blogDataSource = createBlogDataSource();
     final String resource = "org/apache/ibatis/parser/MapperConfig.xml";
     final Reader reader = Resources.getResourceAsReader(resource);
     sqlMapper = new SqlSessionFactoryBuilder().build(reader);
@@ -196,10 +197,23 @@ public class SqlSessionTest extends BaseDataTest {
     try {
       Blog blog = (Blog) session.selectOne("com.domain.BlogMapper.selectBlogJoinedWithPostsAndAuthor", 1);
       Assert.assertEquals("Jim Business", blog.getTitle());
-      Assert.assertEquals(2, blog.getPosts().size());
-      Assert.assertEquals("Corn nuts",blog.getPosts().get(0).getSubject());
-      Assert.assertEquals(101,blog.getAuthor().getId());
-      Assert.assertEquals("jim",blog.getAuthor().getUsername());
+
+      final Author author = blog.getAuthor();
+      Assert.assertEquals(101, author.getId());
+      Assert.assertEquals("jim",author.getUsername());
+
+      final List<Post> posts = blog.getPosts();
+      Assert.assertEquals(2, posts.size());
+
+      final Post post = blog.getPosts().get(0);
+      Assert.assertEquals(1, post.getId());
+      Assert.assertEquals("Corn nuts", post.getSubject());
+
+      final List<Comment> comments = post.getComments();
+      Assert.assertEquals(1, comments.size());
+
+      final Comment comment = comments.get(0);
+      Assert.assertEquals(1, comment.getId());
     } finally {
       session.close();
     }
