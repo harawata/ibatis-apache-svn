@@ -15,11 +15,9 @@ import javax.sql.DataSource;
 public class SqlSessionTest extends BaseDataTest {
   private static SqlSessionFactory sqlMapper;
 
-  private static DataSource blogDataSource;
-
   @BeforeClass
   public static void setup() throws Exception {
-    blogDataSource = createBlogDataSource();
+    createBlogDataSource();
     final String resource = "org/apache/ibatis/parser/MapperConfig.xml";
     final Reader reader = Resources.getResourceAsReader(resource);
     sqlMapper = new SqlSessionFactoryBuilder().build(reader);
@@ -214,6 +212,10 @@ public class SqlSessionTest extends BaseDataTest {
 
       final Comment comment = comments.get(0);
       Assert.assertEquals(1, comment.getId());
+
+      Assert.assertEquals(DraftPost.class, blog.getPosts().get(0).getClass());
+      Assert.assertEquals(Post.class, blog.getPosts().get(1).getClass());
+
     } finally {
       session.close();
     }

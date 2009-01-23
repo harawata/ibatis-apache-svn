@@ -4,13 +4,13 @@ INSERT INTO author (id,username, password, email, bio, favourite_section) VALUES
 INSERT INTO blog (id,author_id,title) VALUES (1,101,'Jim Business');
 INSERT INTO blog (id,author_id,title) VALUES (2,102,'Bally Slog');
 
-INSERT INTO post (id,blog_id,author_id,created_on,section,subject,body) VALUES (1,1,101,'2007-12-05-00.00.00','NEWS','Corn nuts','I think if I never smelled another corn nut it would be too soon...');
-INSERT INTO post (id,blog_id,author_id,created_on,section,subject,body) VALUES (2,1,101,'2008-01-12-00.00.00','VIDEOS','Paul Hogan on Toy Dogs','That''s not a dog.  THAT''s a dog!');
-INSERT INTO post (id,blog_id,author_id,created_on,section,subject,body) VALUES (3,2,102,'2007-12-05-00.00.00','PODCASTS','Monster Trucks','I think monster trucks are great...');
-INSERT INTO post (id,blog_id,author_id,created_on,section,subject,body) VALUES (4,2,102,'2008-01-12-00.00.00','IMAGES','Tea Parties','A tea party is no place to hold a business meeting...');
+INSERT INTO post (id,blog_id,author_id,created_on,section,subject,body,draft) VALUES (1,1,101,'2007-12-05-00.00.00','NEWS','Corn nuts','I think if I never smelled another corn nut it would be too soon...',1);
+INSERT INTO post (id,blog_id,author_id,created_on,section,subject,body,draft) VALUES (2,1,101,'2008-01-12-00.00.00','VIDEOS','Paul Hogan on Toy Dogs','That''s not a dog.  THAT''s a dog!',0);
+INSERT INTO post (id,blog_id,author_id,created_on,section,subject,body,draft) VALUES (3,2,102,'2007-12-05-00.00.00','PODCASTS','Monster Trucks','I think monster trucks are great...',1);
+INSERT INTO post (id,blog_id,author_id,created_on,section,subject,body,draft) VALUES (4,2,102,'2008-01-12-00.00.00','IMAGES','Tea Parties','A tea party is no place to hold a business meeting...',0);
 
 --BAD POST
-INSERT INTO post (id,blog_id,author_id,created_on,section,subject,body) VALUES (5,null,101,'2008-01-12-00.00.00','IMAGES','An orphaned post','this post is orphaned');
+INSERT INTO post (id,blog_id,author_id,created_on,section,subject,body,draft) VALUES (5,null,101,'2008-01-12-00.00.00','IMAGES','An orphaned post','this post is orphaned',0);
 
 INSERT INTO tag (id,name) VALUES (1,'funny');
 INSERT INTO tag (id,name) VALUES (2,'cool');

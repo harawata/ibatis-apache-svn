@@ -33,6 +33,7 @@ CREATE TABLE post (
   section     VARCHAR(25) NOT NULL,
   subject     VARCHAR(255) NOT NULL,
   body        CLOB NOT NULL,
+  draft       INT NOT NULL,
   PRIMARY KEY (id),
   FOREIGN KEY (blog_id) REFERENCES blog(id)
 );

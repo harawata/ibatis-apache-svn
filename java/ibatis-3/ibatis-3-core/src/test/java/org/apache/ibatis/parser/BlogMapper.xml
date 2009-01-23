@@ -44,7 +44,12 @@
     <association property="author" column="post_author_id" resultMap="joinedAuthor"/>
     <collection property="comments" column="post_id" resultMap="joinedComment"/>
     <collection property="tags" column="post_id" resultMap="joinedTag"/>
+    <discriminator javaType="int" column="draft">
+      <case value="1" resultMap="draftPost"/>
+    </discriminator>
   </resultMap>
+
+  <resultMap id="draftPost" type="domain.blog.DraftPost" extends="joinedPost"/>
 
   <resultMap id="blogJoinedWithPostsAndAuthor" type="Blog">
     <id property="id" column="blog_id" />
@@ -70,6 +75,7 @@
       P.created_on as post_created_on,
       P.section as post_section,
       P.subject as post_subject,
+      P.draft as draft,
       P.body as post_body,
       C.id as comment_id,
       C.post_id as comment_post_id,
