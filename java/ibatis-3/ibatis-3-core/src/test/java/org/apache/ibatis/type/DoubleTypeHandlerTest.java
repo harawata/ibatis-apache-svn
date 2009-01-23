@@ -2,6 +2,7 @@ package org.apache.ibatis.type;
 
 import org.jmock.Expectations;
 import org.junit.*;
+import static org.junit.Assert.*;
 
 public class DoubleTypeHandlerTest extends BaseTypeHandlerTest {
 
@@ -30,7 +31,7 @@ public class DoubleTypeHandlerTest extends BaseTypeHandlerTest {
         will(returnValue(false));
       }
     });
-    Assert.assertEquals(100d, TYPE_HANDLER.getResult(rs, "column"));
+    assertEquals(100d, TYPE_HANDLER.getResult(rs, "column"));
     mockery.assertIsSatisfied();
   }
 
@@ -45,7 +46,7 @@ public class DoubleTypeHandlerTest extends BaseTypeHandlerTest {
         will(returnValue(false));
       }
     });
-    Assert.assertEquals(100d, TYPE_HANDLER.getResult(cs, 1));
+    assertEquals(100d, TYPE_HANDLER.getResult(cs, 1));
     mockery.assertIsSatisfied();
   }
 

@@ -5,22 +5,23 @@ import org.apache.ibatis.cache.impl.PerpetualCache;
 import org.junit.*;
 
 import java.util.*;
+import static org.junit.Assert.*;
 
 public class BaseCacheTest {
 
   @Test
   public void shouldDemonstrateEqualsAndHashCodeForVariousCacheTypes() {
     PerpetualCache cache = new PerpetualCache("test_cache");
-    Assert.assertTrue(cache.equals(cache));
-    Assert.assertTrue(cache.equals(new SynchronizedCache(cache)));
-    Assert.assertTrue(cache.equals(new SerializedCache(cache)));
-    Assert.assertTrue(cache.equals(new LoggingCache(cache)));
-    Assert.assertTrue(cache.equals(new ScheduledCache(cache)));
+    assertTrue(cache.equals(cache));
+    assertTrue(cache.equals(new SynchronizedCache(cache)));
+    assertTrue(cache.equals(new SerializedCache(cache)));
+    assertTrue(cache.equals(new LoggingCache(cache)));
+    assertTrue(cache.equals(new ScheduledCache(cache)));
 
-    Assert.assertEquals(cache.hashCode(), new SynchronizedCache(cache).hashCode());
-    Assert.assertEquals(cache.hashCode(), new SerializedCache(cache).hashCode());
-    Assert.assertEquals(cache.hashCode(), new LoggingCache(cache).hashCode());
-    Assert.assertEquals(cache.hashCode(), new ScheduledCache(cache).hashCode());
+    assertEquals(cache.hashCode(), new SynchronizedCache(cache).hashCode());
+    assertEquals(cache.hashCode(), new SerializedCache(cache).hashCode());
+    assertEquals(cache.hashCode(), new LoggingCache(cache).hashCode());
+    assertEquals(cache.hashCode(), new ScheduledCache(cache).hashCode());
 
     Set<Cache> caches = new HashSet<Cache>();
     caches.add(cache);
@@ -28,7 +29,7 @@ public class BaseCacheTest {
     caches.add(new SerializedCache(cache));
     caches.add(new LoggingCache(cache));
     caches.add(new ScheduledCache(cache));
-    Assert.assertEquals(1, caches.size());
+    assertEquals(1, caches.size());
   }
 
 }

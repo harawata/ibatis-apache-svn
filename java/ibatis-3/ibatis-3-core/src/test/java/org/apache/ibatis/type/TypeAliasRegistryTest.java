@@ -1,6 +1,7 @@
 package org.apache.ibatis.type;
 
 import org.junit.*;
+import static org.junit.Assert.*;
 
 public class TypeAliasRegistryTest {
 
@@ -10,8 +11,8 @@ public class TypeAliasRegistryTest {
 
     typeAliasRegistry.registerAlias("rich", "domain.misc.RichType");
 
-    Assert.assertEquals("domain.misc.RichType", typeAliasRegistry.resolveAlias("rich"));
-    Assert.assertEquals("unknown", typeAliasRegistry.resolveAlias("unknown"));
+    assertEquals("domain.misc.RichType", typeAliasRegistry.resolveAlias("rich"));
+    assertEquals("unknown", typeAliasRegistry.resolveAlias("unknown"));
   }
 
 }

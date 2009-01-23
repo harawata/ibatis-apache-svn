@@ -4,6 +4,7 @@ import org.junit.*;
 
 import java.util.*;
 
+import static org.junit.Assert.*;
 
 public class PluginTest {
 
@@ -11,14 +12,14 @@ public class PluginTest {
   public void mapPluginShouldInterceptGet() {
     Map map = new HashMap();
     map = (Map) new AlwaysMapPlugin().plugin(map);
-    Assert.assertEquals("Always", map.get("Anything"));
+    assertEquals("Always", map.get("Anything"));
   }
 
   @Test
   public void shouldNotInterceptToString() {
     Map map = new HashMap();
     map = (Map) new AlwaysMapPlugin().plugin(map);
-    Assert.assertFalse("Always".equals(map.toString()));
+    assertFalse("Always".equals(map.toString()));
   }
 
   @Intercepts({

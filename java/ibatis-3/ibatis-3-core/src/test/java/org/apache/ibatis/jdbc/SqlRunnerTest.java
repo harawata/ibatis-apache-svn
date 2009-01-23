@@ -8,6 +8,7 @@ import org.junit.*;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.util.*;
+import static org.junit.Assert.*;
 
 public class SqlRunnerTest extends BaseDataTest {
 
@@ -19,7 +20,7 @@ public class SqlRunnerTest extends BaseDataTest {
     Connection connection = ds.getConnection();
     SqlRunner exec = new SqlRunner(connection);
     Map row = exec.selectOne("SELECT * FROM PRODUCT WHERE PRODUCTID = ?", "FI-SW-01");
-    Assert.assertEquals("FI-SW-01", row.get("PRODUCTID"));
+    assertEquals("FI-SW-01", row.get("PRODUCTID"));
   }
 
   @Test
@@ -30,7 +31,7 @@ public class SqlRunnerTest extends BaseDataTest {
     Connection connection = ds.getConnection();
     SqlRunner exec = new SqlRunner(connection);
     List rows = exec.selectAll("SELECT * FROM PRODUCT");
-    Assert.assertEquals(16, rows.size());
+    assertEquals(16, rows.size());
   }
 
   @Test
@@ -43,8 +44,8 @@ public class SqlRunnerTest extends BaseDataTest {
     int id = exec.insert("INSERT INTO author (username, password, email, bio) VALUES (?,?,?,?)", "someone", "******", "someone@apache.org", Null.LONGVARCHAR);
     Map row = exec.selectOne("SELECT * FROM author WHERE username = ?", "someone");
     connection.rollback();
-    Assert.assertTrue(SqlRunner.NO_GENERATED_KEY != id);
-    Assert.assertEquals("someone", row.get("USERNAME"));
+    assertTrue(SqlRunner.NO_GENERATED_KEY != id);
+    assertEquals("someone", row.get("USERNAME"));
   }
 
   @Test
@@ -56,8 +57,8 @@ public class SqlRunnerTest extends BaseDataTest {
     SqlRunner exec = new SqlRunner(connection);
     int count = exec.update("update product set category = ? where productid = ?", "DOGS", "FI-SW-01");
     Map row = exec.selectOne("SELECT * FROM PRODUCT WHERE PRODUCTID = ?", "FI-SW-01");
-    Assert.assertEquals("DOGS", row.get("CATEGORY"));
-    Assert.assertEquals(1, count);
+    assertEquals("DOGS", row.get("CATEGORY"));
+    assertEquals(1, count);
   }
 
   @Test
@@ -69,8 +70,8 @@ public class SqlRunnerTest extends BaseDataTest {
     SqlRunner exec = new SqlRunner(connection);
     int count = exec.delete("delete from item");
     List rows = exec.selectAll("SELECT * FROM ITEM");
-    Assert.assertEquals(28, count);
-    Assert.assertEquals(0, rows.size());
+    assertEquals(28, count);
+    assertEquals(0, rows.size());
   }
 
   @Test
@@ -82,7 +83,7 @@ public class SqlRunnerTest extends BaseDataTest {
     exec.run("insert into BLAH values (1)");
     List rows = exec.selectAll("SELECT * FROM BLAH");
     exec.run("DROP TABLE BLAH");
-    Assert.assertEquals(1, rows.size());
+    assertEquals(1, rows.size());
   }
 
 

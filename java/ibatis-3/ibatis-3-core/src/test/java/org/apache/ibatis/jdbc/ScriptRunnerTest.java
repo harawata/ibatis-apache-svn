@@ -11,6 +11,7 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.*;
 import java.util.*;
+import static org.junit.Assert.*;
 
 public class ScriptRunnerTest extends BaseDataTest {
 
@@ -55,7 +56,7 @@ public class ScriptRunnerTest extends BaseDataTest {
       Connection conn = ds.getConnection();
       SqlRunner executor = new SqlRunner(conn);
       List<Map<String, Object>> products = executor.selectAll("SELECT * FROM PRODUCT");
-      Assert.assertEquals(16, products.size());
+      assertEquals(16, products.size());
     } finally {
       ds.forceCloseAll();
     }

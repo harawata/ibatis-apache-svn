@@ -6,6 +6,7 @@ import org.junit.*;
 
 import java.io.Reader;
 import java.util.*;
+import static org.junit.Assert.*;
 
 public class NodeletParserTest {
 
@@ -22,14 +23,14 @@ public class NodeletParserTest {
     Reader resource = Resources.getResourceAsReader("resources/nodelet_test.xml");
     parser.parse(resource);
     Employee emp = handler.getEmployee();
-    Assert.assertEquals(1234567890, emp.getId());
-    Assert.assertEquals("Jim", emp.getFirstName());
-    Assert.assertEquals("Smith", emp.getLastName());
-    Assert.assertEquals(new Date(1970 - 1900, 6 - 1, 15), emp.getBirthDate());
-    Assert.assertEquals(5.8, emp.getHeight());
-    Assert.assertEquals("ft", emp.getHeightUnits());
-    Assert.assertEquals(200, emp.getWeight());
-    Assert.assertEquals("lbs", emp.getWeightUnits());
+    assertEquals(1234567890, emp.getId());
+    assertEquals("Jim", emp.getFirstName());
+    assertEquals("Smith", emp.getLastName());
+    assertEquals(new Date(1970 - 1900, 6 - 1, 15), emp.getBirthDate());
+    assertEquals(5.8, emp.getHeight());
+    assertEquals("ft", emp.getHeightUnits());
+    assertEquals(200, emp.getWeight());
+    assertEquals("lbs", emp.getWeightUnits());
   }
 
 

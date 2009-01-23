@@ -5,6 +5,7 @@ import org.junit.*;
 
 import java.io.InputStream;
 import java.sql.Blob;
+import static org.junit.Assert.*;
 
 public class BlobTypeHandlerTest extends BaseTypeHandlerTest {
 
@@ -39,7 +40,7 @@ public class BlobTypeHandlerTest extends BaseTypeHandlerTest {
         will(returnValue(new byte[]{1, 2, 3}));
       }
     });
-    Assert.assertArrayEquals(new byte[]{1, 2, 3}, (byte[]) TYPE_HANDLER.getResult(rs, "column"));
+    assertArrayEquals(new byte[]{1, 2, 3}, (byte[]) TYPE_HANDLER.getResult(rs, "column"));
     mockery.assertIsSatisfied();
   }
 
@@ -58,7 +59,7 @@ public class BlobTypeHandlerTest extends BaseTypeHandlerTest {
         will(returnValue(new byte[]{1, 2, 3}));
       }
     });
-    Assert.assertArrayEquals(new byte[]{1, 2, 3}, (byte[]) TYPE_HANDLER.getResult(cs, 1));
+    assertArrayEquals(new byte[]{1, 2, 3}, (byte[]) TYPE_HANDLER.getResult(cs, 1));
     mockery.assertIsSatisfied();
   }
 

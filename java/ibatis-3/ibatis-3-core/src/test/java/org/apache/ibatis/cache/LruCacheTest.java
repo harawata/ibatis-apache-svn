@@ -3,6 +3,7 @@ package org.apache.ibatis.cache;
 import org.apache.ibatis.cache.decorators.LruCache;
 import org.apache.ibatis.cache.impl.PerpetualCache;
 import org.junit.*;
+import static org.junit.Assert.*;
 
 public class LruCacheTest {
 
@@ -13,19 +14,19 @@ public class LruCacheTest {
     for (int i = 0; i < 5; i++) {
       cache.putObject(i, i);
     }
-    Assert.assertEquals(0, cache.getObject(0));
+    assertEquals(0, cache.getObject(0));
     cache.putObject(5, 5);
-    Assert.assertNull(cache.getObject(1));
-    Assert.assertEquals(5, cache.getSize());
+    assertNull(cache.getObject(1));
+    assertEquals(5, cache.getSize());
   }
 
   @Test
   public void shouldRemoveItemOnDemand() {
     Cache cache = new LruCache(new PerpetualCache("default"));
     cache.putObject(0, 0);
-    Assert.assertNotNull(cache.getObject(0));
+    assertNotNull(cache.getObject(0));
     cache.removeObject(0);
-    Assert.assertNull(cache.getObject(0));
+    assertNull(cache.getObject(0));
   }
 
   @Test
@@ -34,11 +35,11 @@ public class LruCacheTest {
     for (int i = 0; i < 5; i++) {
       cache.putObject(i, i);
     }
-    Assert.assertNotNull(cache.getObject(0));
-    Assert.assertNotNull(cache.getObject(4));
+    assertNotNull(cache.getObject(0));
+    assertNotNull(cache.getObject(4));
     cache.clear();
-    Assert.assertNull(cache.getObject(0));
-    Assert.assertNull(cache.getObject(4));
+    assertNull(cache.getObject(0));
+    assertNull(cache.getObject(4));
   }
 
 }

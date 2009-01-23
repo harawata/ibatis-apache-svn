@@ -4,6 +4,7 @@ import org.jmock.Expectations;
 import org.junit.*;
 
 import java.math.BigDecimal;
+import static org.junit.Assert.*;
 
 public class BigDecimalTypeHandlerTest extends BaseTypeHandlerTest {
 
@@ -32,7 +33,7 @@ public class BigDecimalTypeHandlerTest extends BaseTypeHandlerTest {
         will(returnValue(false));
       }
     });
-    Assert.assertEquals(new BigDecimal(1), TYPE_HANDLER.getResult(rs, "column"));
+    assertEquals(new BigDecimal(1), TYPE_HANDLER.getResult(rs, "column"));
     mockery.assertIsSatisfied();
   }
 
@@ -47,7 +48,7 @@ public class BigDecimalTypeHandlerTest extends BaseTypeHandlerTest {
         will(returnValue(false));
       }
     });
-    Assert.assertEquals(new BigDecimal(1), TYPE_HANDLER.getResult(cs, 1));
+    assertEquals(new BigDecimal(1), TYPE_HANDLER.getResult(cs, 1));
     mockery.assertIsSatisfied();
   }
 

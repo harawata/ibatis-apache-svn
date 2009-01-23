@@ -5,6 +5,7 @@ import org.junit.*;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import static org.junit.Assert.*;
 
 public class DateTypeHandlerTest extends BaseTypeHandlerTest {
 
@@ -35,7 +36,7 @@ public class DateTypeHandlerTest extends BaseTypeHandlerTest {
         will(returnValue(false));
       }
     });
-    Assert.assertEquals(DATE, TYPE_HANDLER.getResult(rs, "column"));
+    assertEquals(DATE, TYPE_HANDLER.getResult(rs, "column"));
     mockery.assertIsSatisfied();
   }
 
@@ -50,7 +51,7 @@ public class DateTypeHandlerTest extends BaseTypeHandlerTest {
         will(returnValue(false));
       }
     });
-    Assert.assertEquals(DATE, TYPE_HANDLER.getResult(cs, 1));
+    assertEquals(DATE, TYPE_HANDLER.getResult(cs, 1));
     mockery.assertIsSatisfied();
   }
 

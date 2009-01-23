@@ -3,6 +3,7 @@ package org.apache.ibatis.cache;
 import org.apache.ibatis.cache.decorators.*;
 import org.apache.ibatis.cache.impl.PerpetualCache;
 import org.junit.*;
+import static org.junit.Assert.*;
 
 public class PerpetualCacheTest {
 
@@ -12,9 +13,9 @@ public class PerpetualCacheTest {
     cache = new SynchronizedCache(cache);
     for (int i = 0; i < 100000; i++) {
       cache.putObject(i, i);
-      Assert.assertEquals(i, cache.getObject(i));
+      assertEquals(i, cache.getObject(i));
     }
-    Assert.assertEquals(100000, cache.getSize());
+    assertEquals(100000, cache.getSize());
   }
 
   @Test
@@ -23,7 +24,7 @@ public class PerpetualCacheTest {
     cache = new SerializedCache(cache);
     for (int i = 0; i < 1000; i++) {
       cache.putObject(i, i);
-      Assert.assertEquals(i, cache.getObject(i));
+      assertEquals(i, cache.getObject(i));
     }
   }
 
@@ -32,9 +33,9 @@ public class PerpetualCacheTest {
     Cache cache = new PerpetualCache("default");
     cache = new SynchronizedCache(cache);
     cache.putObject(0, 0);
-    Assert.assertNotNull(cache.getObject(0));
+    assertNotNull(cache.getObject(0));
     cache.removeObject(0);
-    Assert.assertNull(cache.getObject(0));
+    assertNull(cache.getObject(0));
   }
 
   @Test
@@ -44,11 +45,11 @@ public class PerpetualCacheTest {
     for (int i = 0; i < 5; i++) {
       cache.putObject(i, i);
     }
-    Assert.assertNotNull(cache.getObject(0));
-    Assert.assertNotNull(cache.getObject(4));
+    assertNotNull(cache.getObject(0));
+    assertNotNull(cache.getObject(4));
     cache.clear();
-    Assert.assertNull(cache.getObject(0));
-    Assert.assertNull(cache.getObject(4));
+    assertNull(cache.getObject(0));
+    assertNull(cache.getObject(4));
   }
 
 }

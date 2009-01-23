@@ -3,6 +3,7 @@ package org.apache.ibatis.xml;
 import org.junit.*;
 
 import java.util.*;
+import static org.junit.Assert.*;
 
 public class GenericTokenParserTest {
 
@@ -24,15 +25,15 @@ public class GenericTokenParserTest {
       put("last_name","Kirk");
     }}));
 
-    Assert.assertEquals("James T Kirk reporting.",parser.parse("${first_name} ${initial} ${last_name} reporting."));
-    Assert.assertEquals("Hello captain James T Kirk",parser.parse("Hello captain ${first_name} ${initial} ${last_name}"));
-    Assert.assertEquals("James T Kirk",parser.parse("${first_name} ${initial} ${last_name}"));
-    Assert.assertEquals("JamesTKirk",parser.parse("${first_name}${initial}${last_name}"));
-    Assert.assertEquals("${",parser.parse("${"));
-    Assert.assertEquals("}",parser.parse("}"));
-    Assert.assertEquals("Hello ${ this is a test.",parser.parse("Hello ${ this is a test."));
-    Assert.assertEquals("Hello } this is a test.",parser.parse("Hello } this is a test."));
-    Assert.assertEquals("Hello } ${ this is a test.",parser.parse("Hello } ${ this is a test."));
+    assertEquals("James T Kirk reporting.",parser.parse("${first_name} ${initial} ${last_name} reporting."));
+    assertEquals("Hello captain James T Kirk",parser.parse("Hello captain ${first_name} ${initial} ${last_name}"));
+    assertEquals("James T Kirk",parser.parse("${first_name} ${initial} ${last_name}"));
+    assertEquals("JamesTKirk",parser.parse("${first_name}${initial}${last_name}"));
+    assertEquals("${",parser.parse("${"));
+    assertEquals("}",parser.parse("}"));
+    assertEquals("Hello ${ this is a test.",parser.parse("Hello ${ this is a test."));
+    assertEquals("Hello } this is a test.",parser.parse("Hello } this is a test."));
+    assertEquals("Hello } ${ this is a test.",parser.parse("Hello } ${ this is a test."));
   }
 
 }

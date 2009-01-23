@@ -2,6 +2,7 @@ package org.apache.ibatis.type;
 
 import org.jmock.Expectations;
 import org.junit.*;
+import static org.junit.Assert.*;
 
 public class ByteArrayTypeHandlerTest extends BaseTypeHandlerTest {
 
@@ -30,7 +31,7 @@ public class ByteArrayTypeHandlerTest extends BaseTypeHandlerTest {
         will(returnValue(false));
       }
     });
-    Assert.assertArrayEquals(new byte[]{1, 2, 3}, (byte[]) TYPE_HANDLER.getResult(rs, "column"));
+    assertArrayEquals(new byte[]{1, 2, 3}, (byte[]) TYPE_HANDLER.getResult(rs, "column"));
     mockery.assertIsSatisfied();
   }
 
@@ -45,7 +46,7 @@ public class ByteArrayTypeHandlerTest extends BaseTypeHandlerTest {
         will(returnValue(false));
       }
     });
-    Assert.assertArrayEquals(new byte[]{1, 2, 3}, (byte[]) TYPE_HANDLER.getResult(cs, 1));
+    assertArrayEquals(new byte[]{1, 2, 3}, (byte[]) TYPE_HANDLER.getResult(cs, 1));
     mockery.assertIsSatisfied();
   }
 

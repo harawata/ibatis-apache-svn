@@ -3,6 +3,7 @@ package org.apache.ibatis.cache;
 import org.junit.*;
 import org.apache.ibatis.cache.impl.PerpetualCache;
 import org.apache.ibatis.cache.decorators.*;
+import static org.junit.Assert.*;
 
 public class SuperCacheTest {
 
@@ -23,10 +24,10 @@ public class SuperCacheTest {
       cache.putObject(i, i);
       ((TransactionalCache)cache).commit();
       Object o = cache.getObject(i);
-      Assert.assertTrue(o == null || i == ((Integer) o));
+      assertTrue(o == null || i == ((Integer) o));
     }
     System.out.println(cache.getSize());
-    Assert.assertTrue(cache.getSize() < N);
+    assertTrue(cache.getSize() < N);
   }
 
 

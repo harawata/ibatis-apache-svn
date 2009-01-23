@@ -1,15 +1,15 @@
 package org.apache.ibatis.jdbc;
 
 import org.apache.ibatis.type.*;
-import org.apache.ibatis.jdbc.Null;
 import org.junit.*;
+import static org.junit.Assert.*;
 
 public class NullTest {
 
   @Test
   public void shouldGetTypeAndTypeHandlerForNullStringType() {
-    Assert.assertEquals(JdbcType.VARCHAR, Null.STRING.getJdbcType());
-    Assert.assertTrue(Null.STRING.getTypeHandler() instanceof StringTypeHandler);
+    assertEquals(JdbcType.VARCHAR, Null.STRING.getJdbcType());
+    assertTrue(Null.STRING.getTypeHandler() instanceof StringTypeHandler);
   }
 
 }

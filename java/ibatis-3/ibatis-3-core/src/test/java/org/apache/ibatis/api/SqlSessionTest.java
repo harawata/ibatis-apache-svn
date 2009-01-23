@@ -10,7 +10,7 @@ import java.util.List;
 
 import domain.blog.*;
 
-import javax.sql.DataSource;
+import static org.junit.Assert.*;
 
 public class SqlSessionTest extends BaseDataTest {
   private static SqlSessionFactory sqlMapper;
@@ -28,7 +28,7 @@ public class SqlSessionTest extends BaseDataTest {
     SqlSession session = sqlMapper.openSession();
     try {
       List<Author> authors = session.selectList("com.domain.AuthorMapper.selectAllAuthors");
-      Assert.assertEquals(2,authors.size());
+      assertEquals(2,authors.size());
     } finally {
       session.close();
     }
@@ -40,8 +40,8 @@ public class SqlSessionTest extends BaseDataTest {
     try {
       Author author = (Author) session.selectOne(
           "com.domain.AuthorMapper.selectAuthor", new Author(101));
-      Assert.assertEquals(101, author.getId());
-      Assert.assertEquals(Section.NEWS, author.getFavouriteSection());
+      assertEquals(101, author.getId());
+      assertEquals(Section.NEWS, author.getFavouriteSection());
     } finally {
       session.close();
     }
@@ -53,8 +53,8 @@ public class SqlSessionTest extends BaseDataTest {
     try {
       List<Author> authors= session.selectList(
           "com.domain.AuthorMapper.selectAuthor", new Author(101));
-      Assert.assertEquals(101, authors.get(0).getId());
-      Assert.assertEquals(Section.NEWS, authors.get(0).getFavouriteSection());
+      assertEquals(101, authors.get(0).getId());
+      assertEquals(Section.NEWS, authors.get(0).getFavouriteSection());
     } finally {
       session.close();
     }
@@ -66,8 +66,8 @@ public class SqlSessionTest extends BaseDataTest {
     try {
       ImmutableAuthor author = (ImmutableAuthor) session.selectOne(
           "com.domain.AuthorMapper.selectImmutableAuthor", new Author(101));
-      Assert.assertEquals(101, author.getId());
-      Assert.assertEquals(Section.NEWS, author.getFavouriteSection());
+      assertEquals(101, author.getId());
+      assertEquals(Section.NEWS, author.getFavouriteSection());
     } finally {
       session.close();
     }
@@ -79,7 +79,7 @@ public class SqlSessionTest extends BaseDataTest {
     try {
       Author author = (Author) session.selectOne(
           "com.domain.AuthorMapper.selectAuthorWithInlineParams", new Author(101));
-      Assert.assertEquals(101, author.getId());
+      assertEquals(101, author.getId());
     } finally {
       session.close();
     }
@@ -92,12 +92,12 @@ public class SqlSessionTest extends BaseDataTest {
       Author expected = new Author(500, "cbegin", "******", "cbegin@somewhere.com", "Something...", null);
       session.insert("com.domain.AuthorMapper.insertAuthor", expected);
       Author actual = (Author) session.selectOne("com.domain.AuthorMapper.selectAuthor", new Author(500));
-      Assert.assertNotNull(actual);
-      Assert.assertEquals(expected.getId(), actual.getId());
-      Assert.assertEquals(expected.getUsername(), actual.getUsername());
-      Assert.assertEquals(expected.getPassword(), actual.getPassword());
-      Assert.assertEquals(expected.getEmail(), actual.getEmail());
-      Assert.assertEquals(expected.getBio(), actual.getBio());
+      assertNotNull(actual);
+      assertEquals(expected.getId(), actual.getId());
+      assertEquals(expected.getUsername(), actual.getUsername());
+      assertEquals(expected.getPassword(), actual.getPassword());
+      assertEquals(expected.getEmail(), actual.getEmail());
+      assertEquals(expected.getBio(), actual.getBio());
     } finally {
       session.close();
     }
@@ -114,14 +114,14 @@ public class SqlSessionTest extends BaseDataTest {
       session.update("com.domain.AuthorMapper.updateAuthor", original);
 
       updated = (Author) session.selectOne("com.domain.AuthorMapper.selectAuthor", 101);
-      Assert.assertEquals(original.getEmail(), updated.getEmail());
+      assertEquals(original.getEmail(), updated.getEmail());
     } finally {
       session.close();
     }
     try {
       session = sqlMapper.openSession();
       updated = (Author) session.selectOne("com.domain.AuthorMapper.selectAuthor", 101);
-      Assert.assertEquals("jim@ibatis.apache.org", updated.getEmail());
+      assertEquals("jim@ibatis.apache.org", updated.getEmail());
     } finally {
       session.close();
     }
@@ -138,7 +138,7 @@ public class SqlSessionTest extends BaseDataTest {
       session.update("com.domain.AuthorMapper.updateAuthor", original);
 
       updated = (Author) session.selectOne("com.domain.AuthorMapper.selectAuthor", 101);
-      Assert.assertEquals(original.getEmail(), updated.getEmail());
+      assertEquals(original.getEmail(), updated.getEmail());
       session.commit();
     } finally {
       session.close();
@@ -146,7 +146,7 @@ public class SqlSessionTest extends BaseDataTest {
     try {
       session = sqlMapper.openSession();
       updated = (Author) session.selectOne("com.domain.AuthorMapper.selectAuthor", 101);
-      Assert.assertEquals(original.getEmail(), updated.getEmail());
+      assertEquals(original.getEmail(), updated.getEmail());
     } finally {
       session.close();
     }
@@ -159,15 +159,15 @@ public class SqlSessionTest extends BaseDataTest {
       final int id = 102;
 
       List<Author> authors = session.selectList("com.domain.AuthorMapper.selectAuthor", id);
-      Assert.assertEquals(1,authors.size());
+      assertEquals(1,authors.size());
 
       session.delete("com.domain.AuthorMapper.deleteAuthor", id);
       authors = session.selectList("com.domain.AuthorMapper.selectAuthor", id);
-      Assert.assertEquals(0,authors.size());
+      assertEquals(0,authors.size());
 
       session.rollback();
       authors = session.selectList("com.domain.AuthorMapper.selectAuthor", id);
-      Assert.assertEquals(1,authors.size());
+      assertEquals(1,authors.size());
 
     } finally {
       session.close();
@@ -179,11 +179,11 @@ public class SqlSessionTest extends BaseDataTest {
     SqlSession session = sqlMapper.openSession();
     try {
       Blog blog = (Blog) session.selectOne("com.domain.BlogMapper.selectBlogWithPostsUsingSubSelect", 1);
-      Assert.assertEquals("Jim Business", blog.getTitle());
-      Assert.assertEquals(2, blog.getPosts().size());
-      Assert.assertEquals("Corn nuts",blog.getPosts().get(0).getSubject());
-      Assert.assertEquals(101,blog.getAuthor().getId());
-      Assert.assertEquals("jim",blog.getAuthor().getUsername());
+      assertEquals("Jim Business", blog.getTitle());
+      assertEquals(2, blog.getPosts().size());
+      assertEquals("Corn nuts",blog.getPosts().get(0).getSubject());
+      assertEquals(101,blog.getAuthor().getId());
+      assertEquals("jim",blog.getAuthor().getUsername());
     } finally {
       session.close();
     }
@@ -194,27 +194,27 @@ public class SqlSessionTest extends BaseDataTest {
     SqlSession session = sqlMapper.openSession();
     try {
       Blog blog = (Blog) session.selectOne("com.domain.BlogMapper.selectBlogJoinedWithPostsAndAuthor", 1);
-      Assert.assertEquals("Jim Business", blog.getTitle());
+      assertEquals("Jim Business", blog.getTitle());
 
       final Author author = blog.getAuthor();
-      Assert.assertEquals(101, author.getId());
-      Assert.assertEquals("jim",author.getUsername());
+      assertEquals(101, author.getId());
+      assertEquals("jim",author.getUsername());
 
       final List<Post> posts = blog.getPosts();
-      Assert.assertEquals(2, posts.size());
+      assertEquals(2, posts.size());
 
       final Post post = blog.getPosts().get(0);
-      Assert.assertEquals(1, post.getId());
-      Assert.assertEquals("Corn nuts", post.getSubject());
+      assertEquals(1, post.getId());
+      assertEquals("Corn nuts", post.getSubject());
 
       final List<Comment> comments = post.getComments();
-      Assert.assertEquals(1, comments.size());
+      assertEquals(1, comments.size());
 
       final Comment comment = comments.get(0);
-      Assert.assertEquals(1, comment.getId());
+      assertEquals(1, comment.getId());
 
-      Assert.assertEquals(DraftPost.class, blog.getPosts().get(0).getClass());
-      Assert.assertEquals(Post.class, blog.getPosts().get(1).getClass());
+      assertEquals(DraftPost.class, blog.getPosts().get(0).getClass());
+      assertEquals(Post.class, blog.getPosts().get(1).getClass());
 
     } finally {
       session.close();
@@ -226,9 +226,9 @@ public class SqlSessionTest extends BaseDataTest {
     SqlSession session = sqlMapper.openSession();
     try {
       session.selectList("ThisStatementDoesNotExist");
-      Assert.fail("Expected exception to be thrown due to statement that does not exist.");
+      fail("Expected exception to be thrown due to statement that does not exist.");
     } catch (Exception e) {
-      Assert.assertTrue(e.getMessage().contains("does not contain value for ThisStatementDoesNotExist"));
+      assertTrue(e.getMessage().contains("does not contain value for ThisStatementDoesNotExist"));
     } finally {
       session.close();
     }
@@ -239,9 +239,9 @@ public class SqlSessionTest extends BaseDataTest {
     Configuration config = sqlMapper.getConfiguration();
     try {
       config.addMappedStatement(config.getMappedStatement("com.domain.BlogMapper.selectBlogWithPostsUsingSubSelect"));
-      Assert.fail("Expected exception to be thrown due to statement that already exists.");
+      fail("Expected exception to be thrown due to statement that already exists.");
     } catch (Exception e) {
-      Assert.assertTrue(e.getMessage().contains("already contains value for com.domain.BlogMapper.selectBlogWithPostsUsingSubSelect"));
+      assertTrue(e.getMessage().contains("already contains value for com.domain.BlogMapper.selectBlogWithPostsUsingSubSelect"));
     }
   }
 

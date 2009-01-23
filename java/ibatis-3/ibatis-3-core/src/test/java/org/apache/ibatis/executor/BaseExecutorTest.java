@@ -10,6 +10,7 @@ import org.junit.*;
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.*;
+import static org.junit.Assert.*;
 
 public abstract class BaseExecutorTest extends BaseDataTest {
   private final Configuration config;
@@ -36,9 +37,9 @@ public abstract class BaseExecutorTest extends BaseDataTest {
     List<Author> authors = executor.query(selectStatement, 99, Executor.NO_ROW_OFFSET, Executor.NO_ROW_LIMIT, Executor.NO_RESULT_HANDLER);
     executor.flushStatements();
     executor.rollback(true);
-    Assert.assertEquals(1, authors.size());
-    Assert.assertEquals(author.toString(), authors.get(0).toString());
-    Assert.assertTrue(1 == rows || BatchExecutor.BATCH_UPDATE_RETURN_VALUE == rows);
+    assertEquals(1, authors.size());
+    assertEquals(author.toString(), authors.get(0).toString());
+    assertTrue(1 == rows || BatchExecutor.BATCH_UPDATE_RETURN_VALUE == rows);
   }
 
   @Test
@@ -48,15 +49,15 @@ public abstract class BaseExecutorTest extends BaseDataTest {
     Executor executor = createExecutor(new JdbcTransaction(connection,false));
     MappedStatement selectStatement = ExecutorTestHelper.prepareSelectAllAuthorsAutoMappedStatement(config);
     List<Author> authors = executor.query(selectStatement, null, Executor.NO_ROW_OFFSET, Executor.NO_ROW_LIMIT, Executor.NO_RESULT_HANDLER);
-    Assert.assertEquals(2, authors.size());
+    assertEquals(2, authors.size());
     Author author = authors.get(0);
     // id,username, password, email, bio, favourite_section
     // (101,'jim','********','jim@ibatis.apache.org','','NEWS');
-    Assert.assertEquals(101, author.getId());
-    Assert.assertEquals("jim", author.getUsername());
-    Assert.assertEquals("jim@ibatis.apache.org", author.getEmail());
-    Assert.assertEquals("", author.getBio());
-    Assert.assertEquals(Section.NEWS, author.getFavouriteSection());
+    assertEquals(101, author.getId());
+    assertEquals("jim", author.getUsername());
+    assertEquals("jim@ibatis.apache.org", author.getEmail());
+    assertEquals("", author.getBio());
+    assertEquals(Section.NEWS, author.getFavouriteSection());
   }
 
   @Test
@@ -75,9 +76,9 @@ public abstract class BaseExecutorTest extends BaseDataTest {
         List<Author> authors = executor.query(selectStatement, id, Executor.NO_ROW_OFFSET, Executor.NO_ROW_LIMIT, Executor.NO_RESULT_HANDLER);
         executor.flushStatements();
         executor.rollback(true);
-        Assert.assertEquals(1, authors.size());
-        Assert.assertEquals(author.toString(), authors.get(0).toString());
-        Assert.assertTrue(id >= 10000);
+        assertEquals(1, authors.size());
+        assertEquals(author.toString(), authors.get(0).toString());
+        assertTrue(id >= 10000);
       }
     } finally {
       config.setGeneratedKeysEnabled(false);
@@ -96,8 +97,8 @@ public abstract class BaseExecutorTest extends BaseDataTest {
     List<Author> authors = executor.query(selectStatement, 97, Executor.NO_ROW_OFFSET, Executor.NO_ROW_LIMIT, Executor.NO_RESULT_HANDLER);
     executor.flushStatements();
     executor.rollback(true);
-    Assert.assertEquals(1, authors.size());
-    Assert.assertEquals(author.toString(), authors.get(0).toString());
+    assertEquals(1, authors.size());
+    assertEquals(author.toString(), authors.get(0).toString());
   }
 
   @Test
@@ -112,9 +113,9 @@ public abstract class BaseExecutorTest extends BaseDataTest {
     List<Author> authors = executor.query(selectStatement, 99, Executor.NO_ROW_OFFSET, Executor.NO_ROW_LIMIT, Executor.NO_RESULT_HANDLER);
     executor.flushStatements();
     executor.rollback(true);
-    Assert.assertEquals(1, authors.size());
-    Assert.assertEquals(author.toString(), authors.get(0).toString());
-    Assert.assertTrue(1 == rows || BatchExecutor.BATCH_UPDATE_RETURN_VALUE == rows);
+    assertEquals(1, authors.size());
+    assertEquals(author.toString(), authors.get(0).toString());
+    assertTrue(1 == rows || BatchExecutor.BATCH_UPDATE_RETURN_VALUE == rows);
   }
 
   @Test
@@ -129,9 +130,9 @@ public abstract class BaseExecutorTest extends BaseDataTest {
     List<Author> authors = executor.query(selectStatement, 101, Executor.NO_ROW_OFFSET, Executor.NO_ROW_LIMIT, Executor.NO_RESULT_HANDLER);
     executor.flushStatements();
     executor.rollback(true);
-    Assert.assertEquals(1, authors.size());
-    Assert.assertEquals(author.toString(), authors.get(0).toString());
-    Assert.assertTrue(1 == rows || BatchExecutor.BATCH_UPDATE_RETURN_VALUE == rows);
+    assertEquals(1, authors.size());
+    assertEquals(author.toString(), authors.get(0).toString());
+    assertTrue(1 == rows || BatchExecutor.BATCH_UPDATE_RETURN_VALUE == rows);
   }
 
   @Test
@@ -146,8 +147,8 @@ public abstract class BaseExecutorTest extends BaseDataTest {
     List<Author> authors = executor.query(selectStatement, 101, Executor.NO_ROW_OFFSET, Executor.NO_ROW_LIMIT, Executor.NO_RESULT_HANDLER);
     executor.flushStatements();
     executor.rollback(true);
-    Assert.assertEquals(0, authors.size());
-    Assert.assertTrue(1 == rows || BatchExecutor.BATCH_UPDATE_RETURN_VALUE == rows);
+    assertEquals(0, authors.size());
+    assertTrue(1 == rows || BatchExecutor.BATCH_UPDATE_RETURN_VALUE == rows);
   }
 
   @Test
@@ -158,12 +159,12 @@ public abstract class BaseExecutorTest extends BaseDataTest {
     MappedStatement selectStatement = ExecutorTestHelper.prepareSelectDiscriminatedProduct(config);
     List<Map> products = executor.query(selectStatement, null, Executor.NO_ROW_OFFSET, Executor.NO_ROW_LIMIT, Executor.NO_RESULT_HANDLER);
     connection.rollback();
-    Assert.assertEquals(16, products.size());
+    assertEquals(16, products.size());
     for (Map m : products) {
       if ("REPTILES".equals(m.get("category"))) {
-        Assert.assertNull(m.get("name"));
+        assertNull(m.get("name"));
       } else {
-        Assert.assertNotNull(m.get("name"));
+        assertNotNull(m.get("name"));
       }
     }
   }
@@ -176,12 +177,12 @@ public abstract class BaseExecutorTest extends BaseDataTest {
     MappedStatement selectStatement = ExecutorTestHelper.prepareSelectDiscriminatedProduct(config);
     List<Map> products = executor.query(selectStatement, null, 4, 10, Executor.NO_RESULT_HANDLER);
     connection.rollback();
-    Assert.assertEquals(10, products.size());
+    assertEquals(10, products.size());
     for (Map m : products) {
       if ("REPTILES".equals(m.get("category"))) {
-        Assert.assertNull(m.get("name"));
+        assertNull(m.get("name"));
       } else {
-        Assert.assertNotNull(m.get("name"));
+        assertNotNull(m.get("name"));
       }
     }
   }
@@ -200,11 +201,11 @@ public abstract class BaseExecutorTest extends BaseDataTest {
       }
     }, Executor.NO_ROW_OFFSET, Executor.NO_ROW_LIMIT, Executor.NO_RESULT_HANDLER);
     connection.rollback();
-    Assert.assertEquals(2, authorSets.size());
+    assertEquals(2, authorSets.size());
     for (List authors : authorSets) {
-      Assert.assertEquals(2, authors.size());
+      assertEquals(2, authors.size());
       for (Object author : authors) {
-        Assert.assertTrue(author instanceof Author);
+        assertTrue(author instanceof Author);
       }
     }
   }
@@ -220,10 +221,10 @@ public abstract class BaseExecutorTest extends BaseDataTest {
     executor.query(selectStatement, author, Executor.NO_ROW_OFFSET, Executor.NO_ROW_LIMIT, Executor.NO_RESULT_HANDLER);
     connection.rollback();
 
-    Assert.assertEquals("sally", author.getUsername());
-    Assert.assertEquals("********", author.getPassword());
-    Assert.assertEquals("sally@ibatis.apache.org", author.getEmail());
-    Assert.assertEquals(null, author.getBio());
+    assertEquals("sally", author.getUsername());
+    assertEquals("********", author.getPassword());
+    assertEquals("sally@ibatis.apache.org", author.getEmail());
+    assertEquals(null, author.getBio());
   }
 
   @Test
@@ -237,9 +238,9 @@ public abstract class BaseExecutorTest extends BaseDataTest {
     config.addMappedStatement(selectPosts);
     List<Post> posts = executor.query(selectPosts, 1, Executor.NO_ROW_OFFSET, Executor.NO_ROW_LIMIT, Executor.NO_RESULT_HANDLER);
     executor.flushStatements();
-    Assert.assertEquals(2, posts.size());
-    Assert.assertNotNull(posts.get(1).getBlog());
-    Assert.assertEquals(1, posts.get(1).getBlog().getId());
+    assertEquals(2, posts.size());
+    assertNotNull(posts.get(1).getBlog());
+    assertEquals(1, posts.get(1).getBlog().getId());
     executor.rollback(true);
   }
 
@@ -255,9 +256,9 @@ public abstract class BaseExecutorTest extends BaseDataTest {
     List<Post> posts = executor.query(selectPost, 5, Executor.NO_ROW_OFFSET, Executor.NO_ROW_LIMIT, Executor.NO_RESULT_HANDLER);
     executor.flushStatements();
     executor.rollback(true);
-    Assert.assertEquals(1, posts.size());
+    assertEquals(1, posts.size());
     Post post = posts.get(0);
-    Assert.assertNull(post.getBlog());
+    assertNull(post.getBlog());
   }
 
   @Test
@@ -271,10 +272,10 @@ public abstract class BaseExecutorTest extends BaseDataTest {
     config.addMappedStatement(selectPost);
     List<Post> posts = executor.query(selectPost, 2, Executor.NO_ROW_OFFSET, Executor.NO_ROW_LIMIT, Executor.NO_RESULT_HANDLER);
     executor.flushStatements();
-    Assert.assertEquals(1, posts.size());
+    assertEquals(1, posts.size());
     Post post = posts.get(0);
-    Assert.assertNotNull(post.getBlog());
-    Assert.assertEquals(101, post.getBlog().getAuthor().getId());
+    assertNotNull(post.getBlog());
+    assertEquals(101, post.getBlog().getAuthor().getId());
     executor.rollback(true);
   }
 
@@ -292,9 +293,9 @@ public abstract class BaseExecutorTest extends BaseDataTest {
       config.setLazyLoadingEnabled(false);
       List<Blog> blogs = executor.query(selectBlog, 1, Executor.NO_ROW_OFFSET, Executor.NO_ROW_LIMIT, Executor.NO_RESULT_HANDLER);
       executor.flushStatements();
-      Assert.assertEquals(1, blogs.size());
-      Assert.assertEquals(2, blogs.get(0).getPosts().size());
-      Assert.assertEquals(1, blogs.get(0).getPosts().get(1).getBlog().getPosts().get(1).getBlog().getId());
+      assertEquals(1, blogs.size());
+      assertEquals(2, blogs.get(0).getPosts().size());
+      assertEquals(1, blogs.get(0).getPosts().get(1).getBlog().getPosts().get(1).getBlog().getId());
       executor.rollback(true);
     } finally {
       config.setLazyLoadingEnabled(true);
@@ -310,10 +311,10 @@ public abstract class BaseExecutorTest extends BaseDataTest {
     List<Author> authors = executor.query(selectStatement, 102, Executor.NO_ROW_OFFSET, Executor.NO_ROW_LIMIT, Executor.NO_RESULT_HANDLER);
     executor.flushStatements();
     executor.rollback(true);
-    Assert.assertEquals(1, authors.size());
+    assertEquals(1, authors.size());
 
     Author author = authors.get(0);
-    Assert.assertEquals(102, author.getId());
+    assertEquals(102, author.getId());
   }
 
   protected abstract Executor createExecutor(Transaction transaction);

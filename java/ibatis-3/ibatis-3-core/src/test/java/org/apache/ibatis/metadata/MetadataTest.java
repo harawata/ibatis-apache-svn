@@ -1,11 +1,11 @@
 package org.apache.ibatis.metadata;
 
-import junit.framework.Assert;
 import org.apache.ibatis.BaseDataTest;
 import org.junit.*;
 
 import javax.sql.DataSource;
 import java.sql.*;
+import static org.junit.Assert.*;
 
 public class MetadataTest extends BaseDataTest {
 
@@ -21,10 +21,10 @@ public class MetadataTest extends BaseDataTest {
     Connection connection = dataSource.getConnection();
     try {
       Database db = DatabaseFactory.newDatabase(connection, null, "APP");
-      Assert.assertNotNull(db.getTable("blog"));
-      Assert.assertNotNull(db.getTable("Author"));
-      Assert.assertNotNull(db.getTable("tAg"));
-      Assert.assertNotNull(db.getTable("PosT"));
+      assertNotNull(db.getTable("blog"));
+      assertNotNull(db.getTable("Author"));
+      assertNotNull(db.getTable("tAg"));
+      assertNotNull(db.getTable("PosT"));
     } finally {
       connection.close();
     }
@@ -36,28 +36,28 @@ public class MetadataTest extends BaseDataTest {
     try {
       Database db = DatabaseFactory.newDatabase(connection, null, null);
       Database db2 = DatabaseFactory.newDatabase(connection, null, null);
-      Assert.assertNotNull(db);
-      Assert.assertTrue(db.equals(db2));
-      Assert.assertTrue(db.hashCode() == db.hashCode());
+      assertNotNull(db);
+      assertTrue(db.equals(db2));
+      assertTrue(db.hashCode() == db.hashCode());
       Table t = db.getTable("blog");
       Table t2 = db.getTable("author");
-      Assert.assertNotNull(t);
-      Assert.assertNotNull(t2);
-      Assert.assertFalse(t.equals(t2));
-      Assert.assertTrue(t.getCatalog().equals(t.getCatalog()));
-      Assert.assertTrue(t.getSchema().equals(t.getSchema()));
-      Assert.assertTrue(t.equals(t));
-      Assert.assertTrue(t.hashCode() == t.hashCode());
-      Assert.assertEquals("BLOG", t.getName());
-      Assert.assertEquals(3, t.getColumnNames().length);
+      assertNotNull(t);
+      assertNotNull(t2);
+      assertFalse(t.equals(t2));
+      assertTrue(t.getCatalog().equals(t.getCatalog()));
+      assertTrue(t.getSchema().equals(t.getSchema()));
+      assertTrue(t.equals(t));
+      assertTrue(t.hashCode() == t.hashCode());
+      assertEquals("BLOG", t.getName());
+      assertEquals(3, t.getColumnNames().length);
       Column c = t.getColumn("author_id");
       Column c2 = t.getColumn("id");
-      Assert.assertNotNull(c);
-      Assert.assertNotNull(c2);
-      Assert.assertEquals(Types.INTEGER, c.getType());
-      Assert.assertFalse(c.equals(c2));
-      Assert.assertTrue(c.equals(c));
-      Assert.assertTrue(c.hashCode() == c.hashCode());
+      assertNotNull(c);
+      assertNotNull(c2);
+      assertEquals(Types.INTEGER, c.getType());
+      assertFalse(c.equals(c2));
+      assertTrue(c.equals(c));
+      assertTrue(c.hashCode() == c.hashCode());
     } finally {
       connection.close();
     }

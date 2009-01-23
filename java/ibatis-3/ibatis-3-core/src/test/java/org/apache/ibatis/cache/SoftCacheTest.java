@@ -3,6 +3,7 @@ package org.apache.ibatis.cache;
 import org.apache.ibatis.cache.decorators.*;
 import org.apache.ibatis.cache.impl.*;
 import org.junit.*;
+import static org.junit.Assert.*;
 
 public class SoftCacheTest {
 
@@ -17,7 +18,7 @@ public class SoftCacheTest {
       Object value = cache.getObject(i);
     }
     System.out.println(cache.getSize());
-    Assert.assertTrue(cache.getSize() < N);
+    assertTrue(cache.getSize() < N);
   }
 
   @Test
@@ -27,7 +28,7 @@ public class SoftCacheTest {
     for (int i = 0; i < 1000; i++) {
       cache.putObject(i, i);
       Object value = cache.getObject(i);
-      Assert.assertTrue(value == null || value.equals(i));
+      assertTrue(value == null || value.equals(i));
     }
   }
 
@@ -35,9 +36,9 @@ public class SoftCacheTest {
   public void shouldRemoveItemOnDemand() {
     Cache cache = new SoftCache(new PerpetualCache("default"));
     cache.putObject(0, 0);
-    Assert.assertNotNull(cache.getObject(0));
+    assertNotNull(cache.getObject(0));
     cache.removeObject(0);
-    Assert.assertNull(cache.getObject(0));
+    assertNull(cache.getObject(0));
   }
 
   @Test
@@ -46,11 +47,11 @@ public class SoftCacheTest {
     for (int i = 0; i < 5; i++) {
       cache.putObject(i, i);
     }
-    Assert.assertNotNull(cache.getObject(0));
-    Assert.assertNotNull(cache.getObject(4));
+    assertNotNull(cache.getObject(0));
+    assertNotNull(cache.getObject(4));
     cache.clear();
-    Assert.assertNull(cache.getObject(0));
-    Assert.assertNull(cache.getObject(4));
+    assertNull(cache.getObject(0));
+    assertNull(cache.getObject(4));
   }
 
 }

@@ -1,6 +1,8 @@
 package org.apache.ibatis.logging;
 
 import org.junit.*;
+import static org.junit.Assert.*;
+
 
 public class LogFactoryTest {
 
@@ -40,7 +42,7 @@ public class LogFactoryTest {
     log.debug("Debug message.");
     log.error("Error message.");
     log.error("Error with Exception.", new Exception("Test exception."));
-    Assert.assertEquals(expectedDebug, log.isDebugEnabled());
+    assertEquals(expectedDebug, log.isDebugEnabled());
   }
 
 

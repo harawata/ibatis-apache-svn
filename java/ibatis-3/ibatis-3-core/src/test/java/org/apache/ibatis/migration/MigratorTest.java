@@ -10,7 +10,7 @@ import java.net.URL;
 import java.net.URISyntaxException;
 import java.sql.Connection;
 
-import junit.framework.Assert;
+import static org.junit.Assert.*;
 
 import javax.sql.DataSource;
 
@@ -52,36 +52,36 @@ public class MigratorTest extends BaseDataTest {
     File f = getExampleDir();
 
     Migrator.main(args("--path="+f.getAbsolutePath(),"bootstrap", "--env=development"));
-    Assert.assertTrue(buffer.toString().contains("--// Bootstrap.sql"));
+    assertTrue(buffer.toString().contains("--// Bootstrap.sql"));
     buffer.clear();
 
     Migrator.main(args("--path="+f.getAbsolutePath(),"status"));
-    Assert.assertTrue(buffer.toString().contains("...pending..."));
+    assertTrue(buffer.toString().contains("...pending..."));
     buffer.clear();
 
     Migrator.main(args("--path="+f.getAbsolutePath(),"up"));
     buffer.clear();
 
     Migrator.main(args("--path="+f.getAbsolutePath(),"status"));
-    Assert.assertFalse(buffer.toString().contains("...pending..."));
+    assertFalse(buffer.toString().contains("...pending..."));
     buffer.clear();
 
     Migrator.main(args("--path="+f.getAbsolutePath(),"down"));
     buffer.clear();
 
     Migrator.main(args("--path="+f.getAbsolutePath(),"status"));
-    Assert.assertTrue(buffer.toString().contains("...pending..."));
+    assertTrue(buffer.toString().contains("...pending..."));
     buffer.clear();
 
     Migrator.main(args("--path="+f.getAbsolutePath(),"version", "20080827200215"));
     buffer.clear();
 
     Migrator.main(args("--path="+f.getAbsolutePath(),"status"));
-    Assert.assertFalse(buffer.toString().contains("...pending..."));
+    assertFalse(buffer.toString().contains("...pending..."));
     buffer.clear();
 
     Migrator.main(args("--path="+f.getAbsolutePath(),"--help"));
-    Assert.assertTrue(buffer.toString().contains("--help"));
+    assertTrue(buffer.toString().contains("--help"));
     buffer.clear();
   }
 
@@ -90,12 +90,12 @@ public class MigratorTest extends BaseDataTest {
   public void shouldInitTempDirectory() throws Exception {
     File basePath = getTempDir();
     Migrator.main(args("--path="+basePath.getAbsolutePath(),"init"));
-    Assert.assertNotNull(basePath.list());
-    Assert.assertEquals(4,basePath.list().length);
+    assertNotNull(basePath.list());
+    assertEquals(4,basePath.list().length);
     File scriptPath = new File(basePath.getCanonicalPath() + File.separator + "scripts");
-    Assert.assertEquals(3,scriptPath.list().length);
+    assertEquals(3,scriptPath.list().length);
     Migrator.main(args("--path="+basePath.getAbsolutePath(),"new","test new migration"));    
-    Assert.assertEquals(4,scriptPath.list().length);
+    assertEquals(4,scriptPath.list().length);
   }
 
   private String[] args(String... args) {
@@ -105,17 +105,17 @@ public class MigratorTest extends BaseDataTest {
   private File getExampleDir() throws IOException, URISyntaxException {
     URL resourceURL = Resources.getResourceURL(getClass().getClassLoader(), "org/apache/ibatis/migration/example/");
     File f = new File(resourceURL.toURI());
-    Assert.assertTrue(f.exists());
-    Assert.assertTrue(f.isDirectory());
+    assertTrue(f.exists());
+    assertTrue(f.isDirectory());
     return f;
   }
 
   private File getTempDir() throws IOException {
     File f = File.createTempFile("migration","test");
-    Assert.assertTrue(f.delete());
-    Assert.assertTrue(f.mkdir());
-    Assert.assertTrue(f.exists());
-    Assert.assertTrue(f.isDirectory());
+    assertTrue(f.delete());
+    assertTrue(f.mkdir());
+    assertTrue(f.exists());
+    assertTrue(f.isDirectory());
     f.deleteOnExit();
     return f;
   }

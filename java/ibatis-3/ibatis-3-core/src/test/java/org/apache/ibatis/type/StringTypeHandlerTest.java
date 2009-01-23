@@ -2,6 +2,7 @@ package org.apache.ibatis.type;
 
 import org.jmock.Expectations;
 import org.junit.*;
+import static org.junit.Assert.*;
 
 public class StringTypeHandlerTest extends BaseTypeHandlerTest {
 
@@ -42,7 +43,7 @@ public class StringTypeHandlerTest extends BaseTypeHandlerTest {
         will(returnValue(false));
       }
     });
-    Assert.assertEquals("Hello", TYPE_HANDLER.getResult(rs, "column"));
+    assertEquals("Hello", TYPE_HANDLER.getResult(rs, "column"));
     mockery.assertIsSatisfied();
   }
 
@@ -57,7 +58,7 @@ public class StringTypeHandlerTest extends BaseTypeHandlerTest {
         will(returnValue(true));
       }
     });
-    Assert.assertEquals(null, TYPE_HANDLER.getResult(rs, "column"));
+    assertEquals(null, TYPE_HANDLER.getResult(rs, "column"));
     mockery.assertIsSatisfied();
   }
 
@@ -72,7 +73,7 @@ public class StringTypeHandlerTest extends BaseTypeHandlerTest {
         will(returnValue(false));
       }
     });
-    Assert.assertEquals("Hello", TYPE_HANDLER.getResult(cs, 1));
+    assertEquals("Hello", TYPE_HANDLER.getResult(cs, 1));
     mockery.assertIsSatisfied();
   }
 
@@ -87,7 +88,7 @@ public class StringTypeHandlerTest extends BaseTypeHandlerTest {
         will(returnValue(true));
       }
     });
-    Assert.assertEquals(null, TYPE_HANDLER.getResult(cs, 1));
+    assertEquals(null, TYPE_HANDLER.getResult(cs, 1));
     mockery.assertIsSatisfied();
   }
 

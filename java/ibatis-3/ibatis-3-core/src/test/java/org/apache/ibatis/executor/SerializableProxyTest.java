@@ -5,6 +5,7 @@ import org.apache.ibatis.executor.loader.*;
 import org.junit.*;
 
 import java.io.*;
+import static org.junit.Assert.*;
 
 public class SerializableProxyTest {
 
@@ -14,7 +15,7 @@ public class SerializableProxyTest {
     Object proxy = ResultObjectProxy.createProxy(Author.class, author, new ResultLoaderRegistry());
     byte[] bytes = serialize((Serializable) proxy);
     Object proxy2 = deserialize(bytes);
-    Assert.assertEquals(author.toString(), proxy2.toString());
+    assertEquals(author.toString(), proxy2.toString());
   }
 
   private byte[] serialize(Serializable value) {

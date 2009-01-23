@@ -3,6 +3,7 @@ package org.apache.ibatis.cache;
 import org.apache.ibatis.cache.decorators.*;
 import org.apache.ibatis.cache.impl.PerpetualCache;
 import org.junit.*;
+import static org.junit.Assert.*;
 
 public class ScheduledCacheTest {
 
@@ -14,10 +15,10 @@ public class ScheduledCacheTest {
     cache = new LoggingCache(cache);
     for (int i = 0; i < 100; i++) {
       cache.putObject(i, i);
-      Assert.assertEquals(i, cache.getObject(i));
+      assertEquals(i, cache.getObject(i));
     }
     Thread.sleep(5000);
-    Assert.assertEquals(0, cache.getSize());
+    assertEquals(0, cache.getSize());
   }
 
   @Test
@@ -27,9 +28,9 @@ public class ScheduledCacheTest {
     ((ScheduledCache)cache).setClearInterval(60000);
     cache = new LoggingCache(cache);
     cache.putObject(0, 0);
-    Assert.assertNotNull(cache.getObject(0));
+    assertNotNull(cache.getObject(0));
     cache.removeObject(0);
-    Assert.assertNull(cache.getObject(0));
+    assertNull(cache.getObject(0));
   }
 
   @Test
@@ -41,11 +42,11 @@ public class ScheduledCacheTest {
     for (int i = 0; i < 5; i++) {
       cache.putObject(i, i);
     }
-    Assert.assertNotNull(cache.getObject(0));
-    Assert.assertNotNull(cache.getObject(4));
+    assertNotNull(cache.getObject(0));
+    assertNotNull(cache.getObject(4));
     cache.clear();
-    Assert.assertNull(cache.getObject(0));
-    Assert.assertNull(cache.getObject(4));
+    assertNull(cache.getObject(0));
+    assertNull(cache.getObject(4));
   }
 
 }

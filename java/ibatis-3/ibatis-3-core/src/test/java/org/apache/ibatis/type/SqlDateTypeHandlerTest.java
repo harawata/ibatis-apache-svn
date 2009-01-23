@@ -4,6 +4,7 @@ import org.jmock.Expectations;
 import org.junit.*;
 
 import java.util.Date;
+import static org.junit.Assert.*;
 
 public class SqlDateTypeHandlerTest extends BaseTypeHandlerTest {
 
@@ -33,7 +34,7 @@ public class SqlDateTypeHandlerTest extends BaseTypeHandlerTest {
         will(returnValue(false));
       }
     });
-    Assert.assertEquals(SQL_DATE, TYPE_HANDLER.getResult(rs, "column"));
+    assertEquals(SQL_DATE, TYPE_HANDLER.getResult(rs, "column"));
     mockery.assertIsSatisfied();
   }
 
@@ -48,7 +49,7 @@ public class SqlDateTypeHandlerTest extends BaseTypeHandlerTest {
         will(returnValue(false));
       }
     });
-    Assert.assertEquals(SQL_DATE, TYPE_HANDLER.getResult(cs, 1));
+    assertEquals(SQL_DATE, TYPE_HANDLER.getResult(cs, 1));
     mockery.assertIsSatisfied();
   }
 

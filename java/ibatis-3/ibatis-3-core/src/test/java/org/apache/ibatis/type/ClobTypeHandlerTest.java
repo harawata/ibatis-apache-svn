@@ -5,6 +5,7 @@ import org.junit.*;
 
 import java.io.Reader;
 import java.sql.Clob;
+import static org.junit.Assert.*;
 
 public class ClobTypeHandlerTest extends BaseTypeHandlerTest {
 
@@ -39,7 +40,7 @@ public class ClobTypeHandlerTest extends BaseTypeHandlerTest {
         will(returnValue("Hello"));
       }
     });
-    Assert.assertEquals("Hello", TYPE_HANDLER.getResult(rs, "column"));
+    assertEquals("Hello", TYPE_HANDLER.getResult(rs, "column"));
     mockery.assertIsSatisfied();
   }
 
@@ -58,7 +59,7 @@ public class ClobTypeHandlerTest extends BaseTypeHandlerTest {
         will(returnValue("Hello"));
       }
     });
-    Assert.assertEquals("Hello", TYPE_HANDLER.getResult(cs, 1));
+    assertEquals("Hello", TYPE_HANDLER.getResult(cs, 1));
     mockery.assertIsSatisfied();
   }
 

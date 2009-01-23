@@ -3,6 +3,7 @@ package org.apache.ibatis.reflection;
 import domain.jpetstore.Product;
 import domain.misc.RichType;
 import org.junit.*;
+import static org.junit.Assert.*;
 
 public class MetaObjectTest {
 
@@ -11,7 +12,7 @@ public class MetaObjectTest {
     RichType rich = new RichType();
     MetaObject meta = MetaObject.forObject(rich);
     meta.setValue("richField", "foo");
-    Assert.assertEquals("foo", meta.getValue("richField"));
+    assertEquals("foo", meta.getValue("richField"));
   }
 
   @Test
@@ -19,7 +20,7 @@ public class MetaObjectTest {
     RichType rich = new RichType();
     MetaObject meta = MetaObject.forObject(rich);
     meta.setValue("richType.richField", "foo");
-    Assert.assertEquals("foo", meta.getValue("richType.richField"));
+    assertEquals("foo", meta.getValue("richType.richField"));
   }
 
   @Test
@@ -27,7 +28,7 @@ public class MetaObjectTest {
     RichType rich = new RichType();
     MetaObject meta = MetaObject.forObject(rich);
     meta.setValue("richProperty", "foo");
-    Assert.assertEquals("foo", meta.getValue("richProperty"));
+    assertEquals("foo", meta.getValue("richProperty"));
   }
 
   @Test
@@ -35,7 +36,7 @@ public class MetaObjectTest {
     RichType rich = new RichType();
     MetaObject meta = MetaObject.forObject(rich);
     meta.setValue("richType.richProperty", "foo");
-    Assert.assertEquals("foo", meta.getValue("richType.richProperty"));
+    assertEquals("foo", meta.getValue("richType.richProperty"));
   }
 
   @Test
@@ -43,7 +44,7 @@ public class MetaObjectTest {
     RichType rich = new RichType();
     MetaObject meta = MetaObject.forObject(rich);
     meta.setValue("richMap.key", "foo");
-    Assert.assertEquals("foo", meta.getValue("richMap.key"));
+    assertEquals("foo", meta.getValue("richMap.key"));
   }
 
   @Test
@@ -51,7 +52,7 @@ public class MetaObjectTest {
     RichType rich = new RichType();
     MetaObject meta = MetaObject.forObject(rich);
     meta.setValue("richMap[key]", "foo");
-    Assert.assertEquals("foo", meta.getValue("richMap[key]"));
+    assertEquals("foo", meta.getValue("richMap[key]"));
   }
 
   @Test
@@ -59,7 +60,7 @@ public class MetaObjectTest {
     RichType rich = new RichType();
     MetaObject meta = MetaObject.forObject(rich);
     meta.setValue("richType.richMap.key", "foo");
-    Assert.assertEquals("foo", meta.getValue("richType.richMap.key"));
+    assertEquals("foo", meta.getValue("richType.richMap.key"));
   }
 
   @Test
@@ -67,7 +68,7 @@ public class MetaObjectTest {
     RichType rich = new RichType();
     MetaObject meta = MetaObject.forObject(rich);
     meta.setValue("richType.richMap[key]", "foo");
-    Assert.assertEquals("foo", meta.getValue("richType.richMap[key]"));
+    assertEquals("foo", meta.getValue("richType.richMap[key]"));
   }
 
   @Test
@@ -75,7 +76,7 @@ public class MetaObjectTest {
     RichType rich = new RichType();
     MetaObject meta = MetaObject.forObject(rich);
     meta.setValue("richList[0]", "foo");
-    Assert.assertEquals("foo", meta.getValue("richList[0]"));
+    assertEquals("foo", meta.getValue("richList[0]"));
   }
 
   @Test
@@ -83,7 +84,7 @@ public class MetaObjectTest {
     RichType rich = new RichType();
     MetaObject meta = MetaObject.forObject(rich);
     meta.setValue("richList[0]", "foo");
-    Assert.assertEquals("foo", meta.getValue("richList[0]"));
+    assertEquals("foo", meta.getValue("richList[0]"));
   }
 
   @Test
@@ -91,7 +92,7 @@ public class MetaObjectTest {
     RichType rich = new RichType();
     MetaObject meta = MetaObject.forObject(rich);
     meta.setValue("richType.richList[0]", "foo");
-    Assert.assertEquals("foo", meta.getValue("richType.richList[0]"));
+    assertEquals("foo", meta.getValue("richType.richList[0]"));
   }
 
   @Test
@@ -99,12 +100,12 @@ public class MetaObjectTest {
     RichType rich = new RichType();
     MetaObject meta = MetaObject.forObject(rich);
     String[] readables = meta.getGetterNames();
-    Assert.assertEquals(5, readables.length);
+    assertEquals(5, readables.length);
     for (String readable : readables) {
-      Assert.assertTrue(meta.hasGetter(readable));
-      Assert.assertTrue(meta.hasGetter("richType." + readable));
+      assertTrue(meta.hasGetter(readable));
+      assertTrue(meta.hasGetter("richType." + readable));
     }
-    Assert.assertTrue(meta.hasGetter("richType"));
+    assertTrue(meta.hasGetter("richType"));
   }
 
   @Test
@@ -112,39 +113,39 @@ public class MetaObjectTest {
     RichType rich = new RichType();
     MetaObject meta = MetaObject.forObject(rich);
     String[] writeables = meta.getSetterNames();
-    Assert.assertEquals(5, writeables.length);
+    assertEquals(5, writeables.length);
     for (String writeable : writeables) {
-      Assert.assertTrue(meta.hasSetter(writeable));
-      Assert.assertTrue(meta.hasSetter("richType." + writeable));
+      assertTrue(meta.hasSetter(writeable));
+      assertTrue(meta.hasSetter("richType." + writeable));
     }
-    Assert.assertTrue(meta.hasSetter("richType"));
+    assertTrue(meta.hasSetter("richType"));
   }
 
   @Test
   public void shouldSetPropertyOfNullNestedProperty() {
     MetaObject richWithNull = MetaObject.forObject(new RichType());
     richWithNull.setValue("richType.richProperty", "foo");
-    Assert.assertEquals("foo", richWithNull.getValue("richType.richProperty"));
+    assertEquals("foo", richWithNull.getValue("richType.richProperty"));
   }
 
   @Test
   public void shouldSetPropertyOfNullNestedPropertyWithNull() {
     MetaObject richWithNull = MetaObject.forObject(new RichType());
     richWithNull.setValue("richType.richProperty", null);
-    Assert.assertEquals(null, richWithNull.getValue("richType.richProperty"));
+    assertEquals(null, richWithNull.getValue("richType.richProperty"));
   }
 
   @Test
   public void shouldGetPropertyOfNullNestedProperty() {
     MetaObject richWithNull = MetaObject.forObject(new RichType());
-    Assert.assertNull(richWithNull.getValue("richType.richProperty"));
+    assertNull(richWithNull.getValue("richType.richProperty"));
   }
 
   @Test
   public void shouldVerifyHasReadablePropertiesReturnedByGetReadablePropertyNames() {
     MetaObject object = MetaObject.forObject(new Product());
     for (String readable : object.getGetterNames()) {
-      Assert.assertTrue(object.hasGetter(readable));
+      assertTrue(object.hasGetter(readable));
     }
   }
 
@@ -152,7 +153,7 @@ public class MetaObjectTest {
   public void shouldVerifyHasWriteablePropertiesReturnedByGetWriteablePropertyNames() {
     MetaObject object = MetaObject.forObject(new Product());
     for (String writeable : object.getSetterNames()) {
-      Assert.assertTrue(object.hasSetter(writeable));
+      assertTrue(object.hasSetter(writeable));
     }
   }
 
@@ -162,7 +163,7 @@ public class MetaObjectTest {
     for (String writeable : object.getSetterNames()) {
       if (!writeable.contains("$")) {
         object.setValue(writeable, "test");
-        Assert.assertEquals("test", object.getValue(writeable));
+        assertEquals("test", object.getValue(writeable));
       }
     }
   }
@@ -172,8 +173,8 @@ public class MetaObjectTest {
     MetaObject object = MetaObject.forObject(new Product());
     for (String writeable : object.getSetterNames()) {
       if (!writeable.contains("$")) {
-        Assert.assertEquals(String.class, object.getGetterType(writeable));
-        Assert.assertEquals(String.class, object.getSetterType(writeable));
+        assertEquals(String.class, object.getGetterType(writeable));
+        assertEquals(String.class, object.getSetterType(writeable));
       }
     }
   }
