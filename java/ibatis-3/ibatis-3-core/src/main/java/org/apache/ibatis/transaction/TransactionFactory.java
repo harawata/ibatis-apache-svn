@@ -6,7 +6,7 @@ import java.util.Properties;
 public interface TransactionFactory {
 
   void setProperties(Properties props);
-    
+
   Transaction newTransaction(Connection conn, boolean autoCommit);
 
 }

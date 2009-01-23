@@ -30,61 +30,55 @@
 //--------------------------------------------------------------------------
 package org.apache.ibatis.ognl;
 
+import junit.framework.TestSuite;
+
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
-import junit.framework.TestSuite;
 
-public class LambdaExpressionTest extends OgnlTestCase
-{
-    private static Object[][]       TESTS = {
-                                          // Lambda expressions
-                                        { null, "#a=:[33](20).longValue().{0}.toArray().length", new Integer(33) },
-                                        { null, "#fact=:[#this<=1? 1 : #fact(#this-1) * #this], #fact(30)", new Integer(1409286144) },
-                                        { null, "#fact=:[#this<=1? 1 : #fact(#this-1) * #this], #fact(30L)", new Long(-8764578968847253504L) },
-                                        { null, "#fact=:[#this<=1? 1 : #fact(#this-1) * #this], #fact(30h)", new BigInteger("265252859812191058636308480000000") },
-                                        { null, "#bump = :[ #this.{ #this + 1 } ], (#bump)({ 1, 2, 3 })", new ArrayList(Arrays.asList(new Integer[] { new Integer(2), new Integer(3), new Integer(4) })) },
-                                        { null, "#call = :[ \"calling \" + [0] + \" on \" + [1] ], (#call)({ \"x\", \"y\" })", "calling x on y" },
-                                    };
+public class LambdaExpressionTest extends OgnlTestCase {
+  private static Object[][] TESTS = {
+      // Lambda expressions
+      {null, "#a=:[33](20).longValue().{0}.toArray().length", new Integer(33)},
+      {null, "#fact=:[#this<=1? 1 : #fact(#this-1) * #this], #fact(30)", new Integer(1409286144)},
+      {null, "#fact=:[#this<=1? 1 : #fact(#this-1) * #this], #fact(30L)", new Long(-8764578968847253504L)},
+      {null, "#fact=:[#this<=1? 1 : #fact(#this-1) * #this], #fact(30h)", new BigInteger("265252859812191058636308480000000")},
+      {null, "#bump = :[ #this.{ #this + 1 } ], (#bump)({ 1, 2, 3 })", new ArrayList(Arrays.asList(new Integer[]{new Integer(2), new Integer(3), new Integer(4)}))},
+      {null, "#call = :[ \"calling \" + [0] + \" on \" + [1] ], (#call)({ \"x\", \"y\" })", "calling x on y"},
+  };
 
-    /*===================================================================
-        Public static methods
-      ===================================================================*/
-    public static TestSuite suite()
-    {
-        TestSuite       result = new TestSuite();
+  /*===================================================================
+    Public static methods
+  ===================================================================*/
+  public static TestSuite suite() {
+    TestSuite result = new TestSuite();
 
-        for (int i = 0; i < TESTS.length; i++) {
-            result.addTest(new LambdaExpressionTest((String)TESTS[i][1], TESTS[i][0], (String)TESTS[i][1], TESTS[i][2]));
-        }
-        return result;
+    for (int i = 0; i < TESTS.length; i++) {
+      result.addTest(new LambdaExpressionTest((String) TESTS[i][1], TESTS[i][0], (String) TESTS[i][1], TESTS[i][2]));
     }
+    return result;
+  }
 
-    /*===================================================================
-        Constructors
-      ===================================================================*/
-    public LambdaExpressionTest()
-    {
-        super();
-    }
+  /*===================================================================
+    Constructors
+  ===================================================================*/
+  public LambdaExpressionTest() {
+    super();
+  }
 
-    public LambdaExpressionTest(String name)
-    {
-        super(name);
-    }
+  public LambdaExpressionTest(String name) {
+    super(name);
+  }
 
-    public LambdaExpressionTest(String name, Object root, String expressionString, Object expectedResult, Object setValue, Object expectedAfterSetResult)
-    {
-        super(name, root, expressionString, expectedResult, setValue, expectedAfterSetResult);
-    }
+  public LambdaExpressionTest(String name, Object root, String expressionString, Object expectedResult, Object setValue, Object expectedAfterSetResult) {
+    super(name, root, expressionString, expectedResult, setValue, expectedAfterSetResult);
+  }
 
-    public LambdaExpressionTest(String name, Object root, String expressionString, Object expectedResult, Object setValue)
-    {
-        super(name, root, expressionString, expectedResult, setValue);
-    }
+  public LambdaExpressionTest(String name, Object root, String expressionString, Object expectedResult, Object setValue) {
+    super(name, root, expressionString, expectedResult, setValue);
+  }
 
-    public LambdaExpressionTest(String name, Object root, String expressionString, Object expectedResult)
-    {
-        super(name, root, expressionString, expectedResult);
-    }
+  public LambdaExpressionTest(String name, Object root, String expressionString, Object expectedResult) {
+    super(name, root, expressionString, expectedResult);
+  }
 }

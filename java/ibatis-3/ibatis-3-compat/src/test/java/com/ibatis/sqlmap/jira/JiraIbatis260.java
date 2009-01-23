@@ -1,9 +1,14 @@
 package com.ibatis.sqlmap.jira;
 
 import com.ibatis.sqlmap.BaseSqlMapTest;
-import testdomain.*;
+import testdomain.ArticleIndex;
+import testdomain.ArticleIndexDenorm;
+import testdomain.Topic;
+import testdomain.TopicDescription;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Regression test for JIRA IBATIS-260: "Hash conflict with groupBy

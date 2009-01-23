@@ -1,13 +1,14 @@
 package org.apache.ibatis.cache;
 
-import org.apache.ibatis.cache.decorators.*;
-import org.apache.ibatis.cache.impl.*;
-import org.junit.*;
+import org.apache.ibatis.cache.decorators.SerializedCache;
+import org.apache.ibatis.cache.decorators.SoftCache;
+import org.apache.ibatis.cache.impl.PerpetualCache;
 import static org.junit.Assert.*;
+import org.junit.Test;
 
 public class SoftCacheTest {
 
-  @Test 
+  @Test
   public void shouldDemonstrateObjectsBeingCollectedAsNeeded() throws Exception {
     final int N = 300000;
     SoftCache cache = new SoftCache(new PerpetualCache("default"));

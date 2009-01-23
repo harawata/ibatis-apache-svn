@@ -1,11 +1,13 @@
 package org.apache.ibatis.executor;
 
-import domain.blog.*;
-import org.apache.ibatis.executor.loader.*;
-import org.junit.*;
+import domain.blog.Author;
+import domain.blog.Section;
+import org.apache.ibatis.executor.loader.ResultLoaderRegistry;
+import org.apache.ibatis.executor.loader.ResultObjectProxy;
+import static org.junit.Assert.assertEquals;
+import org.junit.Test;
 
 import java.io.*;
-import static org.junit.Assert.*;
 
 public class SerializableProxyTest {
 

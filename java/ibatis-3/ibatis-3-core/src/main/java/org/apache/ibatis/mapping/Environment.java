@@ -9,23 +9,28 @@ public class Environment {
   private TransactionFactory transactionFactory;
   private DataSource dataSource;
 
-  private Environment() {}
+  private Environment() {
+  }
 
   public static class Builder {
     private Environment environment = new Environment();
+
     public Builder(String id, TransactionFactory transactionManager, DataSource dataSource) {
       environment.id = id;
       environment.transactionFactory = transactionManager;
       environment.dataSource = dataSource;
     }
+
     public Builder transactionFactory(TransactionFactory transactionFactory) {
       environment.transactionFactory = transactionFactory;
       return this;
     }
+
     public Builder dataSource(DataSource dataSource) {
       environment.dataSource = dataSource;
       return this;
     }
+
     public String id() {
       return environment.id;
     }

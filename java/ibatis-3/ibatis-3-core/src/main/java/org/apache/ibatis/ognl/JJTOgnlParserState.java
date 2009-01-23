@@ -6,8 +6,8 @@ class JJTOgnlParserState {
   private java.util.Stack nodes;
   private java.util.Stack marks;
 
-  private int sp;		// number of nodes on stack
-  private int mk;		// current mark
+  private int sp;    // number of nodes on stack
+  private int mk;    // current mark
   private boolean node_created;
 
   JJTOgnlParserState() {
@@ -36,7 +36,7 @@ class JJTOgnlParserState {
   /* Returns the root node of the AST.  It only makes sense to call
      this after a successful parse. */
   Node rootNode() {
-    return (Node)nodes.elementAt(0);
+    return (Node) nodes.elementAt(0);
   }
 
   /* Pushes a node on to the stack. */
@@ -49,14 +49,14 @@ class JJTOgnlParserState {
      stack.  */
   Node popNode() {
     if (--sp < mk) {
-      mk = ((Integer)marks.pop()).intValue();
+      mk = ((Integer) marks.pop()).intValue();
     }
-    return (Node)nodes.pop();
+    return (Node) nodes.pop();
   }
 
   /* Returns the node currently on the top of the stack. */
   Node peekNode() {
-    return (Node)nodes.peek();
+    return (Node) nodes.peek();
   }
 
   /* Returns the number of children on the stack in the current node
@@ -70,7 +70,7 @@ class JJTOgnlParserState {
     while (sp > mk) {
       popNode();
     }
-    mk = ((Integer)marks.pop()).intValue();
+    mk = ((Integer) marks.pop()).intValue();
   }
 
 
@@ -86,7 +86,7 @@ class JJTOgnlParserState {
      made the children of the definite node.  Then the definite node
      is pushed on to the stack. */
   void closeNodeScope(Node n, int num) {
-    mk = ((Integer)marks.pop()).intValue();
+    mk = ((Integer) marks.pop()).intValue();
     while (num-- > 0) {
       Node c = popNode();
       c.jjtSetParent(n);
@@ -106,17 +106,17 @@ class JJTOgnlParserState {
   void closeNodeScope(Node n, boolean condition) {
     if (condition) {
       int a = nodeArity();
-      mk = ((Integer)marks.pop()).intValue();
+      mk = ((Integer) marks.pop()).intValue();
       while (a-- > 0) {
-	Node c = popNode();
-	c.jjtSetParent(n);
-	n.jjtAddChild(c, a);
+        Node c = popNode();
+        c.jjtSetParent(n);
+        n.jjtAddChild(c, a);
       }
       n.jjtClose();
       pushNode(n);
       node_created = true;
     } else {
-      mk = ((Integer)marks.pop()).intValue();
+      mk = ((Integer) marks.pop()).intValue();
       node_created = false;
     }
   }

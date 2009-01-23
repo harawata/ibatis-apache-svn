@@ -1,6 +1,7 @@
 package org.apache.ibatis.reflection;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 public class MetaObject {
 
@@ -223,7 +224,7 @@ public class MetaObject {
   private Object getIndexedProperty(PropertyTokenizer prop, Object object) {
     Object collection = resolveCollection(prop, object);
     if (collection instanceof Map) {
-      return ((Map)collection).get(prop.getIndex());
+      return ((Map) collection).get(prop.getIndex());
     }
     return getListValue(prop, collection);
   }
@@ -258,10 +259,10 @@ public class MetaObject {
   private void setIndexedProperty(PropertyTokenizer prop, Object object, Object value) {
     Object collection = resolveCollection(prop, object);
     if (collection instanceof Map) {
-      ((Map)collection).put(prop.getIndex(),value);
+      ((Map) collection).put(prop.getIndex(), value);
     } else {
       setListValue(prop, collection, value);
-    }    
+    }
   }
 
   private void setListValue(PropertyTokenizer prop, Object list, Object value) {

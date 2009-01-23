@@ -1,6 +1,9 @@
 package com.ibatis.sqlmap;
 
-import testdomain.*;
+import testdomain.Book;
+import testdomain.Document;
+import testdomain.Magazine;
+import testdomain.PersonDocument;
 
 import java.util.List;
 

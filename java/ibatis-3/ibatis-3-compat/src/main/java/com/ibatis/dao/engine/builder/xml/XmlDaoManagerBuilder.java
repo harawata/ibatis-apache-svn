@@ -2,19 +2,32 @@ package com.ibatis.dao.engine.builder.xml;
 
 
 import com.ibatis.common.resources.Resources;
-import com.ibatis.dao.client.*;
-import com.ibatis.dao.engine.impl.*;
+import com.ibatis.dao.client.Dao;
+import com.ibatis.dao.client.DaoException;
+import com.ibatis.dao.client.DaoManager;
+import com.ibatis.dao.engine.impl.DaoContext;
+import com.ibatis.dao.engine.impl.DaoImpl;
+import com.ibatis.dao.engine.impl.StandardDaoManager;
 import com.ibatis.dao.engine.transaction.DaoTransactionManager;
 import com.ibatis.dao.engine.transaction.external.ExternalDaoTransactionManager;
 import com.ibatis.dao.engine.transaction.jdbc.JdbcDaoTransactionManager;
 import com.ibatis.dao.engine.transaction.sqlmap.SqlMapDaoTransactionManager;
 import org.w3c.dom.*;
-import org.xml.sax.*;
+import org.xml.sax.ErrorHandler;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
-import javax.xml.parsers.*;
-import java.io.*;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.Reader;
 import java.lang.reflect.Constructor;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * NOT THREAD SAFE.  USE SEPARATE INSTANCES PER THREAD.

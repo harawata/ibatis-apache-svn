@@ -15,6 +15,11 @@
  */
 package submitted.resultmap;
 
+import com.ibatis.common.resources.Resources;
+import com.ibatis.sqlmap.client.SqlMapClient;
+import com.ibatis.sqlmap.client.SqlMapClientBuilder;
+import junit.framework.TestCase;
+
 import java.io.IOException;
 import java.io.Reader;
 import java.sql.Connection;
@@ -23,18 +28,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
-import junit.framework.TestCase;
-
-import com.ibatis.common.resources.Resources;
-import com.ibatis.sqlmap.client.SqlMapClient;
-import com.ibatis.sqlmap.client.SqlMapClientBuilder;
-
 /**
  * @author Jeff Butler
  */
 public class PeerListResultTest extends TestCase {
-	private SqlMapClient sqlMapClient = null;
-	
+  private SqlMapClient sqlMapClient = null;
+
   protected void setUp() throws Exception {
     Connection conn = null;
     Statement st = null;
@@ -46,10 +45,10 @@ public class PeerListResultTest extends TestCase {
       st = conn.createStatement();
       st.execute("drop table Person if exists");
       st.execute("create table Person(personId int not null, name varchar(50), primary key (personId))");
-      
+
       st.execute("drop table PhoneNumber if exists");
       st.execute("create table PhoneNumber(personId int not null, phoneId int not null, phoneNumber varchar(50), primary key (personId, phoneId))");
-      
+
       st.execute("drop table Address if exists");
       st.execute("create table Address(personId int not null, addressId int not null, address varchar(50), primary key (personId, addressId))");
 
@@ -58,13 +57,13 @@ public class PeerListResultTest extends TestCase {
       st.execute("insert into PhoneNumber (personId, phoneId, phoneNumber) values(1, 1, '111-2222')");
       st.execute("insert into PhoneNumber (personId, phoneId, phoneNumber) values(1, 2, '333-4444')");
       st.execute("insert into Address (personId, addressId, address) values(1, 1, 'Main Street')");
-      
+
       // setup Wilma
       st.execute("insert into Person (personId, name) values(2, 'Wilma')");
       st.execute("insert into PhoneNumber (personId, phoneId, phoneNumber) values(2, 1, '555-6666')");
       st.execute("insert into Address (personId, addressId, address) values(2, 1, 'Elm Street')");
       st.execute("insert into Address (personId, addressId, address) values(2, 2, 'Maple Lane')");
-      
+
     } catch (Exception e) {
       fail(e.getMessage());
       dbCreated = false;
@@ -88,7 +87,7 @@ public class PeerListResultTest extends TestCase {
       try {
         Reader reader = Resources.getResourceAsReader(resource);
         sqlMapClient = SqlMapClientBuilder
-          .buildSqlMapClient(reader);
+            .buildSqlMapClient(reader);
       } catch (IOException e) {
         fail(e.getMessage());
         sqlMapClient = null;
@@ -96,25 +95,25 @@ public class PeerListResultTest extends TestCase {
     }
   }
 
-	public void test01() {
-		
-      try {
-        List list = sqlMapClient.queryForList("TestSqlMap.test01", null);
-        
-        System.out.println(list);
-      
-        assertEquals(2, list.size());
-        Person person = (Person) list.get(0);
-        assertEquals("Fred", person.getName());
-        assertEquals(person.getAddresses().size(), 1);
-        assertEquals(person.getPhoneNumbers().size(), 2);
+  public void test01() {
 
-        person = (Person) list.get(1);
-        assertEquals("Wilma", person.getName());
-        assertEquals(person.getAddresses().size(), 2);
-        assertEquals(person.getPhoneNumbers().size(), 1);
-      } catch (Exception e) {
-    	  fail(e.getMessage());
-      }
+    try {
+      List list = sqlMapClient.queryForList("TestSqlMap.test01", null);
+
+      System.out.println(list);
+
+      assertEquals(2, list.size());
+      Person person = (Person) list.get(0);
+      assertEquals("Fred", person.getName());
+      assertEquals(person.getAddresses().size(), 1);
+      assertEquals(person.getPhoneNumbers().size(), 2);
+
+      person = (Person) list.get(1);
+      assertEquals("Wilma", person.getName());
+      assertEquals(person.getAddresses().size(), 2);
+      assertEquals(person.getPhoneNumbers().size(), 1);
+    } catch (Exception e) {
+      fail(e.getMessage());
+    }
   }
 }

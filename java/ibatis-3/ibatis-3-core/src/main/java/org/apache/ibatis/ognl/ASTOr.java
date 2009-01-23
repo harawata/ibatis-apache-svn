@@ -34,45 +34,41 @@ package org.apache.ibatis.ognl;
  * @author Luke Blanshard (blanshlu@netscape.net)
  * @author Drew Davidson (drew@ognl.org)
  */
-class ASTOr extends ExpressionNode
-{
-    public ASTOr(int id) {
-        super(id);
-    }
+class ASTOr extends ExpressionNode {
+  public ASTOr(int id) {
+    super(id);
+  }
 
-    public ASTOr(OgnlParser p, int id) {
-        super(p, id);
-    }
+  public ASTOr(OgnlParser p, int id) {
+    super(p, id);
+  }
 
-    public void jjtClose() {
-        flattenTree();
-    }
+  public void jjtClose() {
+    flattenTree();
+  }
 
-    protected Object getValueBody( OgnlContext context, Object source ) throws OgnlException
-    {
-        Object result = null;
-        int last = children.length - 1;
-        for ( int i=0; i <= last; ++i ) {
-            result = children[i].getValue( context, source );
-            if ( i != last && OgnlOps.booleanValue(result) )
-                break;
-        }
-        return result;
+  protected Object getValueBody(OgnlContext context, Object source) throws OgnlException {
+    Object result = null;
+    int last = children.length - 1;
+    for (int i = 0; i <= last; ++i) {
+      result = children[i].getValue(context, source);
+      if (i != last && OgnlOps.booleanValue(result))
+        break;
     }
+    return result;
+  }
 
-    protected void setValueBody( OgnlContext context, Object target, Object value ) throws OgnlException
-    {
-        int last = children.length - 1;
-        for ( int i=0; i < last; ++i ) {
-            Object v = children[i].getValue( context, target );
-            if ( OgnlOps.booleanValue(v) )
-                return;
-        }
-        children[last].setValue( context, target, value );
+  protected void setValueBody(OgnlContext context, Object target, Object value) throws OgnlException {
+    int last = children.length - 1;
+    for (int i = 0; i < last; ++i) {
+      Object v = children[i].getValue(context, target);
+      if (OgnlOps.booleanValue(v))
+        return;
     }
+    children[last].setValue(context, target, value);
+  }
 
-    public String getExpressionOperator(int index)
-    {
-        return "||";
-    }
+  public String getExpressionOperator(int index) {
+    return "||";
+  }
 }

@@ -31,86 +31,77 @@
 package org.apache.ibatis.ognl;
 
 import junit.framework.TestSuite;
-import org.apache.ibatis.ognl.DefaultMemberAccess;
 import org.apache.ibatis.ognl.objects.Root;
 
-public class PrivateAccessorTest extends OgnlTestCase
-{
-    private static Root             ROOT = new Root();
+public class PrivateAccessorTest extends OgnlTestCase {
+  private static Root ROOT = new Root();
 
-    private static Object[][]       TESTS = {
-                                          // Using private get/set methods
-                                        { ROOT, "getPrivateAccessorIntValue()", new Integer(67) },                  /* Call private method */
-                                        { ROOT, "privateAccessorIntValue", new Integer(67) },                       /* Implied private method */
-                                        { ROOT, "privateAccessorIntValue", new Integer(67), new Integer(100) },     /* Implied private method */
-                                        { ROOT, "privateAccessorIntValue2", new Integer(67) },                      /* Implied private method */
-                                        { ROOT, "privateAccessorIntValue2", new Integer(67), new Integer(100) },    /* Implied private method */
-                                        { ROOT, "privateAccessorIntValue3", new Integer(67) },                      /* Implied private method */
-                                        { ROOT, "privateAccessorIntValue3", new Integer(67), new Integer(100) },    /* Implied private method */
-                                        { ROOT, "privateAccessorBooleanValue", Boolean.TRUE },                      /* Implied private method */
-                                        { ROOT, "privateAccessorBooleanValue", Boolean.TRUE, Boolean.FALSE },       /* Implied private method */
-                                    };
+  private static Object[][] TESTS = {
+      // Using private get/set methods
+      {ROOT, "getPrivateAccessorIntValue()", new Integer(67)},                  /* Call private method */
+      {ROOT, "privateAccessorIntValue", new Integer(67)},                       /* Implied private method */
+      {ROOT, "privateAccessorIntValue", new Integer(67), new Integer(100)},     /* Implied private method */
+      {ROOT, "privateAccessorIntValue2", new Integer(67)},                      /* Implied private method */
+      {ROOT, "privateAccessorIntValue2", new Integer(67), new Integer(100)},    /* Implied private method */
+      {ROOT, "privateAccessorIntValue3", new Integer(67)},                      /* Implied private method */
+      {ROOT, "privateAccessorIntValue3", new Integer(67), new Integer(100)},    /* Implied private method */
+      {ROOT, "privateAccessorBooleanValue", Boolean.TRUE},                      /* Implied private method */
+      {ROOT, "privateAccessorBooleanValue", Boolean.TRUE, Boolean.FALSE},       /* Implied private method */
+  };
 
-	/*===================================================================
-		Public static methods
-	  ===================================================================*/
-    public static TestSuite suite()
-    {
-        TestSuite       result = new TestSuite();
+  /*===================================================================
+     Public static methods
+     ===================================================================*/
+  public static TestSuite suite() {
+    TestSuite result = new TestSuite();
 
-        for (int i = 0; i < TESTS.length; i++) {
-            if (TESTS[i].length == 3) {
-                result.addTest(new PrivateAccessorTest((String)TESTS[i][1], TESTS[i][0], (String)TESTS[i][1], TESTS[i][2]));
-            } else {
-                if (TESTS[i].length == 4) {
-                    result.addTest(new PrivateAccessorTest((String)TESTS[i][1], TESTS[i][0], (String)TESTS[i][1], TESTS[i][2], TESTS[i][3]));
-                } else {
-                    if (TESTS[i].length == 5) {
-                        result.addTest(new PrivateAccessorTest((String)TESTS[i][1], TESTS[i][0], (String)TESTS[i][1], TESTS[i][2], TESTS[i][3], TESTS[i][4]));
-                    } else {
-                        throw new RuntimeException("don't understand TEST format");
-                    }
-                }
-            }
+    for (int i = 0; i < TESTS.length; i++) {
+      if (TESTS[i].length == 3) {
+        result.addTest(new PrivateAccessorTest((String) TESTS[i][1], TESTS[i][0], (String) TESTS[i][1], TESTS[i][2]));
+      } else {
+        if (TESTS[i].length == 4) {
+          result.addTest(new PrivateAccessorTest((String) TESTS[i][1], TESTS[i][0], (String) TESTS[i][1], TESTS[i][2], TESTS[i][3]));
+        } else {
+          if (TESTS[i].length == 5) {
+            result.addTest(new PrivateAccessorTest((String) TESTS[i][1], TESTS[i][0], (String) TESTS[i][1], TESTS[i][2], TESTS[i][3], TESTS[i][4]));
+          } else {
+            throw new RuntimeException("don't understand TEST format");
+          }
         }
-        return result;
+      }
     }
+    return result;
+  }
 
 
-	/*===================================================================
-		Constructors
-	  ===================================================================*/
-	public PrivateAccessorTest()
-	{
-	    super();
-	}
+  /*===================================================================
+     Constructors
+     ===================================================================*/
+  public PrivateAccessorTest() {
+    super();
+  }
 
-	public PrivateAccessorTest(String name)
-	{
-	    super(name);
-	}
+  public PrivateAccessorTest(String name) {
+    super(name);
+  }
 
-    public PrivateAccessorTest(String name, Object root, String expressionString, Object expectedResult, Object setValue, Object expectedAfterSetResult)
-    {
-        super(name, root, expressionString, expectedResult, setValue, expectedAfterSetResult);
-    }
+  public PrivateAccessorTest(String name, Object root, String expressionString, Object expectedResult, Object setValue, Object expectedAfterSetResult) {
+    super(name, root, expressionString, expectedResult, setValue, expectedAfterSetResult);
+  }
 
-    public PrivateAccessorTest(String name, Object root, String expressionString, Object expectedResult, Object setValue)
-    {
-        super(name, root, expressionString, expectedResult, setValue);
-    }
+  public PrivateAccessorTest(String name, Object root, String expressionString, Object expectedResult, Object setValue) {
+    super(name, root, expressionString, expectedResult, setValue);
+  }
 
-    public PrivateAccessorTest(String name, Object root, String expressionString, Object expectedResult)
-    {
-        super(name, root, expressionString, expectedResult);
-    }
+  public PrivateAccessorTest(String name, Object root, String expressionString, Object expectedResult) {
+    super(name, root, expressionString, expectedResult);
+  }
 
-	/*===================================================================
-		Overridden methods
-	  ===================================================================*/
-	public void setUp()
-	{
-	    super.setUp();
-        context.setMemberAccess(new DefaultMemberAccess(true));
-	}
+  /*===================================================================
+     Overridden methods
+     ===================================================================*/
+  public void setUp() {
+    super.setUp();
+    context.setMemberAccess(new DefaultMemberAccess(true));
+  }
 }

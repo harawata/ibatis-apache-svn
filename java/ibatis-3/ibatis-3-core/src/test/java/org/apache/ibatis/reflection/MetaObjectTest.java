@@ -2,8 +2,8 @@ package org.apache.ibatis.reflection;
 
 import domain.jpetstore.Product;
 import domain.misc.RichType;
-import org.junit.*;
 import static org.junit.Assert.*;
+import org.junit.Test;
 
 public class MetaObjectTest {
 

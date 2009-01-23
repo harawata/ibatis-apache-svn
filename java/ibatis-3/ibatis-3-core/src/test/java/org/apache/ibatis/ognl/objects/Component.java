@@ -30,56 +30,45 @@
 //--------------------------------------------------------------------------
 package org.apache.ibatis.ognl.objects;
 
-public class Component extends Object
-{
-    private URLStorage          toDisplay = new URLStorage();
-    private Page                page = new Page();
+public class Component extends Object {
+  private URLStorage toDisplay = new URLStorage();
+  private Page page = new Page();
 
-    public static class URLStorage extends Object
-    {
-        private String          pictureUrl = "http://www.picturespace.com/pictures/100";
+  public static class URLStorage extends Object {
+    private String pictureUrl = "http://www.picturespace.com/pictures/100";
 
-        public String getPictureUrl()
-        {
-            return pictureUrl;
-        }
-
-        public void setPictureUrl(String value)
-        {
-            pictureUrl = value;
-        }
+    public String getPictureUrl() {
+      return pictureUrl;
     }
 
-    public static class Page extends Object
-    {
-        public Object createRelativeAsset(String value)
-        {
-            return "/toplevel/" + value;
-        }
+    public void setPictureUrl(String value) {
+      pictureUrl = value;
     }
+  }
 
-    public Component()
-    {
-        super();
+  public static class Page extends Object {
+    public Object createRelativeAsset(String value) {
+      return "/toplevel/" + value;
     }
+  }
 
-    public Page getPage()
-    {
-        return page;
-    }
+  public Component() {
+    super();
+  }
 
-    public void setPage(Page value)
-    {
-        page = value;
-    }
+  public Page getPage() {
+    return page;
+  }
 
-    public URLStorage getToDisplay()
-    {
-        return toDisplay;
-    }
+  public void setPage(Page value) {
+    page = value;
+  }
 
-    public void setToDisplay(URLStorage value)
-    {
-        toDisplay = value;
-    }
+  public URLStorage getToDisplay() {
+    return toDisplay;
+  }
+
+  public void setToDisplay(URLStorage value) {
+    toDisplay = value;
+  }
 }

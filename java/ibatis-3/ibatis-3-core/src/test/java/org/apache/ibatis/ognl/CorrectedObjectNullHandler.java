@@ -31,39 +31,34 @@
 package org.apache.ibatis.ognl;
 
 import java.util.Map;
-import org.apache.ibatis.ognl.NullHandler;
 
-public class CorrectedObjectNullHandler extends Object implements NullHandler
-{
-    private String          defaultValue;
+public class CorrectedObjectNullHandler extends Object implements NullHandler {
+  private String defaultValue;
 
-    /*===================================================================
-        Constructors
-      ===================================================================*/
-    public CorrectedObjectNullHandler(String defaultValue)
-    {
-        super();
-        this.defaultValue = defaultValue;
+  /*===================================================================
+    Constructors
+  ===================================================================*/
+  public CorrectedObjectNullHandler(String defaultValue) {
+    super();
+    this.defaultValue = defaultValue;
+  }
+
+  /*===================================================================
+    TypeConverter interface (overridden)
+  ===================================================================*/
+  public Object nullMethodResult(Map context, Object target, String methodName, Object[] args) {
+    if (methodName.equals("getStringValue")) {
+      return defaultValue;
     }
+    return null;
+  }
 
-    /*===================================================================
-        TypeConverter interface (overridden)
-      ===================================================================*/
-    public Object nullMethodResult(Map context, Object target, String methodName, Object[] args)
-    {
-        if (methodName.equals("getStringValue")) {
-            return defaultValue;
-        }
-        return null;
+  public Object nullPropertyValue(Map context, Object target, Object property) {
+    Object result = null;
+
+    if (property.equals("stringValue")) {
+      return defaultValue;
     }
-
-    public Object nullPropertyValue(Map context, Object target, Object property)
-    {
-        Object      result = null;
-
-        if (property.equals("stringValue")) {
-            return defaultValue;
-        }
-        return null;
-    }
+    return null;
+  }
 }

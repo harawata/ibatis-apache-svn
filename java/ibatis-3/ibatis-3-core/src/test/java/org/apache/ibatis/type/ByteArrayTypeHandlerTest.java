@@ -1,8 +1,8 @@
 package org.apache.ibatis.type;
 
 import org.jmock.Expectations;
-import org.junit.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import org.junit.Test;
 
 public class ByteArrayTypeHandlerTest extends BaseTypeHandlerTest {
 

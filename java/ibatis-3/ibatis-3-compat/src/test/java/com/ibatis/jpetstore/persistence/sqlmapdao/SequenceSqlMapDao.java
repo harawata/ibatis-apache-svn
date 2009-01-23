@@ -1,6 +1,7 @@
 package com.ibatis.jpetstore.persistence.sqlmapdao;
 
-import com.ibatis.dao.client.*;
+import com.ibatis.dao.client.DaoException;
+import com.ibatis.dao.client.DaoManager;
 import com.ibatis.jpetstore.domain.Sequence;
 import com.ibatis.jpetstore.persistence.iface.SequenceDao;
 

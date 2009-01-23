@@ -30,186 +30,167 @@
 //--------------------------------------------------------------------------
 package org.apache.ibatis.ognl;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-public final class ObjectArrayPool extends Object
-{
-    private IntHashMap      pools = new IntHashMap(23);
+public final class ObjectArrayPool extends Object {
+  private IntHashMap pools = new IntHashMap(23);
 
-    public static class SizePool extends Object
-    {
-        private List        arrays = new ArrayList();
-        private int         arraySize;
-        private int         size;
-        private int         created = 0;
-        private int         recovered = 0;
-        private int         recycled = 0;
+  public static class SizePool extends Object {
+    private List arrays = new ArrayList();
+    private int arraySize;
+    private int size;
+    private int created = 0;
+    private int recovered = 0;
+    private int recycled = 0;
 
-        public SizePool(int arraySize)
-        {
-            this(arraySize, 0);
-        }
-
-        public SizePool(int arraySize, int initialSize)
-        {
-            super();
-            this.arraySize = arraySize;
-            for (int i = 0; i < initialSize; i++) {
-                arrays.add(new Object[arraySize]);
-            }
-            created = size = initialSize;
-        }
-
-        public int getArraySize()
-        {
-            return arraySize;
-        }
-
-        public Object[] create()
-        {
-            Object[]        result;
-
-            if (size > 0) {
-                result = (Object[])arrays.remove(size - 1);
-                size--;
-                recovered++;
-            } else {
-                result = new Object[arraySize];
-                created++;
-            }
-            return result;
-        }
-
-        public synchronized void recycle(Object[] value)
-        {
-            if (value != null) {
-                if (value.length != arraySize) {
-                    throw new IllegalArgumentException("recycled array size " + value.length + " inappropriate for pool array size " + arraySize);
-                }
-                Arrays.fill(value, null);
-                arrays.add(value);
-                size++;
-                recycled++;
-            } else {
-                throw new IllegalArgumentException("cannot recycle null object");
-            }
-        }
-
-        /**
-            Returns the number of items in the pool
-         */
-        public int getSize()
-        {
-            return size;
-        }
-
-        /**
-            Returns the number of items this pool has created since
-            it's construction.
-         */
-        public int getCreatedCount()
-        {
-            return created;
-        }
-
-        /**
-            Returns the number of items this pool has recovered from
-            the pool since its construction.
-         */
-        public int getRecoveredCount()
-        {
-            return recovered;
-        }
-
-        /**
-            Returns the number of items this pool has recycled since
-            it's construction.
-         */
-        public int getRecycledCount()
-        {
-            return recycled;
-        }
+    public SizePool(int arraySize) {
+      this(arraySize, 0);
     }
 
-    public ObjectArrayPool()
-    {
-        super();
+    public SizePool(int arraySize, int initialSize) {
+      super();
+      this.arraySize = arraySize;
+      for (int i = 0; i < initialSize; i++) {
+        arrays.add(new Object[arraySize]);
+      }
+      created = size = initialSize;
     }
 
-    public IntHashMap getSizePools()
-    {
-        return pools;
+    public int getArraySize() {
+      return arraySize;
     }
 
-    public synchronized SizePool getSizePool(int arraySize)
-    {
-        SizePool     result = (SizePool)pools.get(arraySize);
+    public Object[] create() {
+      Object[] result;
 
-        if (result == null) {
-            pools.put(arraySize, result = new SizePool(arraySize));
+      if (size > 0) {
+        result = (Object[]) arrays.remove(size - 1);
+        size--;
+        recovered++;
+      } else {
+        result = new Object[arraySize];
+        created++;
+      }
+      return result;
+    }
+
+    public synchronized void recycle(Object[] value) {
+      if (value != null) {
+        if (value.length != arraySize) {
+          throw new IllegalArgumentException("recycled array size " + value.length + " inappropriate for pool array size " + arraySize);
         }
-        return result;
+        Arrays.fill(value, null);
+        arrays.add(value);
+        size++;
+        recycled++;
+      } else {
+        throw new IllegalArgumentException("cannot recycle null object");
+      }
     }
 
-    public synchronized Object[] create(int arraySize)
-    {
-        return getSizePool(arraySize).create();
+    /**
+     * Returns the number of items in the pool
+     */
+    public int getSize() {
+      return size;
     }
 
-    public synchronized Object[] create(Object singleton)
-    {
-        Object[]        result = create(1);
-
-        result[0] = singleton;
-        return result;
+    /**
+     * Returns the number of items this pool has created since
+     * it's construction.
+     */
+    public int getCreatedCount() {
+      return created;
     }
 
-    public synchronized Object[] create(Object object1, Object object2)
-    {
-        Object[]        result = create(2);
-
-        result[0] = object1;
-        result[1] = object2;
-        return result;
+    /**
+     * Returns the number of items this pool has recovered from
+     * the pool since its construction.
+     */
+    public int getRecoveredCount() {
+      return recovered;
     }
 
-    public synchronized Object[] create(Object object1, Object object2, Object object3)
-    {
-        Object[]        result = create(3);
-
-        result[0] = object1;
-        result[1] = object2;
-        result[2] = object3;
-        return result;
+    /**
+     * Returns the number of items this pool has recycled since
+     * it's construction.
+     */
+    public int getRecycledCount() {
+      return recycled;
     }
+  }
 
-    public synchronized Object[] create(Object object1, Object object2, Object object3, Object object4)
-    {
-        Object[]        result = create(4);
+  public ObjectArrayPool() {
+    super();
+  }
 
-        result[0] = object1;
-        result[1] = object2;
-        result[2] = object3;
-        result[3] = object4;
-        return result;
+  public IntHashMap getSizePools() {
+    return pools;
+  }
+
+  public synchronized SizePool getSizePool(int arraySize) {
+    SizePool result = (SizePool) pools.get(arraySize);
+
+    if (result == null) {
+      pools.put(arraySize, result = new SizePool(arraySize));
     }
+    return result;
+  }
 
-    public synchronized Object[] create(Object object1, Object object2, Object object3, Object object4, Object object5)
-    {
-        Object[]        result = create(5);
+  public synchronized Object[] create(int arraySize) {
+    return getSizePool(arraySize).create();
+  }
 
-        result[0] = object1;
-        result[1] = object2;
-        result[2] = object3;
-        result[3] = object4;
-        result[4] = object5;
-        return result;
+  public synchronized Object[] create(Object singleton) {
+    Object[] result = create(1);
+
+    result[0] = singleton;
+    return result;
+  }
+
+  public synchronized Object[] create(Object object1, Object object2) {
+    Object[] result = create(2);
+
+    result[0] = object1;
+    result[1] = object2;
+    return result;
+  }
+
+  public synchronized Object[] create(Object object1, Object object2, Object object3) {
+    Object[] result = create(3);
+
+    result[0] = object1;
+    result[1] = object2;
+    result[2] = object3;
+    return result;
+  }
+
+  public synchronized Object[] create(Object object1, Object object2, Object object3, Object object4) {
+    Object[] result = create(4);
+
+    result[0] = object1;
+    result[1] = object2;
+    result[2] = object3;
+    result[3] = object4;
+    return result;
+  }
+
+  public synchronized Object[] create(Object object1, Object object2, Object object3, Object object4, Object object5) {
+    Object[] result = create(5);
+
+    result[0] = object1;
+    result[1] = object2;
+    result[2] = object3;
+    result[3] = object4;
+    result[4] = object5;
+    return result;
+  }
+
+  public synchronized void recycle(Object[] value) {
+    if (value != null) {
+      getSizePool(value.length).recycle(value);
     }
-
-    public synchronized void recycle(Object[] value)
-    {
-        if (value != null) {
-            getSizePool(value.length).recycle(value);
-        }
-    }
+  }
 }

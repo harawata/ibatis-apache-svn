@@ -30,40 +30,35 @@
 //--------------------------------------------------------------------------
 package org.apache.ibatis.ognl.objects;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
-public class Bean3 extends Object
-{
-    private int         value = 100;
-    private Map         map;
+public class Bean3 extends Object {
+  private int value = 100;
+  private Map map;
 
-    {
-        map = new HashMap();
-        map.put("foo", "bar");
-        map.put("bar", "baz");
-    }
+  {
+    map = new HashMap();
+    map.put("foo", "bar");
+    map.put("bar", "baz");
+  }
 
-    public int getValue()
-    {
-        return value;
-    }
+  public int getValue() {
+    return value;
+  }
 
-    public void setValue(int value)
-    {
-        this.value = value;
-    }
+  public void setValue(int value) {
+    this.value = value;
+  }
 
-    public Object getIndexedValue(int index)
-    {
-        return null;
-    }
+  public Object getIndexedValue(int index) {
+    return null;
+  }
 
-    public void setIndexedValue(int index, Object value)
-    {
-    }
+  public void setIndexedValue(int index, Object value) {
+  }
 
-    public Map getMap()
-    {
-        return map;
-    }
+  public Map getMap() {
+    return map;
+  }
 }

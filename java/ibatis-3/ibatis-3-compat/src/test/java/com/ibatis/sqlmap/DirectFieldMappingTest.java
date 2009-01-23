@@ -1,6 +1,7 @@
 package com.ibatis.sqlmap;
 
-import testdomain.*;
+import testdomain.FieldAccount;
+import testdomain.PrivateAccount;
 
 import java.sql.SQLException;
 

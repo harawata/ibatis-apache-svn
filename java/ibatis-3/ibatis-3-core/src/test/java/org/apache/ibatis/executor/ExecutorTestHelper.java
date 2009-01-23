@@ -2,10 +2,14 @@ package org.apache.ibatis.executor;
 
 import domain.blog.*;
 import org.apache.ibatis.cache.Cache;
-import org.apache.ibatis.cache.decorators.*;
+import org.apache.ibatis.cache.decorators.LoggingCache;
+import org.apache.ibatis.cache.decorators.ScheduledCache;
+import org.apache.ibatis.cache.decorators.SerializedCache;
+import org.apache.ibatis.cache.decorators.SynchronizedCache;
 import org.apache.ibatis.cache.impl.PerpetualCache;
 import org.apache.ibatis.mapping.*;
-import org.apache.ibatis.type.*;
+import org.apache.ibatis.type.JdbcType;
+import org.apache.ibatis.type.TypeHandlerRegistry;
 
 import java.util.*;
 
@@ -147,7 +151,7 @@ public class ExecutorTestHelper {
             add(new ResultMap.Builder(config, "defaultResultMap", Author.class, new ArrayList() {
               {
                 add(new ResultMapping.Builder(config, "favouriteSection", "favourite_section", registry.getTypeHandler(Section.class)).build());
-                add(new ResultMapping.Builder(config, null, "not_exists",Object.class).build());
+                add(new ResultMapping.Builder(config, null, "not_exists", Object.class).build());
               }
             }).build());
           }

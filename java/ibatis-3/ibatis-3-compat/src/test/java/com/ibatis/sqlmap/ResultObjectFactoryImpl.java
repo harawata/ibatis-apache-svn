@@ -3,7 +3,8 @@ package com.ibatis.sqlmap;
 import org.apache.ibatis.reflection.ObjectFactory;
 import testdomain.*;
 
-import java.util.*;
+import java.util.List;
+import java.util.Properties;
 
 /**
  * @author Jeff Butler

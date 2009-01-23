@@ -4,7 +4,10 @@ import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.result.ResultHandler;
 import org.apache.ibatis.mapping.MappedStatement;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 
 public class SimpleStatementHandler extends BaseStatementHandler {

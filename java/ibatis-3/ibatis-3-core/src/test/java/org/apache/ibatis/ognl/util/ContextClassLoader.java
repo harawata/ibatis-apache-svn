@@ -32,28 +32,25 @@ package org.apache.ibatis.ognl.util;
 
 import org.apache.ibatis.ognl.OgnlContext;
 
-public class ContextClassLoader extends ClassLoader
-{
-    private OgnlContext         context;
+public class ContextClassLoader extends ClassLoader {
+  private OgnlContext context;
 
-    /*===================================================================
-        Constructors
-      ===================================================================*/
-    public ContextClassLoader(ClassLoader parentClassLoader, OgnlContext context)
-    {
-        super(parentClassLoader);
-        this.context = context;
-    }
+  /*===================================================================
+    Constructors
+  ===================================================================*/
+  public ContextClassLoader(ClassLoader parentClassLoader, OgnlContext context) {
+    super(parentClassLoader);
+    this.context = context;
+  }
 
-    /*===================================================================
-        Overridden methods
-      ===================================================================*/
-    protected Class findClass(String name) throws ClassNotFoundException
-    {
-        if ((context != null) && (context.getClassResolver() != null)) {
-            return context.getClassResolver().classForName(name, context);
-        }
-        return super.findClass(name);
+  /*===================================================================
+    Overridden methods
+  ===================================================================*/
+  protected Class findClass(String name) throws ClassNotFoundException {
+    if ((context != null) && (context.getClassResolver() != null)) {
+      return context.getClassResolver().classForName(name, context);
     }
+    return super.findClass(name);
+  }
 
 }

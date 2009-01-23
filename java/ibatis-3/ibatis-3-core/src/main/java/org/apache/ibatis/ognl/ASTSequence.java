@@ -34,47 +34,44 @@ package org.apache.ibatis.ognl;
  * @author Luke Blanshard (blanshlu@netscape.net)
  * @author Drew Davidson (drew@ognl.org)
  */
-class ASTSequence extends SimpleNode
-{
-    public ASTSequence(int id) {
-        super(id);
-    }
+class ASTSequence extends SimpleNode {
+  public ASTSequence(int id) {
+    super(id);
+  }
 
-    public ASTSequence(OgnlParser p, int id) {
-        super(p, id);
-    }
+  public ASTSequence(OgnlParser p, int id) {
+    super(p, id);
+  }
 
-    public void jjtClose() {
-        flattenTree();
-    }
+  public void jjtClose() {
+    flattenTree();
+  }
 
-    protected Object getValueBody( OgnlContext context, Object source ) throws OgnlException
-    {
-        Object result = null;
-        for ( int i=0; i < children.length; ++i ) {
-            result = children[i].getValue( context, source );
-        }
-        return result; // The result is just the last one we saw.
+  protected Object getValueBody(OgnlContext context, Object source) throws OgnlException {
+    Object result = null;
+    for (int i = 0; i < children.length; ++i) {
+      result = children[i].getValue(context, source);
     }
+    return result; // The result is just the last one we saw.
+  }
 
-    protected void setValueBody( OgnlContext context, Object target, Object value ) throws OgnlException {
-        int last = children.length - 1;
-        for ( int i=0; i < last; ++i ) {
-            children[i].getValue( context, target );
-        }
-        children[last].setValue( context, target, value );
+  protected void setValueBody(OgnlContext context, Object target, Object value) throws OgnlException {
+    int last = children.length - 1;
+    for (int i = 0; i < last; ++i) {
+      children[i].getValue(context, target);
     }
+    children[last].setValue(context, target, value);
+  }
 
-    public String toString()
-    {
-        String      result = "";
+  public String toString() {
+    String result = "";
 
-        for ( int i=0; i < children.length; ++i ) {
-            if (i > 0) {
-                result = result + ", ";
-            }
-            result = result + children[i];
-        }
-        return result;
+    for (int i = 0; i < children.length; ++i) {
+      if (i > 0) {
+        result = result + ", ";
+      }
+      result = result + children[i];
     }
+    return result;
+  }
 }

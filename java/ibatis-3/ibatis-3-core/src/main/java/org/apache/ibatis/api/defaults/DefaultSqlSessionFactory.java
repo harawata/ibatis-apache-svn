@@ -1,14 +1,17 @@
 package org.apache.ibatis.api.defaults;
 
-import org.apache.ibatis.api.SqlSessionFactory;
 import org.apache.ibatis.api.SqlSession;
+import org.apache.ibatis.api.SqlSessionFactory;
 import org.apache.ibatis.api.exceptions.ExceptionFactory;
-import org.apache.ibatis.mapping.*;
-import org.apache.ibatis.transaction.TransactionFactory;
-import org.apache.ibatis.transaction.Transaction;
-import org.apache.ibatis.executor.*;
-import org.apache.ibatis.logging.*;
+import org.apache.ibatis.executor.Executor;
+import org.apache.ibatis.logging.Log;
+import org.apache.ibatis.logging.LogFactory;
 import org.apache.ibatis.logging.jdbc.ConnectionLogger;
+import org.apache.ibatis.mapping.Configuration;
+import org.apache.ibatis.mapping.Environment;
+import org.apache.ibatis.mapping.ExecutorType;
+import org.apache.ibatis.transaction.Transaction;
+import org.apache.ibatis.transaction.TransactionFactory;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -47,7 +50,7 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
       Connection connection = dataSource.getConnection();
       connection = wrapConnection(connection);
       Transaction tx = transactionFactory.newTransaction(connection, autoCommit);
-      Executor executor = configuration.newExecutor(tx,execType);
+      Executor executor = configuration.newExecutor(tx, execType);
       return new DefaultSqlSession(configuration, executor, autoCommit);
     } catch (SQLException e) {
       throw ExceptionFactory.wrapException("Error opening session.  Cause: " + e, e);

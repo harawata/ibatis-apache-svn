@@ -1,7 +1,8 @@
 package com.ibatis.sqlmap.client;
 
 import javax.sql.DataSource;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
  * This interface declares methods for demarcating SQL Map transactions.

@@ -1,6 +1,7 @@
 package com.ibatis.jpetstore.domain;
 
-import com.ibatis.common.util.*;
+import com.ibatis.common.util.PaginatedArrayList;
+import com.ibatis.common.util.PaginatedList;
 
 import java.io.Serializable;
 import java.math.BigDecimal;

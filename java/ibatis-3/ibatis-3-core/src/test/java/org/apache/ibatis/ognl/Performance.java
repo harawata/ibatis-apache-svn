@@ -30,192 +30,172 @@
 //--------------------------------------------------------------------------
 package org.apache.ibatis.ognl;
 
-import java.lang.reflect.*;
-import java.text.*;
-import org.apache.ibatis.ognl.Ognl;
-import org.apache.ibatis.ognl.OgnlContext;
-import org.apache.ibatis.ognl.OgnlException;
-import org.apache.ibatis.ognl.OgnlRuntime;
-import org.apache.ibatis.ognl.SimpleNode;
 import org.apache.ibatis.ognl.objects.Bean1;
 
-public class Performance extends Object
-{
-    private static int              MAX_ITERATIONS = -1;
-    private static boolean          ITERATIONS_MODE;
-    private static long             MAX_TIME = -1L;
-    private static boolean          TIME_MODE;
-    private static NumberFormat     FACTOR_FORMAT = new DecimalFormat("0.0");
+import java.lang.reflect.Method;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 
-    private String                  name;
-    private OgnlContext             context = (OgnlContext)Ognl.createDefaultContext(null);
-    private Bean1                   root = new Bean1();
-    private SimpleNode              expression;
-    private Method                  method;
-    private int                     iterations;
-    private long                    t0;
-    private long                    t1;
+public class Performance extends Object {
+  private static int MAX_ITERATIONS = -1;
+  private static boolean ITERATIONS_MODE;
+  private static long MAX_TIME = -1L;
+  private static boolean TIME_MODE;
+  private static NumberFormat FACTOR_FORMAT = new DecimalFormat("0.0");
 
-    /*===================================================================
-        Private static classes
-      ===================================================================*/
-    private static class Results
-    {
-        int         iterations;
-        long        time;
+  private String name;
+  private OgnlContext context = (OgnlContext) Ognl.createDefaultContext(null);
+  private Bean1 root = new Bean1();
+  private SimpleNode expression;
+  private Method method;
+  private int iterations;
+  private long t0;
+  private long t1;
 
-        public Results(int iterations, long time)
-        {
-            super();
-            this.iterations = iterations;
-            this.time = time;
-        }
+  /*===================================================================
+    Private static classes
+  ===================================================================*/
+  private static class Results {
+    int iterations;
+    long time;
 
-        public float getFactor(Results otherResults)
-        {
-            if (TIME_MODE) {
-                return Math.max((float)otherResults.iterations, (float)iterations) / Math.min((float)otherResults.iterations, (float)iterations);
-            }
-            return Math.max((float)otherResults.time, (float)time) / Math.min((float)otherResults.time, (float)time);
-        }
+    public Results(int iterations, long time) {
+      super();
+      this.iterations = iterations;
+      this.time = time;
     }
 
-    /*===================================================================
-        Public static methods
-      ===================================================================*/
- 
-    /*===================================================================
-        Constructors
-      ===================================================================*/
-    public Performance(String name, String expressionString, String javaMethodName) throws OgnlException
-    {
-        super();
-        this.name = name;
-        expression = (SimpleNode)Ognl.parseExpression(expressionString);
-        try {
-            method = getClass().getMethod(javaMethodName, new Class[] {});
-        } catch (Exception ex) {
-            throw new OgnlException("java method not found", ex);
-        }
+    public float getFactor(Results otherResults) {
+      if (TIME_MODE) {
+        return Math.max((float) otherResults.iterations, (float) iterations) / Math.min((float) otherResults.iterations, (float) iterations);
+      }
+      return Math.max((float) otherResults.time, (float) time) / Math.min((float) otherResults.time, (float) time);
     }
+  }
 
-    /*===================================================================
-        Protected methods
-      ===================================================================*/
-    protected void startTest()
-    {
-        iterations = 0;
-        t0 = t1 = System.currentTimeMillis();
-    }
+  /*===================================================================
+    Public static methods
+  ===================================================================*/
 
-    protected Results endTest()
-    {
-        return new Results(iterations, t1 - t0);
-    }
+  /*===================================================================
+    Constructors
+  ===================================================================*/
 
-    protected boolean done()
-    {
-        iterations++;
-        t1 = System.currentTimeMillis();
-        if (TIME_MODE) {
-            return (t1 - t0) >= MAX_TIME;
-        } else {
-            if (ITERATIONS_MODE) {
-                return iterations >= MAX_ITERATIONS;
-            } else {
-                throw new RuntimeException("no maximums specified");
-            }
-        }
+  public Performance(String name, String expressionString, String javaMethodName) throws OgnlException {
+    super();
+    this.name = name;
+    expression = (SimpleNode) Ognl.parseExpression(expressionString);
+    try {
+      method = getClass().getMethod(javaMethodName, new Class[]{});
+    } catch (Exception ex) {
+      throw new OgnlException("java method not found", ex);
     }
+  }
 
-    /*===================================================================
-        Public methods
-      ===================================================================*/
-    public String getName()
-    {
-        return name;
-    }
+  /*===================================================================
+    Protected methods
+  ===================================================================*/
+  protected void startTest() {
+    iterations = 0;
+    t0 = t1 = System.currentTimeMillis();
+  }
 
-    public SimpleNode getExpression()
-    {
-        return expression;
-    }
+  protected Results endTest() {
+    return new Results(iterations, t1 - t0);
+  }
 
-    public Results testExpression(boolean compiled) throws OgnlException
-    {
-        if (compiled) {
-            context.put("_compile", Boolean.TRUE);
-        } else {
-            context.remove("_compile");
-        }
-        Ognl.getValue(expression, context, root);
-        startTest();
-        do {
-            Ognl.getValue(expression, context, root);
-        } while (!done());
-        return endTest();
+  protected boolean done() {
+    iterations++;
+    t1 = System.currentTimeMillis();
+    if (TIME_MODE) {
+      return (t1 - t0) >= MAX_TIME;
+    } else {
+      if (ITERATIONS_MODE) {
+        return iterations >= MAX_ITERATIONS;
+      } else {
+        throw new RuntimeException("no maximums specified");
+      }
     }
+  }
 
-    public Results testJava() throws OgnlException
-    {
-        try {
-            return (Results)method.invoke(this, new Object[] {});
-        } catch (Exception ex) {
-            throw new OgnlException("invoking java method '" + method.getName() + "'", ex);
-        }
-    }
+  /*===================================================================
+    Public methods
+  ===================================================================*/
+  public String getName() {
+    return name;
+  }
 
-    public Results testConstantExpression() throws OgnlException
-    {
-        startTest();
-        do {
-            int     result = 100 + 20 * 5;
-        } while (!done());
-        return endTest();
-    }
+  public SimpleNode getExpression() {
+    return expression;
+  }
 
-    public Results testSinglePropertyExpression() throws OgnlException
-    {
-        startTest();
-        do {
-            root.getBean2();
-        } while (!done());
-        return endTest();
+  public Results testExpression(boolean compiled) throws OgnlException {
+    if (compiled) {
+      context.put("_compile", Boolean.TRUE);
+    } else {
+      context.remove("_compile");
     }
+    Ognl.getValue(expression, context, root);
+    startTest();
+    do {
+      Ognl.getValue(expression, context, root);
+    } while (!done());
+    return endTest();
+  }
 
-    public Results testPropertyNavigationExpression() throws OgnlException
-    {
-        startTest();
-        do {
-            root.getBean2().getBean3().getValue();
-        } while (!done());
-        return endTest();
+  public Results testJava() throws OgnlException {
+    try {
+      return (Results) method.invoke(this, new Object[]{});
+    } catch (Exception ex) {
+      throw new OgnlException("invoking java method '" + method.getName() + "'", ex);
     }
+  }
 
-    public Results testPropertyNavigationAndComparisonExpression() throws OgnlException
-    {
-        startTest();
-        do {
-            boolean     result = root.getBean2().getBean3().getValue() < 24;
-        } while (!done());
-        return endTest();
-    }
+  public Results testConstantExpression() throws OgnlException {
+    startTest();
+    do {
+      int result = 100 + 20 * 5;
+    } while (!done());
+    return endTest();
+  }
 
-    public Results testIndexedPropertyNavigationExpression() throws OgnlException
-    {
-        startTest();
-        do {
-            root.getBean2().getBean3().getIndexedValue(25);
-        } while (!done());
-        return endTest();
-    }
+  public Results testSinglePropertyExpression() throws OgnlException {
+    startTest();
+    do {
+      root.getBean2();
+    } while (!done());
+    return endTest();
+  }
 
-    public Results testPropertyNavigationWithMapExpression() throws OgnlException
-    {
-        startTest();
-        do {
-            root.getBean2().getBean3().getMap().get("foo");
-        } while (!done());
-        return endTest();
-    }
+  public Results testPropertyNavigationExpression() throws OgnlException {
+    startTest();
+    do {
+      root.getBean2().getBean3().getValue();
+    } while (!done());
+    return endTest();
+  }
+
+  public Results testPropertyNavigationAndComparisonExpression() throws OgnlException {
+    startTest();
+    do {
+      boolean result = root.getBean2().getBean3().getValue() < 24;
+    } while (!done());
+    return endTest();
+  }
+
+  public Results testIndexedPropertyNavigationExpression() throws OgnlException {
+    startTest();
+    do {
+      root.getBean2().getBean3().getIndexedValue(25);
+    } while (!done());
+    return endTest();
+  }
+
+  public Results testPropertyNavigationWithMapExpression() throws OgnlException {
+    startTest();
+    do {
+      root.getBean2().getBean3().getMap().get("foo");
+    } while (!done());
+    return endTest();
+  }
 }

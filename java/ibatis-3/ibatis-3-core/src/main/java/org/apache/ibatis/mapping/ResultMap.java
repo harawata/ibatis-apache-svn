@@ -1,6 +1,8 @@
 package org.apache.ibatis.mapping;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class ResultMap {
 

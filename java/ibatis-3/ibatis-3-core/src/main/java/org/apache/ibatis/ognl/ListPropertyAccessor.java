@@ -30,93 +30,98 @@
 //--------------------------------------------------------------------------
 package org.apache.ibatis.ognl;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Implementation of PropertyAccessor that uses numbers and dynamic subscripts as
  * properties to index into Lists.
+ *
  * @author Luke Blanshard (blanshlu@netscape.net)
  * @author Drew Davidson (drew@ognl.org)
  */
 public class ListPropertyAccessor extends ObjectPropertyAccessor
     implements PropertyAccessor // This is here to make javadoc show this class as an implementor
 {
-    public Object getProperty( Map context, Object target, Object name ) throws OgnlException
-    {
-        List    list = (List)target;
+  public Object getProperty(Map context, Object target, Object name) throws OgnlException {
+    List list = (List) target;
 
-        if ( name instanceof String ) {
-            Object      result;
+    if (name instanceof String) {
+      Object result;
 
-            if (name.equals("size")) {
-                result = new Integer(list.size());
-            } else {
-                if (name.equals("iterator")) {
-                    result = list.iterator();
-                } else {
-                    if (name.equals("isEmpty")) {
-                        result = list.isEmpty() ? Boolean.TRUE : Boolean.FALSE;
-                    } else {
-                        result = super.getProperty( context, target, name );
-                    }
-                }
-            }
-            return result;
+      if (name.equals("size")) {
+        result = new Integer(list.size());
+      } else {
+        if (name.equals("iterator")) {
+          result = list.iterator();
+        } else {
+          if (name.equals("isEmpty")) {
+            result = list.isEmpty() ? Boolean.TRUE : Boolean.FALSE;
+          } else {
+            result = super.getProperty(context, target, name);
+          }
         }
-
-        if ( name instanceof Number )
-            return list.get( ((Number)name).intValue() );
-
-        if ( name instanceof DynamicSubscript )
-          {
-            int len = list.size();
-            switch ( ((DynamicSubscript)name).getFlag() )
-              {
-                case DynamicSubscript.FIRST:    return len > 0? list.get(0) : null;
-                case DynamicSubscript.MID:      return len > 0? list.get(len/2) : null;
-                case DynamicSubscript.LAST:     return len > 0? list.get(len-1) : null;
-                case DynamicSubscript.ALL:      return new ArrayList(list);
-              }
-          }
-
-        throw new NoSuchPropertyException( target, name );
+      }
+      return result;
     }
 
-    public void setProperty( Map context, Object target, Object name, Object value ) throws OgnlException
-    {
-        if ( name instanceof String )
-          {
-            super.setProperty( context, target, name, value );
-            return;
-          }
+    if (name instanceof Number)
+      return list.get(((Number) name).intValue());
 
-        List list = (List)target;
-
-        if ( name instanceof Number )
-          {
-            list.set( ((Number)name).intValue(), value );
-            return;
-          }
-
-        if ( name instanceof DynamicSubscript )
-          {
-            int len = list.size();
-            switch ( ((DynamicSubscript)name).getFlag() )
-              {
-                case DynamicSubscript.FIRST:    if ( len > 0 ) list.set(0,value);       return;
-                case DynamicSubscript.MID:      if ( len > 0 ) list.set(len/2,value);   return;
-                case DynamicSubscript.LAST:     if ( len > 0 ) list.set(len-1,value);   return;
-                case DynamicSubscript.ALL:
-                  {
-                    if ( !(value instanceof Collection) )
-                        throw new OgnlException( "Value must be a collection" );
-                    list.clear();
-                    list.addAll( (Collection)value );
-                    return;
-                  }
-              }
-          }
-
-        throw new NoSuchPropertyException( target, name );
+    if (name instanceof DynamicSubscript) {
+      int len = list.size();
+      switch (((DynamicSubscript) name).getFlag()) {
+        case DynamicSubscript.FIRST:
+          return len > 0 ? list.get(0) : null;
+        case DynamicSubscript.MID:
+          return len > 0 ? list.get(len / 2) : null;
+        case DynamicSubscript.LAST:
+          return len > 0 ? list.get(len - 1) : null;
+        case DynamicSubscript.ALL:
+          return new ArrayList(list);
+      }
     }
+
+    throw new NoSuchPropertyException(target, name);
+  }
+
+  public void setProperty(Map context, Object target, Object name, Object value) throws OgnlException {
+    if (name instanceof String) {
+      super.setProperty(context, target, name, value);
+      return;
+    }
+
+    List list = (List) target;
+
+    if (name instanceof Number) {
+      list.set(((Number) name).intValue(), value);
+      return;
+    }
+
+    if (name instanceof DynamicSubscript) {
+      int len = list.size();
+      switch (((DynamicSubscript) name).getFlag()) {
+        case DynamicSubscript.FIRST:
+          if (len > 0) list.set(0, value);
+          return;
+        case DynamicSubscript.MID:
+          if (len > 0) list.set(len / 2, value);
+          return;
+        case DynamicSubscript.LAST:
+          if (len > 0) list.set(len - 1, value);
+          return;
+        case DynamicSubscript.ALL: {
+          if (!(value instanceof Collection))
+            throw new OgnlException("Value must be a collection");
+          list.clear();
+          list.addAll((Collection) value);
+          return;
+        }
+      }
+    }
+
+    throw new NoSuchPropertyException(target, name);
+  }
 }

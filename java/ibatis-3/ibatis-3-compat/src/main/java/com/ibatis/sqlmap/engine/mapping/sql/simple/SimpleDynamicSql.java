@@ -6,7 +6,8 @@ import org.apache.ibatis.mapping.ParameterMapping;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 
-import java.util.*;
+import java.util.List;
+import java.util.StringTokenizer;
 
 public class SimpleDynamicSql implements Sql {
 

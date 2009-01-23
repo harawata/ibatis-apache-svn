@@ -3,11 +3,15 @@ package com.ibatis.sqlmap.engine.builder;
 import com.ibatis.sqlmap.engine.mapping.sql.SqlText;
 import com.ibatis.sqlmap.engine.mapping.sql.simple.SimpleDynamicSql;
 import com.ibatis.sqlmap.engine.mapping.sql.statik.StaticSql;
-import org.apache.ibatis.mapping.*;
+import org.apache.ibatis.mapping.Configuration;
+import org.apache.ibatis.mapping.ParameterMapping;
+import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.xml.NodeletContext;
-import org.w3c.dom.*;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SimpleSqlSource implements SqlSource {
 

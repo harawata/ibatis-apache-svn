@@ -34,87 +34,76 @@ package org.apache.ibatis.ognl;
  * @author Luke Blanshard (blanshlu@netscape.net)
  * @author Drew Davidson (drew@ognl.org)
  */
-class ASTProperty extends SimpleNode
-{
-    private boolean     indexedAccess = false;
+class ASTProperty extends SimpleNode {
+  private boolean indexedAccess = false;
 
-    public ASTProperty(int id)
-    {
-        super(id);
+  public ASTProperty(int id) {
+    super(id);
+  }
+
+  public ASTProperty(OgnlParser p, int id) {
+    super(p, id);
+  }
+
+  public void setIndexedAccess(boolean value) {
+    indexedAccess = value;
+  }
+
+  /**
+   * Returns true iff this property is itself an index reference.
+   */
+  public boolean isIndexedAccess() {
+    return indexedAccess;
+  }
+
+  /**
+   * Returns true if this property is described by an IndexedPropertyDescriptor
+   * and that if followed by an index specifier it will call the index get/set
+   * methods rather than go through property accessors.
+   */
+  public int getIndexedPropertyType(OgnlContext context, Object source) throws OgnlException {
+    if (!isIndexedAccess()) {
+      Object property = getProperty(context, source);
+
+      if (property instanceof String) {
+        return OgnlRuntime.getIndexedPropertyType(context, (source == null) ? null : source.getClass(), (String) property);
+      }
     }
+    return OgnlRuntime.INDEXED_PROPERTY_NONE;
+  }
 
-    public ASTProperty(OgnlParser p, int id)
-    {
-        super(p, id);
+  public Object getProperty(OgnlContext context, Object source) throws OgnlException {
+    return children[0].getValue(context, context.getRoot());
+  }
+
+  protected Object getValueBody(OgnlContext context, Object source) throws OgnlException {
+    Object result,
+        property = getProperty(context, source);
+    Node indexSibling;
+
+    result = OgnlRuntime.getProperty(context, source, property);
+    if (result == null) {
+      result = OgnlRuntime.getNullHandler(OgnlRuntime.getTargetClass(source)).nullPropertyValue(context, source, property);
     }
+    return result;
+  }
 
-    public void setIndexedAccess( boolean value )
-    {
-        indexedAccess = value;
+  protected void setValueBody(OgnlContext context, Object target, Object value) throws OgnlException {
+    OgnlRuntime.setProperty(context, target, getProperty(context, target), value);
+  }
+
+  public boolean isNodeSimpleProperty(OgnlContext context) throws OgnlException {
+    return (children != null) && (children.length == 1) && ((SimpleNode) children[0]).isConstant(context);
+  }
+
+  public String toString() {
+    String result;
+
+    if (isIndexedAccess()) {
+      result = "[" + children[0] + "]";
+    } else {
+      result = ((ASTConst) children[0]).getValue().toString();
     }
-
-    /**
-        Returns true iff this property is itself an index reference.
-     */
-    public boolean isIndexedAccess()
-    {
-        return indexedAccess;
-    }
-
-    /**
-        Returns true if this property is described by an IndexedPropertyDescriptor
-        and that if followed by an index specifier it will call the index get/set
-        methods rather than go through property accessors.
-     */
-    public int getIndexedPropertyType(OgnlContext context, Object source) throws OgnlException
-    {
-        if (!isIndexedAccess()) {
-            Object              property = getProperty(context, source);
-
-            if (property instanceof String) {
-                return OgnlRuntime.getIndexedPropertyType(context, (source == null) ? null : source.getClass(), (String)property);
-            }
-        }
-        return OgnlRuntime.INDEXED_PROPERTY_NONE;
-    }
-
-    public Object getProperty( OgnlContext context, Object source ) throws OgnlException
-    {
-        return children[0].getValue( context, context.getRoot() );
-    }
-
-    protected Object getValueBody( OgnlContext context, Object source ) throws OgnlException
-    {
-        Object      result,
-                    property = getProperty(context, source);
-        Node        indexSibling;
-
-        result = OgnlRuntime.getProperty( context, source, property );
-        if (result == null) {
-            result = OgnlRuntime.getNullHandler(OgnlRuntime.getTargetClass(source)).nullPropertyValue(context, source, property);
-        }
-        return result;
-    }
-
-    protected void setValueBody( OgnlContext context, Object target, Object value ) throws OgnlException
-    {
-        OgnlRuntime.setProperty( context, target, getProperty( context, target), value );
-    }
-
-    public boolean isNodeSimpleProperty( OgnlContext context ) throws OgnlException
-    {
-        return (children != null) && (children.length == 1) && ((SimpleNode)children[0]).isConstant(context);
-    }
-
-    public String toString()
-    {
-        String          result;
-
-        if (isIndexedAccess()) {
-            result = "[" + children[0] + "]";
-        } else {
-            result = ((ASTConst)children[0]).getValue().toString();
-        }
-        return result;
-    }
+    return result;
+  }
 }

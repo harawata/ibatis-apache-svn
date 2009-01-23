@@ -19,7 +19,7 @@ public class GenericTokenParser {
   public String parse(String text) {
     StringBuilder builder = new StringBuilder();
     if (text != null) {
-      String after=text;
+      String after = text;
 
       int start = after.indexOf(openToken);
       int end = after.indexOf(closeToken);

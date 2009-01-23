@@ -35,22 +35,23 @@ import java.util.Enumeration;
 
 /**
  * Implementation of ElementsAccessor that returns an iterator over a Java array.
+ *
  * @author Luke Blanshard (blanshlu@netscape.net)
  * @author Drew Davidson (drew@ognl.org)
  */
-public class ArrayElementsAccessor implements ElementsAccessor
-{
-    public Enumeration getElements( final Object target )
-    {
-        return new Enumeration() {
-            private int count = Array.getLength( target );
-            private int index = 0;
-            public boolean hasMoreElements() {
-                return index < count;
-            }
-            public Object nextElement() {
-                return Array.get( target, index++ );
-            }
-        };
-    }
+public class ArrayElementsAccessor implements ElementsAccessor {
+  public Enumeration getElements(final Object target) {
+    return new Enumeration() {
+      private int count = Array.getLength(target);
+      private int index = 0;
+
+      public boolean hasMoreElements() {
+        return index < count;
+      }
+
+      public Object nextElement() {
+        return Array.get(target, index++);
+      }
+    };
+  }
 }

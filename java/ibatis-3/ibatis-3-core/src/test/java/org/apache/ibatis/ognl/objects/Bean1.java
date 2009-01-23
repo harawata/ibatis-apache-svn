@@ -30,12 +30,10 @@
 //--------------------------------------------------------------------------
 package org.apache.ibatis.ognl.objects;
 
-public class Bean1 extends Object
-{
-    private Bean2       bean2 = new Bean2();
+public class Bean1 extends Object {
+  private Bean2 bean2 = new Bean2();
 
-    public Bean2 getBean2()
-    {
-        return bean2;
-    }
+  public Bean2 getBean2() {
+    return bean2;
+  }
 }

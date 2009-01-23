@@ -30,140 +30,138 @@
 //--------------------------------------------------------------------------
 package org.apache.ibatis.ognl;
 
-import java.math.*;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 
 /**
  * @author Luke Blanshard (blanshlu@netscape.net)
  * @author Drew Davidson (drew@ognl.org)
  */
-class ASTConst extends SimpleNode
-{
-    private Object value;
+class ASTConst extends SimpleNode {
+  private Object value;
 
-    public ASTConst(int id) {
-        super(id);
-    }
+  public ASTConst(int id) {
+    super(id);
+  }
 
-    public ASTConst(OgnlParser p, int id) {
-        super(p, id);
-    }
+  public ASTConst(OgnlParser p, int id) {
+    super(p, id);
+  }
 
-      /** Called from parser actions. */
-    void setValue( Object value ) {
-        this.value = value;
-    }
+  /**
+   * Called from parser actions.
+   */
+  void setValue(Object value) {
+    this.value = value;
+  }
 
-    public Object getValue() {
-        return value;
-    }
+  public Object getValue() {
+    return value;
+  }
 
-    protected Object getValueBody( OgnlContext context, Object source ) throws OgnlException {
-        return this.value;
-    }
+  protected Object getValueBody(OgnlContext context, Object source) throws OgnlException {
+    return this.value;
+  }
 
-    public boolean isNodeConstant( OgnlContext context ) throws OgnlException
-    {
-        return true;
-    }
+  public boolean isNodeConstant(OgnlContext context) throws OgnlException {
+    return true;
+  }
 
-    public String getEscapedChar(char ch)
-    {
-        String          result;
+  public String getEscapedChar(char ch) {
+    String result;
 
-        switch(ch) {
-            case '\b':
-                result = "\b";
-                break;
-            case '\t':
-                result = "\\t";
-                break;
-            case '\n':
-                result = "\\n";
-                break;
-            case '\f':
-                result = "\\f";
-                break;
-            case '\r':
-                result = "\\r";
-                break;
-            case '\"':
-                result = "\\\"";
-                break;
-            case '\'':
-                result = "\\\'";
-                break;
-            case '\\':
-                result = "\\\\";
-                break;
-            default:
-                if (Character.isISOControl(ch) || (ch > 255)) {
-                    String      hc = Integer.toString((int)ch, 16);
-                    int         hcl = hc.length();
+    switch (ch) {
+      case '\b':
+        result = "\b";
+        break;
+      case '\t':
+        result = "\\t";
+        break;
+      case '\n':
+        result = "\\n";
+        break;
+      case '\f':
+        result = "\\f";
+        break;
+      case '\r':
+        result = "\\r";
+        break;
+      case '\"':
+        result = "\\\"";
+        break;
+      case '\'':
+        result = "\\\'";
+        break;
+      case '\\':
+        result = "\\\\";
+        break;
+      default:
+        if (Character.isISOControl(ch) || (ch > 255)) {
+          String hc = Integer.toString((int) ch, 16);
+          int hcl = hc.length();
 
-                    result = "\\u";
-                    if (hcl < 4) {
-                        if (hcl == 3) {
-                            result = result + "0";
-                        } else {
-                            if (hcl == 2) {
-                                result = result + "00";
-                            } else {
-                                result = result + "000";
-                            }
-                        }
-                    }
-
-                    result = result + hc;
-                } else {
-                    result = new String(ch + "");
-                }
-                break;
-        }
-        return result;
-    }
-
-    public String getEscapedString(String value)
-    {
-        StringBuffer        result = new StringBuffer();
-
-        for (int i = 0, icount = value.length(); i < icount; i++) {
-            result.append(getEscapedChar(value.charAt(i)));
-        }
-        return new String(result);
-    }
-
-    public String toString()
-    {
-        String      result;
-
-        if (value == null) {
-            result = "null";
-        } else {
-            if (value instanceof String) {
-                result = '\"' + getEscapedString(value.toString()) + '\"';
+          result = "\\u";
+          if (hcl < 4) {
+            if (hcl == 3) {
+              result = result + "0";
             } else {
-                if (value instanceof Character) {
-                    result = '\'' + getEscapedChar(((Character)value).charValue()) + '\'';
-                } else {
-                    result = value.toString();
-                    if (value instanceof Long) {
-                        result = result + "L";
-                    } else {
-                        if (value instanceof BigDecimal) {
-                            result = result + "B";
-                        } else {
-                            if (value instanceof BigInteger) {
-                                result = result + "H";
-                            } else {
-                                if (value instanceof Node) {
-                                    result = ":[ " + result + " ]";
-                                }
-                            }
-                        }
-                    }
-                }
+              if (hcl == 2) {
+                result = result + "00";
+              } else {
+                result = result + "000";
+              }
             }
+          }
+
+          result = result + hc;
+        } else {
+          result = new String(ch + "");
         }
-        return result;
+        break;
     }
+    return result;
+  }
+
+  public String getEscapedString(String value) {
+    StringBuffer result = new StringBuffer();
+
+    for (int i = 0, icount = value.length(); i < icount; i++) {
+      result.append(getEscapedChar(value.charAt(i)));
+    }
+    return new String(result);
+  }
+
+  public String toString() {
+    String result;
+
+    if (value == null) {
+      result = "null";
+    } else {
+      if (value instanceof String) {
+        result = '\"' + getEscapedString(value.toString()) + '\"';
+      } else {
+        if (value instanceof Character) {
+          result = '\'' + getEscapedChar(((Character) value).charValue()) + '\'';
+        } else {
+          result = value.toString();
+          if (value instanceof Long) {
+            result = result + "L";
+          } else {
+            if (value instanceof BigDecimal) {
+              result = result + "B";
+            } else {
+              if (value instanceof BigInteger) {
+                result = result + "H";
+              } else {
+                if (value instanceof Node) {
+                  result = ":[ " + result + " ]";
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    return result;
+  }
 }

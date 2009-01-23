@@ -1,6 +1,7 @@
 package com.ibatis.dao.client.template;
 
-import com.ibatis.dao.client.*;
+import com.ibatis.dao.client.Dao;
+import com.ibatis.dao.client.DaoManager;
 
 /**
  * A base class for Dao implementations, or other DAO templates.

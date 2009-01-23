@@ -4,8 +4,10 @@ import com.ibatis.sqlmap.engine.execution.BatchException;
 import org.apache.ibatis.executor.BatchResult;
 import testdomain.Account;
 
-import java.sql.*;
-import java.util.*;
+import java.sql.BatchUpdateException;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Jeff Butler

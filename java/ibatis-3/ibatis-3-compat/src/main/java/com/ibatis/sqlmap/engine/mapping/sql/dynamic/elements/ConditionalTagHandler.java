@@ -3,8 +3,10 @@ package com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements;
 import com.ibatis.sqlmap.client.SqlMapException;
 import org.apache.ibatis.reflection.MetaObject;
 
-import java.math.*;
-import java.text.*;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public abstract class ConditionalTagHandler extends BaseTagHandler {

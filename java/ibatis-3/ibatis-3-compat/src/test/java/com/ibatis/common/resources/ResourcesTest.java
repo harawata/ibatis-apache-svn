@@ -8,9 +8,11 @@ package com.ibatis.common.resources;
 
 import junit.framework.TestCase;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
-import java.util.*;
+import java.util.Enumeration;
+import java.util.Properties;
 
 /**
  * To change the template for this generated type comment go to

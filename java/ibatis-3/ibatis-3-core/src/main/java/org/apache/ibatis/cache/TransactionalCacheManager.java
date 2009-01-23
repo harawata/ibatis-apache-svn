@@ -2,7 +2,8 @@ package org.apache.ibatis.cache;
 
 import org.apache.ibatis.cache.decorators.TransactionalCache;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TransactionalCacheManager {
 
@@ -17,13 +18,13 @@ public class TransactionalCacheManager {
   }
 
   public void commit() {
-    for(TransactionalCache txCache : transactionalCaches.values()) {
+    for (TransactionalCache txCache : transactionalCaches.values()) {
       txCache.commit();
     }
   }
 
   public void rollback() {
-    for(TransactionalCache txCache : transactionalCaches.values()) {
+    for (TransactionalCache txCache : transactionalCaches.values()) {
       txCache.rollback();
     }
   }
@@ -32,7 +33,7 @@ public class TransactionalCacheManager {
     TransactionalCache txCache = transactionalCaches.get(cache);
     if (txCache == null) {
       txCache = new TransactionalCache(cache);
-      transactionalCaches.put(cache,txCache);
+      transactionalCaches.put(cache, txCache);
     }
     return txCache;
   }

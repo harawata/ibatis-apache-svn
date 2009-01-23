@@ -30,40 +30,41 @@
 //--------------------------------------------------------------------------
 package org.apache.ibatis.ognl;
 
-import java.util.*;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Implementation of PropertyAccessor that uses numbers and dynamic subscripts as
  * properties to index into Lists.
+ *
  * @author Luke Blanshard (blanshlu@netscape.net)
  * @author Drew Davidson (drew@ognl.org)
  */
 public class SetPropertyAccessor extends ObjectPropertyAccessor
     implements PropertyAccessor // This is here to make javadoc show this class as an implementor
 {
-    public Object getProperty( Map context, Object target, Object name ) throws OgnlException
-    {
-        Set     set = (Set)target;
+  public Object getProperty(Map context, Object target, Object name) throws OgnlException {
+    Set set = (Set) target;
 
-        if ( name instanceof String ) {
-            Object      result;
+    if (name instanceof String) {
+      Object result;
 
-            if (name.equals("size")) {
-                result = new Integer(set.size());
-            } else {
-                if (name.equals("iterator")) {
-                    result = set.iterator();
-                } else {
-                    if (name.equals("isEmpty")) {
-                        result = set.isEmpty() ? Boolean.TRUE : Boolean.FALSE;
-                    } else {
-                        result = super.getProperty( context, target, name );
-                    }
-                }
-            }
-            return result;
+      if (name.equals("size")) {
+        result = new Integer(set.size());
+      } else {
+        if (name.equals("iterator")) {
+          result = set.iterator();
+        } else {
+          if (name.equals("isEmpty")) {
+            result = set.isEmpty() ? Boolean.TRUE : Boolean.FALSE;
+          } else {
+            result = super.getProperty(context, target, name);
+          }
         }
-
-        throw new NoSuchPropertyException( target, name );
+      }
+      return result;
     }
+
+    throw new NoSuchPropertyException(target, name);
+  }
 }

@@ -3,7 +3,9 @@ package org.apache.ibatis.executor.statement;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.executor.result.ResultHandler;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 
 public interface StatementHandler {

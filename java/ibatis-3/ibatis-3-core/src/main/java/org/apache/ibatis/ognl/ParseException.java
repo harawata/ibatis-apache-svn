@@ -6,7 +6,7 @@ package org.apache.ibatis.ognl;
  * You can explicitly create objects of this exception type by
  * calling the method generateParseException in the generated
  * parser.
- *
+ * <p/>
  * You can modify this class to customize your error reporting
  * mechanisms so long as you retain the public fields.
  */
@@ -22,13 +22,12 @@ public class ParseException extends Exception {
    * This constructor calls its super class with the empty string
    * to force the "toString" method of parent class "Throwable" to
    * print the error message in the form:
-   *     ParseException: <result of getMessage>
+   * ParseException: <result of getMessage>
    */
   public ParseException(Token currentTokenVal,
                         int[][] expectedTokenSequencesVal,
                         String[] tokenImageVal
-                       )
-  {
+  ) {
     super("");
     specialConstructor = true;
     currentToken = currentTokenVal;
@@ -121,7 +120,7 @@ public class ParseException extends Exception {
         break;
       }
       retval += add_escapes(tok.image);
-      tok = tok.next; 
+      tok = tok.next;
     }
     retval += "\" at line " + currentToken.next.beginLine + ", column " + currentToken.next.beginColumn;
     retval += "." + eol;
@@ -138,55 +137,54 @@ public class ParseException extends Exception {
    * The end of line string for this machine.
    */
   protected String eol = System.getProperty("line.separator", "\n");
- 
+
   /**
    * Used to convert raw characters to their escaped version
    * when these raw version cannot be used as part of an ASCII
    * string literal.
    */
   protected String add_escapes(String str) {
-      StringBuffer retval = new StringBuffer();
-      char ch;
-      for (int i = 0; i < str.length(); i++) {
-        switch (str.charAt(i))
-        {
-           case 0 :
-              continue;
-           case '\b':
-              retval.append("\\b");
-              continue;
-           case '\t':
-              retval.append("\\t");
-              continue;
-           case '\n':
-              retval.append("\\n");
-              continue;
-           case '\f':
-              retval.append("\\f");
-              continue;
-           case '\r':
-              retval.append("\\r");
-              continue;
-           case '\"':
-              retval.append("\\\"");
-              continue;
-           case '\'':
-              retval.append("\\\'");
-              continue;
-           case '\\':
-              retval.append("\\\\");
-              continue;
-           default:
-              if ((ch = str.charAt(i)) < 0x20 || ch > 0x7e) {
-                 String s = "0000" + Integer.toString(ch, 16);
-                 retval.append("\\u" + s.substring(s.length() - 4, s.length()));
-              } else {
-                 retval.append(ch);
-              }
-              continue;
-        }
+    StringBuffer retval = new StringBuffer();
+    char ch;
+    for (int i = 0; i < str.length(); i++) {
+      switch (str.charAt(i)) {
+        case 0:
+          continue;
+        case '\b':
+          retval.append("\\b");
+          continue;
+        case '\t':
+          retval.append("\\t");
+          continue;
+        case '\n':
+          retval.append("\\n");
+          continue;
+        case '\f':
+          retval.append("\\f");
+          continue;
+        case '\r':
+          retval.append("\\r");
+          continue;
+        case '\"':
+          retval.append("\\\"");
+          continue;
+        case '\'':
+          retval.append("\\\'");
+          continue;
+        case '\\':
+          retval.append("\\\\");
+          continue;
+        default:
+          if ((ch = str.charAt(i)) < 0x20 || ch > 0x7e) {
+            String s = "0000" + Integer.toString(ch, 16);
+            retval.append("\\u" + s.substring(s.length() - 4, s.length()));
+          } else {
+            retval.append(ch);
+          }
+          continue;
       }
-      return retval.toString();
-   }
+    }
+    return retval.toString();
+  }
 
 }

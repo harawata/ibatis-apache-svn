@@ -8,26 +8,26 @@
 
   <parameterMap id="selectAuthor"
                 type="domain.blog.Author">
-    <parameter property="id" />
+    <parameter property="id"/>
   </parameterMap>
 
   <resultMap id="selectAuthor" type="domain.blog.Author">
-    <id column="id" property="id" />
-    <result property="username" column="username" />
-    <result property="password" column="password" />
-    <result property="email" column="email" />
-    <result property="bio" column="bio" />
-    <result property="favouriteSection" column="favourite_section" />
+    <id column="id" property="id"/>
+    <result property="username" column="username"/>
+    <result property="password" column="password"/>
+    <result property="email" column="email"/>
+    <result property="bio" column="bio"/>
+    <result property="favouriteSection" column="favourite_section"/>
   </resultMap>
 
   <resultMap id="selectImmutableAuthor" type="domain.blog.ImmutableAuthor">
     <constructor>
-      <id column="id" property="id" />
-      <result property="username" column="username" />
-      <result property="password" column="password" />
-      <result property="email" column="email" />
-      <result property="bio" column="bio" />
-      <result property="favouriteSection" column="favourite_section" />
+      <id column="id" property="id"/>
+      <result property="username" column="username"/>
+      <result property="password" column="password"/>
+      <result property="email" column="email"/>
+      <result property="bio" column="bio"/>
+      <result property="favouriteSection" column="favourite_section"/>
     </constructor>
   </resultMap>
 

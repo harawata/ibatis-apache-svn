@@ -1,20 +1,28 @@
 package com.ibatis.sqlmap.engine.impl;
 
 import com.ibatis.common.util.PaginatedList;
-import com.ibatis.sqlmap.client.*;
 import com.ibatis.sqlmap.client.SqlMapException;
+import com.ibatis.sqlmap.client.SqlMapExecutor;
+import com.ibatis.sqlmap.client.SqlMapSession;
 import com.ibatis.sqlmap.client.event.RowHandler;
 import com.ibatis.sqlmap.engine.builder.Ibatis2Configuration;
 import com.ibatis.sqlmap.engine.execution.BatchException;
 import com.ibatis.sqlmap.engine.mapping.statement.PaginatedDataList;
-import com.ibatis.sqlmap.engine.transaction.*;
-import org.apache.ibatis.executor.*;
+import com.ibatis.sqlmap.engine.transaction.Transaction;
+import com.ibatis.sqlmap.engine.transaction.TransactionManager;
+import com.ibatis.sqlmap.engine.transaction.TransactionScope;
+import org.apache.ibatis.executor.BatchExecutorException;
+import org.apache.ibatis.executor.BatchResult;
+import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.result.ResultHandler;
-import org.apache.ibatis.mapping.*;
+import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.mapping.ResultMap;
+import org.apache.ibatis.mapping.ResultMapping;
 import org.apache.ibatis.reflection.MetaObject;
 
 import javax.sql.DataSource;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.*;
 
 public class SqlMapSessionImpl implements SqlMapSession {

@@ -1,7 +1,8 @@
 package testdomain;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
 
 public class PrivateAccount implements Serializable {
 

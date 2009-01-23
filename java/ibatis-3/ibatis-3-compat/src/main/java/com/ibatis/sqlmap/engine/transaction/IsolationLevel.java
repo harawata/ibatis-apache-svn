@@ -1,6 +1,7 @@
 package com.ibatis.sqlmap.engine.transaction;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 public class IsolationLevel {
 

@@ -1,6 +1,7 @@
 package com.ibatis.sqlmap;
 
-import testdomain.*;
+import testdomain.IItem;
+import testdomain.ISupplier;
 
 import java.util.List;
 

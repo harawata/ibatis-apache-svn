@@ -3,11 +3,18 @@ package com.ibatis.sqlmap.engine.builder;
 import com.ibatis.sqlmap.client.SqlMapException;
 import com.ibatis.sqlmap.engine.mapping.sql.SqlText;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.mapping.*;
+import org.apache.ibatis.mapping.Configuration;
+import org.apache.ibatis.mapping.ParameterMapping;
+import org.apache.ibatis.mapping.ParameterMode;
 import org.apache.ibatis.reflection.MetaClass;
-import org.apache.ibatis.type.*;
+import org.apache.ibatis.type.JdbcType;
+import org.apache.ibatis.type.TypeAliasRegistry;
+import org.apache.ibatis.type.TypeHandler;
+import org.apache.ibatis.type.TypeHandlerRegistry;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
 
 public class InlineParameterMapParser {
 

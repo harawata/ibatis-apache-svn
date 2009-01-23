@@ -9,8 +9,9 @@ import org.apache.ibatis.plugin.*;
 import java.util.*;
 
 @Intercepts({
-@Signature(type = Executor.class, method = "update", args = {MappedStatement.class, Object.class}),
-@Signature(type = Executor.class, method = "query", args = {MappedStatement.class, Object.class, int.class, int.class, ResultHandler.class})
+  @Signature(type = Executor.class, method = "update", args = {MappedStatement.class, Object.class}),
+  @Signature(type = Executor.class, method = "query", args = {MappedStatement.class, Object.class, int.class, int.class,
+      ResultHandler.class})
     })
 public class FlushCacheInterceptor implements Interceptor {
 

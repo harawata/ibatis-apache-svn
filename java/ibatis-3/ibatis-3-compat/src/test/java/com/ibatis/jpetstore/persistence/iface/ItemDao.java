@@ -1,7 +1,8 @@
 package com.ibatis.jpetstore.persistence.iface;
 
 import com.ibatis.common.util.PaginatedList;
-import com.ibatis.jpetstore.domain.*;
+import com.ibatis.jpetstore.domain.Item;
+import com.ibatis.jpetstore.domain.Order;
 
 public interface ItemDao {
 

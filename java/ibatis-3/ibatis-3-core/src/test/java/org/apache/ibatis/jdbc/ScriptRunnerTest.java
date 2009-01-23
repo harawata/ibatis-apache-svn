@@ -1,17 +1,19 @@
 package org.apache.ibatis.jdbc;
 
 import org.apache.ibatis.BaseDataTest;
-import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
 import org.apache.ibatis.datasource.pooled.PooledDataSource;
-import org.apache.ibatis.jdbc.SqlRunner;
+import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
 import org.apache.ibatis.io.Resources;
-import org.junit.*;
+import static org.junit.Assert.assertEquals;
+import org.junit.Test;
 
 import javax.sql.DataSource;
 import java.io.IOException;
-import java.sql.*;
-import java.util.*;
-import static org.junit.Assert.*;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 public class ScriptRunnerTest extends BaseDataTest {
 

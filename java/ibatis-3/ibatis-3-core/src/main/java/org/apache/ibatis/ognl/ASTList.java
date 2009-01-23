@@ -30,41 +30,39 @@
 //--------------------------------------------------------------------------
 package org.apache.ibatis.ognl;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Luke Blanshard (blanshlu@netscape.net)
  * @author Drew Davidson (drew@ognl.org)
  */
-class ASTList extends SimpleNode
-{
-    public ASTList(int id) {
-        super(id);
+class ASTList extends SimpleNode {
+  public ASTList(int id) {
+    super(id);
+  }
+
+  public ASTList(OgnlParser p, int id) {
+    super(p, id);
+  }
+
+  protected Object getValueBody(OgnlContext context, Object source) throws OgnlException {
+    List answer = new ArrayList(jjtGetNumChildren());
+    for (int i = 0; i < jjtGetNumChildren(); ++i)
+      answer.add(children[i].getValue(context, source));
+    return answer;
+  }
+
+  public String toString() {
+    String result = "{ ";
+
+
+    for (int i = 0; i < jjtGetNumChildren(); ++i) {
+      if (i > 0) {
+        result = result + ", ";
+      }
+      result = result + children[i].toString();
     }
-
-    public ASTList(OgnlParser p, int id) {
-        super(p, id);
-    }
-
-    protected Object getValueBody( OgnlContext context, Object source ) throws OgnlException
-    {
-        List answer = new ArrayList( jjtGetNumChildren() );
-        for ( int i=0; i < jjtGetNumChildren(); ++i )
-            answer.add( children[i].getValue(context, source) );
-        return answer;
-    }
-
-    public String toString()
-    {
-        String      result = "{ ";
-
-
-        for ( int i=0; i < jjtGetNumChildren(); ++i ) {
-            if (i > 0) {
-                result = result + ", ";
-            }
-            result = result + children[i].toString();
-        }
-        return result + " }";
-    }
+    return result + " }";
+  }
 }

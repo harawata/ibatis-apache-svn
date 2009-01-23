@@ -2,8 +2,8 @@ package org.apache.ibatis.cache;
 
 import org.apache.ibatis.cache.decorators.FifoCache;
 import org.apache.ibatis.cache.impl.PerpetualCache;
-import org.junit.*;
 import static org.junit.Assert.*;
+import org.junit.Test;
 
 public class FifoCacheTest {
 

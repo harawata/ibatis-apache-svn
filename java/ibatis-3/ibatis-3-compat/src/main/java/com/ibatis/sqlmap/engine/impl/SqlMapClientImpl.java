@@ -1,6 +1,7 @@
 package com.ibatis.sqlmap.engine.impl;
 
-import com.ibatis.sqlmap.client.*;
+import com.ibatis.sqlmap.client.SqlMapClient;
+import com.ibatis.sqlmap.client.SqlMapSession;
 import com.ibatis.sqlmap.engine.builder.Ibatis2Configuration;
 import org.apache.ibatis.cache.Cache;
 

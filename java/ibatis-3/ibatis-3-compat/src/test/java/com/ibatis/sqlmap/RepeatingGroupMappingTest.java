@@ -1,8 +1,9 @@
 package com.ibatis.sqlmap;
 
-import testdomain.*;
+import testdomain.Category;
+import testdomain.Product;
 
-import java.util.*;
+import java.util.List;
 
 public class RepeatingGroupMappingTest extends BaseSqlMapTest {
 

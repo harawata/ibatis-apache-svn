@@ -3,16 +3,18 @@ package org.apache.ibatis.executor;
 import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.cache.impl.PerpetualCache;
 import org.apache.ibatis.executor.result.ResultHandler;
-import org.apache.ibatis.mapping.*;
+import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.mapping.ParameterMapping;
 import org.apache.ibatis.reflection.MetaObject;
-import org.apache.ibatis.type.TypeHandlerRegistry;
 import org.apache.ibatis.transaction.Transaction;
+import org.apache.ibatis.type.TypeHandlerRegistry;
 
-import java.sql.*;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.*;
 
 public abstract class BaseExecutor implements Executor {
-  
+
   private static final Object EXECUTION_PLACEHOLDER = new Object();
 
   protected final Transaction transaction;

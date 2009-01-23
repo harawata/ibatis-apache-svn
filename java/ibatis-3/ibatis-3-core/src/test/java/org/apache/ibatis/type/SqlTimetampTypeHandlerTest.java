@@ -1,10 +1,10 @@
 package org.apache.ibatis.type;
 
 import org.jmock.Expectations;
-import org.junit.*;
+import static org.junit.Assert.assertEquals;
+import org.junit.Test;
 
 import java.util.Date;
-import static org.junit.Assert.*;
 
 public class SqlTimetampTypeHandlerTest extends BaseTypeHandlerTest {
 

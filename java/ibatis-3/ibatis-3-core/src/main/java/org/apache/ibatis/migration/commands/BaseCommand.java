@@ -1,15 +1,17 @@
 package org.apache.ibatis.migration.commands;
 
-import org.apache.ibatis.jdbc.SqlRunner;
-import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.migration.*;
 import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
+import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
+import org.apache.ibatis.jdbc.SqlRunner;
+import org.apache.ibatis.migration.Change;
+import org.apache.ibatis.migration.MigrationException;
 import org.apache.ibatis.xml.PropertyParser;
 
 import java.io.*;
 import java.math.BigDecimal;
-import java.net.*;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -56,7 +58,7 @@ public abstract class BaseCommand implements Command {
   protected List<Change> getChangelog() {
     SqlRunner runner = getSqlRunner();
     try {
-      List<Map<String, Object>> changelog = runner.selectAll("select ID, APPLIED_AT, DESCRIPTION from "+changelogTable()+" order by id");
+      List<Map<String, Object>> changelog = runner.selectAll("select ID, APPLIED_AT, DESCRIPTION from " + changelogTable() + " order by id");
       List<Change> changes = new ArrayList<Change>();
       for (Map<String, Object> change : changelog) {
         String id = change.get("ID") == null ? null : change.get("ID").toString();
@@ -104,7 +106,7 @@ public abstract class BaseCommand implements Command {
       caption = " " + caption + " ";
       builder.append(caption);
     }
-    for (int i = 0; i < length - caption.length()-10; i++) {
+    for (int i = 0; i < length - caption.length() - 10; i++) {
       builder.append("=");
     }
     return builder.toString();

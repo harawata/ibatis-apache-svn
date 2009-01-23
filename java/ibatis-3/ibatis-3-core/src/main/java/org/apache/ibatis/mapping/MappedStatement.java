@@ -2,7 +2,9 @@ package org.apache.ibatis.mapping;
 
 import org.apache.ibatis.cache.Cache;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class MappedStatement {
 

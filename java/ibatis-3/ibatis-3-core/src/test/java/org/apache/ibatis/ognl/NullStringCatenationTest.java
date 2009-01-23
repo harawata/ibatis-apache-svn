@@ -33,67 +33,60 @@ package org.apache.ibatis.ognl;
 import junit.framework.TestSuite;
 import org.apache.ibatis.ognl.objects.Root;
 
-public class NullStringCatenationTest extends OgnlTestCase
-{
-    private static Root             ROOT = new Root();
+public class NullStringCatenationTest extends OgnlTestCase {
+  private static Root ROOT = new Root();
 
-    private static Object[][]       TESTS = {
-                                   	    // Null string catenation
-                                   	    { ROOT, "\"bar\" + null", "barnull" },                                      /* Catenate null to a string */
-                                   	    { ROOT, "\"bar\" + nullObject", "barnull" },                                /* Catenate null to a string */
-                                   	    { ROOT, "20.56 + nullObject", NullPointerException.class },                 /* Catenate null to a number */
-                                    };
+  private static Object[][] TESTS = {
+      // Null string catenation
+      {ROOT, "\"bar\" + null", "barnull"},                                      /* Catenate null to a string */
+      {ROOT, "\"bar\" + nullObject", "barnull"},                                /* Catenate null to a string */
+      {ROOT, "20.56 + nullObject", NullPointerException.class},                 /* Catenate null to a number */
+  };
 
-	/*===================================================================
-		Public static methods
-	  ===================================================================*/
-    public static TestSuite suite()
-    {
-        TestSuite       result = new TestSuite();
+  /*===================================================================
+     Public static methods
+     ===================================================================*/
+  public static TestSuite suite() {
+    TestSuite result = new TestSuite();
 
-        for (int i = 0; i < TESTS.length; i++) {
-            if (TESTS[i].length == 3) {
-                result.addTest(new NullStringCatenationTest((String)TESTS[i][1], TESTS[i][0], (String)TESTS[i][1], TESTS[i][2]));
-            } else {
-                if (TESTS[i].length == 4) {
-                    result.addTest(new NullStringCatenationTest((String)TESTS[i][1], TESTS[i][0], (String)TESTS[i][1], TESTS[i][2], TESTS[i][3]));
-                } else {
-                    if (TESTS[i].length == 5) {
-                        result.addTest(new NullStringCatenationTest((String)TESTS[i][1], TESTS[i][0], (String)TESTS[i][1], TESTS[i][2], TESTS[i][3], TESTS[i][4]));
-                    } else {
-                        throw new RuntimeException("don't understand TEST format");
-                    }
-                }
-            }
+    for (int i = 0; i < TESTS.length; i++) {
+      if (TESTS[i].length == 3) {
+        result.addTest(new NullStringCatenationTest((String) TESTS[i][1], TESTS[i][0], (String) TESTS[i][1], TESTS[i][2]));
+      } else {
+        if (TESTS[i].length == 4) {
+          result.addTest(new NullStringCatenationTest((String) TESTS[i][1], TESTS[i][0], (String) TESTS[i][1], TESTS[i][2], TESTS[i][3]));
+        } else {
+          if (TESTS[i].length == 5) {
+            result.addTest(new NullStringCatenationTest((String) TESTS[i][1], TESTS[i][0], (String) TESTS[i][1], TESTS[i][2], TESTS[i][3], TESTS[i][4]));
+          } else {
+            throw new RuntimeException("don't understand TEST format");
+          }
         }
-        return result;
+      }
     }
+    return result;
+  }
 
-	/*===================================================================
-		Constructors
-	  ===================================================================*/
-	public NullStringCatenationTest()
-	{
-	    super();
-	}
+  /*===================================================================
+     Constructors
+     ===================================================================*/
+  public NullStringCatenationTest() {
+    super();
+  }
 
-	public NullStringCatenationTest(String name)
-	{
-	    super(name);
-	}
+  public NullStringCatenationTest(String name) {
+    super(name);
+  }
 
-    public NullStringCatenationTest(String name, Object root, String expressionString, Object expectedResult, Object setValue, Object expectedAfterSetResult)
-    {
-        super(name, root, expressionString, expectedResult, setValue, expectedAfterSetResult);
-    }
+  public NullStringCatenationTest(String name, Object root, String expressionString, Object expectedResult, Object setValue, Object expectedAfterSetResult) {
+    super(name, root, expressionString, expectedResult, setValue, expectedAfterSetResult);
+  }
 
-    public NullStringCatenationTest(String name, Object root, String expressionString, Object expectedResult, Object setValue)
-    {
-        super(name, root, expressionString, expectedResult, setValue);
-    }
+  public NullStringCatenationTest(String name, Object root, String expressionString, Object expectedResult, Object setValue) {
+    super(name, root, expressionString, expectedResult, setValue);
+  }
 
-    public NullStringCatenationTest(String name, Object root, String expressionString, Object expectedResult)
-    {
-        super(name, root, expressionString, expectedResult);
-    }
+  public NullStringCatenationTest(String name, Object root, String expressionString, Object expectedResult) {
+    super(name, root, expressionString, expectedResult);
+  }
 }

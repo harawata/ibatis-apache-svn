@@ -33,78 +33,71 @@ package org.apache.ibatis.ognl;
 import junit.framework.TestSuite;
 import org.apache.ibatis.ognl.objects.Root;
 
-public class InterfaceInheritanceTest extends OgnlTestCase
-{
-    private static Root             ROOT = new Root();
+public class InterfaceInheritanceTest extends OgnlTestCase {
+  private static Root ROOT = new Root();
 
-    private static Object[][]       TESTS = {
-                                          // Interface inheritence test
-                                        { ROOT, "myMap", ROOT.getMyMap() },
-                                        { ROOT, "myMap.test", ROOT },
-                                        { ROOT.getMyMap(), "list", ROOT.getList() },
-                                        { ROOT, "myMap.array[0]", new Integer(ROOT.getArray()[0]) },
-                                        { ROOT, "myMap.list[1]", ROOT.getList().get(1) },
-                                        { ROOT, "myMap[^]", new Integer(99) },
-                                        { ROOT, "myMap[$]", null },
-                                        { ROOT.getMyMap(), "array[$]", new Integer(ROOT.getArray()[ROOT.getArray().length-1]) },
-                                        { ROOT, "[\"myMap\"]", ROOT.getMyMap() },
-                                        { ROOT, "myMap[null]", null },
-                                        { ROOT, "myMap[#x = null]", null },
-                                        { ROOT, "myMap.(null,test)", ROOT },
-                                        { ROOT, "myMap[null] = 25", new Integer(25) },
-                                        { ROOT, "myMap[null]", new Integer(25), new Integer(50), new Integer(50) },
-                                    };
+  private static Object[][] TESTS = {
+      // Interface inheritence test
+      {ROOT, "myMap", ROOT.getMyMap()},
+      {ROOT, "myMap.test", ROOT},
+      {ROOT.getMyMap(), "list", ROOT.getList()},
+      {ROOT, "myMap.array[0]", new Integer(ROOT.getArray()[0])},
+      {ROOT, "myMap.list[1]", ROOT.getList().get(1)},
+      {ROOT, "myMap[^]", new Integer(99)},
+      {ROOT, "myMap[$]", null},
+      {ROOT.getMyMap(), "array[$]", new Integer(ROOT.getArray()[ROOT.getArray().length - 1])},
+      {ROOT, "[\"myMap\"]", ROOT.getMyMap()},
+      {ROOT, "myMap[null]", null},
+      {ROOT, "myMap[#x = null]", null},
+      {ROOT, "myMap.(null,test)", ROOT},
+      {ROOT, "myMap[null] = 25", new Integer(25)},
+      {ROOT, "myMap[null]", new Integer(25), new Integer(50), new Integer(50)},
+  };
 
-	/*===================================================================
-		Public static methods
-	  ===================================================================*/
-    public static TestSuite suite()
-    {
-        TestSuite       result = new TestSuite();
+  /*===================================================================
+     Public static methods
+     ===================================================================*/
+  public static TestSuite suite() {
+    TestSuite result = new TestSuite();
 
-        for (int i = 0; i < TESTS.length; i++) {
-            if (TESTS[i].length == 3) {
-                result.addTest(new InterfaceInheritanceTest((String)TESTS[i][1], TESTS[i][0], (String)TESTS[i][1], TESTS[i][2]));
-            } else {
-                if (TESTS[i].length == 4) {
-                    result.addTest(new InterfaceInheritanceTest((String)TESTS[i][1], TESTS[i][0], (String)TESTS[i][1], TESTS[i][2], TESTS[i][3]));
-                } else {
-                    if (TESTS[i].length == 5) {
-                        result.addTest(new InterfaceInheritanceTest((String)TESTS[i][1], TESTS[i][0], (String)TESTS[i][1], TESTS[i][2], TESTS[i][3], TESTS[i][4]));
-                    } else {
-                        throw new RuntimeException("don't understand TEST format");
-                    }
-                }
-            }
+    for (int i = 0; i < TESTS.length; i++) {
+      if (TESTS[i].length == 3) {
+        result.addTest(new InterfaceInheritanceTest((String) TESTS[i][1], TESTS[i][0], (String) TESTS[i][1], TESTS[i][2]));
+      } else {
+        if (TESTS[i].length == 4) {
+          result.addTest(new InterfaceInheritanceTest((String) TESTS[i][1], TESTS[i][0], (String) TESTS[i][1], TESTS[i][2], TESTS[i][3]));
+        } else {
+          if (TESTS[i].length == 5) {
+            result.addTest(new InterfaceInheritanceTest((String) TESTS[i][1], TESTS[i][0], (String) TESTS[i][1], TESTS[i][2], TESTS[i][3], TESTS[i][4]));
+          } else {
+            throw new RuntimeException("don't understand TEST format");
+          }
         }
-        return result;
+      }
     }
+    return result;
+  }
 
-	/*===================================================================
-		Constructors
-	  ===================================================================*/
-	public InterfaceInheritanceTest()
-	{
-	    super();
-	}
+  /*===================================================================
+     Constructors
+     ===================================================================*/
+  public InterfaceInheritanceTest() {
+    super();
+  }
 
-	public InterfaceInheritanceTest(String name)
-	{
-	    super(name);
-	}
+  public InterfaceInheritanceTest(String name) {
+    super(name);
+  }
 
-    public InterfaceInheritanceTest(String name, Object root, String expressionString, Object expectedResult, Object setValue, Object expectedAfterSetResult)
-    {
-        super(name, root, expressionString, expectedResult, setValue, expectedAfterSetResult);
-    }
+  public InterfaceInheritanceTest(String name, Object root, String expressionString, Object expectedResult, Object setValue, Object expectedAfterSetResult) {
+    super(name, root, expressionString, expectedResult, setValue, expectedAfterSetResult);
+  }
 
-    public InterfaceInheritanceTest(String name, Object root, String expressionString, Object expectedResult, Object setValue)
-    {
-        super(name, root, expressionString, expectedResult, setValue);
-    }
+  public InterfaceInheritanceTest(String name, Object root, String expressionString, Object expectedResult, Object setValue) {
+    super(name, root, expressionString, expectedResult, setValue);
+  }
 
-    public InterfaceInheritanceTest(String name, Object root, String expressionString, Object expectedResult)
-    {
-        super(name, root, expressionString, expectedResult);
-    }
+  public InterfaceInheritanceTest(String name, Object root, String expressionString, Object expectedResult) {
+    super(name, root, expressionString, expectedResult);
+  }
 }

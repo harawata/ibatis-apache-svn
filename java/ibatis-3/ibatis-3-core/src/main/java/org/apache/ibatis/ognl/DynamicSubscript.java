@@ -36,42 +36,43 @@ package org.apache.ibatis.ognl;
  * for getting at the first, middle, or last elements of a list.  In OGNL expressions,
  * these subscripts look like special kinds of array indexes: [^] means the first element,
  * [$] means the last, [|] means the middle, and [*] means the whole list.
+ *
  * @author Luke Blanshard (blanshlu@netscape.net)
  * @author Drew Davidson (drew@ognl.org)
  */
-public class DynamicSubscript
-{
-    public static final int FIRST   = 0;
-    public static final int MID     = 1;
-    public static final int LAST    = 2;
-    public static final int ALL     = 3;
+public class DynamicSubscript {
+  public static final int FIRST = 0;
+  public static final int MID = 1;
+  public static final int LAST = 2;
+  public static final int ALL = 3;
 
-    public static final DynamicSubscript first  = new DynamicSubscript(FIRST);
-    public static final DynamicSubscript mid    = new DynamicSubscript(MID);
-    public static final DynamicSubscript last   = new DynamicSubscript(LAST);
-    public static final DynamicSubscript all    = new DynamicSubscript(ALL);
+  public static final DynamicSubscript first = new DynamicSubscript(FIRST);
+  public static final DynamicSubscript mid = new DynamicSubscript(MID);
+  public static final DynamicSubscript last = new DynamicSubscript(LAST);
+  public static final DynamicSubscript all = new DynamicSubscript(ALL);
 
-    private int flag;
+  private int flag;
 
-    private DynamicSubscript( int flag )
-    {
-        this.flag = flag;
+  private DynamicSubscript(int flag) {
+    this.flag = flag;
+  }
+
+  public int getFlag() {
+    return flag;
+  }
+
+  public String toString() {
+    switch (flag) {
+      case FIRST:
+        return "^";
+      case MID:
+        return "|";
+      case LAST:
+        return "$";
+      case ALL:
+        return "*";
+      default:
+        return "?"; // Won't happen
     }
-
-    public int getFlag()
-    {
-        return flag;
-    }
-
-    public String toString()
-    {
-        switch (flag)
-          {
-            case FIRST: return "^";
-            case MID:   return "|";
-            case LAST:  return "$";
-            case ALL:   return "*";
-            default:    return "?"; // Won't happen
-          }
-    }
+  }
 }

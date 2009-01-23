@@ -34,52 +34,48 @@ package org.apache.ibatis.ognl;
  * @author Luke Blanshard (blanshlu@netscape.net)
  * @author Drew Davidson (drew@ognl.org)
  */
-class ASTEval extends SimpleNode
-{
-    public ASTEval(int id) {
-        super(id);
+class ASTEval extends SimpleNode {
+  public ASTEval(int id) {
+    super(id);
+  }
+
+  public ASTEval(OgnlParser p, int id) {
+    super(p, id);
+  }
+
+  protected Object getValueBody(OgnlContext context, Object source) throws OgnlException {
+    Object result,
+        expr = children[0].getValue(context, source),
+        previousRoot = context.getRoot();
+    Node node;
+
+    source = children[1].getValue(context, source);
+    node = (expr instanceof Node) ? (Node) expr : (Node) Ognl.parseExpression(expr.toString());
+    try {
+      context.setRoot(source);
+      result = node.getValue(context, source);
+    } finally {
+      context.setRoot(previousRoot);
     }
+    return result;
+  }
 
-    public ASTEval(OgnlParser p, int id) {
-        super(p, id);
+  protected void setValueBody(OgnlContext context, Object target, Object value) throws OgnlException {
+    Object expr = children[0].getValue(context, target),
+        previousRoot = context.getRoot();
+    Node node;
+
+    target = children[1].getValue(context, target);
+    node = (expr instanceof Node) ? (Node) expr : (Node) Ognl.parseExpression(expr.toString());
+    try {
+      context.setRoot(target);
+      node.setValue(context, target, value);
+    } finally {
+      context.setRoot(previousRoot);
     }
+  }
 
-    protected Object getValueBody( OgnlContext context, Object source ) throws OgnlException
-    {
-        Object  result,
-                expr = children[0].getValue( context, source ),
-                previousRoot = context.getRoot();
-        Node    node;
-
-        source = children[1].getValue( context, source );
-        node = (expr instanceof Node) ? (Node) expr : (Node) Ognl.parseExpression( expr.toString() );
-        try {
-            context.setRoot( source );
-            result = node.getValue( context, source );
-        } finally {
-            context.setRoot( previousRoot );
-        }
-        return result;
-    }
-
-    protected void setValueBody( OgnlContext context, Object target, Object value ) throws OgnlException
-    {
-        Object  expr = children[0].getValue(context, target),
-                previousRoot = context.getRoot();
-        Node    node;
-
-        target = children[1].getValue( context, target );
-        node = (expr instanceof Node) ? (Node) expr : (Node) Ognl.parseExpression( expr.toString() );
-        try {
-            context.setRoot( target );
-            node.setValue( context, target, value );
-        } finally {
-            context.setRoot( previousRoot );
-        }
-    }
-
-    public String toString()
-    {
-        return "(" + children[0] + ")(" + children[1] + ")";
-    }
+  public String toString() {
+    return "(" + children[0] + ")(" + children[1] + ")";
+  }
 }

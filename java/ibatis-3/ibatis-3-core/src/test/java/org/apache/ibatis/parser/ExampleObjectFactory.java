@@ -12,7 +12,7 @@ public class ExampleObjectFactory extends DefaultObjectFactory {
   }
 
   public Object create(Class type, List<Class> constructorArgTypes, List<Object> constructorArgs) {
-    return super.create(type,constructorArgTypes,constructorArgs);
+    return super.create(type, constructorArgTypes, constructorArgs);
   }
 
   public void setProperties(Properties properties) {

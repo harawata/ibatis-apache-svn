@@ -1,6 +1,5 @@
 package org.apache.ibatis.datasource.pooled;
 
-import org.apache.ibatis.datasource.pooled.PooledDataSource;
 import org.apache.ibatis.datasource.unpooled.UnpooledDataSourceFactory;
 
 public class PooledDataSourceFactory extends UnpooledDataSourceFactory {

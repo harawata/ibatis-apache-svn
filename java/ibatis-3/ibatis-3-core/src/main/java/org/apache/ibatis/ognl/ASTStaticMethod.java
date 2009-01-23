@@ -34,54 +34,53 @@ package org.apache.ibatis.ognl;
  * @author Luke Blanshard (blanshlu@netscape.net)
  * @author Drew Davidson (drew@ognl.org)
  */
-class ASTStaticMethod extends SimpleNode
-{
-    private String className;
-    private String methodName;
+class ASTStaticMethod extends SimpleNode {
+  private String className;
+  private String methodName;
 
-    public ASTStaticMethod(int id) {
-        super(id);
+  public ASTStaticMethod(int id) {
+    super(id);
+  }
+
+  public ASTStaticMethod(OgnlParser p, int id) {
+    super(p, id);
+  }
+
+  /**
+   * Called from parser action.
+   */
+  void init(String className, String methodName) {
+    this.className = className;
+    this.methodName = methodName;
+  }
+
+  protected Object getValueBody(OgnlContext context, Object source) throws OgnlException {
+    Object[] args = OgnlRuntime.getObjectArrayPool().create(jjtGetNumChildren());
+    Object root = context.getRoot();
+
+    try {
+      for (int i = 0, icount = args.length; i < icount; ++i)
+        args[i] = children[i].getValue(context, root);
+
+      return OgnlRuntime.callStaticMethod(context, className, methodName, args);
+    } finally {
+      OgnlRuntime.getObjectArrayPool().recycle(args);
     }
+  }
 
-    public ASTStaticMethod(OgnlParser p, int id) {
-        super(p, id);
-    }
+  public String toString() {
+    String result = "@" + className + "@" + methodName;
 
-      /** Called from parser action. */
-    void init( String className, String methodName ) {
-        this.className = className;
-        this.methodName = methodName;
-    }
-
-    protected Object getValueBody( OgnlContext context, Object source ) throws OgnlException
-    {
-        Object[]    args = OgnlRuntime.getObjectArrayPool().create(jjtGetNumChildren());
-        Object      root = context.getRoot();
-
-        try {
-            for ( int i=0, icount = args.length; i < icount; ++i )
-                args[i] = children[i].getValue(context, root);
-
-            return OgnlRuntime.callStaticMethod( context, className, methodName, args );
-        } finally {
-            OgnlRuntime.getObjectArrayPool().recycle(args);
+    result = result + "(";
+    if ((children != null) && (children.length > 0)) {
+      for (int i = 0; i < children.length; i++) {
+        if (i > 0) {
+          result = result + ", ";
         }
+        result = result + children[i];
+      }
     }
-
-    public String toString()
-    {
-        String      result = "@" + className + "@" + methodName;
-
-        result = result + "(";
-        if ((children != null) && (children.length > 0)) {
-            for (int i = 0; i < children.length; i++) {
-                if (i > 0) {
-                    result = result + ", ";
-                }
-                result = result + children[i];
-            }
-        }
-        result = result + ")";
-        return result;
-    }
+    result = result + ")";
+    return result;
+  }
 }

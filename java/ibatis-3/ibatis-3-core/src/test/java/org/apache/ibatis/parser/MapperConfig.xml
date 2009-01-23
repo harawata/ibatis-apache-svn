@@ -20,7 +20,7 @@
     <setting name="defaultExecutorType" value="SIMPLE"/>
     <setting name="defaultStatementTimeout" value="25000"/>
   </settings>
-  
+
   <typeAliases>
     <typeAlias alias="Author" type="domain.blog.Author"/>
     <typeAlias alias="Blog" type="domain.blog.Blog"/>
@@ -31,7 +31,7 @@
   </typeAliases>
 
   <typeHandlers>
-    <typeHandler javaType="String" jdbcType="VARCHAR" handler="org.apache.ibatis.parser.ExampleTypeHandler" />
+    <typeHandler javaType="String" jdbcType="VARCHAR" handler="org.apache.ibatis.parser.ExampleTypeHandler"/>
   </typeHandlers>
 
   <objectFactory type="org.apache.ibatis.parser.ExampleObjectFactory">

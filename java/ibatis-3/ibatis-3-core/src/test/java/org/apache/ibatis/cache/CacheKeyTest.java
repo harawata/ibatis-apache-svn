@@ -1,9 +1,9 @@
 package org.apache.ibatis.cache;
 
-import org.junit.*;
+import static org.junit.Assert.*;
+import org.junit.Test;
 
 import java.util.Date;
-import static org.junit.Assert.*;
 
 public class CacheKeyTest {
 

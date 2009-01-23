@@ -1,9 +1,10 @@
 package org.apache.ibatis.cache;
 
-import org.apache.ibatis.cache.decorators.*;
+import org.apache.ibatis.cache.decorators.SerializedCache;
+import org.apache.ibatis.cache.decorators.SynchronizedCache;
 import org.apache.ibatis.cache.impl.PerpetualCache;
-import org.junit.*;
 import static org.junit.Assert.*;
+import org.junit.Test;
 
 public class PerpetualCacheTest {
 

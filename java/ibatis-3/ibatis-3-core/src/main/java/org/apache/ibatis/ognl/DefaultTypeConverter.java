@@ -35,24 +35,21 @@ import java.util.Map;
 
 /**
  * Default type conversion.  Converts among numeric types and also strings.
+ *
  * @author Luke Blanshard (blanshlu@netscape.net)
  * @author Drew Davidson (drew@ognl.org)
  */
-public class DefaultTypeConverter implements TypeConverter
-{
-    public DefaultTypeConverter()
-    {
-        super();
-    }
+public class DefaultTypeConverter implements TypeConverter {
+  public DefaultTypeConverter() {
+    super();
+  }
 
-    public Object convertValue(Map context, Object value, Class toType)
-    {
-        return OgnlOps.convertValue(value, toType);
-    }
+  public Object convertValue(Map context, Object value, Class toType) {
+    return OgnlOps.convertValue(value, toType);
+  }
 
-    public Object convertValue(Map context, Object target, Member member, String propertyName, Object value, Class toType)
-    {
-        return convertValue(context, value, toType);
-    }
+  public Object convertValue(Map context, Object target, Member member, String propertyName, Object value, Class toType) {
+    return convertValue(context, value, toType);
+  }
 }
 

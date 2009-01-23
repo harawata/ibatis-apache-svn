@@ -1,25 +1,31 @@
 package org.apache.ibatis.mapping;
 
 import org.apache.ibatis.cache.Cache;
-import org.apache.ibatis.executor.*;
-import org.apache.ibatis.executor.parameter.*;
-import org.apache.ibatis.executor.result.ResultHandler;
-import org.apache.ibatis.executor.resultset.*;
-import org.apache.ibatis.executor.statement.*;
-import org.apache.ibatis.plugin.*;
-import org.apache.ibatis.reflection.*;
-import org.apache.ibatis.type.*;
-import org.apache.ibatis.transaction.jdbc.JdbcTransaction;
-import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
-import org.apache.ibatis.transaction.managed.ManagedTransaction;
-import org.apache.ibatis.transaction.managed.ManagedTransactionFactory;
-import org.apache.ibatis.transaction.Transaction;
 import org.apache.ibatis.datasource.jndi.JndiDataSourceFactory;
 import org.apache.ibatis.datasource.pooled.PooledDataSourceFactory;
 import org.apache.ibatis.datasource.unpooled.UnpooledDataSourceFactory;
+import org.apache.ibatis.executor.*;
+import org.apache.ibatis.executor.parameter.DefaultParameterHandler;
+import org.apache.ibatis.executor.parameter.ParameterHandler;
+import org.apache.ibatis.executor.result.ResultHandler;
+import org.apache.ibatis.executor.resultset.DefaultResultSetHandler;
+import org.apache.ibatis.executor.resultset.ResultSetHandler;
+import org.apache.ibatis.executor.statement.RoutingStatementHandler;
+import org.apache.ibatis.executor.statement.StatementHandler;
+import org.apache.ibatis.plugin.Interceptor;
+import org.apache.ibatis.plugin.InterceptorChain;
+import org.apache.ibatis.reflection.DefaultObjectFactory;
+import org.apache.ibatis.reflection.ObjectFactory;
+import org.apache.ibatis.transaction.Transaction;
+import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
+import org.apache.ibatis.transaction.managed.ManagedTransactionFactory;
+import org.apache.ibatis.type.TypeAliasRegistry;
+import org.apache.ibatis.type.TypeHandlerRegistry;
 
-import java.sql.Connection;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 
 public class Configuration {
 
@@ -50,7 +56,7 @@ public class Configuration {
     typeAliasRegistry.registerAlias("MANAGED", ManagedTransactionFactory.class.getName());
     typeAliasRegistry.registerAlias("JNDI", JndiDataSourceFactory.class.getName());
     typeAliasRegistry.registerAlias("POOLED", PooledDataSourceFactory.class.getName());
-    typeAliasRegistry.registerAlias("UNPOOLED", UnpooledDataSourceFactory.class.getName());    
+    typeAliasRegistry.registerAlias("UNPOOLED", UnpooledDataSourceFactory.class.getName());
   }
 
   public Environment getEnvironment() {
@@ -170,7 +176,7 @@ public class Configuration {
   public Executor newExecutor(Transaction transaction) {
     return newExecutor(transaction, defaultExecutorType);
   }
-  
+
   public Executor newExecutor(Transaction transaction, ExecutorType executorType) {
     executorType = executorType == null ? defaultExecutorType : executorType;
     executorType = executorType == null ? ExecutorType.SIMPLE : executorType;
@@ -257,7 +263,7 @@ public class Configuration {
     interceptorChain.addInterceptor(interceptor);
   }
 
-  private static class StrictMap<J,K> extends HashMap<J,K> {
+  private static class StrictMap<J, K> extends HashMap<J, K> {
 
     private String name;
 

@@ -1,18 +1,21 @@
 package org.apache.ibatis.migration;
 
 import org.apache.ibatis.BaseDataTest;
-import org.apache.ibatis.jdbc.SqlRunner;
 import org.apache.ibatis.io.Resources;
-import org.junit.*;
-
-import java.io.*;
-import java.net.URL;
-import java.net.URISyntaxException;
-import java.sql.Connection;
-
+import org.apache.ibatis.jdbc.SqlRunner;
+import org.junit.AfterClass;
 import static org.junit.Assert.*;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import javax.sql.DataSource;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.sql.Connection;
 
 public class MigratorTest extends BaseDataTest {
 
@@ -51,36 +54,36 @@ public class MigratorTest extends BaseDataTest {
   public void shouldRunThroughFullMigrationUseCaseInOneTestToEnsureOrder() throws Exception {
     File f = getExampleDir();
 
-    Migrator.main(args("--path="+f.getAbsolutePath(),"bootstrap", "--env=development"));
+    Migrator.main(args("--path=" + f.getAbsolutePath(), "bootstrap", "--env=development"));
     assertTrue(buffer.toString().contains("--// Bootstrap.sql"));
     buffer.clear();
 
-    Migrator.main(args("--path="+f.getAbsolutePath(),"status"));
+    Migrator.main(args("--path=" + f.getAbsolutePath(), "status"));
     assertTrue(buffer.toString().contains("...pending..."));
     buffer.clear();
 
-    Migrator.main(args("--path="+f.getAbsolutePath(),"up"));
+    Migrator.main(args("--path=" + f.getAbsolutePath(), "up"));
     buffer.clear();
 
-    Migrator.main(args("--path="+f.getAbsolutePath(),"status"));
+    Migrator.main(args("--path=" + f.getAbsolutePath(), "status"));
     assertFalse(buffer.toString().contains("...pending..."));
     buffer.clear();
 
-    Migrator.main(args("--path="+f.getAbsolutePath(),"down"));
+    Migrator.main(args("--path=" + f.getAbsolutePath(), "down"));
     buffer.clear();
 
-    Migrator.main(args("--path="+f.getAbsolutePath(),"status"));
+    Migrator.main(args("--path=" + f.getAbsolutePath(), "status"));
     assertTrue(buffer.toString().contains("...pending..."));
     buffer.clear();
 
-    Migrator.main(args("--path="+f.getAbsolutePath(),"version", "20080827200215"));
+    Migrator.main(args("--path=" + f.getAbsolutePath(), "version", "20080827200215"));
     buffer.clear();
 
-    Migrator.main(args("--path="+f.getAbsolutePath(),"status"));
+    Migrator.main(args("--path=" + f.getAbsolutePath(), "status"));
     assertFalse(buffer.toString().contains("...pending..."));
     buffer.clear();
 
-    Migrator.main(args("--path="+f.getAbsolutePath(),"--help"));
+    Migrator.main(args("--path=" + f.getAbsolutePath(), "--help"));
     assertTrue(buffer.toString().contains("--help"));
     buffer.clear();
   }
@@ -89,13 +92,13 @@ public class MigratorTest extends BaseDataTest {
   @Test
   public void shouldInitTempDirectory() throws Exception {
     File basePath = getTempDir();
-    Migrator.main(args("--path="+basePath.getAbsolutePath(),"init"));
+    Migrator.main(args("--path=" + basePath.getAbsolutePath(), "init"));
     assertNotNull(basePath.list());
-    assertEquals(4,basePath.list().length);
+    assertEquals(4, basePath.list().length);
     File scriptPath = new File(basePath.getCanonicalPath() + File.separator + "scripts");
-    assertEquals(3,scriptPath.list().length);
-    Migrator.main(args("--path="+basePath.getAbsolutePath(),"new","test new migration"));    
-    assertEquals(4,scriptPath.list().length);
+    assertEquals(3, scriptPath.list().length);
+    Migrator.main(args("--path=" + basePath.getAbsolutePath(), "new", "test new migration"));
+    assertEquals(4, scriptPath.list().length);
   }
 
   private String[] args(String... args) {
@@ -111,7 +114,7 @@ public class MigratorTest extends BaseDataTest {
   }
 
   private File getTempDir() throws IOException {
-    File f = File.createTempFile("migration","test");
+    File f = File.createTempFile("migration", "test");
     assertTrue(f.delete());
     assertTrue(f.mkdir());
     assertTrue(f.exists());
@@ -122,14 +125,16 @@ public class MigratorTest extends BaseDataTest {
 
   private static class StringOutputStream extends OutputStream {
     private StringBuilder builder = new StringBuilder();
+
     public void write(int b) throws IOException {
-      builder.append((char)b);
+      builder.append((char) b);
 //      out.write(b);
     }
 
     public String toString() {
       return builder.toString();
     }
+
     public void clear() {
       builder.setLength(0);
     }

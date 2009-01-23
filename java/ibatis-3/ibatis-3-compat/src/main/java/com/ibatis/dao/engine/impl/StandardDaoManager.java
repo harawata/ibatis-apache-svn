@@ -1,6 +1,9 @@
 package com.ibatis.dao.engine.impl;
 
-import com.ibatis.dao.client.*;
+import com.ibatis.dao.client.Dao;
+import com.ibatis.dao.client.DaoException;
+import com.ibatis.dao.client.DaoManager;
+import com.ibatis.dao.client.DaoTransaction;
 
 import java.util.*;
 

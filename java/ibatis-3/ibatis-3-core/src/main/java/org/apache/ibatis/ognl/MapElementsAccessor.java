@@ -30,17 +30,17 @@
 //--------------------------------------------------------------------------
 package org.apache.ibatis.ognl;
 
-import java.util.*;
+import java.util.Enumeration;
+import java.util.Map;
 
 /**
  * Implementation of ElementsAccessor that returns an iterator over the map's values.
+ *
  * @author Luke Blanshard (blanshlu@netscape.net)
  * @author Drew Davidson (drew@ognl.org)
  */
-public class MapElementsAccessor implements ElementsAccessor
-{
-    public Enumeration getElements( Object target )
-    {
-        return new IteratorEnumeration( ((Map)target).values().iterator() );
-    }
+public class MapElementsAccessor implements ElementsAccessor {
+  public Enumeration getElements(Object target) {
+    return new IteratorEnumeration(((Map) target).values().iterator());
+  }
 }

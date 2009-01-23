@@ -33,66 +33,59 @@ package org.apache.ibatis.ognl;
 import junit.framework.TestSuite;
 import org.apache.ibatis.ognl.objects.Component;
 
-public class NestedMethodTest extends OgnlTestCase
-{
-    private static Component        COMPONENT = new Component();
+public class NestedMethodTest extends OgnlTestCase {
+  private static Component COMPONENT = new Component();
 
-    private static Object[][]       TESTS = {
-                                        // Expression in a method call argument
-                                        { COMPONENT, "toDisplay.pictureUrl", COMPONENT.getToDisplay().getPictureUrl() },
-                                        { COMPONENT, "page.createRelativeAsset(toDisplay.pictureUrl)", COMPONENT.getPage().createRelativeAsset(COMPONENT.getToDisplay().getPictureUrl()) },
-                                    };
+  private static Object[][] TESTS = {
+      // Expression in a method call argument
+      {COMPONENT, "toDisplay.pictureUrl", COMPONENT.getToDisplay().getPictureUrl()},
+      {COMPONENT, "page.createRelativeAsset(toDisplay.pictureUrl)", COMPONENT.getPage().createRelativeAsset(COMPONENT.getToDisplay().getPictureUrl())},
+  };
 
-	/*===================================================================
-		Public static methods
-	  ===================================================================*/
-    public static TestSuite suite()
-    {
-        TestSuite       result = new TestSuite();
+  /*===================================================================
+     Public static methods
+     ===================================================================*/
+  public static TestSuite suite() {
+    TestSuite result = new TestSuite();
 
-        for (int i = 0; i < TESTS.length; i++) {
-            if (TESTS[i].length == 3) {
-                result.addTest(new NestedMethodTest((String)TESTS[i][1], TESTS[i][0], (String)TESTS[i][1], TESTS[i][2]));
-            } else {
-                if (TESTS[i].length == 4) {
-                    result.addTest(new NestedMethodTest((String)TESTS[i][1], TESTS[i][0], (String)TESTS[i][1], TESTS[i][2], TESTS[i][3]));
-                } else {
-                    if (TESTS[i].length == 5) {
-                        result.addTest(new NestedMethodTest((String)TESTS[i][1], TESTS[i][0], (String)TESTS[i][1], TESTS[i][2], TESTS[i][3], TESTS[i][4]));
-                    } else {
-                        throw new RuntimeException("don't understand TEST format");
-                    }
-                }
-            }
+    for (int i = 0; i < TESTS.length; i++) {
+      if (TESTS[i].length == 3) {
+        result.addTest(new NestedMethodTest((String) TESTS[i][1], TESTS[i][0], (String) TESTS[i][1], TESTS[i][2]));
+      } else {
+        if (TESTS[i].length == 4) {
+          result.addTest(new NestedMethodTest((String) TESTS[i][1], TESTS[i][0], (String) TESTS[i][1], TESTS[i][2], TESTS[i][3]));
+        } else {
+          if (TESTS[i].length == 5) {
+            result.addTest(new NestedMethodTest((String) TESTS[i][1], TESTS[i][0], (String) TESTS[i][1], TESTS[i][2], TESTS[i][3], TESTS[i][4]));
+          } else {
+            throw new RuntimeException("don't understand TEST format");
+          }
         }
-        return result;
+      }
     }
+    return result;
+  }
 
-	/*===================================================================
-		Constructors
-	  ===================================================================*/
-	public NestedMethodTest()
-	{
-	    super();
-	}
+  /*===================================================================
+     Constructors
+     ===================================================================*/
+  public NestedMethodTest() {
+    super();
+  }
 
-	public NestedMethodTest(String name)
-	{
-	    super(name);
-	}
+  public NestedMethodTest(String name) {
+    super(name);
+  }
 
-    public NestedMethodTest(String name, Object root, String expressionString, Object expectedResult, Object setValue, Object expectedAfterSetResult)
-    {
-        super(name, root, expressionString, expectedResult, setValue, expectedAfterSetResult);
-    }
+  public NestedMethodTest(String name, Object root, String expressionString, Object expectedResult, Object setValue, Object expectedAfterSetResult) {
+    super(name, root, expressionString, expectedResult, setValue, expectedAfterSetResult);
+  }
 
-    public NestedMethodTest(String name, Object root, String expressionString, Object expectedResult, Object setValue)
-    {
-        super(name, root, expressionString, expectedResult, setValue);
-    }
+  public NestedMethodTest(String name, Object root, String expressionString, Object expectedResult, Object setValue) {
+    super(name, root, expressionString, expectedResult, setValue);
+  }
 
-    public NestedMethodTest(String name, Object root, String expressionString, Object expectedResult)
-    {
-        super(name, root, expressionString, expectedResult);
-    }
+  public NestedMethodTest(String name, Object root, String expressionString, Object expectedResult) {
+    super(name, root, expressionString, expectedResult);
+  }
 }

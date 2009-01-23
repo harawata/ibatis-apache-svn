@@ -3,15 +3,22 @@ package com.ibatis.sqlmap.engine.builder;
 import com.ibatis.sqlmap.client.SqlMapException;
 import com.ibatis.sqlmap.client.extensions.TypeHandlerCallback;
 import com.ibatis.sqlmap.engine.datasource.DataSourceFactory;
-import com.ibatis.sqlmap.engine.transaction.*;
+import com.ibatis.sqlmap.engine.transaction.TransactionConfig;
+import com.ibatis.sqlmap.engine.transaction.TransactionManager;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.reflection.*;
-import org.apache.ibatis.type.*;
-import org.apache.ibatis.xml.*;
 import org.apache.ibatis.mapping.ExecutorType;
+import org.apache.ibatis.reflection.MetaClass;
+import org.apache.ibatis.reflection.ObjectFactory;
+import org.apache.ibatis.type.JdbcType;
+import org.apache.ibatis.type.TypeHandler;
+import org.apache.ibatis.xml.Nodelet;
+import org.apache.ibatis.xml.NodeletContext;
+import org.apache.ibatis.xml.NodeletParser;
 
 import java.io.Reader;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 
 public class XmlSqlMapConfigParser {
 
@@ -194,7 +201,7 @@ public class XmlSqlMapConfigParser {
     factory.setProperties(props);
     config.setObjectFactory(factory);
   }
-  
+
   @Nodelet("/sqlMapConfig/sqlMap")
   public void sqlMapConfigsqlMap(NodeletContext context) throws Exception {
     String resource = context.getStringAttribute("resource");

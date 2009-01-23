@@ -3,7 +3,9 @@ package com.ibatis.sqlmap;
 import testdomain.Account;
 
 import java.sql.SQLException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class DynamicTest extends BaseSqlMapTest {
 

@@ -2,7 +2,8 @@ package com.ibatis.jpetstore.domain;
 
 import junit.framework.TestCase;
 
-import java.math.*;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.*;
 
 public class BeanTest extends TestCase {

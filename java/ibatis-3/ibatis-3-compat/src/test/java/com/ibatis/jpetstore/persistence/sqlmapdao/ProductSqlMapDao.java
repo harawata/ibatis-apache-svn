@@ -5,7 +5,9 @@ import com.ibatis.dao.client.DaoManager;
 import com.ibatis.jpetstore.domain.Product;
 import com.ibatis.jpetstore.persistence.iface.ProductDao;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
 
 public class ProductSqlMapDao extends BaseSqlMapDao implements ProductDao {
 

@@ -33,51 +33,44 @@ package org.apache.ibatis.ognl;
 import junit.framework.TestSuite;
 import org.apache.ibatis.ognl.objects.Simple;
 
-public class MethodTest extends OgnlTestCase
-{
-    private static Object           ROOT = new Simple();
-    private static Object[][]       TESTS = {
-                                        { "hashCode().doubleValue()", new Double(ROOT.hashCode()) }
-                                    };
+public class MethodTest extends OgnlTestCase {
+  private static Object ROOT = new Simple();
+  private static Object[][] TESTS = {
+      {"hashCode().doubleValue()", new Double(ROOT.hashCode())}
+  };
 
-	/*===================================================================
-		Public static methods
-	  ===================================================================*/
-    public static TestSuite suite()
-    {
-        TestSuite       result = new TestSuite();
+  /*===================================================================
+     Public static methods
+     ===================================================================*/
+  public static TestSuite suite() {
+    TestSuite result = new TestSuite();
 
-        for (int i = 0; i < TESTS.length; i++) {
-            result.addTest(new MethodTest((String)TESTS[i][0] + " (" + TESTS[i][1] + ")", ROOT, (String)TESTS[i][0], TESTS[i][1]));
-        }
-        return result;
+    for (int i = 0; i < TESTS.length; i++) {
+      result.addTest(new MethodTest((String) TESTS[i][0] + " (" + TESTS[i][1] + ")", ROOT, (String) TESTS[i][0], TESTS[i][1]));
     }
+    return result;
+  }
 
-	/*===================================================================
-		Constructors
-	  ===================================================================*/
-	public MethodTest()
-	{
-	    super();
-	}
+  /*===================================================================
+     Constructors
+     ===================================================================*/
+  public MethodTest() {
+    super();
+  }
 
-	public MethodTest(String name)
-	{
-	    super(name);
-	}
+  public MethodTest(String name) {
+    super(name);
+  }
 
-    public MethodTest(String name, Object root, String expressionString, Object expectedResult, Object setValue, Object expectedAfterSetResult)
-    {
-        super(name, root, expressionString, expectedResult, setValue, expectedAfterSetResult);
-    }
+  public MethodTest(String name, Object root, String expressionString, Object expectedResult, Object setValue, Object expectedAfterSetResult) {
+    super(name, root, expressionString, expectedResult, setValue, expectedAfterSetResult);
+  }
 
-    public MethodTest(String name, Object root, String expressionString, Object expectedResult, Object setValue)
-    {
-        super(name, root, expressionString, expectedResult, setValue);
-    }
+  public MethodTest(String name, Object root, String expressionString, Object expectedResult, Object setValue) {
+    super(name, root, expressionString, expectedResult, setValue);
+  }
 
-    public MethodTest(String name, Object root, String expressionString, Object expectedResult)
-    {
-        super(name, root, expressionString, expectedResult);
-    }
+  public MethodTest(String name, Object root, String expressionString, Object expectedResult) {
+    super(name, root, expressionString, expectedResult);
+  }
 }

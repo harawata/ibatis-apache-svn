@@ -35,13 +35,12 @@ package org.apache.ibatis.ognl;
  * Exception thrown if an OGNL expression is evaluated in the wrong context; the usual
  * case is when an expression that does not end in a property reference is passed to
  * <code>setValue</code>.
+ *
  * @author Luke Blanshard (blanshlu@netscape.net)
  * @author Drew Davidson (drew@ognl.org)
  */
-public class InappropriateExpressionException extends OgnlException
-{
-    public InappropriateExpressionException( Node tree )
-    {
-        super( "Inappropriate OGNL expression: " + tree );
-    }
+public class InappropriateExpressionException extends OgnlException {
+  public InappropriateExpressionException(Node tree) {
+    super("Inappropriate OGNL expression: " + tree);
+  }
 }

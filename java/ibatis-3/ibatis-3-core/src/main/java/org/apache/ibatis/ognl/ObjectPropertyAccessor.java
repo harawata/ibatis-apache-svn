@@ -36,100 +36,92 @@ import java.util.Map;
 /**
  * Implementation of PropertyAccessor that uses reflection on the target object's class to
  * find a field or a pair of set/get methods with the given property name.
+ *
  * @author Luke Blanshard (blanshlu@netscape.net)
  * @author Drew Davidson (drew@ognl.org)
  */
-public class ObjectPropertyAccessor implements PropertyAccessor
-{
-    /**
-        Returns OgnlRuntime.NotFound if the property does not exist.
-     */
-    public Object getPossibleProperty( Map context, Object target, String name) throws OgnlException
-    {
-        Object          result;
-        OgnlContext     ognlContext = (OgnlContext)context;
+public class ObjectPropertyAccessor implements PropertyAccessor {
+  /**
+   * Returns OgnlRuntime.NotFound if the property does not exist.
+   */
+  public Object getPossibleProperty(Map context, Object target, String name) throws OgnlException {
+    Object result;
+    OgnlContext ognlContext = (OgnlContext) context;
 
-        try {
-            if ((result = OgnlRuntime.getMethodValue(ognlContext, target, name, true)) == OgnlRuntime.NotFound) {
-                result = OgnlRuntime.getFieldValue(ognlContext, target, name, true);
-            }
-        } catch (IntrospectionException ex) {
-            throw new OgnlException(name, ex);
-        } catch (OgnlException ex) {
-            throw ex;
-        } catch (Exception ex) {
-            throw new OgnlException(name, ex);
-        }
-        return result;
+    try {
+      if ((result = OgnlRuntime.getMethodValue(ognlContext, target, name, true)) == OgnlRuntime.NotFound) {
+        result = OgnlRuntime.getFieldValue(ognlContext, target, name, true);
+      }
+    } catch (IntrospectionException ex) {
+      throw new OgnlException(name, ex);
+    } catch (OgnlException ex) {
+      throw ex;
+    } catch (Exception ex) {
+      throw new OgnlException(name, ex);
     }
+    return result;
+  }
 
-    /**
-        Returns OgnlRuntime.NotFound if the property does not exist.
-     */
-    public Object setPossibleProperty( Map context, Object target, String name, Object value) throws OgnlException
-    {
-        Object          result = null;
-        OgnlContext     ognlContext = (OgnlContext)context;
+  /**
+   * Returns OgnlRuntime.NotFound if the property does not exist.
+   */
+  public Object setPossibleProperty(Map context, Object target, String name, Object value) throws OgnlException {
+    Object result = null;
+    OgnlContext ognlContext = (OgnlContext) context;
 
-        try {
-            if (!OgnlRuntime.setMethodValue(ognlContext, target, name, value, true)) {
-                result = OgnlRuntime.setFieldValue(ognlContext, target, name, value) ? null : OgnlRuntime.NotFound;
-            }
-        } catch (IntrospectionException ex) {
-            throw new OgnlException(name, ex);
-        } catch (OgnlException ex) {
-            throw ex;
-        } catch (Exception ex) {
-            throw new OgnlException(name, ex);
-        }
-        return result;
+    try {
+      if (!OgnlRuntime.setMethodValue(ognlContext, target, name, value, true)) {
+        result = OgnlRuntime.setFieldValue(ognlContext, target, name, value) ? null : OgnlRuntime.NotFound;
+      }
+    } catch (IntrospectionException ex) {
+      throw new OgnlException(name, ex);
+    } catch (OgnlException ex) {
+      throw ex;
+    } catch (Exception ex) {
+      throw new OgnlException(name, ex);
     }
+    return result;
+  }
 
-    public boolean hasGetProperty( OgnlContext context, Object target, Object oname ) throws OgnlException
-    {
-        try {
-            return OgnlRuntime.hasGetProperty( context, target, oname );
-        } catch (IntrospectionException ex) {
-            throw new OgnlException("checking if " + target + " has gettable property " + oname, ex);
-        }
+  public boolean hasGetProperty(OgnlContext context, Object target, Object oname) throws OgnlException {
+    try {
+      return OgnlRuntime.hasGetProperty(context, target, oname);
+    } catch (IntrospectionException ex) {
+      throw new OgnlException("checking if " + target + " has gettable property " + oname, ex);
     }
+  }
 
-    public boolean hasGetProperty( Map context, Object target, Object oname ) throws OgnlException
-    {
-        return hasGetProperty((OgnlContext)context, target, oname);
+  public boolean hasGetProperty(Map context, Object target, Object oname) throws OgnlException {
+    return hasGetProperty((OgnlContext) context, target, oname);
+  }
+
+  public boolean hasSetProperty(OgnlContext context, Object target, Object oname) throws OgnlException {
+    try {
+      return OgnlRuntime.hasSetProperty(context, target, oname);
+    } catch (IntrospectionException ex) {
+      throw new OgnlException("checking if " + target + " has settable property " + oname, ex);
     }
+  }
 
-    public boolean hasSetProperty( OgnlContext context, Object target, Object oname ) throws OgnlException
-    {
-        try {
-            return OgnlRuntime.hasSetProperty( context, target, oname );
-        } catch (IntrospectionException ex) {
-            throw new OgnlException("checking if " + target + " has settable property " + oname, ex);
-        }
+  public boolean hasSetProperty(Map context, Object target, Object oname) throws OgnlException {
+    return hasSetProperty((OgnlContext) context, target, oname);
+  }
+
+  public Object getProperty(Map context, Object target, Object oname) throws OgnlException {
+    Object result = null;
+    String name = oname.toString();
+
+    if ((result = getPossibleProperty(context, target, name)) == OgnlRuntime.NotFound) {
+      throw new NoSuchPropertyException(target, name);
     }
+    return result;
+  }
 
-    public boolean hasSetProperty( Map context, Object target, Object oname ) throws OgnlException
-    {
-        return hasSetProperty((OgnlContext)context, target, oname);
+  public void setProperty(Map context, Object target, Object oname, Object value) throws OgnlException {
+    String name = oname.toString();
+
+    if (setPossibleProperty(context, target, name, value) == OgnlRuntime.NotFound) {
+      throw new NoSuchPropertyException(target, name);
     }
-
-    public Object getProperty( Map context, Object target, Object oname ) throws OgnlException
-    {
-        Object              result = null;
-        String              name = oname.toString();
-
-        if ((result = getPossibleProperty(context, target, name)) == OgnlRuntime.NotFound) {
-            throw new NoSuchPropertyException(target, name);
-        }
-        return result;
-    }
-
-    public void setProperty( Map context, Object target, Object oname, Object value ) throws OgnlException
-    {
-        String          name = oname.toString();
-
-        if (setPossibleProperty(context, target, name, value) == OgnlRuntime.NotFound) {
-            throw new NoSuchPropertyException(target, name);
-        }
-    }
+  }
 }

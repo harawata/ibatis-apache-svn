@@ -6,7 +6,8 @@ import com.ibatis.sqlmap.engine.transaction.user.UserProvidedTransaction;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.Configuration;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 public class TransactionManager {
 

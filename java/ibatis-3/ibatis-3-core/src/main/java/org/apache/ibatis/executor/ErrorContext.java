@@ -107,7 +107,7 @@ public class ErrorContext {
     if (sql != null) {
       description.append(NEWLINE);
       description.append("### SQL: ");
-      description.append(sql.replace('\n',' ').replace('\r',' ').replace('\t',' ').trim());
+      description.append(sql.replace('\n', ' ').replace('\r', ' ').replace('\t', ' ').trim());
     }
 
     // cause

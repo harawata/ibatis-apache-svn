@@ -1,7 +1,7 @@
 package org.apache.ibatis.logging;
 
-import org.junit.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import org.junit.Test;
 
 
 public class LogFactoryTest {

@@ -2,11 +2,12 @@ package org.apache.ibatis.xml;
 
 import domain.misc.Employee;
 import org.apache.ibatis.io.Resources;
-import org.junit.*;
+import static org.junit.Assert.assertEquals;
+import org.junit.Test;
 
 import java.io.Reader;
-import java.util.*;
-import static org.junit.Assert.*;
+import java.util.Date;
+import java.util.Properties;
 
 public class NodeletParserTest {
 

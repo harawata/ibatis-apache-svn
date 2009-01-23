@@ -30,106 +30,96 @@
 //--------------------------------------------------------------------------
 package org.apache.ibatis.ognl;
 
-import java.lang.reflect.*;
-import java.util.*;
 import junit.framework.TestSuite;
-import org.apache.ibatis.ognl.DefaultTypeConverter;
-import org.apache.ibatis.ognl.TypeConverter;
 import org.apache.ibatis.ognl.objects.Root;
 
-public class ArrayElementsTest extends OgnlTestCase
-{
-    private static String[]         STRING_ARRAY = new String[] { "hello", "world" };
-    private static int[]            INT_ARRAY = new int[] { 10, 20 };
-    private static Root             ROOT = new Root();
+import java.lang.reflect.Array;
+import java.lang.reflect.Member;
+import java.util.Map;
 
-    private static Object[][]       TESTS = {
-                                          // Array elements test
-                                        { STRING_ARRAY,     "length",       new Integer(2) },
-                                        { STRING_ARRAY,     "#root[1]",     "world" },
-                                        { INT_ARRAY,        "#root[1]",     new Integer(20) },
-                                        { INT_ARRAY,        "#root[1]",     new Integer(20), "50", new Integer(50) },
-                                        { INT_ARRAY,        "#root[1]",     new Integer(50), new String[] { "50", "100" }, new Integer(50) },
-                                        { ROOT,             "intValue",     new Integer(0), new String[] { "50", "100" }, new Integer(50) },
-                                        { ROOT,             "array",        ROOT.getArray(), new String[] { "50", "100" }, new int[] { 50, 100 } },
-                                    };
+public class ArrayElementsTest extends OgnlTestCase {
+  private static String[] STRING_ARRAY = new String[]{"hello", "world"};
+  private static int[] INT_ARRAY = new int[]{10, 20};
+  private static Root ROOT = new Root();
 
-	/*===================================================================
-		Private static methods
-	  ===================================================================*/
-	/*===================================================================
-		Public static methods
-	  ===================================================================*/
-    public static TestSuite suite()
-    {
-        TestSuite       result = new TestSuite();
+  private static Object[][] TESTS = {
+      // Array elements test
+      {STRING_ARRAY, "length", new Integer(2)},
+      {STRING_ARRAY, "#root[1]", "world"},
+      {INT_ARRAY, "#root[1]", new Integer(20)},
+      {INT_ARRAY, "#root[1]", new Integer(20), "50", new Integer(50)},
+      {INT_ARRAY, "#root[1]", new Integer(50), new String[]{"50", "100"}, new Integer(50)},
+      {ROOT, "intValue", new Integer(0), new String[]{"50", "100"}, new Integer(50)},
+      {ROOT, "array", ROOT.getArray(), new String[]{"50", "100"}, new int[]{50, 100}},
+  };
 
-        for (int i = 0; i < TESTS.length; i++) {
-            if (TESTS[i].length == 3) {
-                result.addTest(new ArrayElementsTest((String)TESTS[i][1], TESTS[i][0], (String)TESTS[i][1], TESTS[i][2]));
-            } else {
-                if (TESTS[i].length == 4) {
-                    result.addTest(new ArrayElementsTest((String)TESTS[i][1], TESTS[i][0], (String)TESTS[i][1], TESTS[i][2], TESTS[i][3]));
-                } else {
-                    if (TESTS[i].length == 5) {
-                        result.addTest(new ArrayElementsTest((String)TESTS[i][1], TESTS[i][0], (String)TESTS[i][1], TESTS[i][2], TESTS[i][3], TESTS[i][4]));
-                    } else {
-                        throw new RuntimeException("don't understand TEST format");
-                    }
-                }
-            }
+  /*===================================================================
+     Private static methods
+     ===================================================================*/
+  /*===================================================================
+     Public static methods
+     ===================================================================*/
+  public static TestSuite suite() {
+    TestSuite result = new TestSuite();
+
+    for (int i = 0; i < TESTS.length; i++) {
+      if (TESTS[i].length == 3) {
+        result.addTest(new ArrayElementsTest((String) TESTS[i][1], TESTS[i][0], (String) TESTS[i][1], TESTS[i][2]));
+      } else {
+        if (TESTS[i].length == 4) {
+          result.addTest(new ArrayElementsTest((String) TESTS[i][1], TESTS[i][0], (String) TESTS[i][1], TESTS[i][2], TESTS[i][3]));
+        } else {
+          if (TESTS[i].length == 5) {
+            result.addTest(new ArrayElementsTest((String) TESTS[i][1], TESTS[i][0], (String) TESTS[i][1], TESTS[i][2], TESTS[i][3], TESTS[i][4]));
+          } else {
+            throw new RuntimeException("don't understand TEST format");
+          }
         }
-        return result;
+      }
     }
+    return result;
+  }
 
-	/*===================================================================
-		Constructors
-	  ===================================================================*/
-	public ArrayElementsTest()
-	{
-	    super();
-	}
+  /*===================================================================
+     Constructors
+     ===================================================================*/
+  public ArrayElementsTest() {
+    super();
+  }
 
-	public ArrayElementsTest(String name)
-	{
-	    super(name);
-	}
+  public ArrayElementsTest(String name) {
+    super(name);
+  }
 
-    public ArrayElementsTest(String name, Object root, String expressionString, Object expectedResult, Object setValue, Object expectedAfterSetResult)
-    {
-        super(name, root, expressionString, expectedResult, setValue, expectedAfterSetResult);
-    }
+  public ArrayElementsTest(String name, Object root, String expressionString, Object expectedResult, Object setValue, Object expectedAfterSetResult) {
+    super(name, root, expressionString, expectedResult, setValue, expectedAfterSetResult);
+  }
 
-    public ArrayElementsTest(String name, Object root, String expressionString, Object expectedResult, Object setValue)
-    {
-        super(name, root, expressionString, expectedResult, setValue);
-    }
+  public ArrayElementsTest(String name, Object root, String expressionString, Object expectedResult, Object setValue) {
+    super(name, root, expressionString, expectedResult, setValue);
+  }
 
-    public ArrayElementsTest(String name, Object root, String expressionString, Object expectedResult)
-    {
-        super(name, root, expressionString, expectedResult);
-    }
+  public ArrayElementsTest(String name, Object root, String expressionString, Object expectedResult) {
+    super(name, root, expressionString, expectedResult);
+  }
 
-	/*===================================================================
-		Overridden methods
-	  ===================================================================*/
-    protected void setUp()
-    {
-        TypeConverter       arrayConverter;
+  /*===================================================================
+     Overridden methods
+     ===================================================================*/
+  protected void setUp() {
+    TypeConverter arrayConverter;
 
-        super.setUp();
-        arrayConverter = new DefaultTypeConverter()
-            {
-                public Object convertValue(Map context, Object target, Member member, String propertyName, Object value, Class toType)
-                {
-                    if (value.getClass().isArray()) {
-                        if (!toType.isArray()) {
-                            value = Array.get(value, 0);
-                        }
-                    }
-                    return super.convertValue(context, target, member, propertyName, value, toType);
-                }
-            };
-        context.setTypeConverter(arrayConverter);
-    }
+    super.setUp();
+    arrayConverter = new DefaultTypeConverter() {
+      public Object convertValue(Map context, Object target, Member member, String propertyName, Object value, Class toType) {
+        if (value.getClass().isArray()) {
+          if (!toType.isArray()) {
+            value = Array.get(value, 0);
+          }
+        }
+        return super.convertValue(context, target, member, propertyName, value, toType);
+      }
+    };
+    context.setTypeConverter(arrayConverter);
+  }
 }

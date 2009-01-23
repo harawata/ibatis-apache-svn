@@ -33,65 +33,58 @@ package org.apache.ibatis.ognl;
 import junit.framework.TestSuite;
 import org.apache.ibatis.ognl.objects.Root;
 
-public class StaticsAndConstructorsTest extends OgnlTestCase
-{
-    private static Root             ROOT = new Root();
+public class StaticsAndConstructorsTest extends OgnlTestCase {
+  private static Root ROOT = new Root();
 
-    private static Object[][]       TESTS = {
-                                        { "@java.lang.Class@forName(\"java.lang.Object\")", Object.class },
-                                        { "@java.lang.Integer@MAX_VALUE", new Integer(Integer.MAX_VALUE) },
-                                        { "@@max(3,4)", new Integer(4) },
-                                        { "new java.lang.StringBuffer().append(55).toString()", "55" },
-                                        { "class", ROOT.getClass() },
-                                        { "@org.apache.ibatis.ognl.objects.Root@class", ROOT.getClass() },
-                                        { "class.getName()", ROOT.getClass().getName() },
-                                        { "@org.apache.ibatis.ognl.objects.Root@class.getName()", ROOT.getClass().getName() },
-                                        { "@org.apache.ibatis.ognl.objects.Root@class.name", ROOT.getClass().getName() },
-                                        { "class.getSuperclass()", ROOT.getClass().getSuperclass() },
-                                        { "class.superclass", ROOT.getClass().getSuperclass() },
-                                        { "class.name", ROOT.getClass().getName() },
-                                        { "getStaticInt()", new Integer(Root.getStaticInt()) },
-                                        { "@org.apache.ibatis.ognl.objects.Root@getStaticInt()", new Integer(Root.getStaticInt()) },
-                                    };
+  private static Object[][] TESTS = {
+      {"@java.lang.Class@forName(\"java.lang.Object\")", Object.class},
+      {"@java.lang.Integer@MAX_VALUE", new Integer(Integer.MAX_VALUE)},
+      {"@@max(3,4)", new Integer(4)},
+      {"new java.lang.StringBuffer().append(55).toString()", "55"},
+      {"class", ROOT.getClass()},
+      {"@org.apache.ibatis.ognl.objects.Root@class", ROOT.getClass()},
+      {"class.getName()", ROOT.getClass().getName()},
+      {"@org.apache.ibatis.ognl.objects.Root@class.getName()", ROOT.getClass().getName()},
+      {"@org.apache.ibatis.ognl.objects.Root@class.name", ROOT.getClass().getName()},
+      {"class.getSuperclass()", ROOT.getClass().getSuperclass()},
+      {"class.superclass", ROOT.getClass().getSuperclass()},
+      {"class.name", ROOT.getClass().getName()},
+      {"getStaticInt()", new Integer(Root.getStaticInt())},
+      {"@org.apache.ibatis.ognl.objects.Root@getStaticInt()", new Integer(Root.getStaticInt())},
+  };
 
-	/*===================================================================
-		Public static methods
-	  ===================================================================*/
-    public static TestSuite suite()
-    {
-        TestSuite       result = new TestSuite();
+  /*===================================================================
+     Public static methods
+     ===================================================================*/
+  public static TestSuite suite() {
+    TestSuite result = new TestSuite();
 
-        for (int i = 0; i < TESTS.length; i++) {
-            result.addTest(new StaticsAndConstructorsTest((String)TESTS[i][0] + " (" + TESTS[i][1] + ")", ROOT, (String)TESTS[i][0], TESTS[i][1]));
-        }
-        return result;
+    for (int i = 0; i < TESTS.length; i++) {
+      result.addTest(new StaticsAndConstructorsTest((String) TESTS[i][0] + " (" + TESTS[i][1] + ")", ROOT, (String) TESTS[i][0], TESTS[i][1]));
     }
+    return result;
+  }
 
-	/*===================================================================
-		Constructors
-	  ===================================================================*/
-	public StaticsAndConstructorsTest()
-	{
-	    super();
-	}
+  /*===================================================================
+     Constructors
+     ===================================================================*/
+  public StaticsAndConstructorsTest() {
+    super();
+  }
 
-	public StaticsAndConstructorsTest(String name)
-	{
-	    super(name);
-	}
+  public StaticsAndConstructorsTest(String name) {
+    super(name);
+  }
 
-    public StaticsAndConstructorsTest(String name, Object root, String expressionString, Object expectedResult, Object setValue, Object expectedAfterSetResult)
-    {
-        super(name, root, expressionString, expectedResult, setValue, expectedAfterSetResult);
-    }
+  public StaticsAndConstructorsTest(String name, Object root, String expressionString, Object expectedResult, Object setValue, Object expectedAfterSetResult) {
+    super(name, root, expressionString, expectedResult, setValue, expectedAfterSetResult);
+  }
 
-    public StaticsAndConstructorsTest(String name, Object root, String expressionString, Object expectedResult, Object setValue)
-    {
-        super(name, root, expressionString, expectedResult, setValue);
-    }
+  public StaticsAndConstructorsTest(String name, Object root, String expressionString, Object expectedResult, Object setValue) {
+    super(name, root, expressionString, expectedResult, setValue);
+  }
 
-    public StaticsAndConstructorsTest(String name, Object root, String expressionString, Object expectedResult)
-    {
-        super(name, root, expressionString, expectedResult);
-    }
+  public StaticsAndConstructorsTest(String name, Object root, String expressionString, Object expectedResult) {
+    super(name, root, expressionString, expectedResult);
+  }
 }

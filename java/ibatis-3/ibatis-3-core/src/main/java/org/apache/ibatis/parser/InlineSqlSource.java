@@ -1,6 +1,7 @@
 package org.apache.ibatis.parser;
 
-import org.apache.ibatis.mapping.*;
+import org.apache.ibatis.mapping.ParameterMapping;
+import org.apache.ibatis.mapping.SqlSource;
 
 import java.util.List;
 

@@ -30,36 +30,35 @@
 //--------------------------------------------------------------------------
 package org.apache.ibatis.ognl;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
 
 /**
  * @author Luke Blanshard (blanshlu@netscape.net)
  * @author Drew Davidson (drew@ognl.org)
  */
-class ASTProject extends SimpleNode
-{
-    public ASTProject(int id) {
-        super(id);
-    }
+class ASTProject extends SimpleNode {
+  public ASTProject(int id) {
+    super(id);
+  }
 
-    public ASTProject(OgnlParser p, int id) {
-        super(p, id);
-    }
+  public ASTProject(OgnlParser p, int id) {
+    super(p, id);
+  }
 
-    protected Object getValueBody( OgnlContext context, Object source ) throws OgnlException
-    {
-        Node                expr = children[0];
-        List                answer = new ArrayList();
-        ElementsAccessor    elementsAccessor = OgnlRuntime.getElementsAccessor( OgnlRuntime.getTargetClass(source) );
+  protected Object getValueBody(OgnlContext context, Object source) throws OgnlException {
+    Node expr = children[0];
+    List answer = new ArrayList();
+    ElementsAccessor elementsAccessor = OgnlRuntime.getElementsAccessor(OgnlRuntime.getTargetClass(source));
 
-        for (Enumeration e = elementsAccessor.getElements(source); e.hasMoreElements();) {
-            answer.add( expr.getValue(context, e.nextElement()) );
-        }
-        return answer;
+    for (Enumeration e = elementsAccessor.getElements(source); e.hasMoreElements();) {
+      answer.add(expr.getValue(context, e.nextElement()));
     }
+    return answer;
+  }
 
-    public String toString()
-    {
-        return "{ " + children[0] + " }";
-    }
+  public String toString() {
+    return "{ " + children[0] + " }";
+  }
 }

@@ -1,10 +1,13 @@
 package com.ibatis.sqlmap.engine.transaction.jta;
 
 import com.ibatis.sqlmap.client.SqlMapException;
-import com.ibatis.sqlmap.engine.transaction.*;
+import com.ibatis.sqlmap.engine.transaction.BaseTransactionConfig;
+import com.ibatis.sqlmap.engine.transaction.Transaction;
+import com.ibatis.sqlmap.engine.transaction.TransactionException;
 import org.apache.ibatis.mapping.Configuration;
 
-import javax.naming.*;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.transaction.UserTransaction;
 import java.sql.SQLException;
 import java.util.Properties;

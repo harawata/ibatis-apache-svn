@@ -1,14 +1,17 @@
 package com.ibatis.dao.client.template;
 
 import com.ibatis.common.util.PaginatedList;
-import com.ibatis.dao.client.*;
+import com.ibatis.dao.client.DaoException;
+import com.ibatis.dao.client.DaoManager;
 import com.ibatis.dao.engine.transaction.sqlmap.SqlMapDaoTransaction;
-import com.ibatis.sqlmap.client.*;
+import com.ibatis.sqlmap.client.SqlMapExecutor;
+import com.ibatis.sqlmap.client.SqlMapTransactionManager;
 import com.ibatis.sqlmap.client.event.RowHandler;
 import com.ibatis.sqlmap.engine.execution.BatchException;
 
 import java.sql.SQLException;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 /**
  * A DaoTemplate for SQL Map implementations that provides a

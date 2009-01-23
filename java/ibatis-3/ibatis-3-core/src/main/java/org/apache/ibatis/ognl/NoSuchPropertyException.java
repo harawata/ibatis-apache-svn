@@ -34,33 +34,29 @@ package org.apache.ibatis.ognl;
 /**
  * Exception thrown if a property is attempted to be extracted from an object that does
  * not have such a property.
+ *
  * @author Luke Blanshard (blanshlu@netscape.net)
  * @author Drew Davidson (drew@ognl.org)
  */
-public class NoSuchPropertyException extends OgnlException
-{
-	private Object					target;
-	private Object					name;
+public class NoSuchPropertyException extends OgnlException {
+  private Object target;
+  private Object name;
 
-    public NoSuchPropertyException( Object target, Object name, Throwable reason )
-    {
-    	super( ((target instanceof Class) ? target.toString() : target.getClass().getName()) + "." + name, reason );
-    	this.target = target;
-    	this.name = name;
-    }
+  public NoSuchPropertyException(Object target, Object name, Throwable reason) {
+    super(((target instanceof Class) ? target.toString() : target.getClass().getName()) + "." + name, reason);
+    this.target = target;
+    this.name = name;
+  }
 
-    public NoSuchPropertyException( Object target, Object name )
-    {
-        this( target, name, null );
-    }
+  public NoSuchPropertyException(Object target, Object name) {
+    this(target, name, null);
+  }
 
-    public Object getTarget()
-    {
-    	return target;
-    }
+  public Object getTarget() {
+    return target;
+  }
 
-    public Object getName()
-    {
-    	return name;
-    }
+  public Object getName() {
+    return name;
+  }
 }

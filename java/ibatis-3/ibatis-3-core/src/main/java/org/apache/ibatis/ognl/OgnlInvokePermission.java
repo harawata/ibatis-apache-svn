@@ -30,7 +30,7 @@
 //--------------------------------------------------------------------------
 package org.apache.ibatis.ognl;
 
-import java.security.*;
+import java.security.BasicPermission;
 
 /**
  * BasicPermission subclass that defines a permission token for invoking
@@ -38,19 +38,17 @@ import java.security.*;
  * constructors) and does not implement actions.  It is similar in spirit
  * to the {@link java.lang.reflect.ReflectPermission} class in that it
  * guards access to methods.
+ *
  * @author Luke Blanshard (blanshlu@netscape.net)
  * @author Drew Davidson (drew@ognl.org)
  */
-public class OgnlInvokePermission extends BasicPermission
-{
-    public OgnlInvokePermission(String name)
-    {
-        super(name);
-    }
+public class OgnlInvokePermission extends BasicPermission {
+  public OgnlInvokePermission(String name) {
+    super(name);
+  }
 
-    public OgnlInvokePermission(String name, String actions)
-    {
-        super(name, actions);
-    }
+  public OgnlInvokePermission(String name, String actions) {
+    super(name, actions);
+  }
 }
 

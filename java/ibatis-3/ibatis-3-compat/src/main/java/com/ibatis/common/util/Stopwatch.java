@@ -1,8 +1,11 @@
 package com.ibatis.common.util;
 
-import org.apache.ibatis.logging.*;
+import org.apache.ibatis.logging.Log;
+import org.apache.ibatis.logging.LogFactory;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Stopwatch class used for testing.

@@ -1,7 +1,7 @@
 package org.apache.ibatis.jdbc;
 
-import org.apache.ibatis.type.*;
-import org.apache.ibatis.jdbc.Null;
+import org.apache.ibatis.type.TypeHandler;
+import org.apache.ibatis.type.TypeHandlerRegistry;
 
 import java.sql.*;
 import java.util.*;
@@ -217,5 +217,5 @@ public class SqlRunner {
       }
     }
   }
-  
+
 }

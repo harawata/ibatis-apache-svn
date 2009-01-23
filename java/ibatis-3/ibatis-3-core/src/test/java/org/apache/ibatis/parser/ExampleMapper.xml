@@ -14,14 +14,14 @@
 
   <parameterMap id="" type="">
     <parameter property="id" javaType="" jdbcType="" typeHandler=""
-           mode="IN" scale="" resultMap=""/>
+               mode="IN" scale="" resultMap=""/>
     <parameter property="dept" javaType="" jdbcType="" typeHandler=""
-           mode="IN" scale="" resultMap=""/>
+               mode="IN" scale="" resultMap=""/>
   </parameterMap>
 
   <resultMap id="" type="" extends="">
     <constructor>
-      <id column="" javaType="" jdbcType="" typeHandler="" />
+      <id column="" javaType="" jdbcType="" typeHandler=""/>
       <result column="" javaType="" jdbcType="" typeHandler=""/>
     </constructor>
     <result property="" column="" javaType="" jdbcType="" typeHandler=""/>

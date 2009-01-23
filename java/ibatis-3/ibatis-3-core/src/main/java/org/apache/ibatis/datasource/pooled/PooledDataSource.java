@@ -1,12 +1,13 @@
 package org.apache.ibatis.datasource.pooled;
 
-import org.apache.ibatis.logging.*;
 import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
+import org.apache.ibatis.logging.Log;
+import org.apache.ibatis.logging.LogFactory;
 
 import javax.sql.DataSource;
 import java.io.PrintWriter;
 import java.sql.*;
-import java.util.*;
+import java.util.Properties;
 
 /**
  * This is a simple, synchronous, thread-safe database connection pool.

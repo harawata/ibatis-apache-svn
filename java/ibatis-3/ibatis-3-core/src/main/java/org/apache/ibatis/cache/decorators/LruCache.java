@@ -2,7 +2,8 @@ package org.apache.ibatis.cache.decorators;
 
 import org.apache.ibatis.cache.Cache;
 
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.concurrent.locks.ReadWriteLock;
 
 /**
@@ -68,7 +69,7 @@ public class LruCache implements Cache {
   }
 
   private void cycleKeyList(Object key) {
-    keyMap.put(key,key);
+    keyMap.put(key, key);
     if (eldestKey != null) {
       delegate.removeObject(eldestKey);
       eldestKey = null;

@@ -1,7 +1,9 @@
 package testdomain;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
 
 public class Order implements Serializable {
 

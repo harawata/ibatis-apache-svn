@@ -31,57 +31,49 @@
 package org.apache.ibatis.ognl;
 
 import junit.framework.TestSuite;
-import org.apache.ibatis.ognl.MethodFailedException;
 import org.apache.ibatis.ognl.objects.Root;
 
-public class IndexAccessTest extends OgnlTestCase
-{
-    private static Root             ROOT = new Root();
+public class IndexAccessTest extends OgnlTestCase {
+  private static Root ROOT = new Root();
 
-    private static Object[][]       TESTS = {
-                                          // indexed access of with navigation chain (should start back at root)
-                                        { ROOT, "list[index]", ROOT.getList().get(ROOT.getIndex()) },
-                                        { ROOT, "list[size() - 1]", MethodFailedException.class },
-                                    };
+  private static Object[][] TESTS = {
+      // indexed access of with navigation chain (should start back at root)
+      {ROOT, "list[index]", ROOT.getList().get(ROOT.getIndex())},
+      {ROOT, "list[size() - 1]", MethodFailedException.class},
+  };
 
-	/*===================================================================
-		Public static methods
-	  ===================================================================*/
-    public static TestSuite suite()
-    {
-        TestSuite       result = new TestSuite();
+  /*===================================================================
+     Public static methods
+     ===================================================================*/
+  public static TestSuite suite() {
+    TestSuite result = new TestSuite();
 
-        for (int i = 0; i < TESTS.length; i++) {
-            result.addTest(new IndexAccessTest((String)TESTS[i][1], TESTS[i][0], (String)TESTS[i][1], TESTS[i][2]));
-        }
-        return result;
+    for (int i = 0; i < TESTS.length; i++) {
+      result.addTest(new IndexAccessTest((String) TESTS[i][1], TESTS[i][0], (String) TESTS[i][1], TESTS[i][2]));
     }
+    return result;
+  }
 
-	/*===================================================================
-		Constructors
-	  ===================================================================*/
-	public IndexAccessTest()
-	{
-	    super();
-	}
+  /*===================================================================
+     Constructors
+     ===================================================================*/
+  public IndexAccessTest() {
+    super();
+  }
 
-	public IndexAccessTest(String name)
-	{
-	    super(name);
-	}
+  public IndexAccessTest(String name) {
+    super(name);
+  }
 
-    public IndexAccessTest(String name, Object root, String expressionString, Object expectedResult, Object setValue, Object expectedAfterSetResult)
-    {
-        super(name, root, expressionString, expectedResult, setValue, expectedAfterSetResult);
-    }
+  public IndexAccessTest(String name, Object root, String expressionString, Object expectedResult, Object setValue, Object expectedAfterSetResult) {
+    super(name, root, expressionString, expectedResult, setValue, expectedAfterSetResult);
+  }
 
-    public IndexAccessTest(String name, Object root, String expressionString, Object expectedResult, Object setValue)
-    {
-        super(name, root, expressionString, expectedResult, setValue);
-    }
+  public IndexAccessTest(String name, Object root, String expressionString, Object expectedResult, Object setValue) {
+    super(name, root, expressionString, expectedResult, setValue);
+  }
 
-    public IndexAccessTest(String name, Object root, String expressionString, Object expectedResult)
-    {
-        super(name, root, expressionString, expectedResult);
-    }
+  public IndexAccessTest(String name, Object root, String expressionString, Object expectedResult) {
+    super(name, root, expressionString, expectedResult);
+  }
 }

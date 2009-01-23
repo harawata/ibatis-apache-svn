@@ -2,9 +2,13 @@ package com.ibatis.sqlmap;
 
 import com.ibatis.common.jdbc.ScriptRunner;
 import com.ibatis.common.resources.Resources;
-import com.ibatis.sqlmap.client.*;
+import com.ibatis.sqlmap.client.SqlMapClient;
+import com.ibatis.sqlmap.client.SqlMapClientBuilder;
 import junit.framework.TestCase;
-import testdomain.*;
+import testdomain.Account;
+import testdomain.FieldAccount;
+import testdomain.Order;
+import testdomain.PrivateAccount;
 
 import javax.sql.DataSource;
 import java.io.Reader;

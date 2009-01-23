@@ -33,13 +33,12 @@ package org.apache.ibatis.ognl;
 
 /**
  * Exception thrown if a malformed OGNL expression is encountered.
+ *
  * @author Luke Blanshard (blanshlu@netscape.net)
  * @author Drew Davidson (drew@ognl.org)
  */
-public class ExpressionSyntaxException extends OgnlException
-{
-    public ExpressionSyntaxException( String expression, Throwable reason )
-    {
-        super( "Malformed OGNL expression: " + expression, reason );
-    }
+public class ExpressionSyntaxException extends OgnlException {
+  public ExpressionSyntaxException(String expression, Throwable reason) {
+    super("Malformed OGNL expression: " + expression, reason);
+  }
 }

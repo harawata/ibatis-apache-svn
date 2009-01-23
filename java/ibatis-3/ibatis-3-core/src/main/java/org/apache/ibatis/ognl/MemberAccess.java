@@ -42,21 +42,20 @@ import java.util.Map;
  * @author Drew Davidson (drew@ognl.org)
  * @version 15 October 1999
  */
-public interface MemberAccess
-{
-    /**
-        Sets the member up for accessibility
-     */
-    public Object setup(Map context, Object target, Member member, String propertyName);
+public interface MemberAccess {
+  /**
+   * Sets the member up for accessibility
+   */
+  public Object setup(Map context, Object target, Member member, String propertyName);
 
-    /**
-        Restores the member from the previous setup call.
-     */
-    public void restore(Map context, Object target, Member member, String propertyName, Object state);
+  /**
+   * Restores the member from the previous setup call.
+   */
+  public void restore(Map context, Object target, Member member, String propertyName, Object state);
 
-    /**
-        Returns true if the given member is accessible or can be made accessible
-        by this object.
-     */
-	public boolean isAccessible(Map context, Object target, Member member, String propertyName);
+  /**
+   * Returns true if the given member is accessible or can be made accessible
+   * by this object.
+   */
+  public boolean isAccessible(Map context, Object target, Member member, String propertyName);
 }

@@ -1,9 +1,13 @@
 package com.ibatis.dao.engine.impl;
 
-import com.ibatis.dao.client.*;
+import com.ibatis.dao.client.Dao;
+import com.ibatis.dao.client.DaoException;
+import com.ibatis.dao.client.DaoTransaction;
 import com.ibatis.dao.engine.transaction.DaoTransactionManager;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class DaoContext {
 

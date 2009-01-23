@@ -1,11 +1,11 @@
 package org.apache.ibatis.type;
 
 import org.jmock.Expectations;
-import org.junit.*;
+import static org.junit.Assert.assertEquals;
+import org.junit.Test;
 
 import java.io.Reader;
 import java.sql.Clob;
-import static org.junit.Assert.*;
 
 public class ClobTypeHandlerTest extends BaseTypeHandlerTest {
 

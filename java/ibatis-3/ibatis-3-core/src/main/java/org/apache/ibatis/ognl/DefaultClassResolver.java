@@ -30,39 +30,38 @@
 //--------------------------------------------------------------------------
 package org.apache.ibatis.ognl;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Default class resolution.  Uses Class.forName() to look up classes by name.
  * It also looks in the "java.lang" package if the class named does not give
  * a package specifier, allowing easier usage of these classes.
+ *
  * @author Luke Blanshard (blanshlu@netscape.net)
  * @author Drew Davidson (drew@ognl.org)
  */
-public class DefaultClassResolver extends Object implements ClassResolver
-{
-    private Map     classes = new HashMap(101);
+public class DefaultClassResolver extends Object implements ClassResolver {
+  private Map classes = new HashMap(101);
 
-    public DefaultClassResolver()
-    {
-        super();
+  public DefaultClassResolver() {
+    super();
+  }
+
+  public Class classForName(String className, Map context) throws ClassNotFoundException {
+    Class result = null;
+
+    if ((result = (Class) classes.get(className)) == null) {
+      try {
+        result = Class.forName(className);
+      } catch (ClassNotFoundException ex) {
+        if (className.indexOf('.') == -1) {
+          result = Class.forName("java.lang." + className);
+          classes.put("java.lang." + className, result);
+        }
+      }
+      classes.put(className, result);
     }
-
-	public Class classForName(String className, Map context) throws ClassNotFoundException
-	{
-	    Class       result = null;
-
-        if ((result = (Class)classes.get(className)) == null) {
-    		try {
-    		    result = Class.forName(className);
-    		} catch (ClassNotFoundException ex) {
-    			if (className.indexOf('.') == -1) {
-    			    result = Class.forName("java.lang." + className);
-        			classes.put("java.lang." + className, result);
-        		}
-    		}
-			classes.put(className, result);
-    	}
-	    return result;
-	}
+    return result;
+  }
 }

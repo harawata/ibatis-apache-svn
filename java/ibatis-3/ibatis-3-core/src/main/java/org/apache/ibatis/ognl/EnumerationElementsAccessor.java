@@ -36,13 +36,12 @@ import java.util.Enumeration;
 /**
  * Implementation of the ElementsAccessor interface for Enumerations, which returns an
  * iterator that passes its calls through to the target Enumeration.
+ *
  * @author Luke Blanshard (blanshlu@netscape.net)
  * @author Drew Davidson (drew@ognl.org)
  */
-public class EnumerationElementsAccessor implements ElementsAccessor
-{
-    public Enumeration getElements( Object target )
-    {
-    	return (Enumeration)target;
-    }
+public class EnumerationElementsAccessor implements ElementsAccessor {
+  public Enumeration getElements(Object target) {
+    return (Enumeration) target;
+  }
 }

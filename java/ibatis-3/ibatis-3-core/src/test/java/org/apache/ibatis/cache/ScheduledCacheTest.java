@@ -1,9 +1,10 @@
 package org.apache.ibatis.cache;
 
-import org.apache.ibatis.cache.decorators.*;
+import org.apache.ibatis.cache.decorators.LoggingCache;
+import org.apache.ibatis.cache.decorators.ScheduledCache;
 import org.apache.ibatis.cache.impl.PerpetualCache;
-import org.junit.*;
 import static org.junit.Assert.*;
+import org.junit.Test;
 
 public class ScheduledCacheTest {
 
@@ -11,7 +12,7 @@ public class ScheduledCacheTest {
   public void shouldDemonstrateHowAllObjectsAreFlushedAfterBasedOnTime() throws Exception {
     Cache cache = new PerpetualCache("DefaultCache");
     cache = new ScheduledCache(cache);
-    ((ScheduledCache)cache).setClearInterval(2500);
+    ((ScheduledCache) cache).setClearInterval(2500);
     cache = new LoggingCache(cache);
     for (int i = 0; i < 100; i++) {
       cache.putObject(i, i);
@@ -25,7 +26,7 @@ public class ScheduledCacheTest {
   public void shouldRemoveItemOnDemand() {
     Cache cache = new PerpetualCache("DefaultCache");
     cache = new ScheduledCache(cache);
-    ((ScheduledCache)cache).setClearInterval(60000);
+    ((ScheduledCache) cache).setClearInterval(60000);
     cache = new LoggingCache(cache);
     cache.putObject(0, 0);
     assertNotNull(cache.getObject(0));
@@ -37,7 +38,7 @@ public class ScheduledCacheTest {
   public void shouldFlushAllItemsOnDemand() {
     Cache cache = new PerpetualCache("DefaultCache");
     cache = new ScheduledCache(cache);
-    ((ScheduledCache)cache).setClearInterval(60000);
+    ((ScheduledCache) cache).setClearInterval(60000);
     cache = new LoggingCache(cache);
     for (int i = 0; i < 5; i++) {
       cache.putObject(i, i);

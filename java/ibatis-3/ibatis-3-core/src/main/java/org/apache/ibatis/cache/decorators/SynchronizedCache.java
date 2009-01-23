@@ -1,6 +1,6 @@
 package org.apache.ibatis.cache.decorators;
 
-import org.apache.ibatis.cache.*;
+import org.apache.ibatis.cache.Cache;
 
 import java.util.concurrent.locks.ReadWriteLock;
 
@@ -19,7 +19,7 @@ public class SynchronizedCache implements Cache {
   public int getSize() {
     acquireReadLock();
     try {
-      return delegate.getSize();      
+      return delegate.getSize();
     } finally {
       releaseReadLock();
     }

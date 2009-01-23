@@ -34,23 +34,20 @@ package org.apache.ibatis.ognl;
  * @author Luke Blanshard (blanshlu@netscape.net)
  * @author Drew Davidson (drew@ognl.org)
  */
-class ASTNegate extends ExpressionNode
-{
-    public ASTNegate(int id) {
-        super(id);
-    }
+class ASTNegate extends ExpressionNode {
+  public ASTNegate(int id) {
+    super(id);
+  }
 
-    public ASTNegate(OgnlParser p, int id) {
-        super(p, id);
-    }
+  public ASTNegate(OgnlParser p, int id) {
+    super(p, id);
+  }
 
-    protected Object getValueBody( OgnlContext context, Object source ) throws OgnlException
-    {
-        return OgnlOps.negate( children[0].getValue(context, source) );
-    }
+  protected Object getValueBody(OgnlContext context, Object source) throws OgnlException {
+    return OgnlOps.negate(children[0].getValue(context, source));
+  }
 
-    public String toString()
-    {
-        return "-" + children[0];
-    }
+  public String toString() {
+    return "-" + children[0];
+  }
 }

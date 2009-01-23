@@ -6,8 +6,11 @@ import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.reflection.MetaClass;
-import org.apache.ibatis.type.*;
-import org.apache.ibatis.xml.*;
+import org.apache.ibatis.type.JdbcType;
+import org.apache.ibatis.type.TypeHandler;
+import org.apache.ibatis.xml.Nodelet;
+import org.apache.ibatis.xml.NodeletContext;
+import org.apache.ibatis.xml.NodeletParser;
 
 import java.io.Reader;
 import java.util.*;

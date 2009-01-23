@@ -2,7 +2,8 @@ package com.ibatis.sqlmap;
 
 import testdomain.ComplexBean;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ComplexTypeTest extends BaseSqlMapTest {
 

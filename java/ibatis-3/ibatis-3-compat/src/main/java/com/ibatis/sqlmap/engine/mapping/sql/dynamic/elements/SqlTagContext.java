@@ -2,8 +2,12 @@ package com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements;
 
 import org.apache.ibatis.mapping.ParameterMapping;
 
-import java.io.*;
-import java.util.*;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 
 public class SqlTagContext {
 

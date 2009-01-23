@@ -28,13 +28,13 @@ public class Database {
   }
 
   public Table getTable(String name) {
-    return (Table)tables.get(name.toUpperCase());
+    return (Table) tables.get(name.toUpperCase());
   }
 
   public String[] getTableNames() {
-    return (String[])tables.keySet().toArray(new String[tables.size()]);
+    return (String[]) tables.keySet().toArray(new String[tables.size()]);
   }
-  
+
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;

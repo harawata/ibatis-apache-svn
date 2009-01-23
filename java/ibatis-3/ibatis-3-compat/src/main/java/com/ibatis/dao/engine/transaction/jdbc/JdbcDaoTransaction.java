@@ -2,11 +2,13 @@ package com.ibatis.dao.engine.transaction.jdbc;
 
 import com.ibatis.dao.client.DaoException;
 import com.ibatis.dao.engine.transaction.ConnectionDaoTransaction;
-import org.apache.ibatis.logging.*;
+import org.apache.ibatis.logging.Log;
+import org.apache.ibatis.logging.LogFactory;
 import org.apache.ibatis.logging.jdbc.ConnectionLogger;
 
 import javax.sql.DataSource;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 public class JdbcDaoTransaction implements ConnectionDaoTransaction {
 

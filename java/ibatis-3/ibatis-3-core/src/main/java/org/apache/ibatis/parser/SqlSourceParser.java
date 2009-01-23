@@ -1,10 +1,15 @@
 package org.apache.ibatis.parser;
 
-import org.apache.ibatis.mapping.*;
-import org.apache.ibatis.xml.*;
+import org.apache.ibatis.mapping.Configuration;
+import org.apache.ibatis.mapping.ParameterMapping;
+import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.type.TypeHandler;
+import org.apache.ibatis.xml.GenericTokenParser;
+import org.apache.ibatis.xml.NodeletContext;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
 
 public class SqlSourceParser extends BaseParser {
 
@@ -33,13 +38,14 @@ public class SqlSourceParser extends BaseParser {
       parameterMappings.add(buildParameterMapping(content));
       return "?";
     }
+
     private ParameterMapping buildParameterMapping(String content) {
-      StringTokenizer parameterMappingParts = new StringTokenizer(content,", ");
+      StringTokenizer parameterMappingParts = new StringTokenizer(content, ", ");
       String property = parameterMappingParts.nextToken();
       ParameterMapping.Builder builder = new ParameterMapping.Builder(configuration, property, Object.class);
       while (parameterMappingParts.hasMoreTokens()) {
         String attribute = parameterMappingParts.nextToken();
-        StringTokenizer attributeParts = new StringTokenizer(attribute,"=");
+        StringTokenizer attributeParts = new StringTokenizer(attribute, "=");
         if (attributeParts.countTokens() == 2) {
           String name = attributeParts.nextToken();
           String value = attributeParts.nextToken();

@@ -2,10 +2,12 @@ package com.ibatis.jpetstore.persistence;
 
 import com.ibatis.common.jdbc.ScriptRunner;
 import com.ibatis.common.resources.Resources;
-import com.ibatis.dao.client.*;
+import com.ibatis.dao.client.DaoManager;
+import com.ibatis.dao.client.DaoManagerBuilder;
 
 import java.io.Reader;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.util.Properties;
 
 public class DaoConfig {

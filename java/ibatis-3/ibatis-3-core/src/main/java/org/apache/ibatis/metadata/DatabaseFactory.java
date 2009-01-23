@@ -1,7 +1,9 @@
 package org.apache.ibatis.metadata;
 
-import javax.sql.DataSource;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class DatabaseFactory {
   private DatabaseFactory() {
@@ -36,12 +38,12 @@ public class DatabaseFactory {
 
       try {
         String[] tableNames = database.getTableNames();
-        for (int i=0; i < tableNames.length; i++) {
+        for (int i = 0; i < tableNames.length; i++) {
           Table table = database.getTable(tableNames[i]);
           rs = dbmd.getPrimaryKeys(catalogFilter, schemaFilter, table.getName());
           if (rs.next()) {
             String columnName = rs.getString("COLUMN_NAME");
-            table.setPrimaryKey (table.getColumn(columnName));
+            table.setPrimaryKey(table.getColumn(columnName));
           }
         }
       } finally {
@@ -49,7 +51,9 @@ public class DatabaseFactory {
       }
 
     } finally {
-      try { conn.rollback(); } catch (Exception e) { /*ignore*/ }
+      try {
+        conn.rollback();
+      } catch (Exception e) { /*ignore*/ }
     }
     return database;
   }

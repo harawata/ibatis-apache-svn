@@ -1,11 +1,14 @@
 package com.ibatis.dao.engine.transaction.sqlmap;
 
 import com.ibatis.common.resources.Resources;
-import com.ibatis.dao.client.*;
+import com.ibatis.dao.client.DaoException;
+import com.ibatis.dao.client.DaoTransaction;
 import com.ibatis.dao.engine.transaction.DaoTransactionManager;
-import com.ibatis.sqlmap.client.*;
+import com.ibatis.sqlmap.client.SqlMapClient;
+import com.ibatis.sqlmap.client.SqlMapClientBuilder;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.Reader;
 import java.util.Properties;
 
 /**

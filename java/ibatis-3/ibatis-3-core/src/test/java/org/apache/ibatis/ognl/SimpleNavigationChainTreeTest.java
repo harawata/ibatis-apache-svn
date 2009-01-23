@@ -31,63 +31,54 @@
 package org.apache.ibatis.ognl;
 
 import junit.framework.TestSuite;
-import org.apache.ibatis.ognl.Ognl;
 
-public class SimpleNavigationChainTreeTest extends OgnlTestCase
-{
-    private static Object[][]       TESTS = {
-                                        { "name", Boolean.TRUE },
-                                        { "name[i]", Boolean.FALSE },
-                                        { "name + foo", Boolean.FALSE },
-                                        { "name.foo", Boolean.TRUE }
-                                    };
+public class SimpleNavigationChainTreeTest extends OgnlTestCase {
+  private static Object[][] TESTS = {
+      {"name", Boolean.TRUE},
+      {"name[i]", Boolean.FALSE},
+      {"name + foo", Boolean.FALSE},
+      {"name.foo", Boolean.TRUE}
+  };
 
-	/*===================================================================
-		Public static methods
-	  ===================================================================*/
-    public static TestSuite suite()
-    {
-        TestSuite       result = new TestSuite();
+  /*===================================================================
+     Public static methods
+     ===================================================================*/
+  public static TestSuite suite() {
+    TestSuite result = new TestSuite();
 
-        for (int i = 0; i < TESTS.length; i++) {
-            result.addTest(new SimpleNavigationChainTreeTest((String)TESTS[i][0] + " (" + TESTS[i][1] + ")", null, (String)TESTS[i][0], TESTS[i][1]));
-        }
-        return result;
+    for (int i = 0; i < TESTS.length; i++) {
+      result.addTest(new SimpleNavigationChainTreeTest((String) TESTS[i][0] + " (" + TESTS[i][1] + ")", null, (String) TESTS[i][0], TESTS[i][1]));
     }
+    return result;
+  }
 
-	/*===================================================================
-		Constructors
-	  ===================================================================*/
-	public SimpleNavigationChainTreeTest()
-	{
-	    super();
-	}
+  /*===================================================================
+     Constructors
+     ===================================================================*/
+  public SimpleNavigationChainTreeTest() {
+    super();
+  }
 
-	public SimpleNavigationChainTreeTest(String name)
-	{
-	    super(name);
-	}
+  public SimpleNavigationChainTreeTest(String name) {
+    super(name);
+  }
 
-    public SimpleNavigationChainTreeTest(String name, Object root, String expressionString, Object expectedResult, Object setValue, Object expectedAfterSetResult)
-    {
-        super(name, root, expressionString, expectedResult, setValue, expectedAfterSetResult);
-    }
+  public SimpleNavigationChainTreeTest(String name, Object root, String expressionString, Object expectedResult, Object setValue, Object expectedAfterSetResult) {
+    super(name, root, expressionString, expectedResult, setValue, expectedAfterSetResult);
+  }
 
-    public SimpleNavigationChainTreeTest(String name, Object root, String expressionString, Object expectedResult, Object setValue)
-    {
-        super(name, root, expressionString, expectedResult, setValue);
-    }
+  public SimpleNavigationChainTreeTest(String name, Object root, String expressionString, Object expectedResult, Object setValue) {
+    super(name, root, expressionString, expectedResult, setValue);
+  }
 
-    public SimpleNavigationChainTreeTest(String name, Object root, String expressionString, Object expectedResult)
-    {
-        super(name, root, expressionString, expectedResult);
-    }
+  public SimpleNavigationChainTreeTest(String name, Object root, String expressionString, Object expectedResult) {
+    super(name, root, expressionString, expectedResult);
+  }
 
-	/*===================================================================
-		Overridden methods
-	  ===================================================================*/
-    protected void runTest() throws Exception
-    {
-        assertTrue(Ognl.isSimpleNavigationChain(getExpression(), context) == ((Boolean)getExpectedResult()).booleanValue());
-    }
+  /*===================================================================
+     Overridden methods
+     ===================================================================*/
+  protected void runTest() throws Exception {
+    assertTrue(Ognl.isSimpleNavigationChain(getExpression(), context) == ((Boolean) getExpectedResult()).booleanValue());
+  }
 }

@@ -1,14 +1,14 @@
 package org.apache.ibatis.jdbc;
 
 import org.apache.ibatis.BaseDataTest;
-import org.apache.ibatis.jdbc.Null;
-import org.apache.ibatis.jdbc.SqlRunner;
-import org.junit.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import org.junit.Test;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
-import java.util.*;
-import static org.junit.Assert.*;
+import java.util.List;
+import java.util.Map;
 
 public class SqlRunnerTest extends BaseDataTest {
 

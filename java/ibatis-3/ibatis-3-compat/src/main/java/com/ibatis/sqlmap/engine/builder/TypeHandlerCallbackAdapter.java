@@ -1,14 +1,18 @@
 package com.ibatis.sqlmap.engine.builder;
 
-import com.ibatis.sqlmap.client.extensions.*;
-import org.apache.ibatis.type.*;
+import com.ibatis.sqlmap.client.extensions.ParameterSetter;
+import com.ibatis.sqlmap.client.extensions.ResultGetter;
+import com.ibatis.sqlmap.client.extensions.TypeHandlerCallback;
+import org.apache.ibatis.type.JdbcType;
+import org.apache.ibatis.type.TypeHandler;
 
-import java.io.*;
+import java.io.InputStream;
+import java.io.Reader;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.*;
-import java.sql.Date;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Map;
 
 public class TypeHandlerCallbackAdapter implements TypeHandler {
 

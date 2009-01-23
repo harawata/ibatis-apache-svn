@@ -34,61 +34,57 @@ package org.apache.ibatis.ognl;
  * @author Luke Blanshard (blanshlu@netscape.net)
  * @author Drew Davidson (drew@ognl.org)
  */
-public abstract class ExpressionNode extends SimpleNode
-{
-    public ExpressionNode(int i) {
-        super(i);
-    }
+public abstract class ExpressionNode extends SimpleNode {
+  public ExpressionNode(int i) {
+    super(i);
+  }
 
-    public ExpressionNode(OgnlParser p, int i) {
-        super(p, i);
-    }
-    /**
-        Returns true iff this node is constant without respect to the children.
-     */
-    public boolean isNodeConstant( OgnlContext context ) throws OgnlException
-    {
-        return false;
-    }
+  public ExpressionNode(OgnlParser p, int i) {
+    super(p, i);
+  }
 
-    public boolean isConstant( OgnlContext context ) throws OgnlException
-    {
-        boolean     result = isNodeConstant(context);
+  /**
+   * Returns true iff this node is constant without respect to the children.
+   */
+  public boolean isNodeConstant(OgnlContext context) throws OgnlException {
+    return false;
+  }
 
-        if ((children != null) && (children.length > 0)) {
-            result = true;
-            for ( int i=0; result && (i < children.length); ++i ) {
-                if (children[i] instanceof SimpleNode) {
-                    result = ((SimpleNode)children[i]).isConstant( context );
-                } else {
-                    result = false;
-                }
-            }
+  public boolean isConstant(OgnlContext context) throws OgnlException {
+    boolean result = isNodeConstant(context);
+
+    if ((children != null) && (children.length > 0)) {
+      result = true;
+      for (int i = 0; result && (i < children.length); ++i) {
+        if (children[i] instanceof SimpleNode) {
+          result = ((SimpleNode) children[i]).isConstant(context);
+        } else {
+          result = false;
         }
-        return result;
+      }
     }
+    return result;
+  }
 
-    public String getExpressionOperator(int index)
-    {
-        throw new RuntimeException("unknown operator for " + OgnlParserTreeConstants.jjtNodeName[id]);
-    }
+  public String getExpressionOperator(int index) {
+    throw new RuntimeException("unknown operator for " + OgnlParserTreeConstants.jjtNodeName[id]);
+  }
 
-    public String toString()
-    {
-        String      result;
+  public String toString() {
+    String result;
 
-        result = (parent == null) ? "" : "(";
-        if ((children != null) && (children.length > 0)) {
-            for ( int i = 0; i < children.length; ++i ) {
-                if (i > 0) {
-                    result += " " + getExpressionOperator(i) + " ";
-                }
-                result += children[i].toString();
-            }
+    result = (parent == null) ? "" : "(";
+    if ((children != null) && (children.length > 0)) {
+      for (int i = 0; i < children.length; ++i) {
+        if (i > 0) {
+          result += " " + getExpressionOperator(i) + " ";
         }
-        if (parent != null) {
-            result = result + ")";
-        }
-        return result;
+        result += children[i].toString();
+      }
     }
+    if (parent != null) {
+      result = result + ")";
+    }
+    return result;
+  }
 }

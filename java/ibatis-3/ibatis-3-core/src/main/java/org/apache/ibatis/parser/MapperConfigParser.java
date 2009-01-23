@@ -1,18 +1,23 @@
 package org.apache.ibatis.parser;
 
-import org.apache.ibatis.xml.*;
-import org.apache.ibatis.mapping.*;
-import org.apache.ibatis.type.*;
-import org.apache.ibatis.plugin.Interceptor;
-import org.apache.ibatis.reflection.*;
-import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.datasource.DataSourceFactory;
-import org.apache.ibatis.transaction.TransactionFactory;
 import org.apache.ibatis.executor.ErrorContext;
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.mapping.Configuration;
+import org.apache.ibatis.mapping.Environment;
+import org.apache.ibatis.mapping.ExecutorType;
+import org.apache.ibatis.plugin.Interceptor;
+import org.apache.ibatis.reflection.MetaClass;
+import org.apache.ibatis.reflection.ObjectFactory;
+import org.apache.ibatis.transaction.TransactionFactory;
+import org.apache.ibatis.type.TypeHandler;
+import org.apache.ibatis.xml.Nodelet;
+import org.apache.ibatis.xml.NodeletContext;
+import org.apache.ibatis.xml.NodeletParser;
 
 import java.io.Reader;
-import java.util.*;
+import java.util.Map;
+import java.util.Properties;
 
 public class MapperConfigParser extends BaseParser {
 
@@ -25,11 +30,11 @@ public class MapperConfigParser extends BaseParser {
   private Environment.Builder environmentBuilder;
 
   public MapperConfigParser(Reader reader) {
-    this(reader,null,null);
+    this(reader, null, null);
   }
 
   public MapperConfigParser(Reader reader, String environment) {
-    this(reader,environment,null);
+    this(reader, environment, null);
   }
 
   public MapperConfigParser(Reader reader, String environment, Properties props) {

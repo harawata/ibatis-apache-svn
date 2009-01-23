@@ -30,24 +30,22 @@
 //--------------------------------------------------------------------------
 package org.apache.ibatis.ognl;
 
-import java.util.*;
+import java.util.Map;
 
 /**
  * Implementation of NullHandler that returns null in all cases,
  * so that NullPointerException will be thrown by the caller.
+ *
  * @author Luke Blanshard (blanshlu@netscape.net)
  * @author Drew Davidson (drew@ognl.org)
  */
-public class ObjectNullHandler implements NullHandler
-{
-    /* NullHandler interface */
-    public Object nullMethodResult(Map context, Object target, String methodName, Object[] args)
-    {
-        return null;
-    }
+public class ObjectNullHandler implements NullHandler {
+  /* NullHandler interface */
+  public Object nullMethodResult(Map context, Object target, String methodName, Object[] args) {
+    return null;
+  }
 
-    public Object nullPropertyValue(Map context, Object target, Object property)
-    {
-        return null;
-    }
+  public Object nullPropertyValue(Map context, Object target, Object property) {
+    return null;
+  }
 }

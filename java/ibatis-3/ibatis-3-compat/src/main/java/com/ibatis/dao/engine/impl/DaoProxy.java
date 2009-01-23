@@ -3,8 +3,11 @@ package com.ibatis.dao.engine.impl;
 import com.ibatis.dao.client.Dao;
 import org.apache.ibatis.reflection.ExceptionUtil;
 
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.util.HashSet;
+import java.util.Set;
 
 public class DaoProxy implements InvocationHandler {
 

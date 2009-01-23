@@ -2,7 +2,8 @@ package com.ibatis.common.jdbc;
 
 import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 public class ScriptRunner extends org.apache.ibatis.jdbc.ScriptRunner {
 

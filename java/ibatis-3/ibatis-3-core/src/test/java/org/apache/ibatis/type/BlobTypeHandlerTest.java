@@ -1,11 +1,11 @@
 package org.apache.ibatis.type;
 
 import org.jmock.Expectations;
-import org.junit.*;
+import static org.junit.Assert.assertArrayEquals;
+import org.junit.Test;
 
 import java.io.InputStream;
 import java.sql.Blob;
-import static org.junit.Assert.*;
 
 public class BlobTypeHandlerTest extends BaseTypeHandlerTest {
 

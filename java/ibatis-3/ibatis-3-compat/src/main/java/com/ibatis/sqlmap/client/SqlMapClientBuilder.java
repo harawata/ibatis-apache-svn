@@ -1,6 +1,7 @@
 package com.ibatis.sqlmap.client;
 
-import com.ibatis.sqlmap.engine.builder.*;
+import com.ibatis.sqlmap.engine.builder.Ibatis2Configuration;
+import com.ibatis.sqlmap.engine.builder.XmlSqlMapConfigParser;
 import com.ibatis.sqlmap.engine.impl.SqlMapClientImpl;
 
 import java.io.Reader;

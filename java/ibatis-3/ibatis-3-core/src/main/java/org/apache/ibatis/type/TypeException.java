@@ -19,5 +19,5 @@ public class TypeException extends SqlMapperException {
   public TypeException(Throwable cause) {
     super(cause);
   }
-  
+
 }

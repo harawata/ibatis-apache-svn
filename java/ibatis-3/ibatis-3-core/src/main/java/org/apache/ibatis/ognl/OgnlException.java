@@ -33,125 +33,120 @@ package org.apache.ibatis.ognl;
 
 /**
  * Superclass for OGNL exceptions, incorporating an optional encapsulated exception.
+ *
  * @author Luke Blanshard (blanshlu@netscape.net)
  * @author Drew Davidson (drew@ognl.org)
  */
-public class OgnlException extends Exception
-{
-      /**
-       * The root evaluation of the expression when the exception was thrown
-       */
-    private Evaluation  evaluation;
+public class OgnlException extends Exception {
+  /**
+   * The root evaluation of the expression when the exception was thrown
+   */
+  private Evaluation evaluation;
 
-      /**
-       * Why this exception was thrown.
-       * @serial
-       */
-    private Throwable reason;
+  /**
+   * Why this exception was thrown.
+   *
+   * @serial
+   */
+  private Throwable reason;
 
-      /** Constructs an OgnlException with no message or encapsulated exception. */
-    public OgnlException()
-    {
-        this( null, null );
+  /**
+   * Constructs an OgnlException with no message or encapsulated exception.
+   */
+  public OgnlException() {
+    this(null, null);
+  }
+
+  /**
+   * Constructs an OgnlException with the given message but no encapsulated exception.
+   *
+   * @param msg the exception's detail message
+   */
+  public OgnlException(String msg) {
+    this(msg, null);
+  }
+
+  /**
+   * Constructs an OgnlException with the given message and encapsulated exception.
+   *
+   * @param msg    the exception's detail message
+   * @param reason the encapsulated exception
+   */
+  public OgnlException(String msg, Throwable reason) {
+    super(msg);
+    this.reason = reason;
+  }
+
+  /**
+   * Returns the encapsulated exception, or null if there is none.
+   *
+   * @return the encapsulated exception
+   */
+  public Throwable getReason() {
+    return reason;
+  }
+
+  /**
+   * Returns the Evaluation that was the root evaluation when the exception was
+   * thrown.
+   */
+  public Evaluation getEvaluation() {
+    return evaluation;
+  }
+
+  /**
+   * Sets the Evaluation that was current when this exception was thrown.
+   */
+  public void setEvaluation(Evaluation value) {
+    evaluation = value;
+  }
+
+  /**
+   * Returns a string representation of this exception.
+   *
+   * @return a string representation of this exception
+   */
+  public String toString() {
+    if (reason == null)
+      return super.toString();
+    return super.toString() + " [" + reason + "]";
+  }
+
+
+  /**
+   * Prints the stack trace for this (and possibly the encapsulated) exception on
+   * System.err.
+   */
+  public void printStackTrace() {
+    printStackTrace(System.err);
+  }
+
+  /**
+   * Prints the stack trace for this (and possibly the encapsulated) exception on the
+   * given print stream.
+   */
+  public void printStackTrace(java.io.PrintStream s) {
+    synchronized (s) {
+      super.printStackTrace(s);
+      if (reason != null) {
+        s.println("/-- Encapsulated exception ------------\\");
+        reason.printStackTrace(s);
+        s.println("\\--------------------------------------/");
+      }
     }
+  }
 
-      /**
-       * Constructs an OgnlException with the given message but no encapsulated exception.
-       * @param msg the exception's detail message
-       */
-    public OgnlException( String msg )
-    {
-        this( msg, null );
-    }
-
-      /**
-       * Constructs an OgnlException with the given message and encapsulated exception.
-       * @param msg     the exception's detail message
-       * @param reason  the encapsulated exception
-       */
-    public OgnlException( String msg, Throwable reason )
-    {
-        super( msg );
-        this.reason = reason;
-    }
-
-      /**
-       * Returns the encapsulated exception, or null if there is none.
-       * @return the encapsulated exception
-       */
-    public Throwable getReason()
-    {
-        return reason;
-    }
-
-    /**
-        Returns the Evaluation that was the root evaluation when the exception was
-        thrown.
-     */
-    public Evaluation getEvaluation()
-    {
-        return evaluation;
-    }
-
-    /**
-        Sets the Evaluation that was current when this exception was thrown.
-     */
-    public void setEvaluation(Evaluation value)
-    {
-        evaluation = value;
-    }
-
-      /**
-       * Returns a string representation of this exception.
-       * @return a string representation of this exception
-       */
-    public String toString()
-    {
-        if ( reason == null )
-            return super.toString();
-        return super.toString() + " [" + reason + "]";
-    }
-
-
-      /**
-       * Prints the stack trace for this (and possibly the encapsulated) exception on
-       * System.err.
-       */
-    public void printStackTrace()
-    {
-        printStackTrace( System.err );
-    }
-
-      /**
-       * Prints the stack trace for this (and possibly the encapsulated) exception on the
-       * given print stream.
-       */
-    public void printStackTrace(java.io.PrintStream s)
-    {
-	synchronized (s)
-          {
-            super.printStackTrace(s);
-            if ( reason != null ) {
-                s.println(  "/-- Encapsulated exception ------------\\" );
-                reason.printStackTrace(s);
-                s.println( "\\--------------------------------------/" );
-            }
-          }
-    }
-
-      /**
-       * Prints the stack trace for this (and possibly the encapsulated) exception on the
-       * given print writer.
-       */
-    public void printStackTrace(java.io.PrintWriter s)
-    {
-	synchronized (s)
-          {
-            super.printStackTrace(s);
-            if ( reason != null ) {
-                s.println(  "/-- Encapsulated exception ------------\\" );
-                reason.printStackTrace(s);
-                s.println( "\\--------------------------------------/" );
+  /**
+   * Prints the stack trace for this (and possibly the encapsulated) exception on the
+   * given print writer.
+   */
+  public void printStackTrace(java.io.PrintWriter s) {
+    synchronized (s) {
+      super.printStackTrace(s);
+      if (reason != null) {
+        s.println("/-- Encapsulated exception ------------\\");
+        reason.printStackTrace(s);
+        s.println("\\--------------------------------------/" );
             }
           }
     }

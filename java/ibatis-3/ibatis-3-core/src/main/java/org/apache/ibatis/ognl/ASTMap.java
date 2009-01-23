@@ -30,84 +30,81 @@
 //--------------------------------------------------------------------------
 package org.apache.ibatis.ognl;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Luke Blanshard (blanshlu@netscape.net)
  * @author Drew Davidson (drew@ognl.org)
  */
-class ASTMap extends SimpleNode
-{
-    private static Class    DEFAULT_MAP_CLASS;
-    private String          className;
+class ASTMap extends SimpleNode {
+  private static Class DEFAULT_MAP_CLASS;
+  private String className;
 
-    static {
-        /* Try to get LinkedHashMap; if older JDK than 1.4 use HashMap */
-        try {
-            DEFAULT_MAP_CLASS = Class.forName("java.util.LinkedHashMap");
-        } catch (ClassNotFoundException ex) {
-            DEFAULT_MAP_CLASS = HashMap.class;
-        }
+  static {
+    /* Try to get LinkedHashMap; if older JDK than 1.4 use HashMap */
+    try {
+      DEFAULT_MAP_CLASS = Class.forName("java.util.LinkedHashMap");
+    } catch (ClassNotFoundException ex) {
+      DEFAULT_MAP_CLASS = HashMap.class;
+    }
+  }
+
+  public ASTMap(int id) {
+    super(id);
+  }
+
+  public ASTMap(OgnlParser p, int id) {
+    super(p, id);
+  }
+
+  protected void setClassName(String value) {
+    className = value;
+  }
+
+  protected Object getValueBody(OgnlContext context, Object source) throws OgnlException {
+    Map answer;
+
+    if (className == null) {
+      try {
+        answer = (Map) DEFAULT_MAP_CLASS.newInstance();
+      } catch (Exception ex) {
+        /* This should never happen */
+        throw new OgnlException("Default Map class '" + DEFAULT_MAP_CLASS.getName() + "' instantiation error", ex);
+      }
+    } else {
+      try {
+        answer = (Map) OgnlRuntime.classForName(context, className).newInstance();
+      } catch (Exception ex) {
+        throw new OgnlException("Map implementor '" + className + "' not found", ex);
+      }
     }
 
-    public ASTMap(int id) {
-        super(id);
+    for (int i = 0; i < jjtGetNumChildren(); ++i) {
+      ASTKeyValue kv = (ASTKeyValue) children[i];
+      Node k = kv.getKey(),
+          v = kv.getValue();
+
+      answer.put(k.getValue(context, source), (v == null) ? null : v.getValue(context, source));
     }
+    return answer;
+  }
 
-    public ASTMap(OgnlParser p, int id) {
-        super(p, id);
+  public String toString() {
+    String result = "#";
+
+    if (className != null) {
+      result = result + "@" + className + "@";
     }
+    result = result + "{ ";
+    for (int i = 0; i < jjtGetNumChildren(); ++i) {
+      ASTKeyValue kv = (ASTKeyValue) children[i];
 
-    protected void setClassName(String value)
-    {
-        className = value;
+      if (i > 0) {
+        result = result + ", ";
+      }
+      result = result + kv.getKey() + " : " + kv.getValue();
     }
-
-    protected Object getValueBody( OgnlContext context, Object source ) throws OgnlException
-    {
-        Map answer;
-
-        if (className == null) {
-            try {
-                answer = (Map)DEFAULT_MAP_CLASS.newInstance();
-            } catch (Exception ex) {
-                /* This should never happen */
-                throw new OgnlException("Default Map class '" + DEFAULT_MAP_CLASS.getName() + "' instantiation error", ex);
-            }
-        } else {
-            try {
-                answer = (Map)OgnlRuntime.classForName(context, className).newInstance();
-            } catch (Exception ex) {
-                throw new OgnlException("Map implementor '" + className + "' not found", ex);
-            }
-        }
-
-        for ( int i=0; i < jjtGetNumChildren(); ++i ) {
-            ASTKeyValue     kv = (ASTKeyValue)children[i];
-            Node            k = kv.getKey(),
-                            v = kv.getValue();
-
-            answer.put( k.getValue(context, source), (v == null) ? null : v.getValue(context, source) );
-        }
-        return answer;
-    }
-
-    public String toString()
-    {
-        String      result = "#";
-
-        if (className != null) {
-            result = result + "@" + className + "@";
-        }
-        result = result + "{ ";
-        for ( int i = 0; i < jjtGetNumChildren(); ++i ) {
-            ASTKeyValue     kv = (ASTKeyValue)children[i];
-
-            if (i > 0) {
-                result = result + ", ";
-            }
-            result = result + kv.getKey() + " : " + kv.getValue();
-        }
-        return result + " }";
-    }
+    return result + " }";
+  }
 }

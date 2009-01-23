@@ -1,9 +1,11 @@
 package com.ibatis.sqlmap.engine.builder;
 
-import com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements.*;
+import com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements.SqlTagHandler;
+import com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements.SqlTagHandlerFactory;
 import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.xml.NodeletContext;
-import org.w3c.dom.*;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 public class SqlSourceFactory {
 

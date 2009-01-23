@@ -1,6 +1,9 @@
 package com.ibatis.jpetstore.persistence;
 
-import com.ibatis.jpetstore.domain.*;
+import com.ibatis.jpetstore.domain.DomainFixture;
+import com.ibatis.jpetstore.domain.Item;
+import com.ibatis.jpetstore.domain.LineItem;
+import com.ibatis.jpetstore.domain.Order;
 import com.ibatis.jpetstore.persistence.iface.ItemDao;
 
 public class ItemDaoTest extends BasePersistenceTest {

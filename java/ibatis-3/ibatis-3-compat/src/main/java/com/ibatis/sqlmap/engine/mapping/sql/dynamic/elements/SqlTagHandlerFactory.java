@@ -1,6 +1,7 @@
 package com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SqlTagHandlerFactory {
 

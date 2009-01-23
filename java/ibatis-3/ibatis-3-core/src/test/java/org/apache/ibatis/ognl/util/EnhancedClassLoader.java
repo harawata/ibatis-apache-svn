@@ -30,21 +30,18 @@
 //--------------------------------------------------------------------------
 package org.apache.ibatis.ognl.util;
 
-public class EnhancedClassLoader extends ClassLoader
-{
-	/*===================================================================
-		Constructors
-	  ===================================================================*/
-    public EnhancedClassLoader(ClassLoader parentClassLoader)
-    {
-        super(parentClassLoader);
-    }
+public class EnhancedClassLoader extends ClassLoader {
+  /*===================================================================
+     Constructors
+     ===================================================================*/
+  public EnhancedClassLoader(ClassLoader parentClassLoader) {
+    super(parentClassLoader);
+  }
 
-	/*===================================================================
-		Overridden methods
-	  ===================================================================*/
-    public Class defineClass(String enhancedClassName, byte[] byteCode)
-    {
-        return defineClass(enhancedClassName, byteCode, 0, byteCode.length);
-    }
+  /*===================================================================
+     Overridden methods
+     ===================================================================*/
+  public Class defineClass(String enhancedClassName, byte[] byteCode) {
+    return defineClass(enhancedClassName, byteCode, 0, byteCode.length);
+  }
 }

@@ -1,13 +1,15 @@
 package org.apache.ibatis.io;
 
 import org.apache.ibatis.BaseDataTest;
-import org.junit.*;
+import static org.junit.Assert.*;
+import org.junit.Test;
 
-import java.io.*;
+import java.io.File;
+import java.io.InputStream;
+import java.io.Reader;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Properties;
-import static org.junit.Assert.*;
 
 public class ResourcesTest extends BaseDataTest {
 

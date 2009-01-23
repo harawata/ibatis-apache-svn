@@ -1,13 +1,15 @@
 package org.apache.ibatis.executor;
 
-import org.apache.ibatis.cache.*;
+import org.apache.ibatis.cache.Cache;
+import org.apache.ibatis.cache.CacheKey;
+import org.apache.ibatis.cache.TransactionalCacheManager;
 import org.apache.ibatis.executor.result.ResultHandler;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.transaction.Transaction;
 
-import java.sql.*;
-import java.util.*;
+import java.sql.SQLException;
+import java.util.List;
 
 public class CachingExecutor implements Executor {
 

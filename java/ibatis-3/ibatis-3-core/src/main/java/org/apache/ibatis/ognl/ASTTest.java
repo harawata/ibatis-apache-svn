@@ -34,32 +34,28 @@ package org.apache.ibatis.ognl;
  * @author Luke Blanshard (blanshlu@netscape.net)
  * @author Drew Davidson (drew@ognl.org)
  */
-class ASTTest extends ExpressionNode
-{
-    public ASTTest(int id) {
-        super(id);
-    }
+class ASTTest extends ExpressionNode {
+  public ASTTest(int id) {
+    super(id);
+  }
 
-    public ASTTest(OgnlParser p, int id) {
-        super(p, id);
-    }
+  public ASTTest(OgnlParser p, int id) {
+    super(p, id);
+  }
 
-    protected Object getValueBody( OgnlContext context, Object source ) throws OgnlException
-    {
-        Object test = children[0].getValue( context, source );
-        int branch = OgnlOps.booleanValue(test)? 1 : 2;
-        return children[branch].getValue( context, source );
-    }
+  protected Object getValueBody(OgnlContext context, Object source) throws OgnlException {
+    Object test = children[0].getValue(context, source);
+    int branch = OgnlOps.booleanValue(test) ? 1 : 2;
+    return children[branch].getValue(context, source);
+  }
 
-    protected void setValueBody( OgnlContext context, Object target, Object value ) throws OgnlException
-    {
-        Object test = children[0].getValue( context, target );
-        int branch = OgnlOps.booleanValue(test)? 1 : 2;
-        children[branch].setValue( context, target, value );
-    }
+  protected void setValueBody(OgnlContext context, Object target, Object value) throws OgnlException {
+    Object test = children[0].getValue(context, target);
+    int branch = OgnlOps.booleanValue(test) ? 1 : 2;
+    children[branch].setValue(context, target, value);
+  }
 
-    public String getExpressionOperator(int index)
-    {
-        return (index == 1) ? "?" : ":";
-    }
+  public String getExpressionOperator(int index) {
+    return (index == 1) ? "?" : ":";
+  }
 }

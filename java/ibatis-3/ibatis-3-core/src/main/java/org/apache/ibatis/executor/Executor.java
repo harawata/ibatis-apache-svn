@@ -6,7 +6,7 @@ import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.transaction.Transaction;
 
-import java.sql.*;
+import java.sql.SQLException;
 import java.util.List;
 
 public interface Executor {

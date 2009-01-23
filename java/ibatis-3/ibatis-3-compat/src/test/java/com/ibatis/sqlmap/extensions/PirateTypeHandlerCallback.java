@@ -1,7 +1,9 @@
 package com.ibatis.sqlmap.extensions;
 
 import com.ibatis.sqlmap.client.SqlMapException;
-import com.ibatis.sqlmap.client.extensions.*;
+import com.ibatis.sqlmap.client.extensions.ParameterSetter;
+import com.ibatis.sqlmap.client.extensions.ResultGetter;
+import com.ibatis.sqlmap.client.extensions.TypeHandlerCallback;
 
 import java.sql.SQLException;
 

@@ -16,6 +16,6 @@ public class GenericConcrete extends GenericSubclass implements GenericInterface
   }
 
   public void setId(Integer id) {
-    this.id = (long)id;
+    this.id = (long) id;
   }
 }

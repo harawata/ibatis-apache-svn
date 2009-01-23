@@ -2,7 +2,8 @@ package com.ibatis.jpetstore.persistence.sqlmapdao;
 
 import com.ibatis.common.util.PaginatedList;
 import com.ibatis.dao.client.DaoManager;
-import com.ibatis.jpetstore.domain.*;
+import com.ibatis.jpetstore.domain.LineItem;
+import com.ibatis.jpetstore.domain.Order;
 import com.ibatis.jpetstore.persistence.iface.OrderDao;
 
 public class OrderSqlMapDao extends BaseSqlMapDao implements OrderDao {

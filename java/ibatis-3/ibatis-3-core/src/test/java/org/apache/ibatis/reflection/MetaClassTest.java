@@ -2,10 +2,12 @@ package org.apache.ibatis.reflection;
 
 import domain.misc.RichType;
 import domain.misc.generics.GenericConcrete;
-import org.junit.*;
-
-import java.util.*;
 import static org.junit.Assert.*;
+import org.junit.Test;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class MetaClassTest {
 

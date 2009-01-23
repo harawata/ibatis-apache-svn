@@ -30,167 +30,144 @@
 //--------------------------------------------------------------------------
 package org.apache.ibatis.ognl.objects;
 
-import java.util.*;
 import org.apache.ibatis.ognl.DynamicSubscript;
 
-public class Root extends Object
-{
-    public static final String      SIZE_STRING = "size";
-    public static final int         STATIC_INT = 23;
+import java.util.*;
 
-    private int[]                   array = { 1, 2, 3, 4 };
-    private Map                     map = new HashMap(23);
-    private MyMap                   myMap = new MyMapImpl();
-    private List                    list = Arrays.asList(new Object[] { null, this, array });
-    private List                    settableList = new ArrayList(Arrays.asList(new Object[] { "foo", "bar", "baz" }));
-    private int                     index = 1;
-    private int                     intValue = 0;
-    private String                  stringValue;
-    private int                     yetAnotherIntValue = 46;
-    private boolean                 privateAccessorBooleanValue = true;
-    private int                     privateAccessorIntValue = 67;
-    private int                     privateAccessorIntValue2 = 67;
-    private int                     privateAccessorIntValue3 = 67;
-    public String                   anotherStringValue = "foo";
-    public int                      anotherIntValue = 123;
-    public int                      six = 6;
+public class Root extends Object {
+  public static final String SIZE_STRING = "size";
+  public static final int STATIC_INT = 23;
 
-	/*===================================================================
-		Public static methods
-	  ===================================================================*/
-	public static int getStaticInt()
-	{
-	    return STATIC_INT;
-	}
+  private int[] array = {1, 2, 3, 4};
+  private Map map = new HashMap(23);
+  private MyMap myMap = new MyMapImpl();
+  private List list = Arrays.asList(new Object[]{null, this, array});
+  private List settableList = new ArrayList(Arrays.asList(new Object[]{"foo", "bar", "baz"}));
+  private int index = 1;
+  private int intValue = 0;
+  private String stringValue;
+  private int yetAnotherIntValue = 46;
+  private boolean privateAccessorBooleanValue = true;
+  private int privateAccessorIntValue = 67;
+  private int privateAccessorIntValue2 = 67;
+  private int privateAccessorIntValue3 = 67;
+  public String anotherStringValue = "foo";
+  public int anotherIntValue = 123;
+  public int six = 6;
 
-	/*===================================================================
-		Constructors
-	  ===================================================================*/
-    public Root()
-    {
-        super();
-    }
+  /*===================================================================
+     Public static methods
+     ===================================================================*/
+  public static int getStaticInt() {
+    return STATIC_INT;
+  }
 
-	/*===================================================================
-		Private methods
-	  ===================================================================*/
-    {
-        map.put( "test", this );
-        map.put( "array", array );
-        map.put( "list", list );
-        map.put( "size", new Integer(5000) );
-        map.put( DynamicSubscript.first, new Integer(99) );
+  /*===================================================================
+     Constructors
+     ===================================================================*/
+  public Root() {
+    super();
+  }
 
-        /* make myMap identical */
-        myMap.putAll( map );
-    }
+  /*===================================================================
+     Private methods
+     ===================================================================*/ {
+    map.put("test", this);
+    map.put("array", array);
+    map.put("list", list);
+    map.put("size", new Integer(5000));
+    map.put(DynamicSubscript.first, new Integer(99));
 
-    private boolean isPrivateAccessorBooleanValue()
-    {
-        return privateAccessorBooleanValue;
-    }
+    /* make myMap identical */
+    myMap.putAll(map);
+  }
 
-    private void setPrivateAccessorBooleanValue(boolean value)
-    {
-        privateAccessorBooleanValue = value;
-    }
+  private boolean isPrivateAccessorBooleanValue() {
+    return privateAccessorBooleanValue;
+  }
 
-    private int getPrivateAccessorIntValue()
-    {
-        return privateAccessorIntValue;
-    }
+  private void setPrivateAccessorBooleanValue(boolean value) {
+    privateAccessorBooleanValue = value;
+  }
 
-    private void setPrivateAccessorIntValue(int value)
-    {
-        privateAccessorIntValue = value;
-    }
+  private int getPrivateAccessorIntValue() {
+    return privateAccessorIntValue;
+  }
 
-	/*===================================================================
-		Protected methods
-	  ===================================================================*/
-    protected int getPrivateAccessorIntValue2()
-    {
-        return privateAccessorIntValue2;
-    }
+  private void setPrivateAccessorIntValue(int value) {
+    privateAccessorIntValue = value;
+  }
 
-    protected void setPrivateAccessorIntValue2(int value)
-    {
-        privateAccessorIntValue2 = value;
-    }
+  /*===================================================================
+     Protected methods
+     ===================================================================*/
+  protected int getPrivateAccessorIntValue2() {
+    return privateAccessorIntValue2;
+  }
 
-	/*===================================================================
-		Package protected methods
-	  ===================================================================*/
-    int getPrivateAccessorIntValue3()
-    {
-        return privateAccessorIntValue3;
-    }
+  protected void setPrivateAccessorIntValue2(int value) {
+    privateAccessorIntValue2 = value;
+  }
 
-    void setPrivateAccessorIntValue3(int value)
-    {
-        privateAccessorIntValue3 = value;
-    }
+  /*===================================================================
+     Package protected methods
+     ===================================================================*/
+  int getPrivateAccessorIntValue3() {
+    return privateAccessorIntValue3;
+  }
 
-	/*===================================================================
-		Public methods
-	  ===================================================================*/
-    public int[] getArray()
-    {
-        return array;
-    }
+  void setPrivateAccessorIntValue3(int value) {
+    privateAccessorIntValue3 = value;
+  }
 
-    public void setArray(int[] value)
-    {
-        array = value;
-    }
+  /*===================================================================
+     Public methods
+     ===================================================================*/
+  public int[] getArray() {
+    return array;
+  }
 
-    public Map getMap()
-    {
-        return map;
-    }
+  public void setArray(int[] value) {
+    array = value;
+  }
 
-    public MyMap getMyMap()
-    {
-        return myMap;
-    }
+  public Map getMap() {
+    return map;
+  }
 
-    public List getList()
-    {
-        return list;
-    }
+  public MyMap getMyMap() {
+    return myMap;
+  }
 
-    public List getSettableList()
-    {
-        return settableList;
-    }
+  public List getList() {
+    return list;
+  }
 
-    public int getIndex()
-    {
-        return index;
-    }
+  public List getSettableList() {
+    return settableList;
+  }
 
-    public int getIntValue()
-    {
-        return intValue;
-    }
+  public int getIndex() {
+    return index;
+  }
 
-    public void setIntValue(int value)
-    {
-        intValue = value;
-    }
+  public int getIntValue() {
+    return intValue;
+  }
 
-    public String getStringValue()
-    {
-        return stringValue;
-    }
+  public void setIntValue(int value) {
+    intValue = value;
+  }
 
-    public void setStringValue(String value)
-    {
-        stringValue = value;
-    }
+  public String getStringValue() {
+    return stringValue;
+  }
 
-    public Object getNullObject()
-    {
-        return null;
-    }
+  public void setStringValue(String value) {
+    stringValue = value;
+  }
+
+  public Object getNullObject() {
+    return null;
+  }
 }

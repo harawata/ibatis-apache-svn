@@ -34,25 +34,22 @@ package org.apache.ibatis.ognl;
  * @author Luke Blanshard (blanshlu@netscape.net)
  * @author Drew Davidson (drew@ognl.org)
  */
-class ASTNotIn extends SimpleNode
-{
-    public ASTNotIn(int id) {
-        super(id);
-    }
+class ASTNotIn extends SimpleNode {
+  public ASTNotIn(int id) {
+    super(id);
+  }
 
-    public ASTNotIn(OgnlParser p, int id) {
-        super(p, id);
-    }
+  public ASTNotIn(OgnlParser p, int id) {
+    super(p, id);
+  }
 
-    protected Object getValueBody( OgnlContext context, Object source ) throws OgnlException
-    {
-        Object v1 = children[0].getValue( context, source );
-        Object v2 = children[1].getValue( context, source );
-        return OgnlOps.in( v1, v2 )? Boolean.FALSE : Boolean.TRUE;
-    }
+  protected Object getValueBody(OgnlContext context, Object source) throws OgnlException {
+    Object v1 = children[0].getValue(context, source);
+    Object v2 = children[1].getValue(context, source);
+    return OgnlOps.in(v1, v2) ? Boolean.FALSE : Boolean.TRUE;
+  }
 
-    public String toString()
-    {
-        return children[0] + " not in " + children[1];
-    }
+  public String toString() {
+    return children[0] + " not in " + children[1];
+  }
 }

@@ -1,6 +1,9 @@
 package org.apache.ibatis.jdbc;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.Reader;
 import java.sql.*;
 
 public class ScriptRunner {
@@ -57,7 +60,7 @@ public class ScriptRunner {
   public void closeConnection() {
     try {
       connection.close();
-    } catch(Exception e) {
+    } catch (Exception e) {
       // ignore
     }
   }

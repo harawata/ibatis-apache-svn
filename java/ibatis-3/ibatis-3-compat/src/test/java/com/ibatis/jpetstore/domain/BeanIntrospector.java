@@ -1,7 +1,9 @@
 package com.ibatis.jpetstore.domain;
 
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.StringTokenizer;
 
 /**
  * Abstract class used to help development of Probe implementations

@@ -34,31 +34,30 @@ package org.apache.ibatis.ognl;
  * @author Luke Blanshard (blanshlu@netscape.net)
  * @author Drew Davidson (drew@ognl.org)
  */
-class ASTVarRef extends SimpleNode
-{
-    private String name;
+class ASTVarRef extends SimpleNode {
+  private String name;
 
-    public ASTVarRef(int id) {
-        super(id);
-    }
+  public ASTVarRef(int id) {
+    super(id);
+  }
 
-    public ASTVarRef(OgnlParser p, int id) {
-        super(p, id);
-    }
+  public ASTVarRef(OgnlParser p, int id) {
+    super(p, id);
+  }
 
-    void setName( String name ) {
-        this.name = name;
-    }
+  void setName(String name) {
+    this.name = name;
+  }
 
-    protected Object getValueBody( OgnlContext context, Object source ) throws OgnlException {
-        return context.get(name);
-    }
+  protected Object getValueBody(OgnlContext context, Object source) throws OgnlException {
+    return context.get(name);
+  }
 
-    protected void setValueBody( OgnlContext context, Object target, Object value ) throws OgnlException {
-        context.put( name, value );
-    }
+  protected void setValueBody(OgnlContext context, Object target, Object value) throws OgnlException {
+    context.put(name, value);
+  }
 
-    public String toString() {
-        return "#" + name;
-    }
+  public String toString() {
+    return "#" + name;
+  }
 }

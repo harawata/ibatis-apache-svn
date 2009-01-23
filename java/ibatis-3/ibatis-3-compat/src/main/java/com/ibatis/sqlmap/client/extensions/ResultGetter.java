@@ -3,8 +3,8 @@ package com.ibatis.sqlmap.client.extensions;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.*;
-import java.sql.Date;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Map;
 
 /**
  * Allows values to be retrieved from the underlying result set.

@@ -1,9 +1,10 @@
 package org.apache.ibatis.reflection;
 
-import org.junit.*;
+import static org.junit.Assert.assertEquals;
+import org.junit.Test;
 
-import java.lang.reflect.*;
-import static org.junit.Assert.*;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.UndeclaredThrowableException;
 
 public class ExceptionUtilTest {
 

@@ -1,14 +1,20 @@
 package com.ibatis.sqlmap.engine.mapping.sql.dynamic;
 
 import com.ibatis.sqlmap.engine.builder.InlineParameterMapParser;
-import com.ibatis.sqlmap.engine.mapping.sql.*;
+import com.ibatis.sqlmap.engine.mapping.sql.Sql;
+import com.ibatis.sqlmap.engine.mapping.sql.SqlChild;
+import com.ibatis.sqlmap.engine.mapping.sql.SqlText;
 import com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements.*;
 import com.ibatis.sqlmap.engine.mapping.sql.simple.SimpleDynamicSql;
-import org.apache.ibatis.mapping.*;
+import org.apache.ibatis.mapping.Configuration;
+import org.apache.ibatis.mapping.ParameterMapping;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 
-import java.io.*;
-import java.util.*;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class DynamicSql implements Sql, DynamicParent {
 

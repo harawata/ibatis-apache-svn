@@ -1,11 +1,14 @@
 package com.ibatis.sqlmap;
 
-import com.ibatis.sqlmap.client.*;
+import com.ibatis.sqlmap.client.SqlMapClient;
+import com.ibatis.sqlmap.client.SqlMapSession;
 import org.apache.ibatis.cache.CacheKey;
 import testdomain.Account;
 
 import java.sql.SQLException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class CacheStatementTest extends BaseSqlMapTest {
 

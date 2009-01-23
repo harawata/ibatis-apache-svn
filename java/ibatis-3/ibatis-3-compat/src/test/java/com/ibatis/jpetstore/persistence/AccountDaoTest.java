@@ -1,6 +1,7 @@
 package com.ibatis.jpetstore.persistence;
 
-import com.ibatis.jpetstore.domain.*;
+import com.ibatis.jpetstore.domain.Account;
+import com.ibatis.jpetstore.domain.DomainFixture;
 import com.ibatis.jpetstore.persistence.iface.AccountDao;
 
 public class AccountDaoTest extends BasePersistenceTest {

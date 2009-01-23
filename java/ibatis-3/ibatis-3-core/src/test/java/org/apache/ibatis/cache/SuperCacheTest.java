@@ -1,9 +1,9 @@
 package org.apache.ibatis.cache;
 
-import org.junit.*;
-import org.apache.ibatis.cache.impl.PerpetualCache;
 import org.apache.ibatis.cache.decorators.*;
-import static org.junit.Assert.*;
+import org.apache.ibatis.cache.impl.PerpetualCache;
+import static org.junit.Assert.assertTrue;
+import org.junit.Test;
 
 public class SuperCacheTest {
 
@@ -22,7 +22,7 @@ public class SuperCacheTest {
     cache = new TransactionalCache(cache);
     for (int i = 0; i < N; i++) {
       cache.putObject(i, i);
-      ((TransactionalCache)cache).commit();
+      ((TransactionalCache) cache).commit();
       Object o = cache.getObject(i);
       assertTrue(o == null || i == ((Integer) o));
     }

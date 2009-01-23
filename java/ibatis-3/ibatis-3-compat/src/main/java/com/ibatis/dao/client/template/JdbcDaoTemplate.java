@@ -1,6 +1,8 @@
 package com.ibatis.dao.client.template;
 
-import com.ibatis.dao.client.*;
+import com.ibatis.dao.client.DaoException;
+import com.ibatis.dao.client.DaoManager;
+import com.ibatis.dao.client.DaoTransaction;
 import com.ibatis.dao.engine.transaction.ConnectionDaoTransaction;
 
 import java.sql.Connection;

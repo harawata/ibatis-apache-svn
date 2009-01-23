@@ -30,13 +30,11 @@
 //--------------------------------------------------------------------------
 package org.apache.ibatis.ognl.objects;
 
-public class ObjectIndexed extends BaseObjectIndexed
-{
-    public ObjectIndexed()
-    {
-        super();
-        setAttribute("foo", "bar");
-        setAttribute("bar", "baz");
-        setAttribute("other", new OtherObjectIndexed());
-    }
+public class ObjectIndexed extends BaseObjectIndexed {
+  public ObjectIndexed() {
+    super();
+    setAttribute("foo", "bar");
+    setAttribute("bar", "baz");
+    setAttribute("other", new OtherObjectIndexed());
+  }
 }

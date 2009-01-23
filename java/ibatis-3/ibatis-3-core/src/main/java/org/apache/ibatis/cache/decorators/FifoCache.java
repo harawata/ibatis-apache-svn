@@ -2,7 +2,7 @@ package org.apache.ibatis.cache.decorators;
 
 import org.apache.ibatis.cache.Cache;
 
-import java.util.*;
+import java.util.LinkedList;
 import java.util.concurrent.locks.ReadWriteLock;
 
 /**

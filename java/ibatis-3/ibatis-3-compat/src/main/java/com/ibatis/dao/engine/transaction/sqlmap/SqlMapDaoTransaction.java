@@ -4,7 +4,8 @@ import com.ibatis.dao.client.DaoException;
 import com.ibatis.dao.engine.transaction.ConnectionDaoTransaction;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 public class SqlMapDaoTransaction implements ConnectionDaoTransaction {
 

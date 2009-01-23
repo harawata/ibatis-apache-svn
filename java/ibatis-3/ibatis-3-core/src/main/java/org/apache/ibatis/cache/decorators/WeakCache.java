@@ -2,9 +2,10 @@ package org.apache.ibatis.cache.decorators;
 
 import org.apache.ibatis.cache.Cache;
 
-import java.util.*;
+import java.lang.ref.ReferenceQueue;
+import java.lang.ref.WeakReference;
+import java.util.LinkedList;
 import java.util.concurrent.locks.ReadWriteLock;
-import java.lang.ref.*;
 
 /**
  * Weak Reference cache decorator
@@ -86,6 +87,7 @@ public class WeakCache implements Cache {
 
   private static class WeakEntry extends WeakReference {
     private final Object key;
+
     private WeakEntry(Object key, Object value, ReferenceQueue garbageCollectionQueue) {
       super(value, garbageCollectionQueue);
       this.key = key;

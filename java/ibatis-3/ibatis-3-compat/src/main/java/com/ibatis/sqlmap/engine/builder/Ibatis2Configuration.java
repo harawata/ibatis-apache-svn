@@ -1,16 +1,20 @@
 package com.ibatis.sqlmap.engine.builder;
 
-import com.ibatis.sqlmap.engine.datasource.*;
+import com.ibatis.sqlmap.engine.datasource.DbcpDataSourceFactory;
+import com.ibatis.sqlmap.engine.datasource.JndiDataSourceFactory;
+import com.ibatis.sqlmap.engine.datasource.SimpleDataSourceFactory;
 import com.ibatis.sqlmap.engine.transaction.TransactionManager;
 import com.ibatis.sqlmap.engine.transaction.external.ExternalTransactionConfig;
 import com.ibatis.sqlmap.engine.transaction.jdbc.JdbcTransactionConfig;
 import com.ibatis.sqlmap.engine.transaction.jta.JtaTransactionConfig;
-import org.apache.ibatis.cache.decorators.*;
-import org.apache.ibatis.cache.impl.PerpetualCache;
+import org.apache.ibatis.cache.decorators.FifoCache;
+import org.apache.ibatis.cache.decorators.LruCache;
+import org.apache.ibatis.cache.decorators.SoftCache;
 import org.apache.ibatis.mapping.Configuration;
 
 import javax.sql.DataSource;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Ibatis2Configuration extends Configuration {
 

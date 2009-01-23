@@ -1,11 +1,14 @@
 package com.ibatis.sqlmap.engine.transaction.jdbc;
 
-import com.ibatis.sqlmap.engine.transaction.*;
+import com.ibatis.sqlmap.engine.transaction.BaseTransaction;
+import com.ibatis.sqlmap.engine.transaction.IsolationLevel;
+import com.ibatis.sqlmap.engine.transaction.TransactionException;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.Configuration;
 
 import javax.sql.DataSource;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 public class JdbcTransaction extends BaseTransaction {
 

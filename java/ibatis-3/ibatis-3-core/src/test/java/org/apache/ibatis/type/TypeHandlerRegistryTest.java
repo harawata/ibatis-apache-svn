@@ -1,8 +1,8 @@
 package org.apache.ibatis.type;
 
 import domain.misc.RichType;
-import org.junit.*;
 import static org.junit.Assert.*;
+import org.junit.Test;
 
 public class TypeHandlerRegistryTest {
 

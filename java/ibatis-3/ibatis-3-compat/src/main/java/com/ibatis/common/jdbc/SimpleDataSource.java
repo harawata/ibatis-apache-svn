@@ -1,10 +1,11 @@
 package com.ibatis.common.jdbc;
 
 import com.ibatis.common.resources.Resources;
-
-import java.util.*;
-
 import org.apache.ibatis.datasource.pooled.PooledDataSource;
+
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 
 public class SimpleDataSource extends PooledDataSource {
 

@@ -1,13 +1,17 @@
 package com.ibatis.sqlmap.engine.transaction.jta;
 
-import com.ibatis.sqlmap.engine.transaction.*;
+import com.ibatis.sqlmap.engine.transaction.BaseTransaction;
+import com.ibatis.sqlmap.engine.transaction.IsolationLevel;
+import com.ibatis.sqlmap.engine.transaction.TransactionException;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.Configuration;
 import org.apache.ibatis.transaction.jdbc.JdbcTransaction;
 
 import javax.sql.DataSource;
-import javax.transaction.*;
-import java.sql.*;
+import javax.transaction.Status;
+import javax.transaction.UserTransaction;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 public class JtaTransaction extends BaseTransaction {
 
@@ -56,7 +60,7 @@ public class JtaTransaction extends BaseTransaction {
     if (connection.getAutoCommit()) {
       connection.setAutoCommit(false);
     }
-    executor = configuration.newExecutor(new JdbcTransaction(connection,false));
+    executor = configuration.newExecutor(new JdbcTransaction(connection, false));
   }
 
   public void commit(boolean required) throws SQLException, TransactionException {

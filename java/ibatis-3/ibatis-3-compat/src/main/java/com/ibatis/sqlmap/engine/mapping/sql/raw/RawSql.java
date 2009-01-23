@@ -1,7 +1,8 @@
 package com.ibatis.sqlmap.engine.mapping.sql.raw;
 
 import com.ibatis.sqlmap.engine.mapping.sql.Sql;
-import org.apache.ibatis.mapping.*;
+import org.apache.ibatis.mapping.ParameterMap;
+import org.apache.ibatis.mapping.ParameterMapping;
 
 import java.util.List;
 

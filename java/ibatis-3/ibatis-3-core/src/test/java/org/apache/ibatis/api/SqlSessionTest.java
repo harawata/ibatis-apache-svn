@@ -1,16 +1,15 @@
 package org.apache.ibatis.api;
 
-import org.junit.*;
+import domain.blog.*;
 import org.apache.ibatis.BaseDataTest;
-import org.apache.ibatis.mapping.Configuration;
 import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.mapping.Configuration;
+import static org.junit.Assert.*;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import java.io.Reader;
 import java.util.List;
-
-import domain.blog.*;
-
-import static org.junit.Assert.*;
 
 public class SqlSessionTest extends BaseDataTest {
   private static SqlSessionFactory sqlMapper;
@@ -28,7 +27,7 @@ public class SqlSessionTest extends BaseDataTest {
     SqlSession session = sqlMapper.openSession();
     try {
       List<Author> authors = session.selectList("com.domain.AuthorMapper.selectAllAuthors");
-      assertEquals(2,authors.size());
+      assertEquals(2, authors.size());
     } finally {
       session.close();
     }
@@ -51,7 +50,7 @@ public class SqlSessionTest extends BaseDataTest {
   public void shouldSelectOneAuthorAsList() throws Exception {
     SqlSession session = sqlMapper.openSession();
     try {
-      List<Author> authors= session.selectList(
+      List<Author> authors = session.selectList(
           "com.domain.AuthorMapper.selectAuthor", new Author(101));
       assertEquals(101, authors.get(0).getId());
       assertEquals(Section.NEWS, authors.get(0).getFavouriteSection());
@@ -159,15 +158,15 @@ public class SqlSessionTest extends BaseDataTest {
       final int id = 102;
 
       List<Author> authors = session.selectList("com.domain.AuthorMapper.selectAuthor", id);
-      assertEquals(1,authors.size());
+      assertEquals(1, authors.size());
 
       session.delete("com.domain.AuthorMapper.deleteAuthor", id);
       authors = session.selectList("com.domain.AuthorMapper.selectAuthor", id);
-      assertEquals(0,authors.size());
+      assertEquals(0, authors.size());
 
       session.rollback();
       authors = session.selectList("com.domain.AuthorMapper.selectAuthor", id);
-      assertEquals(1,authors.size());
+      assertEquals(1, authors.size());
 
     } finally {
       session.close();
@@ -181,9 +180,9 @@ public class SqlSessionTest extends BaseDataTest {
       Blog blog = (Blog) session.selectOne("com.domain.BlogMapper.selectBlogWithPostsUsingSubSelect", 1);
       assertEquals("Jim Business", blog.getTitle());
       assertEquals(2, blog.getPosts().size());
-      assertEquals("Corn nuts",blog.getPosts().get(0).getSubject());
-      assertEquals(101,blog.getAuthor().getId());
-      assertEquals("jim",blog.getAuthor().getUsername());
+      assertEquals("Corn nuts", blog.getPosts().get(0).getSubject());
+      assertEquals(101, blog.getAuthor().getId());
+      assertEquals("jim", blog.getAuthor().getUsername());
     } finally {
       session.close();
     }
@@ -198,7 +197,7 @@ public class SqlSessionTest extends BaseDataTest {
 
       final Author author = blog.getAuthor();
       assertEquals(101, author.getId());
-      assertEquals("jim",author.getUsername());
+      assertEquals("jim", author.getUsername());
 
       final List<Post> posts = blog.getPosts();
       assertEquals(2, posts.size());

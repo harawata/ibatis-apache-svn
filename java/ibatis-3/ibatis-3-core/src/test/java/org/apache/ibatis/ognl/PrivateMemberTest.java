@@ -32,66 +32,54 @@ package org.apache.ibatis.ognl;
 
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import org.apache.ibatis.ognl.DefaultMemberAccess;
-import org.apache.ibatis.ognl.Ognl;
-import org.apache.ibatis.ognl.OgnlContext;
-import org.apache.ibatis.ognl.OgnlException;
 
 /**
  * This is a test program for private access in OGNL.
  * shows the failures and a summary.
  */
-public class PrivateMemberTest extends TestCase
-{
-    private String                  _privateProperty = "private value";
-    protected OgnlContext           context;
+public class PrivateMemberTest extends TestCase {
+  private String _privateProperty = "private value";
+  protected OgnlContext context;
 
 
-	/*===================================================================
-		Public static methods
-	  ===================================================================*/
-    public static TestSuite suite()
-    {
-        return new TestSuite(PrivateMemberTest.class);
-    }
+  /*===================================================================
+     Public static methods
+     ===================================================================*/
+  public static TestSuite suite() {
+    return new TestSuite(PrivateMemberTest.class);
+  }
 
-	/*===================================================================
-		Constructors
-	  ===================================================================*/
-	public PrivateMemberTest(String name)
-	{
-	    super(name);
-	}
+  /*===================================================================
+     Constructors
+     ===================================================================*/
+  public PrivateMemberTest(String name) {
+    super(name);
+  }
 
-	/*===================================================================
-		Public methods
-	  ===================================================================*/
-    private String getPrivateProperty()
-    {
-        return _privateProperty;
-    }
+  /*===================================================================
+     Public methods
+     ===================================================================*/
+  private String getPrivateProperty() {
+    return _privateProperty;
+  }
 
-    private void setPrivateProperty(String value)
-    {
-        _privateProperty = value;
-    }
+  private void setPrivateProperty(String value) {
+    _privateProperty = value;
+  }
 
-    public void testPrivateAccessor() throws OgnlException
-    {
-        assertEquals(Ognl.getValue("privateProperty", context, this), getPrivateProperty());
-    }
+  public void testPrivateAccessor() throws OgnlException {
+    assertEquals(Ognl.getValue("privateProperty", context, this), getPrivateProperty());
+  }
 
-    public void testPrivateField() throws OgnlException
-    {
-        assertEquals(Ognl.getValue("_privateProperty", context, this), _privateProperty);
-    }
+  public void testPrivateField() throws OgnlException {
+    assertEquals(Ognl.getValue("_privateProperty", context, this), _privateProperty);
+  }
 
-	/*===================================================================
-		Overridden methods
-	  ===================================================================*/
-	public void setUp()
-	{
-        context = (OgnlContext)Ognl.createDefaultContext(null);
-        context.setMemberAccess(new DefaultMemberAccess(true));
-	}
+  /*===================================================================
+     Overridden methods
+     ===================================================================*/
+  public void setUp() {
+    context = (OgnlContext) Ognl.createDefaultContext(null);
+    context.setMemberAccess(new DefaultMemberAccess(true));
+  }
 }

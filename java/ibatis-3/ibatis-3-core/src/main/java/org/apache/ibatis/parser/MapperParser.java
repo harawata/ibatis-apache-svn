@@ -1,14 +1,20 @@
 package org.apache.ibatis.parser;
 
-import org.apache.ibatis.mapping.*;
-import org.apache.ibatis.reflection.MetaClass;
-import org.apache.ibatis.type.*;
-import org.apache.ibatis.xml.*;
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.executor.ErrorContext;
+import org.apache.ibatis.mapping.*;
+import org.apache.ibatis.reflection.MetaClass;
+import org.apache.ibatis.type.JdbcType;
+import org.apache.ibatis.type.TypeHandler;
+import org.apache.ibatis.xml.Nodelet;
+import org.apache.ibatis.xml.NodeletContext;
+import org.apache.ibatis.xml.NodeletParser;
 
 import java.io.Reader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Properties;
 
 public class MapperParser extends BaseParser {
 
@@ -72,24 +78,24 @@ public class MapperParser extends BaseParser {
     }
     cache = configuration.getCache(namespaceCacheId(ns));
     if (cache == null) {
-      throw new ParserException("No cache for namespace '"+ns+"' could be found.");
+      throw new ParserException("No cache for namespace '" + ns + "' could be found.");
     }
   }
 
   //  <cache type="LRU" flushInterval="3600000" size="1000" readOnly="false" />
   @Nodelet("/mapper/cache")
   public void cacheElement(NodeletContext context) throws Exception {
-    String type = context.getStringAttribute("perpetual","PERPETUAL");
+    String type = context.getStringAttribute("perpetual", "PERPETUAL");
     type = typeAliasRegistry.resolveAlias(type);
     Class typeClass = Class.forName(type);
 
-    String eviction = context.getStringAttribute("eviction","LRU");
+    String eviction = context.getStringAttribute("eviction", "LRU");
     eviction = typeAliasRegistry.resolveAlias(eviction);
     Class evictionClass = Class.forName(eviction);
 
-    Long flushInterval = context.getLongAttribute("flushInterval",null);
-    Integer size = context.getIntAttribute("size",null);
-    boolean readOnly = context.getBooleanAttribute("readOnly",false);
+    Long flushInterval = context.getLongAttribute("flushInterval", null);
+    Integer size = context.getIntAttribute("size", null);
+    boolean readOnly = context.getBooleanAttribute("readOnly", false);
 
     Properties props = context.getChildrenAsProperties();
 
@@ -269,13 +275,13 @@ public class MapperParser extends BaseParser {
   //  <procedure ...>
   @Nodelet("/mapper/procedure")
   public void procedureElement(NodeletContext context) throws Exception {
-    buildStatement(context,StatementType.CALLABLE);
+    buildStatement(context, StatementType.CALLABLE);
   }
 
   //  <procedure ...>
   @Nodelet("/mapper/statement")
   public void statementElement(NodeletContext context) throws Exception {
-    buildStatement(context,StatementType.STATEMENT);
+    buildStatement(context, StatementType.STATEMENT);
   }
 
   private String applyNamespace(String base) {
@@ -313,10 +319,10 @@ public class MapperParser extends BaseParser {
   private void setStatementCache(NodeletContext context, MappedStatement.Builder statementBuilder) {
     boolean isSelect = "select".equals(context.getNode().getNodeName());
 
-    boolean flushCache = context.getBooleanAttribute("flushCache",!isSelect);
+    boolean flushCache = context.getBooleanAttribute("flushCache", !isSelect);
     statementBuilder.flushCacheRequired(flushCache);
 
-    boolean useCache = context.getBooleanAttribute("useCache",isSelect);
+    boolean useCache = context.getBooleanAttribute("useCache", isSelect);
     statementBuilder.useCache(useCache);
 
     statementBuilder.cache(cache);
@@ -421,7 +427,7 @@ public class MapperParser extends BaseParser {
     resultMap = applyNamespace(resultMap);
     String mode = context.getStringAttribute("mode");
     String typeHandler = context.getStringAttribute("typeHandler");
-    Integer numericScale = context.getIntAttribute("numericScale",null);
+    Integer numericScale = context.getIntAttribute("numericScale", null);
 
     ParameterMode modeEnum = resolveParameterMode(mode);
     Class resultType = parameterMapBuilder.type();

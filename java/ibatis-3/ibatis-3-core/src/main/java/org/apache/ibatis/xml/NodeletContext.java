@@ -1,8 +1,13 @@
 package org.apache.ibatis.xml;
 
-import org.w3c.dom.*;
+import org.w3c.dom.CharacterData;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
 
 public class NodeletContext {
 
@@ -176,8 +181,8 @@ public class NodeletContext {
     List<NodeletContext> children = new ArrayList<NodeletContext>();
     NodeList nodeList = node.getChildNodes();
     if (nodeList != null) {
-      for (int i=0,n=nodeList.getLength(); i < n; i++) {
-        children.add(new NodeletContext(nodeList.item(i),variables));
+      for (int i = 0, n = nodeList.getLength(); i < n; i++) {
+        children.add(new NodeletContext(nodeList.item(i), variables));
       }
     }
     return children;
@@ -185,7 +190,7 @@ public class NodeletContext {
 
   public Properties getChildrenAsProperties() {
     Properties properties = new Properties();
-    for(NodeletContext child : getChildren()) {
+    for (NodeletContext child : getChildren()) {
       String name = child.getStringAttribute("name");
       String value = child.getStringAttribute("value");
       if (name != null && value != null) {
@@ -201,7 +206,7 @@ public class NodeletContext {
     if (attributeNodes != null) {
       for (int i = 0; i < attributeNodes.getLength(); i++) {
         Node attribute = attributeNodes.item(i);
-        String value = PropertyParser.parse(attribute.getNodeValue(),variables);
+        String value = PropertyParser.parse(attribute.getNodeValue(), variables);
         attributes.put(attribute.getNodeName(), value);
       }
     }
@@ -225,7 +230,7 @@ public class NodeletContext {
     if (child.getNodeType() == Node.CDATA_SECTION_NODE
         || child.getNodeType() == Node.TEXT_NODE) {
       String data = ((CharacterData) child).getData();
-      data = PropertyParser.parse(data,variables);
+      data = PropertyParser.parse(data, variables);
       return data;
     }
     return null;

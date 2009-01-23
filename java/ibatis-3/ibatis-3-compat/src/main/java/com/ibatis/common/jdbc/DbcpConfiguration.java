@@ -4,7 +4,8 @@ import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.ibatis.reflection.MetaObject;
 
 import javax.sql.DataSource;
-import java.util.*;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Wrapper class to simplify use of DBCP

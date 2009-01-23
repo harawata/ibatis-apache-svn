@@ -1,12 +1,12 @@
 package org.apache.ibatis.api.defaults;
 
-import org.apache.ibatis.api.SqlSession;
 import org.apache.ibatis.api.ApiException;
+import org.apache.ibatis.api.SqlSession;
 import org.apache.ibatis.api.exceptions.ExceptionFactory;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.result.ResultHandler;
-import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.Configuration;
+import org.apache.ibatis.mapping.MappedStatement;
 
 import java.util.List;
 
@@ -55,7 +55,7 @@ public class DefaultSqlSession implements SqlSession {
   }
 
   public void select(String statement, Object parameter, ResultHandler handler) {
-    select(statement,parameter,Executor.NO_ROW_OFFSET, Executor.NO_ROW_LIMIT,handler);
+    select(statement, parameter, Executor.NO_ROW_OFFSET, Executor.NO_ROW_LIMIT, handler);
   }
 
   public void select(String statement, Object parameter, int offset, int limit, ResultHandler handler) {

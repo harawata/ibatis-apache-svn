@@ -34,36 +34,31 @@ package org.apache.ibatis.ognl;
  * @author Luke Blanshard (blanshlu@netscape.net)
  * @author Drew Davidson (drew@ognl.org)
  */
-class ASTKeyValue extends SimpleNode
-{
-    public ASTKeyValue(int id) {
-        super(id);
-    }
+class ASTKeyValue extends SimpleNode {
+  public ASTKeyValue(int id) {
+    super(id);
+  }
 
-    public ASTKeyValue(OgnlParser p, int id) {
-        super(p, id);
-    }
+  public ASTKeyValue(OgnlParser p, int id) {
+    super(p, id);
+  }
 
-    protected Node getKey()
-    {
-        return children[0];
-    }
+  protected Node getKey() {
+    return children[0];
+  }
 
-    protected Node getValue()
-    {
-        return (jjtGetNumChildren() > 1) ? children[1] : null;
-    }
+  protected Node getValue() {
+    return (jjtGetNumChildren() > 1) ? children[1] : null;
+  }
 
-    /**
-        Returns null because this is a parser construct and does not evaluate
-     */
-    protected Object getValueBody( OgnlContext context, Object source ) throws OgnlException
-    {
-        return null;
-    }
+  /**
+   * Returns null because this is a parser construct and does not evaluate
+   */
+  protected Object getValueBody(OgnlContext context, Object source) throws OgnlException {
+    return null;
+  }
 
-    public String toString()
-    {
-        return getKey() + " -> " + getValue();
-    }
+  public String toString() {
+    return getKey() + " -> " + getValue();
+  }
 }

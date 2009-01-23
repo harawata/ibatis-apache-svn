@@ -31,74 +31,64 @@
 package org.apache.ibatis.ognl;
 
 import junit.framework.TestSuite;
-import org.apache.ibatis.ognl.Ognl;
-import org.apache.ibatis.ognl.OgnlException;
 
-public class ConstantTreeTest extends OgnlTestCase
-{
-    public static int               nonFinalStaticVariable = 15;
+public class ConstantTreeTest extends OgnlTestCase {
+  public static int nonFinalStaticVariable = 15;
 
-    private static Object[][]       TESTS = {
-                                        { "true", Boolean.TRUE },
-                                        { "55", Boolean.TRUE },
-                                        { "@java.awt.Color@black", Boolean.TRUE },
-                                        { "@org.apache.ibatis.ognl.ConstantTreeTest@nonFinalStaticVariable", Boolean.FALSE },
-                                        { "@org.apache.ibatis.ognl.ConstantTreeTest@nonFinalStaticVariable + 10", Boolean.FALSE },
-                                        { "55 + 24 + @java.awt.Event@ALT_MASK", Boolean.TRUE },
-                                        { "name", Boolean.FALSE },
-                                        { "name[i]", Boolean.FALSE },
-                                        { "name[i].property", Boolean.FALSE },
-                                        { "name.{? foo }", Boolean.FALSE },
-                                        { "name.{ foo }", Boolean.FALSE },
-                                        { "name.{ 25 }", Boolean.FALSE }
-                                    };
+  private static Object[][] TESTS = {
+      {"true", Boolean.TRUE},
+      {"55", Boolean.TRUE},
+      {"@java.awt.Color@black", Boolean.TRUE},
+      {"@org.apache.ibatis.ognl.ConstantTreeTest@nonFinalStaticVariable", Boolean.FALSE},
+      {"@org.apache.ibatis.ognl.ConstantTreeTest@nonFinalStaticVariable + 10", Boolean.FALSE},
+      {"55 + 24 + @java.awt.Event@ALT_MASK", Boolean.TRUE},
+      {"name", Boolean.FALSE},
+      {"name[i]", Boolean.FALSE},
+      {"name[i].property", Boolean.FALSE},
+      {"name.{? foo }", Boolean.FALSE},
+      {"name.{ foo }", Boolean.FALSE},
+      {"name.{ 25 }", Boolean.FALSE}
+  };
 
-	/*===================================================================
-		Public static methods
-	  ===================================================================*/
-    public static TestSuite suite()
-    {
-        TestSuite       result = new TestSuite();
+  /*===================================================================
+     Public static methods
+     ===================================================================*/
+  public static TestSuite suite() {
+    TestSuite result = new TestSuite();
 
-        for (int i = 0; i < TESTS.length; i++) {
-            result.addTest(new ConstantTreeTest((String)TESTS[i][0] + " (" + TESTS[i][1] + ")", null, (String)TESTS[i][0], TESTS[i][1]));
-        }
-        return result;
+    for (int i = 0; i < TESTS.length; i++) {
+      result.addTest(new ConstantTreeTest((String) TESTS[i][0] + " (" + TESTS[i][1] + ")", null, (String) TESTS[i][0], TESTS[i][1]));
     }
+    return result;
+  }
 
-	/*===================================================================
-		Overridden methods
-	  ===================================================================*/
-    protected void runTest() throws OgnlException
-    {
-        assertTrue(Ognl.isConstant(getExpression(), context) == ((Boolean)getExpectedResult()).booleanValue());
-    }
+  /*===================================================================
+     Overridden methods
+     ===================================================================*/
+  protected void runTest() throws OgnlException {
+    assertTrue(Ognl.isConstant(getExpression(), context) == ((Boolean) getExpectedResult()).booleanValue());
+  }
 
-	/*===================================================================
-		Constructors
-	  ===================================================================*/
-	public ConstantTreeTest()
-	{
-	    super();
-	}
+  /*===================================================================
+     Constructors
+     ===================================================================*/
+  public ConstantTreeTest() {
+    super();
+  }
 
-	public ConstantTreeTest(String name)
-	{
-	    super(name);
-	}
+  public ConstantTreeTest(String name) {
+    super(name);
+  }
 
-    public ConstantTreeTest(String name, Object root, String expressionString, Object expectedResult, Object setValue, Object expectedAfterSetResult)
-    {
-        super(name, root, expressionString, expectedResult, setValue, expectedAfterSetResult);
-    }
+  public ConstantTreeTest(String name, Object root, String expressionString, Object expectedResult, Object setValue, Object expectedAfterSetResult) {
+    super(name, root, expressionString, expectedResult, setValue, expectedAfterSetResult);
+  }
 
-    public ConstantTreeTest(String name, Object root, String expressionString, Object expectedResult, Object setValue)
-    {
-        super(name, root, expressionString, expectedResult, setValue);
-    }
+  public ConstantTreeTest(String name, Object root, String expressionString, Object expectedResult, Object setValue) {
+    super(name, root, expressionString, expectedResult, setValue);
+  }
 
-    public ConstantTreeTest(String name, Object root, String expressionString, Object expectedResult)
-    {
-        super(name, root, expressionString, expectedResult);
-    }
+  public ConstantTreeTest(String name, Object root, String expressionString, Object expectedResult) {
+    super(name, root, expressionString, expectedResult);
+  }
 }

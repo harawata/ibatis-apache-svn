@@ -1,9 +1,11 @@
 package com.ibatis.sqlmap;
 
-import testdomain.*;
+import testdomain.Account;
+import testdomain.Order;
 
 import java.sql.SQLException;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 public class ResultMapTest extends BaseSqlMapTest {
 

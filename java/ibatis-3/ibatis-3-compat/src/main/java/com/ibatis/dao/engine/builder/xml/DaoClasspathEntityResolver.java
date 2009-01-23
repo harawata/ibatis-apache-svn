@@ -1,10 +1,14 @@
 package com.ibatis.dao.engine.builder.xml;
 
 import com.ibatis.common.resources.Resources;
-import org.xml.sax.*;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DaoClasspathEntityResolver implements EntityResolver {
 

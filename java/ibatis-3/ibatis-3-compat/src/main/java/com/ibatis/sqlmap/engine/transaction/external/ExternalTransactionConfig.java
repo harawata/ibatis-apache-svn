@@ -1,6 +1,8 @@
 package com.ibatis.sqlmap.engine.transaction.external;
 
-import com.ibatis.sqlmap.engine.transaction.*;
+import com.ibatis.sqlmap.engine.transaction.BaseTransactionConfig;
+import com.ibatis.sqlmap.engine.transaction.Transaction;
+import com.ibatis.sqlmap.engine.transaction.TransactionException;
 import org.apache.ibatis.mapping.Configuration;
 
 import java.sql.SQLException;

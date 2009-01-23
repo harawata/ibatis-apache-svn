@@ -30,28 +30,22 @@
 //--------------------------------------------------------------------------
 package org.apache.ibatis.ognl.objects;
 
-public class CorrectedObject extends Object
-{
-    public CorrectedObject()
-    {
-        super();
-    }
+public class CorrectedObject extends Object {
+  public CorrectedObject() {
+    super();
+  }
 
-    public void setStringValue(String value)
-    {
-    }
+  public void setStringValue(String value) {
+  }
 
-    public String getStringValue()
-    {
-        return null;
-    }
+  public String getStringValue() {
+    return null;
+  }
 
-    public String getIndexedStringValue(String key)
-    {
-        return null;
-    }
+  public String getIndexedStringValue(String key) {
+    return null;
+  }
 
-    public void setIndexedStringValue(String key, String value)
-    {
-    }
+  public void setIndexedStringValue(String key, String value) {
+  }
 }

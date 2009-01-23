@@ -1,8 +1,9 @@
 package org.apache.ibatis.cache.decorators;
 
-import org.apache.ibatis.cache.*;
+import org.apache.ibatis.cache.Cache;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.locks.ReadWriteLock;
 
 public class TransactionalCache implements Cache {
@@ -41,12 +42,12 @@ public class TransactionalCache implements Cache {
 
   public void putObject(Object key, Object object) {
     entriesToRemoveOnCommit.remove(key);
-    entriesToAddOnCommit.put(key, new AddEntry(delegate,key,object));
+    entriesToAddOnCommit.put(key, new AddEntry(delegate, key, object));
   }
 
   public Object removeObject(Object key) {
     entriesToAddOnCommit.remove(key);
-    entriesToRemoveOnCommit.put(key, new RemoveEntry(delegate,key));
+    entriesToRemoveOnCommit.put(key, new RemoveEntry(delegate, key));
     return delegate.getObject(key);
   }
 

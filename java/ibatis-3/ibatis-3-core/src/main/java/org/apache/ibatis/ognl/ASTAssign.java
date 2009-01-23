@@ -34,25 +34,22 @@ package org.apache.ibatis.ognl;
  * @author Luke Blanshard (blanshlu@netscape.net)
  * @author Drew Davidson (drew@ognl.org)
  */
-class ASTAssign extends SimpleNode
-{
-    public ASTAssign(int id) {
-        super(id);
-    }
+class ASTAssign extends SimpleNode {
+  public ASTAssign(int id) {
+    super(id);
+  }
 
-    public ASTAssign(OgnlParser p, int id) {
-        super(p, id);
-    }
+  public ASTAssign(OgnlParser p, int id) {
+    super(p, id);
+  }
 
-    protected Object getValueBody( OgnlContext context, Object source ) throws OgnlException
-    {
-        Object result = children[1].getValue( context, source );
-        children[0].setValue( context, source, result );
-        return result;
-    }
+  protected Object getValueBody(OgnlContext context, Object source) throws OgnlException {
+    Object result = children[1].getValue(context, source);
+    children[0].setValue(context, source, result);
+    return result;
+  }
 
-    public String toString()
-    {
-        return children[0] + " = " + children[1];
-    }
+  public String toString() {
+    return children[0] + " = " + children[1];
+  }
 }

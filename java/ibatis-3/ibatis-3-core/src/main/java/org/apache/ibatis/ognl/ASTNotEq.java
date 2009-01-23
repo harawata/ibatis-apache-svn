@@ -34,25 +34,22 @@ package org.apache.ibatis.ognl;
  * @author Luke Blanshard (blanshlu@netscape.net)
  * @author Drew Davidson (drew@ognl.org)
  */
-class ASTNotEq extends ExpressionNode
-{
-    public ASTNotEq(int id) {
-        super(id);
-    }
+class ASTNotEq extends ExpressionNode {
+  public ASTNotEq(int id) {
+    super(id);
+  }
 
-    public ASTNotEq(OgnlParser p, int id) {
-        super(p, id);
-    }
+  public ASTNotEq(OgnlParser p, int id) {
+    super(p, id);
+  }
 
-    protected Object getValueBody( OgnlContext context, Object source ) throws OgnlException
-    {
-        Object v1 = children[0].getValue( context, source );
-        Object v2 = children[1].getValue( context, source );
-        return OgnlOps.equal( v1, v2 )? Boolean.FALSE : Boolean.TRUE;
-    }
+  protected Object getValueBody(OgnlContext context, Object source) throws OgnlException {
+    Object v1 = children[0].getValue(context, source);
+    Object v2 = children[1].getValue(context, source);
+    return OgnlOps.equal(v1, v2) ? Boolean.FALSE : Boolean.TRUE;
+  }
 
-    public String getExpressionOperator(int index)
-    {
-        return "!=";
-    }
+  public String getExpressionOperator(int index) {
+    return "!=";
+  }
 }
