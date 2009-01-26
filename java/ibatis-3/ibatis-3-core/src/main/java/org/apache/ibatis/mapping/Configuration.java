@@ -1,6 +1,11 @@
 package org.apache.ibatis.mapping;
 
 import org.apache.ibatis.cache.Cache;
+import org.apache.ibatis.cache.decorators.FifoCache;
+import org.apache.ibatis.cache.decorators.LruCache;
+import org.apache.ibatis.cache.decorators.WeakCache;
+import org.apache.ibatis.cache.decorators.SoftCache;
+import org.apache.ibatis.cache.impl.PerpetualCache;
 import org.apache.ibatis.datasource.jndi.JndiDataSourceFactory;
 import org.apache.ibatis.datasource.pooled.PooledDataSourceFactory;
 import org.apache.ibatis.datasource.unpooled.UnpooledDataSourceFactory;
@@ -57,6 +62,12 @@ public class Configuration {
     typeAliasRegistry.registerAlias("JNDI", JndiDataSourceFactory.class.getName());
     typeAliasRegistry.registerAlias("POOLED", PooledDataSourceFactory.class.getName());
     typeAliasRegistry.registerAlias("UNPOOLED", UnpooledDataSourceFactory.class.getName());
+
+    typeAliasRegistry.registerAlias("PERPETUAL", PerpetualCache.class.getName());
+    typeAliasRegistry.registerAlias("FIFO", FifoCache.class.getName());
+    typeAliasRegistry.registerAlias("LRU", LruCache.class.getName());
+    typeAliasRegistry.registerAlias("SOFT", SoftCache.class.getName());
+    typeAliasRegistry.registerAlias("WEAK", WeakCache.class.getName());
   }
 
   public Environment getEnvironment() {

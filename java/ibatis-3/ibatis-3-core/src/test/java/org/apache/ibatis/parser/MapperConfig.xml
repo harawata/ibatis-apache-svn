@@ -62,6 +62,7 @@
     <!-- mapperXML vs. mapperClass-->
     <mapper resource="org/apache/ibatis/parser/AuthorMapper.xml"/>
     <mapper resource="org/apache/ibatis/parser/BlogMapper.xml"/>
+    <mapper resource="org/apache/ibatis/parser/CachedAuthorMapper.xml"/>
   </mappers>
 
 </configuration>

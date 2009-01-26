@@ -244,4 +244,47 @@ public class SqlSessionTest extends BaseDataTest {
     }
   }
 
+  @Test
+  public void shouldCacheAllAuthors() throws Exception {
+    int first = -1;
+    int second = -1;
+    SqlSession session = sqlMapper.openSession();
+    try {
+      List<Author> authors = session.selectList("com.domain.CachedAuthorMapper.selectAllAuthors");
+      first = System.identityHashCode(authors);
+      session.commit(); // commit should not be required for read/only activity.
+    } finally {
+      session.close();
+    }
+    session = sqlMapper.openSession();
+    try {
+      List<Author> authors = session.selectList("com.domain.CachedAuthorMapper.selectAllAuthors");
+      second = System.identityHashCode(authors);
+    } finally {
+      session.close();
+    }
+    assertEquals (first, second);
+  }
+
+  @Test
+  public void shouldNotCacheAllAuthors() throws Exception {
+    int first = -1;
+    int second = -1;
+    SqlSession session = sqlMapper.openSession();
+    try {
+      List<Author> authors = session.selectList("com.domain.AuthorMapper.selectAllAuthors");
+      first = System.identityHashCode(authors);
+    } finally {
+      session.close();
+    }
+    session = sqlMapper.openSession();
+    try {
+      List<Author> authors = session.selectList("com.domain.AuthorMapper.selectAllAuthors");
+      second = System.identityHashCode(authors);
+    } finally {
+      session.close();
+    }
+    assertTrue(first != second);
+  }
+
 }

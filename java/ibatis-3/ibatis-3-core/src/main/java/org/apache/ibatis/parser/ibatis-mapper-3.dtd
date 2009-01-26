@@ -13,11 +13,11 @@ namespace CDATA #REQUIRED
 
 <!ELEMENT cache (property*)>
 <!ATTLIST cache
-type CDATA #REQUIRED
-eviction CDATA #REQUIRED
-flushInterval CDATA #REQUIRED
-size CDATA #REQUIRED
-readOnly CDATA #REQUIRED
+type CDATA #IMPLIED
+eviction CDATA #IMPLIED
+flushInterval CDATA #IMPLIED
+size CDATA #IMPLIED
+readOnly CDATA #IMPLIED
 >
 
 <!ELEMENT parameterMap (parameter+)?>
