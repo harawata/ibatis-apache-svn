@@ -25,7 +25,7 @@ public class StaticSql implements Sql {
   private String sqlStatement;
 
   public StaticSql(String sqlStatement) {
-    this.sqlStatement = sqlStatement.replace('\r', ' ').replace('\n', ' ');
+    this.sqlStatement = sqlStatement;
   }
 
   public String getSql(StatementScope statementScope, Object parameterObject) {

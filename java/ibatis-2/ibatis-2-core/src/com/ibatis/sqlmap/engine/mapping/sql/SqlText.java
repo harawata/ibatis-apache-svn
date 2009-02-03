@@ -30,8 +30,8 @@ public class SqlText implements SqlChild {
   }
 
   public void setText(String text) {
-    this.text = text.replace('\r', ' ').replace('\n', ' ').replace('\t', ' ');
-    this.isWhiteSpace = text.trim().length() == 0;
+    this.text = text;
+    this.isWhiteSpace = false;
   }
 
   public boolean isWhiteSpace() {
