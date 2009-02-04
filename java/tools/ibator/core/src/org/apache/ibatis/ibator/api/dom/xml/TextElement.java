@@ -15,11 +15,6 @@
  */
 package org.apache.ibatis.ibator.api.dom.xml;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.StringTokenizer;
-
 import org.apache.ibatis.ibator.api.dom.OutputUtilities;
 
 /**
@@ -43,65 +38,9 @@ public class TextElement extends Element {
      */
     @Override
     public String getFormattedContent(int indentLevel) {
-        return formatLongString(content, 100, indentLevel);
-    }
-
-    /**
-     * Utility method. Takes a long string and breaks it into multiple lines of
-     * whose width is no longer that the specified maximum line length.
-     * 
-     * @param s
-     *            the String to be formatted
-     * @param maxLineLength
-     *            the maximum line length
-     * @param indentLevel
-     *            the required indent level of all lines
-     * @return the formatted String
-     */
-    private static String formatLongString(String s, int maxLineLength,
-            int indentLevel) {
-
         StringBuilder sb = new StringBuilder();
         OutputUtilities.xmlIndent(sb, indentLevel);
-        sb.append(s);
-        if (sb.length() <= maxLineLength || s.indexOf(' ') == -1) {
-            // line is short, or has no spaces - return as is
-            return sb.toString();
-        }
-        
-        List<String> lines = new ArrayList<String>();
-        StringTokenizer st = new StringTokenizer(s, " "); //$NON-NLS-1$
-        
-        sb.setLength(0);
-        OutputUtilities.xmlIndent(sb, indentLevel);
-        sb.append(st.nextToken());
-        while (st.hasMoreTokens()) {
-            String token = st.nextToken();
-
-            if (sb.length() + token.length() + 1 > maxLineLength) {
-                lines.add(sb.toString());
-                sb.setLength(0);
-                OutputUtilities.xmlIndent(sb, indentLevel + 1);
-                sb.append(token);
-            } else {
-                sb.append(' ');
-                sb.append(token);
-            }
-        }
-
-        if (sb.toString().trim().length() > 0) {
-            lines.add(sb.toString());
-        }
-
-        sb.setLength(0);
-        Iterator<String> iter = lines.iterator();
-        while (iter.hasNext()) {
-            sb.append(iter.next());
-            if (iter.hasNext()) {
-                OutputUtilities.newLine(sb);
-            }
-        }
-
+        sb.append(content);
         return sb.toString();
     }
 }

@@ -15,6 +15,8 @@
  */
 package org.apache.ibatis.ibator.generator.ibatis2.sqlmap.elements;
 
+import java.util.Iterator;
+
 import org.apache.ibatis.ibator.api.IntrospectedColumn;
 import org.apache.ibatis.ibator.api.dom.xml.Attribute;
 import org.apache.ibatis.ibator.api.dom.xml.TextElement;
@@ -41,20 +43,25 @@ public class BlobColumnListElementGenerator extends AbstractXmlElementGenerator 
 
         ibatorContext.getCommentGenerator().addComment(answer);
 
-        boolean comma = false;
         StringBuilder sb = new StringBuilder();
         
-        for (IntrospectedColumn introspectedColumn : introspectedTable.getBLOBColumns()) {
-            if (comma) {
+        Iterator<IntrospectedColumn> iter = introspectedTable.getBLOBColumns().iterator();
+        while (iter.hasNext()) {
+            sb.append(iter.next().getSelectListPhrase());
+            
+            if (iter.hasNext()) {
                 sb.append(", "); //$NON-NLS-1$
-            } else {
-                comma = true;
             }
-
-            sb.append(introspectedColumn.getSelectListPhrase());
+            
+            if (sb.length() > 80) {
+                answer.addElement(new TextElement(sb.toString()));
+                sb.setLength(0);
+            }
         }
-        
-        answer.addElement((new TextElement(sb.toString())));
+
+        if (sb.length() > 0) {
+            answer.addElement((new TextElement(sb.toString())));
+        }
 
         if (ibatorContext.getPlugins().sqlMapBlobColumnListElementGenerated(answer, introspectedTable)) {
             parentElement.addElement(answer);

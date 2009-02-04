@@ -3,6 +3,8 @@ Version 1.2.2:
 
 Bugs:
 1. Fixed NPE when no DAOs are generated
+2. Fixed IBATIS-579 - don't allow column names with spaces to break
+   across lines
 
 Enhancements:
 1. IBATIS-569 - Make it easier to override IbatorRules in plugins

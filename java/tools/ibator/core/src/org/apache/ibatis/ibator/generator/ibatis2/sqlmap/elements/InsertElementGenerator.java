@@ -15,8 +15,13 @@
  */
 package org.apache.ibatis.ibator.generator.ibatis2.sqlmap.elements;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import org.apache.ibatis.ibator.api.FullyQualifiedTable;
 import org.apache.ibatis.ibator.api.IntrospectedColumn;
+import org.apache.ibatis.ibator.api.dom.OutputUtilities;
 import org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.ibator.api.dom.xml.Attribute;
 import org.apache.ibatis.ibator.api.dom.xml.TextElement;
@@ -71,29 +76,43 @@ public class InsertElementGenerator extends AbstractXmlElementGenerator {
 
         valuesClause.append("values ("); //$NON-NLS-1$
 
-        boolean comma = false;
-        for (IntrospectedColumn introspectedColumn : introspectedTable.getAllColumns()) {
+        List<String> valuesClauses = new ArrayList<String>();
+        Iterator<IntrospectedColumn> iter = introspectedTable.getAllColumns().iterator();
+        while (iter.hasNext()) {
+            IntrospectedColumn introspectedColumn = iter.next();
             if (introspectedColumn.isIdentity()) {
                 // cannot set values on identity fields
                 continue;
             }
-
-            if (comma) {
-                insertClause.append(", "); //$NON-NLS-1$
-                valuesClause.append(", "); //$NON-NLS-1$
-            } else {
-                comma = true; // turn on comma for next time
-            }
-
+            
             insertClause.append(introspectedColumn.getEscapedColumnName());
             valuesClause.append(introspectedColumn.getIbatisFormattedParameterClause());
+            if (iter.hasNext()) {
+                insertClause.append(", "); //$NON-NLS-1$
+                valuesClause.append(", "); //$NON-NLS-1$
+            }
+            
+            if (valuesClause.length() > 80) {
+                answer.addElement(new TextElement(insertClause.toString()));
+                insertClause.setLength(0);
+                OutputUtilities.xmlIndent(insertClause, 1);
+                
+                valuesClauses.add(valuesClause.toString());
+                valuesClause.setLength(0);
+                OutputUtilities.xmlIndent(valuesClause, 1);
+            }
         }
+        
         insertClause.append(')');
-        valuesClause.append(')');
-
         answer.addElement(new TextElement(insertClause.toString()));
-        answer.addElement(new TextElement(valuesClause.toString()));
-
+        
+        valuesClause.append(')');
+        valuesClauses.add(valuesClause.toString());
+        
+        for (String clause : valuesClauses) {
+            answer.addElement(new TextElement(clause));
+        }
+        
         if (gk != null && !gk.isBeforeInsert()) {
             IntrospectedColumn introspectedColumn = introspectedTable.getColumn(gk.getColumn());
             // if the column is null, then it's a configuration error. The
