@@ -67,8 +67,8 @@ public class RenameExampleClassPlugin extends IbatorPluginAdapter {
      */
     public boolean validate(List<String> warnings) {
         
-        searchString = properties.getProperty("searchString");
-        replaceString = properties.getProperty("replaceString");
+        searchString = properties.getProperty("searchString"); //$NON-NLS-1$
+        replaceString = properties.getProperty("replaceString"); //$NON-NLS-1$
         
         boolean valid = StringUtility.stringHasValue(searchString)
             && StringUtility.stringHasValue(replaceString);
@@ -77,10 +77,10 @@ public class RenameExampleClassPlugin extends IbatorPluginAdapter {
             pattern = Pattern.compile(searchString);
         } else {
             if (!StringUtility.stringHasValue(searchString)) {
-                warnings.add(Messages.getString("Warning.27"));
+                warnings.add(Messages.getString("Warning.27")); //$NON-NLS-1$
             }
             if (!StringUtility.stringHasValue(replaceString)) {
-                warnings.add(Messages.getString("Warning.28"));
+                warnings.add(Messages.getString("Warning.28")); //$NON-NLS-1$
             }
         }
         

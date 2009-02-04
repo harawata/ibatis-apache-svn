@@ -67,25 +67,17 @@ public class SelectByPrimaryKeyElementGenerator extends AbstractXmlElementGenera
         StringBuilder sb = new StringBuilder();
         sb.append("select "); //$NON-NLS-1$
 
-        boolean comma = false;
         if (StringUtility.stringHasValue(introspectedTable.getSelectByPrimaryKeyQueryId())) {
             sb.append('\'');
             sb.append(introspectedTable.getSelectByPrimaryKeyQueryId());
-            sb.append("' as QUERYID"); //$NON-NLS-1$
-            comma = true;
+            sb.append("' as QUERYID,"); //$NON-NLS-1$
         }
-
-        for (IntrospectedColumn introspectedColumn : introspectedTable.getAllColumns()) {
-            if (comma) {
-                sb.append(", "); //$NON-NLS-1$
-            } else {
-                comma = true;
-            }
-
-            sb.append(introspectedColumn.getSelectListPhrase());
-        }
-
         answer.addElement(new TextElement(sb.toString()));
+        answer.addElement(getBaseColumnListElement(table));
+        if (introspectedTable.hasBLOBColumns()) {
+            answer.addElement(new TextElement(",")); //$NON-NLS-1$
+            answer.addElement(getBlobColumnListElement(table));
+        }
 
         sb.setLength(0);
         sb.append("from "); //$NON-NLS-1$

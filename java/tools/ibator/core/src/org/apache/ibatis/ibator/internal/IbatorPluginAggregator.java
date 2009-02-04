@@ -950,4 +950,34 @@ public final class IbatorPluginAggregator implements IbatorPlugin {
             plugin.initialized(introspectedTable);
         }
     }
+
+    public boolean sqlMapBaseColumnListElementGenerated(XmlElement element,
+            IntrospectedTable introspectedTable) {
+        boolean rc = true;
+
+        for (IbatorPlugin plugin : plugins) {
+            if (!plugin
+                    .sqlMapBaseColumnListElementGenerated(element, introspectedTable)) {
+                rc = false;
+                break;
+            }
+        }
+
+        return rc;
+    }
+
+    public boolean sqlMapBlobColumnListElementGenerated(XmlElement element,
+            IntrospectedTable introspectedTable) {
+        boolean rc = true;
+
+        for (IbatorPlugin plugin : plugins) {
+            if (!plugin
+                    .sqlMapBlobColumnListElementGenerated(element, introspectedTable)) {
+                rc = false;
+                break;
+            }
+        }
+
+        return rc;
+    }
 }

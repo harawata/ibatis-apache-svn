@@ -15,12 +15,14 @@
  */
 package org.apache.ibatis.ibator.generator.ibatis2.sqlmap.elements;
 
+import org.apache.ibatis.ibator.api.FullyQualifiedTable;
 import org.apache.ibatis.ibator.api.IntrospectedColumn;
 import org.apache.ibatis.ibator.api.dom.xml.Attribute;
 import org.apache.ibatis.ibator.api.dom.xml.TextElement;
 import org.apache.ibatis.ibator.api.dom.xml.XmlElement;
 import org.apache.ibatis.ibator.config.GeneratedKey;
 import org.apache.ibatis.ibator.generator.AbstractGenerator;
+import org.apache.ibatis.ibator.generator.ibatis2.XmlConstants;
 import org.apache.ibatis.ibator.internal.util.StringUtility;
 
 /**
@@ -58,6 +60,20 @@ public abstract class AbstractXmlElementGenerator extends AbstractGenerator {
         }
         answer.addElement(new TextElement(generatedKey.getRuntimeSqlStatement()));
     
+        return answer;
+    }
+
+    protected XmlElement getBaseColumnListElement(FullyQualifiedTable table) {
+        XmlElement answer = new XmlElement("include"); //$NON-NLS-1$
+        answer.addAttribute(new Attribute("refid", //$NON-NLS-1$
+                table.getSqlMapNamespace() + "." + XmlConstants.BASE_COLUMN_LIST_ID)); //$NON-NLS-1$
+        return answer;
+    }
+
+    protected XmlElement getBlobColumnListElement(FullyQualifiedTable table) {
+        XmlElement answer = new XmlElement("include"); //$NON-NLS-1$
+        answer.addAttribute(new Attribute("refid", //$NON-NLS-1$
+                table.getSqlMapNamespace() + "." + XmlConstants.BLOB_COLUMN_LIST_ID)); //$NON-NLS-1$
         return answer;
     }
 }

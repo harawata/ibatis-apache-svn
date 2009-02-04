@@ -155,4 +155,12 @@ public class IbatorRulesDelegate implements IbatorRules {
     public IntrospectedTable getIntrospectedTable() {
         return ibatorRules.getIntrospectedTable();
     }
+
+    public boolean generateBaseColumnList() {
+        return ibatorRules.generateBaseColumnList();
+    }
+
+    public boolean generateBlobColumnList() {
+        return ibatorRules.generateBlobColumnList();
+    }
 }

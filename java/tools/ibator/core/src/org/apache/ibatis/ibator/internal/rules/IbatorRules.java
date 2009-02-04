@@ -123,12 +123,29 @@ public interface IbatorRules {
     
     /**
      * Implements the rule for generating the SQL example where clause element.
-     * Generate the element if the selectByExample or deleteByExample
-     * or countByExample statements are allowed.
+     * Generate the element if the selectByExample, deleteByExample,
+     * updateByExample, or countByExample statements are allowed.
      * 
      * @return true if the SQL where clause element should be generated
      */
     boolean generateSQLExampleWhereClause();
+    
+    /**
+     * Implements the rule for generating the SQL base column list element.
+     * Generate the element if any of the select methods are enabled.
+     * 
+     * @return true if the SQL base column list element should be generated
+     */
+    boolean generateBaseColumnList();
+    
+    /**
+     * Implements the rule for generating the SQL blob column list element.
+     * Generate the element if any of the select methods are enabled,
+     * and the table contains BLOB columns.
+     * 
+     * @return true if the SQL blob column list element should be generated
+     */
+    boolean generateBlobColumnList();
     
     /**
      * Implements the rule for generating the select by primary key SQL Map

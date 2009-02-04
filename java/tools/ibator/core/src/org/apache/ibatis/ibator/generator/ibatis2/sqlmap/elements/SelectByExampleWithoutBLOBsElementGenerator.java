@@ -16,7 +16,6 @@
 package org.apache.ibatis.ibator.generator.ibatis2.sqlmap.elements;
 
 import org.apache.ibatis.ibator.api.FullyQualifiedTable;
-import org.apache.ibatis.ibator.api.IntrospectedColumn;
 import org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.ibator.api.dom.xml.Attribute;
 import org.apache.ibatis.ibator.api.dom.xml.TextElement;
@@ -55,24 +54,13 @@ public class SelectByExampleWithoutBLOBsElementGenerator extends AbstractXmlElem
         StringBuilder sb = new StringBuilder();
         sb.append("select "); //$NON-NLS-1$
 
-        boolean comma = false;
         if (StringUtility.stringHasValue(introspectedTable.getSelectByExampleQueryId())) {
             sb.append('\'');
             sb.append(introspectedTable.getSelectByExampleQueryId());
-            sb.append("' as QUERYID"); //$NON-NLS-1$
-            comma = true;
+            sb.append("' as QUERYID,"); //$NON-NLS-1$
         }
-
-        for (IntrospectedColumn introspectedColumn : introspectedTable.getNonBLOBColumns()) {
-            if (comma) {
-                sb.append(", "); //$NON-NLS-1$
-            } else {
-                comma = true;
-            }
-
-            sb.append(introspectedColumn.getSelectListPhrase());
-        }
-        answer.addElement((new TextElement(sb.toString())));
+        answer.addElement(new TextElement(sb.toString()));
+        answer.addElement(getBaseColumnListElement(table));
 
         sb.setLength(0);
         sb.append("from "); //$NON-NLS-1$

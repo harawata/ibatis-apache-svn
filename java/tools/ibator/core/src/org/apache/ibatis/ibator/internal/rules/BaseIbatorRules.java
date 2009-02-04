@@ -24,8 +24,6 @@ import org.apache.ibatis.ibator.config.TableConfiguration;
  * the methods and objects to create, and certain attributes related to those
  * objects.
  * 
- * See package JavaDoc for more information.
- * 
  * @author Jeff Butler
  */
 public abstract class BaseIbatorRules implements IbatorRules {
@@ -202,7 +200,8 @@ public abstract class BaseIbatorRules implements IbatorRules {
     public boolean generateSQLExampleWhereClause() {
         boolean rc = tableConfiguration.isSelectByExampleStatementEnabled()
             || tableConfiguration.isDeleteByExampleStatementEnabled()
-            || tableConfiguration.isCountByExampleStatementEnabled();
+            || tableConfiguration.isCountByExampleStatementEnabled()
+            || tableConfiguration.isUpdateByExampleStatementEnabled();
         
         return rc;
     }
@@ -295,5 +294,16 @@ public abstract class BaseIbatorRules implements IbatorRules {
 
     public IntrospectedTable getIntrospectedTable() {
         return introspectedTable;
+    }
+
+    public boolean generateBaseColumnList() {
+        return generateSelectByPrimaryKey()
+            || generateSelectByExampleWithoutBLOBs();
+    }
+
+    public boolean generateBlobColumnList() {
+        return introspectedTable.hasBLOBColumns()
+            && (tableConfiguration.isSelectByExampleStatementEnabled()
+                    || tableConfiguration.isSelectByPrimaryKeyStatementEnabled());
     }
 }

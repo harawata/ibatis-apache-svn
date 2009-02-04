@@ -22,6 +22,8 @@ import org.apache.ibatis.ibator.api.dom.xml.XmlElement;
 import org.apache.ibatis.ibator.generator.AbstractXmlGenerator;
 import org.apache.ibatis.ibator.generator.ibatis2.XmlConstants;
 import org.apache.ibatis.ibator.generator.ibatis2.sqlmap.elements.AbstractXmlElementGenerator;
+import org.apache.ibatis.ibator.generator.ibatis2.sqlmap.elements.BaseColumnListElementGenerator;
+import org.apache.ibatis.ibator.generator.ibatis2.sqlmap.elements.BlobColumnListElementGenerator;
 import org.apache.ibatis.ibator.generator.ibatis2.sqlmap.elements.CountByExampleElementGenerator;
 import org.apache.ibatis.ibator.generator.ibatis2.sqlmap.elements.DeleteByExampleElementGenerator;
 import org.apache.ibatis.ibator.generator.ibatis2.sqlmap.elements.DeleteByPrimaryKeyElementGenerator;
@@ -65,6 +67,8 @@ public class SqlMapGenerator extends AbstractXmlGenerator {
         addResultMapWithoutBLOBsElement(answer);
         addResultMapWithBLOBsElement(answer);
         addExampleWhereClauseElement(answer);
+        addBaseColumnListElement(answer);
+        addBlobColumnListElement(answer);
         addSelectByExampleWithBLOBsElement(answer);
         addSelectByExampleWithoutBLOBsElement(answer);
         addSelectByPrimaryKeyElement(answer);
@@ -100,6 +104,20 @@ public class SqlMapGenerator extends AbstractXmlGenerator {
     protected void addExampleWhereClauseElement(XmlElement parentElement) {
         if (introspectedTable.getRules().generateSQLExampleWhereClause()) {
             AbstractXmlElementGenerator elementGenerator = new ExampleWhereClauseElementGenerator();
+            initializeAndExecuteGenerator(elementGenerator, parentElement);
+        }
+    }
+    
+    protected void addBaseColumnListElement(XmlElement parentElement) {
+        if (introspectedTable.getRules().generateBaseColumnList()) {
+            AbstractXmlElementGenerator elementGenerator = new BaseColumnListElementGenerator();
+            initializeAndExecuteGenerator(elementGenerator, parentElement);
+        }
+    }
+    
+    protected void addBlobColumnListElement(XmlElement parentElement) {
+        if (introspectedTable.getRules().generateBlobColumnList()) {
+            AbstractXmlElementGenerator elementGenerator = new BlobColumnListElementGenerator();
             initializeAndExecuteGenerator(elementGenerator, parentElement);
         }
     }

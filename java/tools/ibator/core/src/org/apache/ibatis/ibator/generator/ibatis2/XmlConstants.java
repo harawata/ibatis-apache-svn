@@ -115,6 +115,16 @@ public class XmlConstants {
         sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
         sb.append("Example_Where_Clause"); //$NON-NLS-1$
         EXAMPLE_WHERE_CLAUSE_ID = sb.toString();
+
+        sb.setLength(0);
+        sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
+        sb.append("Base_Column_List"); //$NON-NLS-1$
+        BASE_COLUMN_LIST_ID = sb.toString();
+
+        sb.setLength(0);
+        sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
+        sb.append("Blob_Column_List"); //$NON-NLS-1$
+        BLOB_COLUMN_LIST_ID = sb.toString();
     }
 
     public static final String SQL_MAP_SYSTEM_ID = "http://ibatis.apache.org/dtd/sql-map-2.dtd"; //$NON-NLS-1$
@@ -162,4 +172,8 @@ public class XmlConstants {
     public static final String RESULT_MAP_WITH_BLOBS_ID;
     
     public static final String EXAMPLE_WHERE_CLAUSE_ID;
+    
+    public static final String BASE_COLUMN_LIST_ID;
+    
+    public static final String BLOB_COLUMN_LIST_ID;
 }

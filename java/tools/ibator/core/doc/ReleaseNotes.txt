@@ -7,6 +7,8 @@ Bugs:
 Enhancements:
 1. IBATIS-569 - Make it easier to override IbatorRules in plugins
 2. IBATIS-571 - Added "autoDelimitKeywords" support to <ibatorContext>
+3. IBATIS-577 - Define SQL fragments for column lists.  Thanks to Iwao
+   AVE! for the idea and the initial patch
 
 -------------------------------------------------------------------------------
 Version 1.2.1:

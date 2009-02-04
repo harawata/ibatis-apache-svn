@@ -919,6 +919,32 @@ public interface IbatorPlugin {
     boolean sqlMapExampleWhereClauseElementGenerated(XmlElement element, IntrospectedTable introspectedTable);
 
     /**
+     * This method is called when the baseColumnList element is generated.
+     * 
+     * @param element the generated &lt;sql&gt; element
+     * @param introspectedTable ibator's class containing information
+     *   about the table as introspected from the database
+     * @return true if the element should be generated, false
+     *   if the generated element should be ignored.  In the case
+     *   of multiple plugins, the first plugin returning false
+     *   will disable the calling of further plugins.
+     */
+    boolean sqlMapBaseColumnListElementGenerated(XmlElement element, IntrospectedTable introspectedTable);
+
+    /**
+     * This method is called when the blobColumnList element is generated.
+     * 
+     * @param element the generated &lt;sql&gt; element
+     * @param introspectedTable ibator's class containing information
+     *   about the table as introspected from the database
+     * @return true if the element should be generated, false
+     *   if the generated element should be ignored.  In the case
+     *   of multiple plugins, the first plugin returning false
+     *   will disable the calling of further plugins.
+     */
+    boolean sqlMapBlobColumnListElementGenerated(XmlElement element, IntrospectedTable introspectedTable);
+
+    /**
      * This method is called when the insert element is generated.
      * 
      * @param element the generated &lt;insert&gt; element

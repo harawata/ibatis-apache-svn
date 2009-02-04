@@ -306,4 +306,14 @@ public abstract class IbatorPluginAdapter implements IbatorPlugin {
 
     public void initialized(IntrospectedTable introspectedTable) {
     }
+
+    public boolean sqlMapBaseColumnListElementGenerated(XmlElement element,
+            IntrospectedTable introspectedTable) {
+        return true;
+    }
+
+    public boolean sqlMapBlobColumnListElementGenerated(XmlElement element,
+            IntrospectedTable introspectedTable) {
+        return true;
+    }
 }
