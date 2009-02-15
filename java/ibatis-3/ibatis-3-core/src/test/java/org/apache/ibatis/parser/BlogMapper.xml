@@ -93,4 +93,8 @@
   </select>
 
 
+  <select id="selectAllPosts" resultType="hashmap">
+    select * from post order by id
+  </select>
+
 </mapper>

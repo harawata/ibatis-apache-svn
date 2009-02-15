@@ -2,6 +2,7 @@ package org.apache.ibatis.binding;
 
 import org.apache.ibatis.api.SqlSession;
 import org.apache.ibatis.mapping.Configuration;
+import org.apache.ibatis.executor.Executor;
 
 import java.lang.reflect.Method;
 import java.sql.SQLException;
@@ -67,6 +68,7 @@ public class MapperMethod {
     if (List.class.isAssignableFrom(method.getReturnType())) {
       returnsList = true;
       if (argCount == 2) {
+        hasListBounds = true;
       } else if (argCount == 3) {
         hasListBounds = true;
       }
@@ -100,9 +102,16 @@ public class MapperMethod {
     Object result;
     if (hasListBounds) {
       Object param = getParam(args);
-      int skip = ((Integer) args[1]);
-      int max = ((Integer) args[2]);
-      result = sqlSession.selectList(commandName, param, skip, max);
+      int offset = Executor.NO_ROW_OFFSET;
+      int limit = Executor.NO_ROW_LIMIT;
+      if (args.length == 3) {
+        offset = ((Integer) args[1]);
+        limit = ((Integer) args[2]);
+      } else if (args.length == 2) {
+        offset = ((Integer) args[0]);
+        limit = ((Integer) args[1]);
+      }
+      result = sqlSession.selectList(commandName, param, offset, limit);
     } else {
       Object param = getParam(args);
       result = sqlSession.selectList(commandName, param);
@@ -114,7 +123,7 @@ public class MapperMethod {
     if (args == null) {
       return null;
     }
-    return args.length > 0 ? args[0] : null;
+    return args.length == 1 || args.length == 3 ? args[0] : null;
   }
 
 }

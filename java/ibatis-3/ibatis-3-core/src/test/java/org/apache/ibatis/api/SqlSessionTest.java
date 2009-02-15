@@ -10,8 +10,10 @@ import org.junit.Test;
 
 import java.io.Reader;
 import java.util.List;
+import java.util.Map;
 
 import com.domain.AuthorMapper;
+import com.domain.BlogMapper;
 
 public class SqlSessionTest extends BaseDataTest {
   private static SqlSessionFactory sqlMapper;
@@ -340,7 +342,7 @@ public class SqlSessionTest extends BaseDataTest {
     try {
       AuthorMapper mapper = session.getMapper(AuthorMapper.class);
       int count = mapper.deleteAuthor(101);
-      assertEquals(count, 1);
+      assertEquals(1, count);
       try{
         mapper.selectAuthor(101);
         fail("Expected exception.");
@@ -360,9 +362,50 @@ public class SqlSessionTest extends BaseDataTest {
       Author expected = mapper.selectAuthor(101);
       expected.setUsername("NewUsername");
       int count = mapper.updateAuthor(expected);
-      assertEquals(count, 1);
+      assertEquals(1, count);
       Author actual = mapper.selectAuthor(101);
       assertEquals(expected.getUsername(), actual.getUsername());
+    } finally {
+      session.close();
+    }
+  }
+
+  @Test
+  public void shouldSelectAllPostsUsingMapperClass() throws Exception {
+    SqlSession session = sqlMapper.openSession();
+    try {
+      BlogMapper mapper = session.getMapper(BlogMapper.class);
+      List<Map> posts = mapper.selectAllPosts(null);
+      assertEquals(5, posts.size());
+    } finally {
+      session.close();
+    }
+  }
+
+  @Test
+  public void shouldLimitResultsUsingMapperClass() throws Exception {
+    SqlSession session = sqlMapper.openSession();
+    try {
+      BlogMapper mapper = session.getMapper(BlogMapper.class);
+      List<Map> posts = mapper.selectAllPosts(null,0,2);
+      assertEquals(2, posts.size());
+      assertEquals(1, posts.get(0).get("ID"));
+      assertEquals(2, posts.get(1).get("ID"));
+    } finally {
+      session.close();
+    }
+  }
+
+  @Test
+  public void shouldOffsetAndLimitResultsUsingMapperClass() throws Exception {
+    SqlSession session = sqlMapper.openSession();
+    try {
+      BlogMapper mapper = session.getMapper(BlogMapper.class);
+      List<Map> posts = mapper.selectAllPosts(2,3);
+      assertEquals(3, posts.size());
+      assertEquals(3, posts.get(0).get("ID"));
+      assertEquals(4, posts.get(1).get("ID"));
+      assertEquals(5, posts.get(2).get("ID"));
     } finally {
       session.close();
     }
