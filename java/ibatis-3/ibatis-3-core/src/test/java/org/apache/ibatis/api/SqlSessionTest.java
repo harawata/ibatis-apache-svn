@@ -12,8 +12,8 @@ import java.io.Reader;
 import java.util.List;
 import java.util.Map;
 
-import com.domain.AuthorMapper;
-import com.domain.BlogMapper;
+import domain.blog.mappers.AuthorMapper;
+import domain.blog.mappers.BlogMapper;
 
 public class SqlSessionTest extends BaseDataTest {
   private static SqlSessionFactory sqlMapper;
@@ -30,7 +30,7 @@ public class SqlSessionTest extends BaseDataTest {
   public void shouldSelectAllAuthors() throws Exception {
     SqlSession session = sqlMapper.openSession();
     try {
-      List<Author> authors = session.selectList("com.domain.AuthorMapper.selectAllAuthors");
+      List<Author> authors = session.selectList("domain.blog.mappers.AuthorMapper.selectAllAuthors");
       assertEquals(2, authors.size());
     } finally {
       session.close();
@@ -42,7 +42,7 @@ public class SqlSessionTest extends BaseDataTest {
     SqlSession session = sqlMapper.openSession();
     try {
       Author author = (Author) session.selectOne(
-          "com.domain.AuthorMapper.selectAuthor", new Author(101));
+          "domain.blog.mappers.AuthorMapper.selectAuthor", new Author(101));
       assertEquals(101, author.getId());
       assertEquals(Section.NEWS, author.getFavouriteSection());
     } finally {
@@ -55,7 +55,7 @@ public class SqlSessionTest extends BaseDataTest {
     SqlSession session = sqlMapper.openSession();
     try {
       List<Author> authors = session.selectList(
-          "com.domain.AuthorMapper.selectAuthor", new Author(101));
+          "domain.blog.mappers.AuthorMapper.selectAuthor", new Author(101));
       assertEquals(101, authors.get(0).getId());
       assertEquals(Section.NEWS, authors.get(0).getFavouriteSection());
     } finally {
@@ -68,7 +68,7 @@ public class SqlSessionTest extends BaseDataTest {
     SqlSession session = sqlMapper.openSession();
     try {
       ImmutableAuthor author = (ImmutableAuthor) session.selectOne(
-          "com.domain.AuthorMapper.selectImmutableAuthor", new Author(101));
+          "domain.blog.mappers.AuthorMapper.selectImmutableAuthor", new Author(101));
       assertEquals(101, author.getId());
       assertEquals(Section.NEWS, author.getFavouriteSection());
     } finally {
@@ -81,7 +81,7 @@ public class SqlSessionTest extends BaseDataTest {
     SqlSession session = sqlMapper.openSession();
     try {
       Author author = (Author) session.selectOne(
-          "com.domain.AuthorMapper.selectAuthorWithInlineParams", new Author(101));
+          "domain.blog.mappers.AuthorMapper.selectAuthorWithInlineParams", new Author(101));
       assertEquals(101, author.getId());
     } finally {
       session.close();
@@ -93,8 +93,8 @@ public class SqlSessionTest extends BaseDataTest {
     SqlSession session = sqlMapper.openSession();
     try {
       Author expected = new Author(500, "cbegin", "******", "cbegin@somewhere.com", "Something...", null);
-      session.insert("com.domain.AuthorMapper.insertAuthor", expected);
-      Author actual = (Author) session.selectOne("com.domain.AuthorMapper.selectAuthor", new Author(500));
+      session.insert("domain.blog.mappers.AuthorMapper.insertAuthor", expected);
+      Author actual = (Author) session.selectOne("domain.blog.mappers.AuthorMapper.selectAuthor", new Author(500));
       assertNotNull(actual);
       assertEquals(expected.getId(), actual.getId());
       assertEquals(expected.getUsername(), actual.getUsername());
@@ -112,18 +112,18 @@ public class SqlSessionTest extends BaseDataTest {
     Author original;
     Author updated;
     try {
-      original = (Author) session.selectOne("com.domain.AuthorMapper.selectAuthor", 101);
+      original = (Author) session.selectOne("domain.blog.mappers.AuthorMapper.selectAuthor", 101);
       original.setEmail("new@email.com");
-      session.update("com.domain.AuthorMapper.updateAuthor", original);
+      session.update("domain.blog.mappers.AuthorMapper.updateAuthor", original);
 
-      updated = (Author) session.selectOne("com.domain.AuthorMapper.selectAuthor", 101);
+      updated = (Author) session.selectOne("domain.blog.mappers.AuthorMapper.selectAuthor", 101);
       assertEquals(original.getEmail(), updated.getEmail());
     } finally {
       session.close();
     }
     try {
       session = sqlMapper.openSession();
-      updated = (Author) session.selectOne("com.domain.AuthorMapper.selectAuthor", 101);
+      updated = (Author) session.selectOne("domain.blog.mappers.AuthorMapper.selectAuthor", 101);
       assertEquals("jim@ibatis.apache.org", updated.getEmail());
     } finally {
       session.close();
@@ -136,11 +136,11 @@ public class SqlSessionTest extends BaseDataTest {
     Author original;
     Author updated;
     try {
-      original = (Author) session.selectOne("com.domain.AuthorMapper.selectAuthor", 101);
+      original = (Author) session.selectOne("domain.blog.mappers.AuthorMapper.selectAuthor", 101);
       original.setEmail("new@email.com");
-      session.update("com.domain.AuthorMapper.updateAuthor", original);
+      session.update("domain.blog.mappers.AuthorMapper.updateAuthor", original);
 
-      updated = (Author) session.selectOne("com.domain.AuthorMapper.selectAuthor", 101);
+      updated = (Author) session.selectOne("domain.blog.mappers.AuthorMapper.selectAuthor", 101);
       assertEquals(original.getEmail(), updated.getEmail());
       session.commit();
     } finally {
@@ -148,7 +148,7 @@ public class SqlSessionTest extends BaseDataTest {
     }
     try {
       session = sqlMapper.openSession();
-      updated = (Author) session.selectOne("com.domain.AuthorMapper.selectAuthor", 101);
+      updated = (Author) session.selectOne("domain.blog.mappers.AuthorMapper.selectAuthor", 101);
       assertEquals(original.getEmail(), updated.getEmail());
     } finally {
       session.close();
@@ -161,15 +161,15 @@ public class SqlSessionTest extends BaseDataTest {
     try {
       final int id = 102;
 
-      List<Author> authors = session.selectList("com.domain.AuthorMapper.selectAuthor", id);
+      List<Author> authors = session.selectList("domain.blog.mappers.AuthorMapper.selectAuthor", id);
       assertEquals(1, authors.size());
 
-      session.delete("com.domain.AuthorMapper.deleteAuthor", id);
-      authors = session.selectList("com.domain.AuthorMapper.selectAuthor", id);
+      session.delete("domain.blog.mappers.AuthorMapper.deleteAuthor", id);
+      authors = session.selectList("domain.blog.mappers.AuthorMapper.selectAuthor", id);
       assertEquals(0, authors.size());
 
       session.rollback();
-      authors = session.selectList("com.domain.AuthorMapper.selectAuthor", id);
+      authors = session.selectList("domain.blog.mappers.AuthorMapper.selectAuthor", id);
       assertEquals(1, authors.size());
 
     } finally {
@@ -181,7 +181,7 @@ public class SqlSessionTest extends BaseDataTest {
   public void shouldSelectBlogWithPostsAndAuthorUsingSubSelects() throws Exception {
     SqlSession session = sqlMapper.openSession();
     try {
-      Blog blog = (Blog) session.selectOne("com.domain.BlogMapper.selectBlogWithPostsUsingSubSelect", 1);
+      Blog blog = (Blog) session.selectOne("domain.blog.mappers.BlogMapper.selectBlogWithPostsUsingSubSelect", 1);
       assertEquals("Jim Business", blog.getTitle());
       assertEquals(2, blog.getPosts().size());
       assertEquals("Corn nuts", blog.getPosts().get(0).getSubject());
@@ -196,7 +196,7 @@ public class SqlSessionTest extends BaseDataTest {
   public void shouldSelectBlogWithPostsAndAuthorUsingJoin() throws Exception {
     SqlSession session = sqlMapper.openSession();
     try {
-      Blog blog = (Blog) session.selectOne("com.domain.BlogMapper.selectBlogJoinedWithPostsAndAuthor", 1);
+      Blog blog = (Blog) session.selectOne("domain.blog.mappers.BlogMapper.selectBlogJoinedWithPostsAndAuthor", 1);
       assertEquals("Jim Business", blog.getTitle());
 
       final Author author = blog.getAuthor();
@@ -241,10 +241,10 @@ public class SqlSessionTest extends BaseDataTest {
   public void shouldThrowExceptionIfTryingToAddStatementWithSameName() throws Exception {
     Configuration config = sqlMapper.getConfiguration();
     try {
-      config.addMappedStatement(config.getMappedStatement("com.domain.BlogMapper.selectBlogWithPostsUsingSubSelect"));
+      config.addMappedStatement(config.getMappedStatement("domain.blog.mappers.BlogMapper.selectBlogWithPostsUsingSubSelect"));
       fail("Expected exception to be thrown due to statement that already exists.");
     } catch (Exception e) {
-      assertTrue(e.getMessage().contains("already contains value for com.domain.BlogMapper.selectBlogWithPostsUsingSubSelect"));
+      assertTrue(e.getMessage().contains("already contains value for domain.blog.mappers.BlogMapper.selectBlogWithPostsUsingSubSelect"));
     }
   }
 
@@ -276,14 +276,14 @@ public class SqlSessionTest extends BaseDataTest {
     int second = -1;
     SqlSession session = sqlMapper.openSession();
     try {
-      List<Author> authors = session.selectList("com.domain.AuthorMapper.selectAllAuthors");
+      List<Author> authors = session.selectList("domain.blog.mappers.AuthorMapper.selectAllAuthors");
       first = System.identityHashCode(authors);
     } finally {
       session.close();
     }
     session = sqlMapper.openSession();
     try {
-      List<Author> authors = session.selectList("com.domain.AuthorMapper.selectAllAuthors");
+      List<Author> authors = session.selectList("domain.blog.mappers.AuthorMapper.selectAllAuthors");
       second = System.identityHashCode(authors);
     } finally {
       session.close();

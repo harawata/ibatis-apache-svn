@@ -4,12 +4,12 @@
     PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
     "http://ibatis.apache.org/dtd/ibatis-mapper-3.dtd">
 
-<mapper namespace="com.domain.BlogMapper">
+<mapper namespace="domain.blog.mappers.BlogMapper">
 
   <resultMap id="blogWithPosts" type="Blog">
     <id property="id" column="id"/>
     <result property="title" column="title"/>
-    <association property="author" column="author_id" select="com.domain.AuthorMapper.selectAuthorWithInlineParams"/>
+    <association property="author" column="author_id" select="domain.blog.mappers.AuthorMapper.selectAuthorWithInlineParams"/>
     <collection property="posts" column="id" select="selectPostsForBlog"/>
   </resultMap>
 

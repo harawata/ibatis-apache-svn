@@ -1,4 +1,4 @@
-package com.domain;
+package domain.blog.mappers;
 
 import domain.blog.Author;
 

@@ -1,4 +1,4 @@
-package com.domain;
+package domain.blog.mappers;
 
 import java.util.Map;
 import java.util.List;
