@@ -11,6 +11,8 @@ import org.junit.Test;
 import java.io.Reader;
 import java.util.List;
 
+import com.domain.AuthorMapper;
+
 public class SqlSessionTest extends BaseDataTest {
   private static SqlSessionFactory sqlMapper;
 
@@ -285,6 +287,85 @@ public class SqlSessionTest extends BaseDataTest {
       session.close();
     }
     assertTrue(first != second);
+  }
+
+  @Test
+  public void shouldSelectAuthorsUsingMapperClass() {
+    SqlSession session = sqlMapper.openSession();
+    try {
+      AuthorMapper mapper = session.getMapper(AuthorMapper.class);
+      System.out.println(mapper.getClass());
+      List authors = mapper.selectAllAuthors();
+      assertEquals(2,authors.size());
+    } finally {
+      session.close();
+    }
+  }
+
+  @Test
+  public void shouldExecuteSelectOneAuthorUsingMapperClass() {
+    SqlSession session = sqlMapper.openSession();
+    try {
+      AuthorMapper mapper = session.getMapper(AuthorMapper.class);
+      System.out.println(mapper.getClass());
+      Author author = mapper.selectAuthor(101);
+      assertEquals(101,author.getId());
+    } finally {
+      session.close();
+    }
+  }
+
+  @Test
+  public void shouldInsertAuthorUsingMapperClass() throws Exception {
+    SqlSession session = sqlMapper.openSession();
+    try {
+      AuthorMapper mapper = session.getMapper(AuthorMapper.class);
+      Author expected = new Author(500, "cbegin", "******", "cbegin@somewhere.com", "Something...", null);
+      mapper.insertAuthor(expected);
+      Author actual = mapper.selectAuthor(500);
+      assertNotNull(actual);
+      assertEquals(expected.getId(), actual.getId());
+      assertEquals(expected.getUsername(), actual.getUsername());
+      assertEquals(expected.getPassword(), actual.getPassword());
+      assertEquals(expected.getEmail(), actual.getEmail());
+      assertEquals(expected.getBio(), actual.getBio());
+    } finally {
+      session.close();
+    }
+  }
+
+  @Test
+  public void shouldDeleteAuthorUsingMapperClass() throws Exception {
+    SqlSession session = sqlMapper.openSession();
+    try {
+      AuthorMapper mapper = session.getMapper(AuthorMapper.class);
+      int count = mapper.deleteAuthor(101);
+      assertEquals(count, 1);
+      try{
+        mapper.selectAuthor(101);
+        fail("Expected exception.");
+      } catch(Exception e) {
+        assertEquals(ApiException.class, e.getClass());
+      }
+    } finally {
+      session.close();
+    }
+  }
+
+  @Test
+  public void shouldUpdateAuthorUsingMapperClass() throws Exception {
+    SqlSession session = sqlMapper.openSession();
+    try {
+      AuthorMapper mapper = session.getMapper(AuthorMapper.class);
+      Author expected = mapper.selectAuthor(101);
+      expected.setUsername("NewUsername");
+      int count = mapper.updateAuthor(expected);
+      assertEquals(count, 1);
+      Author actual = mapper.selectAuthor(101);
+      assertEquals(expected.getUsername(), actual.getUsername());
+    } finally {
+      session.close();
+    }
   }
 
 }

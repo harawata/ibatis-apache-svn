@@ -7,10 +7,13 @@ import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.result.ResultHandler;
 import org.apache.ibatis.mapping.Configuration;
 import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.binding.MapperFactory;
 
 import java.util.List;
 
 public class DefaultSqlSession implements SqlSession {
+
+  private MapperFactory mapperFactory;
 
   private Configuration configuration;
   private Executor executor;
@@ -19,6 +22,7 @@ public class DefaultSqlSession implements SqlSession {
   private boolean dirty;
 
   public DefaultSqlSession(Configuration configuration, Executor executor, boolean autoCommit) {
+    this.mapperFactory = new MapperFactory();
     this.configuration = configuration;
     this.executor = executor;
     this.autoCommit = autoCommit;
@@ -135,6 +139,14 @@ public class DefaultSqlSession implements SqlSession {
     } catch (Exception e) {
       throw ExceptionFactory.wrapException("Error closing transaction.  Cause: " + e, e);
     }
+  }
+
+  public Configuration getConfiguration() {
+    return configuration;
+  }
+
+  public <T> T getMapper(Class<T> type) {
+    return mapperFactory.getMapper(type, this);
   }
 
   private boolean isCommitOrRollbackRequired(boolean force) {

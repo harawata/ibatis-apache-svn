@@ -1,6 +1,7 @@
 package org.apache.ibatis.api;
 
 import org.apache.ibatis.executor.result.ResultHandler;
+import org.apache.ibatis.mapping.Configuration;
 
 import java.util.List;
 
@@ -41,5 +42,9 @@ public interface SqlSession {
   void rollback(boolean force);
 
   void close();
+
+  Configuration getConfiguration();
+
+  <T> T getMapper(Class<T> type);
 
 }
