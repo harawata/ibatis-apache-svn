@@ -18,7 +18,9 @@ package org.apache.ibatis.ibator.internal.types;
 import java.math.BigDecimal;
 import java.sql.Types;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import org.apache.ibatis.ibator.api.IntrospectedColumn;
@@ -34,181 +36,95 @@ import org.apache.ibatis.ibator.internal.util.StringUtility;
  */
 public class JavaTypeResolverDefaultImpl implements JavaTypeResolver {
 
-	protected List<String> warnings;
+    protected List<String> warnings;
 	
-	protected Properties properties;
+    protected Properties properties;
     
     protected IbatorContext ibatorContext;
+    
+    protected boolean forceBigDecimals;
+    
+    protected Map<Integer, FullyQualifiedJavaType> typeMap;
 
-	public JavaTypeResolverDefaultImpl() {
-		super();
+    public JavaTypeResolverDefaultImpl() {
+	    super();
         properties = new Properties();
-	}
+        typeMap = new HashMap<Integer, FullyQualifiedJavaType>();
+        
+        typeMap.put(Types.ARRAY, new FullyQualifiedJavaType(Object.class.getName()));
+        typeMap.put(Types.BIGINT, new FullyQualifiedJavaType(Long.class.getName()));
+        typeMap.put(Types.BINARY, new FullyQualifiedJavaType("byte[]")); //$NON-NLS-1$
+        typeMap.put(Types.BIT, new FullyQualifiedJavaType(Boolean.class.getName()));
+        typeMap.put(Types.BLOB, new FullyQualifiedJavaType("byte[]")); //$NON-NLS-1$
+        typeMap.put(Types.BOOLEAN, new FullyQualifiedJavaType(Boolean.class.getName()));
+        typeMap.put(Types.CHAR, new FullyQualifiedJavaType(String.class.getName()));
+        typeMap.put(Types.CLOB, new FullyQualifiedJavaType(String.class.getName()));
+        typeMap.put(Types.DATALINK, new FullyQualifiedJavaType(Object.class.getName()));
+        typeMap.put(Types.DATE, new FullyQualifiedJavaType(Date.class.getName()));
+        typeMap.put(Types.DISTINCT, new FullyQualifiedJavaType(Object.class.getName()));
+        typeMap.put(Types.DOUBLE, new FullyQualifiedJavaType(Double.class.getName()));
+        typeMap.put(Types.FLOAT, new FullyQualifiedJavaType(Double.class.getName()));
+        typeMap.put(Types.INTEGER, new FullyQualifiedJavaType(Integer.class.getName()));
+        typeMap.put(Types.JAVA_OBJECT, new FullyQualifiedJavaType(Object.class.getName()));
+        typeMap.put(Types.LONGVARBINARY, new FullyQualifiedJavaType("byte[]")); //$NON-NLS-1$
+        typeMap.put(Types.LONGVARCHAR, new FullyQualifiedJavaType(String.class.getName()));
+        typeMap.put(Types.NULL, new FullyQualifiedJavaType(Object.class.getName()));
+        typeMap.put(Types.OTHER, new FullyQualifiedJavaType(Object.class.getName()));
+        typeMap.put(Types.REAL, new FullyQualifiedJavaType(Float.class.getName()));
+        typeMap.put(Types.REF, new FullyQualifiedJavaType(Object.class.getName()));
+        typeMap.put(Types.SMALLINT, new FullyQualifiedJavaType(Short.class.getName()));
+        typeMap.put(Types.STRUCT, new FullyQualifiedJavaType(Object.class.getName()));
+        typeMap.put(Types.TIME, new FullyQualifiedJavaType(Date.class.getName()));
+        typeMap.put(Types.TIMESTAMP, new FullyQualifiedJavaType(Date.class.getName()));
+        typeMap.put(Types.TINYINT, new FullyQualifiedJavaType(Byte.class.getName()));
+        typeMap.put(Types.VARBINARY, new FullyQualifiedJavaType("byte[]")); //$NON-NLS-1$
+        typeMap.put(Types.VARCHAR, new FullyQualifiedJavaType(String.class.getName()));
+    }
 
     public void addConfigurationProperties(Properties properties) {
         this.properties.putAll(properties);
+        forceBigDecimals = StringUtility.isTrue(properties
+                .getProperty(PropertyRegistry.TYPE_RESOLVER_FORCE_BIG_DECIMALS));
     }
 
-	/*
-	 *  (non-Javadoc)
-	 * @see org.apache.ibatis.ibator.api.JavaTypeResolver#initializeResolvedJavaType(org.apache.ibatis.ibator.internal.db.ColumnDefinition)
-	 */
-	public FullyQualifiedJavaType calculateJavaType(IntrospectedColumn introspectedColumn) {
-		boolean forceBigDecimals = StringUtility.isTrue(properties
-				.getProperty(PropertyRegistry.TYPE_RESOLVER_FORCE_BIG_DECIMALS));
+    /*
+     *  (non-Javadoc)
+     * @see org.apache.ibatis.ibator.api.JavaTypeResolver#initializeResolvedJavaType(org.apache.ibatis.ibator.internal.db.ColumnDefinition)
+     */
+    public FullyQualifiedJavaType calculateJavaType(IntrospectedColumn introspectedColumn) {
 
         FullyQualifiedJavaType answer;
-		switch (introspectedColumn.getJdbcType()) {
-		case Types.ARRAY:
-			answer = new FullyQualifiedJavaType(Object.class.getName());
-			break;
-
-		case Types.BIGINT:
-		    answer = new FullyQualifiedJavaType(Long.class.getName());
-			break;
-
-		case Types.BINARY:
-		    answer = new FullyQualifiedJavaType("byte[]"); //$NON-NLS-1$
-			break;
-
-		case Types.BIT:
-		    answer = new FullyQualifiedJavaType(Boolean.class.getName());
-			break;
-
-		case Types.BLOB:
-		    answer = new FullyQualifiedJavaType("byte[]"); //$NON-NLS-1$
-			break;
-
-		case Types.BOOLEAN:
-		    answer = new FullyQualifiedJavaType(Boolean.class.getName());
-			break;
-
-		case Types.CHAR:
-		    answer = new FullyQualifiedJavaType(String.class.getName());
-			break;
-
-		case Types.CLOB:
-		    answer = new FullyQualifiedJavaType(String.class.getName());
-			break;
-
-		case Types.DATALINK:
-		    answer = new FullyQualifiedJavaType(Object.class.getName());
-			break;
-
-		case Types.DATE:
-		    answer = new FullyQualifiedJavaType(Date.class.getName());
-			break;
-
-		case Types.DECIMAL:
-			if (introspectedColumn.getScale() > 0 || introspectedColumn.getLength() > 18 || forceBigDecimals) {
-			    answer = new FullyQualifiedJavaType(BigDecimal.class.getName());
-			} else if (introspectedColumn.getLength() > 9) {
-			    answer = new FullyQualifiedJavaType(Long.class.getName());
-			} else if (introspectedColumn.getLength() > 4) {
-			    answer = new FullyQualifiedJavaType(Integer.class.getName());
-			} else {
-			    answer = new FullyQualifiedJavaType(Short.class.getName());
-			}
-			break;
-
-		case Types.DISTINCT:
-		    answer = new FullyQualifiedJavaType(Object.class.getName());
-			break;
-
-		case Types.DOUBLE:
-		    answer = new FullyQualifiedJavaType(Double.class.getName());
-			break;
-
-		case Types.FLOAT:
-		    answer = new FullyQualifiedJavaType(Double.class.getName());
-			break;
-
-		case Types.INTEGER:
-		    answer = new FullyQualifiedJavaType(Integer.class.getName());
-			break;
-
-		case Types.JAVA_OBJECT:
-		    answer = new FullyQualifiedJavaType(Object.class.getName());
-			break;
-
-		case Types.LONGVARBINARY:
-		    answer = new FullyQualifiedJavaType("byte[]"); //$NON-NLS-1$
-			break;
-
-		case Types.LONGVARCHAR:
-		    answer = new FullyQualifiedJavaType(String.class.getName());
-			break;
-
-		case Types.NULL:
-		    answer = new FullyQualifiedJavaType(Object.class.getName());
-			break;
-
-		case Types.NUMERIC:
-			if (introspectedColumn.getScale() > 0 || introspectedColumn.getLength() > 18 || forceBigDecimals) {
-			    answer = new FullyQualifiedJavaType(BigDecimal.class.getName());
-			} else if (introspectedColumn.getLength() > 9) {
-			    answer = new FullyQualifiedJavaType(Long.class.getName());
-			} else if (introspectedColumn.getLength() > 4) {
-			    answer = new FullyQualifiedJavaType(Integer.class.getName());
-			} else {
-			    answer = new FullyQualifiedJavaType(Short.class.getName());
-			}
-			break;
-
-		case Types.OTHER:
-		    answer = new FullyQualifiedJavaType(Object.class.getName());
-			break;
-
-		case Types.REAL:
-		    answer = new FullyQualifiedJavaType(Float.class.getName());
-			break;
-
-		case Types.REF:
-		    answer = new FullyQualifiedJavaType(Object.class.getName());
-			break;
-
-		case Types.SMALLINT:
-		    answer = new FullyQualifiedJavaType(Short.class.getName());
-			break;
-
-		case Types.STRUCT:
-		    answer = new FullyQualifiedJavaType(Object.class.getName());
-			break;
-
-		case Types.TIME:
-		    answer = new FullyQualifiedJavaType(Date.class.getName());
-			break;
-
-		case Types.TIMESTAMP:
-		    answer = new FullyQualifiedJavaType(Date.class.getName());
-			break;
-
-		case Types.TINYINT:
-		    answer = new FullyQualifiedJavaType(Byte.class.getName());
-			break;
-
-		case Types.VARBINARY:
-		    answer = new FullyQualifiedJavaType("byte[]"); //$NON-NLS-1$
-			break;
-
-		case Types.VARCHAR:
-		    answer = new FullyQualifiedJavaType(String.class.getName());
-			break;
-
-		default:
-		    answer = null;
+        switch (introspectedColumn.getJdbcType()) {
+        case Types.DECIMAL:
+        case Types.NUMERIC:
+            answer = typeMap.get(introspectedColumn.getJdbcType());
+            if (answer == null) {
+                if (introspectedColumn.getScale() > 0 || introspectedColumn.getLength() > 18 || forceBigDecimals) {
+                    answer = new FullyQualifiedJavaType(BigDecimal.class.getName());
+                } else if (introspectedColumn.getLength() > 9) {
+                    answer = new FullyQualifiedJavaType(Long.class.getName());
+                } else if (introspectedColumn.getLength() > 4) {
+                    answer = new FullyQualifiedJavaType(Integer.class.getName());
+                } else {
+                    answer = new FullyQualifiedJavaType(Short.class.getName());
+                }
+            }
             break;
-		}
+
+        default:
+		    answer = typeMap.get(introspectedColumn.getJdbcType());
+            break;
+        }
 
         return answer;
-	}
+    }
 	
-	/* (non-Javadoc)
-	 * @see org.apache.ibatis.ibator.api.JavaTypeResolver#setWarnings(java.util.List)
-	 */
-	public void setWarnings(List<String> warnings) {
-		this.warnings = warnings;
-	}
+    /* (non-Javadoc)
+     * @see org.apache.ibatis.ibator.api.JavaTypeResolver#setWarnings(java.util.List)
+     */
+    public void setWarnings(List<String> warnings) {
+        this.warnings = warnings;
+    }
 
     public void setIbatorContext(IbatorContext ibatorContext) {
         this.ibatorContext = ibatorContext;

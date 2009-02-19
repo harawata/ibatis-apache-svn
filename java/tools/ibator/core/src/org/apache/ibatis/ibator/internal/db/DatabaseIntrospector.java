@@ -41,6 +41,8 @@ import org.apache.ibatis.ibator.internal.IbatorObjectFactory;
 import org.apache.ibatis.ibator.internal.util.JavaBeansUtil;
 import org.apache.ibatis.ibator.internal.util.StringUtility;
 import org.apache.ibatis.ibator.internal.util.messages.Messages;
+import org.apache.ibatis.ibator.logging.Log;
+import org.apache.ibatis.ibator.logging.LogFactory;
 
 /**
  * 
@@ -52,6 +54,7 @@ public class DatabaseIntrospector {
     private JavaTypeResolver javaTypeResolver;
     private List<String> warnings;
     private IbatorContext ibatorContext;
+    private Log logger;
 
     public DatabaseIntrospector(IbatorContext ibatorContext, DatabaseMetaData databaseMetaData,
             JavaTypeResolver javaTypeResolver, List<String> warnings) {
@@ -60,6 +63,7 @@ public class DatabaseIntrospector {
         this.databaseMetaData = databaseMetaData;
         this.javaTypeResolver = javaTypeResolver;
         this.warnings = warnings;
+        logger = LogFactory.getLog(getClass());
     }
 
     private void calculatePrimaryKey(FullyQualifiedTable table, IntrospectedTable introspectedTable) {
@@ -168,12 +172,16 @@ public class DatabaseIntrospector {
             
             if (!introspectedTable.hasAnyColumns()) {
                 // add warning that the table has no columns, remove from the list
-                warnings.add(Messages.getString("Warning.1", introspectedTable.getFullyQualifiedTable().toString())); //$NON-NLS-1$
+                String warning = Messages.getString("Warning.1", introspectedTable.getFullyQualifiedTable().toString());  //$NON-NLS-1$
+                warnings.add(warning);
+                logger.debug(warning);
                 iter.remove();
             } else if (!introspectedTable.hasPrimaryKeyColumns()
                     && !introspectedTable.hasBaseColumns()) {
                 // add warning that the table has only BLOB columns, remove from the list
-                warnings.add(Messages.getString("Warning.18", introspectedTable.getFullyQualifiedTable().toString())); //$NON-NLS-1$
+                String warning = Messages.getString("Warning.18", introspectedTable.getFullyQualifiedTable().toString()); //$NON-NLS-1$ 
+                warnings.add(warning);
+                logger.debug(warning);
                 iter.remove();
             } else {
                 // now make sure that all columns called out in the configuration
@@ -196,6 +204,11 @@ public class DatabaseIntrospector {
                 IntrospectedColumn introspectedColumn = tableColumns.next();
                 if (tc.isColumnIgnored(introspectedColumn.getActualColumnName())) {
                     tableColumns.remove();
+                    if (logger.isDebugEnabled()) {
+                        logger.debug(Messages.getString("Tracing.3", //$NON-NLS-1$
+                                introspectedColumn.getActualColumnName(),
+                                entry.getKey().toString()));
+                    }
                 }
             }
         }
@@ -208,7 +221,7 @@ public class DatabaseIntrospector {
         if (tc.getColumnRenamingRule() != null) {
             pattern = Pattern.compile(tc.getColumnRenamingRule().getSearchString());
             replaceString = tc.getColumnRenamingRule().getReplaceString();
-            replaceString = replaceString == null ? "" : replaceString;//$NON-NLS-1$
+            replaceString = replaceString == null ? "" : replaceString; //$NON-NLS-1$
         }
 
         for (Map.Entry<ActualTableName, List<IntrospectedColumn>> entry : columns.entrySet()) {
@@ -251,9 +264,12 @@ public class DatabaseIntrospector {
                     if (warn) {
                         introspectedColumn.setFullyQualifiedJavaType(FullyQualifiedJavaType.getObjectInstance());
                         
-                        warnings.add(Messages.getString("Warning.14", //$NON-NLS-1$
-                            entry.getKey().toString(),
-                            introspectedColumn.getActualColumnName()));
+                        String warning = Messages.getString("Warning.14", //$NON-NLS-1$
+                                entry.getKey().toString(),
+                                introspectedColumn.getActualColumnName());
+                        
+                        warnings.add(warning);
+                        logger.debug(warning);
                     }
                     
                 }
@@ -297,6 +313,12 @@ public class DatabaseIntrospector {
                         .getActualColumnName());
 
                 if (columnOverride != null) {
+                    if (logger.isDebugEnabled()) {
+                        logger.debug(Messages.getString("Tracing.4", //$NON-NLS-1$
+                                introspectedColumn.getActualColumnName(),
+                                entry.getKey().toString()));
+                    }
+                    
                     if (StringUtility.stringHasValue(columnOverride.getJavaProperty())) {
                         introspectedColumn.setJavaProperty(columnOverride.getJavaProperty());
                     }
@@ -400,6 +422,11 @@ public class DatabaseIntrospector {
 
         Map<ActualTableName, List<IntrospectedColumn>> answer = new HashMap<ActualTableName, List<IntrospectedColumn>>();
         
+        if (logger.isDebugEnabled()) {
+            String fullTableName = StringUtility.composeFullyQualifiedTableName(localCatalog, localSchema, localTableName, '.');
+            logger.debug(Messages.getString("Tracing.1", fullTableName)); //$NON-NLS-1$
+        }
+        
         ResultSet rs = databaseMetaData.getColumns(localCatalog, localSchema,
                 localTableName, null);
 
@@ -424,6 +451,13 @@ public class DatabaseIntrospector {
             }
             
             columns.add(introspectedColumn);
+            
+            if (logger.isDebugEnabled()) {
+                logger.debug(Messages.getString("Tracing.2", //$NON-NLS-1$
+                        introspectedColumn.getActualColumnName(),
+                        Integer.toString(introspectedColumn.getJdbcType()),
+                        atn.toString()));
+            }
         }
         
         closeResultSet(rs);

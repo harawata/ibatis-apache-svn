@@ -11,6 +11,8 @@ Enhancements:
 2. IBATIS-571 - Added "autoDelimitKeywords" support to <ibatorContext>
 3. IBATIS-577 - Define SQL fragments for column lists.  Thanks to Iwao
    AVE! for the idea and the initial patch
+4. Added some additional command line arguments
+5. Added logging
 
 -------------------------------------------------------------------------------
 Version 1.2.1:

@@ -32,9 +32,10 @@ import org.apache.ibatis.ibator.exception.InvalidConfigurationException;
 import org.apache.ibatis.ibator.exception.XMLParserException;
 import org.apache.ibatis.ibator.internal.DefaultShellCallback;
 import org.apache.ibatis.ibator.internal.util.messages.Messages;
+import org.apache.ibatis.ibator.logging.LogFactory;
 
 /**
- * This class allows ibator to be run from the command line.
+ * This class allows Ibator to be run from the command line.
  * 
  * @author Jeff Butler
  */
@@ -43,6 +44,8 @@ public class IbatorRunner {
     private static final String OVERWRITE = "-overwrite"; //$NON-NLS-1$
     private static final String CONTEXT_IDS = "-contextids"; //$NON-NLS-1$
     private static final String TABLES = "-tables"; //$NON-NLS-1$
+    private static final String VERBOSE = "-verbose"; //$NON-NLS-1$
+    private static final String FORCE_JAVA_LOGGING = "-forceJavaLogging"; //$NON-NLS-1$
 
 	public static void main(String[] args) {
         if (args.length == 0) {
@@ -94,11 +97,14 @@ public class IbatorRunner {
                 warnings);
             IbatorConfiguration config = cp.parseIbatorConfiguration(configurationFile);
             
-            DefaultShellCallback callback = new DefaultShellCallback(arguments.containsKey(OVERWRITE));
+            DefaultShellCallback shellCallback = new DefaultShellCallback(arguments.containsKey(OVERWRITE));
             
-            Ibator ibator = new Ibator(config, callback, warnings);
+            Ibator ibator = new Ibator(config, shellCallback, warnings);
             
-            ibator.generate(null, contexts, fullyqualifiedTables);
+            ProgressCallback progressCallback =
+                arguments.containsKey(VERBOSE) ? new VerboseProgressCallback() : null;
+            
+            ibator.generate(progressCallback, contexts, fullyqualifiedTables);
             
         } catch (XMLParserException e) {
         	writeLine(Messages.getString("Progress.3")); //$NON-NLS-1$
@@ -165,6 +171,10 @@ public class IbatorRunner {
                 i++;
             } else if (OVERWRITE.equalsIgnoreCase(args[i])) {
                 arguments.put(OVERWRITE, "Y"); //$NON-NLS-1$
+            } else if (VERBOSE.equalsIgnoreCase(args[i])) {
+                arguments.put(VERBOSE, "Y"); //$NON-NLS-1$
+            } else if (FORCE_JAVA_LOGGING.equalsIgnoreCase(args[i])) {
+                LogFactory.selectJavaLogging();
             } else if (CONTEXT_IDS.equalsIgnoreCase(args[i])) {
                 if ((i + 1) < args.length) {
                     arguments.put(CONTEXT_IDS, args[i + 1]);

@@ -415,7 +415,7 @@ public class IbatorContext extends PropertyHolder {
 
         introspectedTables = new ArrayList<IntrospectedTable>();
         JavaTypeResolver javaTypeResolver = IbatorObjectFactory
-            .createJavaTypeResolver(IbatorContext.this, warnings);
+            .createJavaTypeResolver(this, warnings);
 
         Connection connection = null;
 
@@ -424,7 +424,7 @@ public class IbatorContext extends PropertyHolder {
             connection = getConnection();
 
             DatabaseIntrospector databaseIntrospector = new DatabaseIntrospector(
-                    IbatorContext.this, connection.getMetaData(), javaTypeResolver,
+                    this, connection.getMetaData(), javaTypeResolver,
                     warnings);
 
             for (TableConfiguration tc : tableConfigurations) {
@@ -481,7 +481,7 @@ public class IbatorContext extends PropertyHolder {
         pluginAggregator = new IbatorPluginAggregator();
         for (IbatorPluginConfiguration ibatorPluginConfiguration : pluginConfigurations) {
             IbatorPlugin plugin = IbatorObjectFactory.createIbatorPlugin(
-                    IbatorContext.this, ibatorPluginConfiguration);
+                    this, ibatorPluginConfiguration);
             if (plugin.validate(warnings)) {
                 pluginAggregator.addPlugin(plugin);
             } else {

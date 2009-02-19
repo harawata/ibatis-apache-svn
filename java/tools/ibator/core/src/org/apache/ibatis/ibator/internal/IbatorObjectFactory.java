@@ -105,7 +105,7 @@ public class IbatorObjectFactory {
         return answer;
 	}
 	
-    public static Object createInternalObject(String type) {
+    public static Class<?> internalClassForName(String type) throws ClassNotFoundException {
         Class<?> clazz = null;
         
         try {
@@ -115,12 +115,18 @@ public class IbatorObjectFactory {
             // ignore - failsafe below
         }
         
+        if (clazz == null) {
+            clazz = Class.forName(type);
+        }
+        
+        return clazz;
+    }
+    
+	public static Object createInternalObject(String type) {
         Object answer;
         
         try {
-            if (clazz == null) {
-                clazz = Class.forName(type);
-            }
+            Class<?> clazz = internalClassForName(type);
         
             answer = clazz.newInstance();
         } catch (Exception e) {

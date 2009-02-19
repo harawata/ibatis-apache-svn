@@ -19,7 +19,7 @@ import org.apache.ibatis.ibator.api.ProgressCallback;
 
 /**
  * This class implements a progress callback that does nothing.  It is used when the
- * ibator client passes in a null for the ProgressCallback.
+ * Ibator client passes in a null for the ProgressCallback.
  * 
  * @author Jeff Butler
  */
