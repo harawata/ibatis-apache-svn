@@ -13,8 +13,6 @@ import java.util.List;
 
 public class DefaultSqlSession implements SqlSession {
 
-  private MapperFactory mapperFactory;
-
   private Configuration configuration;
   private Executor executor;
 
@@ -22,7 +20,6 @@ public class DefaultSqlSession implements SqlSession {
   private boolean dirty;
 
   public DefaultSqlSession(Configuration configuration, Executor executor, boolean autoCommit) {
-    this.mapperFactory = new MapperFactory();
     this.configuration = configuration;
     this.executor = executor;
     this.autoCommit = autoCommit;
@@ -146,7 +143,7 @@ public class DefaultSqlSession implements SqlSession {
   }
 
   public <T> T getMapper(Class<T> type) {
-    return mapperFactory.getMapper(type, this);
+    return configuration.getMapperFactory().getMapper(type, this);
   }
 
   private boolean isCommitOrRollbackRequired(boolean force) {

@@ -26,6 +26,7 @@ import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.apache.ibatis.transaction.managed.ManagedTransactionFactory;
 import org.apache.ibatis.type.TypeAliasRegistry;
 import org.apache.ibatis.type.TypeHandlerRegistry;
+import org.apache.ibatis.binding.MapperFactory;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -47,6 +48,7 @@ public class Configuration {
 
   private Properties variables = new Properties();
   private ObjectFactory objectFactory = new DefaultObjectFactory();
+  private MapperFactory mapperFactory = new MapperFactory();
 
   private final InterceptorChain interceptorChain = new InterceptorChain();
   private final TypeHandlerRegistry typeHandlerRegistry = new TypeHandlerRegistry();
@@ -272,6 +274,10 @@ public class Configuration {
 
   public void addInterceptor(Interceptor interceptor) {
     interceptorChain.addInterceptor(interceptor);
+  }
+
+  public MapperFactory getMapperFactory() {
+    return mapperFactory;
   }
 
   private static class StrictMap<J, K> extends HashMap<J, K> {
