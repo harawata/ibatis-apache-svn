@@ -1,4 +1,4 @@
-package org.apache.ibatis.api.exceptions;
+package org.apache.ibatis.exceptions;
 
 public class RuntimeSqlException extends RuntimeException {
 

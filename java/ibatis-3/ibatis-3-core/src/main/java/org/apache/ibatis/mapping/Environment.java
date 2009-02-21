@@ -9,6 +9,12 @@ public class Environment {
   private TransactionFactory transactionFactory;
   private DataSource dataSource;
 
+  public Environment(String id, TransactionFactory transactionFactory, DataSource dataSource) {
+    this.id = id;
+    this.transactionFactory = transactionFactory;
+    this.dataSource = dataSource;
+  }
+
   private Environment() {
   }
 

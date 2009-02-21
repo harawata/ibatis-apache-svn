@@ -2,12 +2,11 @@ package org.apache.ibatis.api.defaults;
 
 import org.apache.ibatis.api.ApiException;
 import org.apache.ibatis.api.SqlSession;
-import org.apache.ibatis.api.exceptions.ExceptionFactory;
+import org.apache.ibatis.exceptions.ExceptionFactory;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.result.ResultHandler;
 import org.apache.ibatis.mapping.Configuration;
 import org.apache.ibatis.mapping.MappedStatement;
-import org.apache.ibatis.binding.MapperFactory;
 
 import java.util.List;
 
@@ -143,7 +142,7 @@ public class DefaultSqlSession implements SqlSession {
   }
 
   public <T> T getMapper(Class<T> type) {
-    return configuration.getMapperFactory().getMapper(type, this);
+    return configuration.getMapper(type, this);
   }
 
   private boolean isCommitOrRollbackRequired(boolean force) {

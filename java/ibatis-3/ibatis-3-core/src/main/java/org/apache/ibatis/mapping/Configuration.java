@@ -26,7 +26,8 @@ import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.apache.ibatis.transaction.managed.ManagedTransactionFactory;
 import org.apache.ibatis.type.TypeAliasRegistry;
 import org.apache.ibatis.type.TypeHandlerRegistry;
-import org.apache.ibatis.binding.MapperFactory;
+import org.apache.ibatis.binding.MapperRegistry;
+import org.apache.ibatis.api.SqlSession;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -48,7 +49,7 @@ public class Configuration {
 
   private Properties variables = new Properties();
   private ObjectFactory objectFactory = new DefaultObjectFactory();
-  private MapperFactory mapperFactory = new MapperFactory();
+  private MapperRegistry mapperRegistry = new MapperRegistry(this);
 
   private final InterceptorChain interceptorChain = new InterceptorChain();
   private final TypeHandlerRegistry typeHandlerRegistry = new TypeHandlerRegistry();
@@ -57,6 +58,11 @@ public class Configuration {
   private final Map<String, Cache> caches = new StrictMap<String, Cache>("Caches collection");
   private final Map<String, ResultMap> resultMaps = new StrictMap<String, ResultMap>("Result Maps collection");
   private final Map<String, ParameterMap> parameterMaps = new StrictMap<String, ParameterMap>("Parameter Maps collection");
+
+  public Configuration(Environment environment) {
+    this();
+    this.environment = environment;
+  }
 
   public Configuration() {
     typeAliasRegistry.registerAlias("JDBC", JdbcTransactionFactory.class.getName());
@@ -276,8 +282,12 @@ public class Configuration {
     interceptorChain.addInterceptor(interceptor);
   }
 
-  public MapperFactory getMapperFactory() {
-    return mapperFactory;
+  public <T> void addMapper(Class<T> type) {
+    mapperRegistry.addMapper(type);
+  }
+
+  public <T> T getMapper(Class<T> type, SqlSession sqlSession) {
+    return mapperRegistry.getMapper(type,sqlSession);
   }
 
   private static class StrictMap<J, K> extends HashMap<J, K> {

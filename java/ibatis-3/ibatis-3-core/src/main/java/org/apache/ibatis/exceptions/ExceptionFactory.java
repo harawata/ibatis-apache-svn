@@ -1,4 +1,4 @@
-package org.apache.ibatis.api.exceptions;
+package org.apache.ibatis.exceptions;
 
 import org.apache.ibatis.executor.ErrorContext;
 

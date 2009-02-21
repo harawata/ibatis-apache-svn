@@ -1,7 +1,7 @@
 package org.apache.ibatis.api;
 
 import org.apache.ibatis.api.defaults.DefaultSqlSessionFactory;
-import org.apache.ibatis.api.exceptions.ExceptionFactory;
+import org.apache.ibatis.exceptions.ExceptionFactory;
 import org.apache.ibatis.mapping.Configuration;
 import org.apache.ibatis.parser.MapperConfigParser;
 
