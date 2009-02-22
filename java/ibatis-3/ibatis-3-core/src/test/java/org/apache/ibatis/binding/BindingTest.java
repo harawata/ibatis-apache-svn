@@ -4,7 +4,9 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSession;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import domain.blog.Blog;
+import static org.junit.Assert.*;
+
+import domain.blog.*;
 
 import java.util.List;
 
@@ -17,12 +19,12 @@ public class BindingTest {
   }
 
   @Test
-  public void shouldExecuteBoundSelectListStatement() {
+  public void shouldExecuteBoundSelectListOfBlogsStatement() {
     SqlSession session = sqlSessionFactory.openSession();
     try {
       BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
       List<Blog> blogs = mapper.selectBlogs();
-      System.out.println(blogs.size());
+      assertEquals(2,blogs.size());
     } finally {
       session.close();
     }
@@ -30,16 +32,32 @@ public class BindingTest {
   }
 
   @Test
-  public void shouldExecuteBoundSelectOneStatement() {
+  public void shouldExecuteBoundSelectOneBlogStatement() {
     SqlSession session = sqlSessionFactory.openSession();
     try {
       BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
-      Blog blogs = mapper.selectBlog(1);
-      System.out.println(blogs.getId());
+      Blog blog = mapper.selectBlog(1);
+      assertEquals(1,blog.getId());
+      assertEquals("Jim Business",blog.getTitle());
     } finally {
       session.close();
     }
+  }
 
+  @Test
+  public void shouldSelectOneAuthor() {
+    SqlSession session = sqlSessionFactory.openSession();
+    try {
+      BoundAuthorMapper mapper = session.getMapper(BoundAuthorMapper.class);
+      Author author = mapper.selectAuthor(101);
+      assertEquals(101,author.getId());
+      assertEquals("jim",author.getUsername());
+      assertEquals("********",author.getPassword());
+      assertEquals("jim@ibatis.apache.org",author.getEmail());
+      assertEquals("", author.getBio());
+    } finally {
+      session.close();
+    }
   }
 
 

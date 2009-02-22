@@ -1,6 +1,6 @@
 package org.apache.ibatis.binding;
 
-import domain.blog.Blog;
+import domain.blog.*;
 import static org.apache.ibatis.annotations.Annotations.*;
 
 import java.util.List;

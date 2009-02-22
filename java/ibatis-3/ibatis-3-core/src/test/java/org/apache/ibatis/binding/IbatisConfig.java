@@ -18,6 +18,7 @@ public class IbatisConfig {
       Environment environment = new Environment("Production", transactionFactory, dataSource);
       Configuration configuration = new Configuration(environment);
       configuration.addMapper(BoundBlogMapper.class);
+      configuration.addMapper(BoundAuthorMapper.class);
       return new DefaultSqlSessionFactory(configuration);
     } catch (Exception e) {
       throw new RuntimeException("Error initializing SqlSessionFactory. Cause: " + e, e);

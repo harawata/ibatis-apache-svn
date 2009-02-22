@@ -46,14 +46,23 @@ public class MapperRegistry {
 
   private Cache parseCache(Class type) {
     CacheDomain cacheDomain = (CacheDomain) type.getAnnotation(CacheDomain.class);
+    CacheDomainRef cacheDomainRef = (CacheDomainRef) type.getAnnotation(CacheDomainRef.class);
     if (cacheDomain != null) {
-      CacheBuilder builder = new CacheBuilder(type.getName() + "-Cache");
+      String cacheId = type.getName() + "-BoundCache";
+      CacheBuilder builder = new CacheBuilder(cacheId);
       builder.clearInterval(cacheDomain.flushInterval());
       builder.size(cacheDomain.size());
       builder.readWrite(cacheDomain.readWrite());
       builder.implementation(cacheDomain.implementation());
       builder.addDecorator(cacheDomain.eviction());
       return builder.build();
+    } else if (cacheDomain != null) {
+      String cacheRefId = cacheDomainRef.value().getName();
+      Cache cache = config.getCache(cacheRefId);
+      if (cache == null) {
+        throw new BindingException("No cache exists in namespace "+ cacheRefId + ".  Be sure to register the referenced cache namespace first when building mappers.");
+      }
+      return cache;
     }
     return null;
   }
@@ -89,6 +98,10 @@ public class MapperRegistry {
 
   private void setResultMaps(Method method, final String mappedStatementId, MappedStatement.Builder builder) {
     final Class returnType = getReturnType(method);
+
+    Results results = method.getAnnotation(Results.class);
+    
+
     builder.resultMaps(new ArrayList<ResultMap>() {{
       add(new ResultMap.Builder(
         config,
