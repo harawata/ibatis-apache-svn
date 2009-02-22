@@ -1,7 +1,7 @@
-package org.apache.ibatis.api.defaults;
+package org.apache.ibatis.session.defaults;
 
-import org.apache.ibatis.api.ApiException;
-import org.apache.ibatis.api.SqlSession;
+import org.apache.ibatis.session.SessionException;
+import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.exceptions.ExceptionFactory;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.result.ResultHandler;
@@ -32,7 +32,7 @@ public class DefaultSqlSession implements SqlSession {
   public Object selectOne(String statement, Object parameter) {
     List list = selectList(statement, parameter);
     if (list.size() != 1) {
-      throw new ApiException("Expected one result to be returned by selectOne(), but found: " + list.size());
+      throw new SessionException("Expected one result to be returned by selectOne(), but found: " + list.size());
     }
     return list.get(0);
   }

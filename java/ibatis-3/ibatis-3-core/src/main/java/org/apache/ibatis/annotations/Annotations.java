@@ -3,6 +3,8 @@ package org.apache.ibatis.annotations;
 import org.apache.ibatis.cache.decorators.LruCache;
 import org.apache.ibatis.cache.impl.PerpetualCache;
 import org.apache.ibatis.type.JdbcType;
+import org.apache.ibatis.mapping.ResultSetType;
+import org.apache.ibatis.mapping.StatementType;
 
 import java.lang.annotation.*;
 
@@ -47,18 +49,18 @@ public class Annotations {
 
   @Retention(RetentionPolicy.RUNTIME)
   @Target(ElementType.TYPE)
-  public static @interface Cache {
-    Class<? extends org.apache.ibatis.cache.Cache> type() default PerpetualCache.class;
+  public static @interface CacheDomain {
+    Class<? extends org.apache.ibatis.cache.Cache> implementation() default PerpetualCache.class;
     Class<? extends org.apache.ibatis.cache.Cache> eviction() default LruCache.class;
-    int flushInterval() default 3600000;
+    long flushInterval() default 3600000;
     int size() default 1000;
-    boolean readOnly() default false;
+    boolean readWrite() default true;
   }
 
   @Retention(RetentionPolicy.RUNTIME)
   @Target(ElementType.TYPE)
-  public @interface CacheRefNamespace {
-    String[] value();
+  public @interface CacheDomainRef {
+    Class value();
   }
 
   @Retention(RetentionPolicy.RUNTIME)
@@ -95,6 +97,17 @@ public class Annotations {
   @Target(ElementType.METHOD)
   public @interface Statement {
     String[] value();
+  }
+
+  @Retention(RetentionPolicy.RUNTIME)
+  @Target(ElementType.METHOD)
+  public @interface Options {
+    boolean useCache() default true;
+    boolean flushCache() default false;
+    ResultSetType resultSetType() default ResultSetType.FORWARD_ONLY;
+    StatementType statementType() default StatementType.PREPARED;
+    int fetchSize() default -1;
+    int timeout() default -1;
   }
 
 }

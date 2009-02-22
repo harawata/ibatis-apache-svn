@@ -1,7 +1,7 @@
 package org.apache.ibatis.binding;
 
-import org.apache.ibatis.api.SqlSessionFactory;
-import org.apache.ibatis.api.defaults.DefaultSqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.defaults.DefaultSqlSessionFactory;
 import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.transaction.TransactionFactory;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;

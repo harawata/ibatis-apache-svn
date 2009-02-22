@@ -27,7 +27,7 @@ import org.apache.ibatis.transaction.managed.ManagedTransactionFactory;
 import org.apache.ibatis.type.TypeAliasRegistry;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 import org.apache.ibatis.binding.MapperRegistry;
-import org.apache.ibatis.api.SqlSession;
+import org.apache.ibatis.session.SqlSession;
 
 import java.util.Collection;
 import java.util.HashMap;

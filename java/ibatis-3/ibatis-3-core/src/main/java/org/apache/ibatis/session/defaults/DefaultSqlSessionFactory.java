@@ -1,7 +1,7 @@
-package org.apache.ibatis.api.defaults;
+package org.apache.ibatis.session.defaults;
 
-import org.apache.ibatis.api.SqlSession;
-import org.apache.ibatis.api.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.exceptions.ExceptionFactory;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.logging.Log;

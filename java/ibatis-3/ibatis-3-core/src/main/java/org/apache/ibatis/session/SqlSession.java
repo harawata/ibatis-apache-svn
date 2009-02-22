@@ -1,4 +1,4 @@
-package org.apache.ibatis.api;
+package org.apache.ibatis.session;
 
 import org.apache.ibatis.executor.result.ResultHandler;
 import org.apache.ibatis.mapping.Configuration;

@@ -1,4 +1,4 @@
-package org.apache.ibatis.api;
+package org.apache.ibatis.session;
 
 import domain.blog.*;
 import org.apache.ibatis.BaseDataTest;
@@ -349,7 +349,7 @@ public class SqlSessionTest extends BaseDataTest {
         mapper.selectAuthor(101);
         fail("Expected exception.");
       } catch(Exception e) {
-        assertEquals(ApiException.class, e.getClass());
+        assertEquals(SessionException.class, e.getClass());
       }
     } finally {
       session.close();

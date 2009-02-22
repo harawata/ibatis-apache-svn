@@ -1,6 +1,6 @@
 package org.apache.ibatis.binding;
 
-import org.apache.ibatis.api.SqlSession;
+import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.mapping.Configuration;
 import org.apache.ibatis.executor.Executor;
 
