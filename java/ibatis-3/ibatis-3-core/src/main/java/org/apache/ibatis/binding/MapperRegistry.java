@@ -45,7 +45,7 @@ public class MapperRegistry {
 
   public void parseAnnotations(Class type) {
     Cache cache = parseCache(type);
-    parseMethodAnnotations(cache,type);
+    parseMethodAnnotations(cache, type);
   }
 
   private Cache parseCache(Class type) {
@@ -67,7 +67,7 @@ public class MapperRegistry {
     for (Method method : methods) {
       MappedStatement statement = parseMappedStatement(method, cache);
       if (statement != null) {
-      config.addMappedStatement(statement);
+        config.addMappedStatement(statement);
       }
     }
   }
@@ -75,37 +75,41 @@ public class MapperRegistry {
   private MappedStatement parseMappedStatement(Method method, Cache cache) {
     Class annotationType = getSqlAnnotationType(method);
     if (annotationType != null) {
-    String sql = getSqlAnnotationValue(method, annotationType);
-    String mappedStatementId = method.getDeclaringClass().getName() + "." + method.getName();
-    SqlSource sqlSource = new BasicSqlSource(sql);
-    MappedStatement.Builder builder = new MappedStatement.Builder(config, mappedStatementId, sqlSource);
-    builder.resource(method.getDeclaringClass().getName().replace('.', '/') + ".java (best guess)");
+      String sql = getSqlAnnotationValue(method, annotationType);
+      String mappedStatementId = method.getDeclaringClass().getName() + "." + method.getName();
+      SqlSource sqlSource = new BasicSqlSource(sql);
+      MappedStatement.Builder builder = new MappedStatement.Builder(config, mappedStatementId, sqlSource);
+      builder.resource(method.getDeclaringClass().getName().replace('.', '/') + ".java (best guess)");
 
-    Options options = method.getAnnotation(Options.class);
-    if (options != null) {
-      builder.useCache(options.useCache());
-      builder.flushCacheRequired(options.flushCache());
-      builder.resultSetType(options.resultSetType());
-      builder.statementType(options.statementType());
-      builder.fetchSize(options.fetchSize());
-      builder.timeout(options.timeout());
-    }
-
-    builder.cache(cache);
-
-    Class returnType = method.getReturnType();
-    if (returnType.isAssignableFrom(Collection.class)) {
-      TypeVariable<? extends Class<?>>[] returnTypeVariables = returnType.getTypeParameters();
-      if (returnTypeVariables.length == 1) {
-        returnType = returnTypeVariables[0].getGenericDeclaration();
+      Options options = method.getAnnotation(Options.class);
+      if (options != null) {
+        builder.useCache(options.useCache());
+        builder.flushCacheRequired(options.flushCache());
+        builder.resultSetType(options.resultSetType());
+        builder.statementType(options.statementType());
+        builder.fetchSize(options.fetchSize());
+        builder.timeout(options.timeout());
       }
-    }
 
-    builder.parameterMap(new ParameterMap.Builder(config,"",Object.class,new ArrayList<ParameterMapping>()).build());
-    final ResultMap resultMap = new ResultMap.Builder(config, "", returnType, new ArrayList<ResultMapping>()).build();
-    builder.resultMaps(new ArrayList<ResultMap>() {{ add(resultMap); }});
+      builder.cache(cache);
 
-    return builder.build();
+      Class returnType = method.getReturnType();
+      if (returnType.isAssignableFrom(Collection.class)) {
+        TypeVariable<? extends Class<?>>[] returnTypeVariables = returnType.getTypeParameters();
+        if (returnTypeVariables.length == 1) {
+          returnType = returnTypeVariables[0].getGenericDeclaration();
+        }
+      }
+
+      builder.parameterMap(new ParameterMap.Builder(config, "", Object.class, new ArrayList<ParameterMapping>()).build());
+      final ResultMap resultMap = new ResultMap.Builder(config, "", returnType, new ArrayList<ResultMapping>()).build();
+      builder.resultMaps(new ArrayList<ResultMap>() {
+        {
+          add(resultMap);
+        }
+      });
+
+      return builder.build();
     }
     return null;
   }
@@ -116,7 +120,7 @@ public class MapperRegistry {
       try {
         String[] strings = (String[]) annotation.getClass().getMethod("value").invoke(annotation);
         StringBuilder sql = new StringBuilder();
-        for(String fragment : strings) {
+        for (String fragment : strings) {
           sql.append(fragment);
           sql.append(" ");
         }
