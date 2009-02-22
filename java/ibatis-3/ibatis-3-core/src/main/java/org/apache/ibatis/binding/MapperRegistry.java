@@ -3,15 +3,11 @@ package org.apache.ibatis.binding;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.mapping.*;
 import static org.apache.ibatis.annotations.Annotations.*;
-import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.cache.Cache;
-import org.apache.ibatis.parser.InlineSqlSource;
 import org.apache.ibatis.parser.SqlSourceParser;
-import org.apache.ibatis.xml.GenericTokenParser;
 
 import java.util.*;
 import java.lang.reflect.Method;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.TypeVariable;
 import java.lang.annotation.Annotation;
 
@@ -75,43 +71,74 @@ public class MapperRegistry {
   private MappedStatement parseMappedStatement(Method method, Cache cache) {
     Class annotationType = getSqlAnnotationType(method);
     if (annotationType != null) {
-      String sql = getSqlAnnotationValue(method, annotationType);
-      String mappedStatementId = method.getDeclaringClass().getName() + "." + method.getName();
-      SqlSource sqlSource = new BasicSqlSource(sql);
+      final String sql = getSqlAnnotationValue(method, annotationType);
+      final String mappedStatementId = method.getDeclaringClass().getName() + "." + method.getName();
+      final SqlSource sqlSource = new SqlSourceParser(config).parse(sql);
+
       MappedStatement.Builder builder = new MappedStatement.Builder(config, mappedStatementId, sqlSource);
       builder.resource(method.getDeclaringClass().getName().replace('.', '/') + ".java (best guess)");
-
-      Options options = method.getAnnotation(Options.class);
-      if (options != null) {
-        builder.useCache(options.useCache());
-        builder.flushCacheRequired(options.flushCache());
-        builder.resultSetType(options.resultSetType());
-        builder.statementType(options.statementType());
-        builder.fetchSize(options.fetchSize());
-        builder.timeout(options.timeout());
-      }
-
       builder.cache(cache);
-
-      Class returnType = method.getReturnType();
-      if (returnType.isAssignableFrom(Collection.class)) {
-        TypeVariable<? extends Class<?>>[] returnTypeVariables = returnType.getTypeParameters();
-        if (returnTypeVariables.length == 1) {
-          returnType = returnTypeVariables[0].getGenericDeclaration();
-        }
-      }
-
-      builder.parameterMap(new ParameterMap.Builder(config, "", Object.class, new ArrayList<ParameterMapping>()).build());
-      final ResultMap resultMap = new ResultMap.Builder(config, "", returnType, new ArrayList<ResultMapping>()).build();
-      builder.resultMaps(new ArrayList<ResultMap>() {
-        {
-          add(resultMap);
-        }
-      });
+      setOptions(method, builder);
+      setParameterMap(method, mappedStatementId, builder);
+      setResultMaps(method, mappedStatementId, builder);
 
       return builder.build();
     }
     return null;
+  }
+
+  private void setResultMaps(Method method, final String mappedStatementId, MappedStatement.Builder builder) {
+    final Class returnType = getReturnType(method);
+    builder.resultMaps(new ArrayList<ResultMap>() {{
+      add(new ResultMap.Builder(
+        config,
+        mappedStatementId+"-BoundResultMap",
+        returnType,
+        new ArrayList<ResultMapping>()).build());
+    }});
+  }
+
+  private void setParameterMap(Method method, String mappedStatementId, MappedStatement.Builder builder) {
+    final Class parameterType = getParameterType(method);
+    builder.parameterMap(new ParameterMap.Builder(
+        config,
+        mappedStatementId+"-BoundParameterMap",
+        parameterType,
+        new ArrayList<ParameterMapping>()).build());
+  }
+
+  private void setOptions(Method method, MappedStatement.Builder builder) {
+    Options options = method.getAnnotation(Options.class);
+    if (options != null) {
+      builder.useCache(options.useCache());
+      builder.flushCacheRequired(options.flushCache());
+      builder.resultSetType(options.resultSetType());
+      builder.statementType(options.statementType());
+      builder.fetchSize(options.fetchSize());
+      builder.timeout(options.timeout());
+    }
+  }
+
+  private Class getParameterType(Method method) {
+    Class parameterType = null;
+    Class[] parameterTypes = method.getParameterTypes();
+    if (parameterTypes.length ==1 || parameterTypes.length == 3) {
+      // Methods with 1 or 3 parameters have a value parameter
+      // (the other two params are offset/limit parameters for multiple selects)
+      parameterType = parameterTypes[0];
+    }
+    return parameterType;
+  }
+
+  private Class getReturnType(Method method) {
+    Class returnType = method.getReturnType();
+    if (returnType.isAssignableFrom(Collection.class)) {
+      TypeVariable<? extends Class<?>>[] returnTypeVariables = returnType.getTypeParameters();
+      if (returnTypeVariables.length == 1) {
+        returnType = returnTypeVariables[0].getGenericDeclaration();
+      }
+    }
+    return returnType;
   }
 
   private String getSqlAnnotationValue(Method method, Class annotationType) {

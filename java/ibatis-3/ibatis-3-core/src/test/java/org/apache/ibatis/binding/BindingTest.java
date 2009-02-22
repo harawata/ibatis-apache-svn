@@ -17,12 +17,25 @@ public class BindingTest {
   }
 
   @Test
-  public void shouldExecuteBoundSelectStatement() {
+  public void shouldExecuteBoundSelectListStatement() {
     SqlSession session = sqlSessionFactory.openSession();
     try {
       BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
       List<Blog> blogs = mapper.selectBlogs();
       System.out.println(blogs.size());
+    } finally {
+      session.close();
+    }
+
+  }
+
+  @Test
+  public void shouldExecuteBoundSelectOneStatement() {
+    SqlSession session = sqlSessionFactory.openSession();
+    try {
+      BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
+      Blog blogs = mapper.selectBlog(1);
+      System.out.println(blogs.getId());
     } finally {
       session.close();
     }

@@ -5,7 +5,6 @@ import org.apache.ibatis.mapping.ParameterMapping;
 import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.xml.GenericTokenParser;
-import org.apache.ibatis.xml.NodeletContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,10 +18,10 @@ public class SqlSourceParser extends BaseParser {
     this.typeHandlerRegistry = configuration.getTypeHandlerRegistry();
   }
 
-  public SqlSource parse(NodeletContext context) {
+  public SqlSource parse(String originalSql) {
     ParameterMappingTokenHandler handler = new ParameterMappingTokenHandler();
     GenericTokenParser parser = new GenericTokenParser("#{", "}", handler);
-    String sql = parser.parse(context.getStringBody());
+    String sql = parser.parse(originalSql);
     return new InlineSqlSource(sql, handler.getParameterMappings());
   }
 
