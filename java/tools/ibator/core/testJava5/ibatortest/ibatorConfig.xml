@@ -261,6 +261,7 @@
 
   <ibatorContext id="miscellaneousTests" targetRuntime="Ibatis2Java5">
     <ibatorPlugin type="org.apache.ibatis.ibator.plugins.EqualsHashCodePlugin" />
+    <ibatorPlugin type="org.apache.ibatis.ibator.plugins.CaseInsensitiveLikePlugin" />
     <ibatorPlugin type="org.apache.ibatis.ibator.plugins.RenameExampleClassPlugin" >
       <property name="searchString" value="Example$"/>
       <property name="replaceString" value="Criteria"/>

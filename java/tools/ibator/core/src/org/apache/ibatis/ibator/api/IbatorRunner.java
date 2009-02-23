@@ -174,7 +174,7 @@ public class IbatorRunner {
             } else if (VERBOSE.equalsIgnoreCase(args[i])) {
                 arguments.put(VERBOSE, "Y"); //$NON-NLS-1$
             } else if (FORCE_JAVA_LOGGING.equalsIgnoreCase(args[i])) {
-                LogFactory.selectJavaLogging();
+                LogFactory.forceJavaLogging();
             } else if (CONTEXT_IDS.equalsIgnoreCase(args[i])) {
                 if ((i + 1) < args.length) {
                     arguments.put(CONTEXT_IDS, args[i + 1]);

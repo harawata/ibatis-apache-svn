@@ -46,7 +46,8 @@ Ibator will use standard Java logging.</p>
 if Log4J is in the runtime classpath, you may specify the <code>-forceJavaLogging</code>
 command line argument, or specify the following line of code when running
 Ibator from Java:</p>
-<p><code>org.apache.ibatis.ibator.logging.LogFactory.selectJavaLogging();</code></p>  
+<p><code>org.apache.ibatis.ibator.logging.LogFactory.forceJavaLogging();</code></p>
+<p><b>Important:</b> You should specify the above line of code <i>before</i> any other Ibator code.</p>
 
 <h2>Configuring Log4J Logging</h2>
 <p>The following is a sample Log4J configuration file:</p>
@@ -81,16 +82,16 @@ methods if you prefer.</p>
 # Specify the handlers to create in the root logger
 # (all loggers are children of the root logger)
 handlers = java.util.logging.ConsoleHandler
-    
+
 # Set the default logging level for the root logger
 .level = INFO
-    
+
 # Set the default logging level for new ConsoleHandler instances
 java.util.logging.ConsoleHandler.level = ALL
-    
+
 # Set the default formatter for new ConsoleHandler instances
 java.util.logging.ConsoleHandler.formatter = java.util.logging.SimpleFormatter
-    
+
 # Set the default logging level for the logger named org.apache.ibatis.ibator
 org.apache.ibatis.ibator.level = FINE
 </pre>

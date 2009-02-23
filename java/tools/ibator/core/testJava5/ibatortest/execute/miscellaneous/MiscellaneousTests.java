@@ -921,4 +921,88 @@ public class MiscellaneousTests extends BaseMiscellaneousTest {
             fail(e.getMessage());
         }
     }
+
+    @SuppressWarnings("unchecked")
+    public void testMyObjectSelectByExampleLikeInsensitive() {
+        MyObjectDAO dao = getMyObjectDAO();
+
+        try {
+            MyObject record = new MyObject();
+            FirstName fn = new FirstName();
+            fn.setValue("Fred");
+            record.setFirstname(fn);
+            record.setLastname("Flintstone");
+            record.setId1(1);
+            record.setId2(1);
+            dao.insertMyObject(record);
+
+            record = new MyObject();
+            fn = new FirstName();
+            fn.setValue("Wilma");
+            record.setFirstname(fn);
+            record.setLastname("Flintstone");
+            record.setId1(1);
+            record.setId2(2);
+            dao.insertMyObject(record);
+
+            record = new MyObject();
+            fn = new FirstName();
+            fn.setValue("Pebbles");
+            record.setFirstname(fn);
+            record.setLastname("Flintstone");
+            record.setId1(1);
+            record.setId2(3);
+            dao.insertMyObject(record);
+
+            record = new MyObject();
+            fn = new FirstName();
+            fn.setValue("Barney");
+            record.setFirstname(fn);
+            record.setLastname("Rubble");
+            record.setId1(2);
+            record.setId2(1);
+            dao.insertMyObject(record);
+
+            record = new MyObject();
+            fn = new FirstName();
+            fn.setValue("Betty");
+            record.setFirstname(fn);
+            record.setLastname("Rubble");
+            record.setId1(2);
+            record.setId2(2);
+            dao.insertMyObject(record);
+
+            record = new MyObject();
+            fn = new FirstName();
+            fn.setValue("Bamm Bamm");
+            record.setFirstname(fn);
+            record.setLastname("Rubble");
+            record.setId1(2);
+            record.setId2(3);
+            dao.insertMyObject(record);
+
+            MyObjectCriteria example = new MyObjectCriteria();
+            example.createCriteria().andLastnameLike("RU%");
+            example.setOrderByClause("ID1, ID2");
+            List answer = dao.selectMyObjectByExample(example);
+            assertEquals(0, answer.size());
+            
+            example.clear();
+            example.createCriteria().andLastnameLikeInsensitive("RU%");
+            answer = dao.selectMyObjectByExample(example);
+            assertEquals(3, answer.size());
+            
+            MyObject returnedRecord = (MyObject) answer.get(0);
+            assertEquals(2, returnedRecord.getId1().intValue());
+            assertEquals(1, returnedRecord.getId2().intValue());
+            returnedRecord = (MyObject) answer.get(1);
+            assertEquals(2, returnedRecord.getId1().intValue());
+            assertEquals(2, returnedRecord.getId2().intValue());
+            returnedRecord = (MyObject) answer.get(2);
+            assertEquals(2, returnedRecord.getId1().intValue());
+            assertEquals(3, returnedRecord.getId2().intValue());
+        } catch (SQLException e) {
+            fail(e.getMessage());
+        }
+    }
 }

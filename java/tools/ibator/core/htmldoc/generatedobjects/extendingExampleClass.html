@@ -70,6 +70,14 @@ public class ExtendedCustomerExample extends CustomerExample {
 <p>Once the basic class is created, adding additional predicates is a matter
 of adding additional methods the the extended <code>Criteria</code> class.</p>
 
+<h2>Extending vs. Plugging In</h2>
+<p>If you find that you are extending the example classes frequently, it might be
+more convenient for you to create an Ibator Plugin to generate the additional
+functionality rather than hand coding the extended classes.  The example below (under
+the heading "Single Parameter Predicates") can also be accomplished with a plugin
+as demonstrated by the class
+<code>org.apache.ibatis.ibator.plugins.CaseInsensitiveLikePlugin</code>.</p>
+
 <h2>Adding Predicates</h2>
 <p>Ibator generates a dynamic SQL fragment that allows virtually unlimited
 where clauses to be created at run-time.  To accomplish this, the generated SQL

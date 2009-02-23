@@ -68,7 +68,7 @@ public class LogFactory {
      * intend to use this method you should call it before calling any other
      * Ibator method.
      */
-    public static synchronized void selectJavaLogging() {
+    public static synchronized void forceJavaLogging() {
         try {
             IbatorObjectFactory.internalClassForName("java.util.logging.Logger"); //$NON-NLS-1$
             Class<?> implClass = IbatorObjectFactory.internalClassForName(

@@ -13,6 +13,7 @@ Enhancements:
    AVE! for the idea and the initial patch
 4. Added some additional command line arguments
 5. Added logging
+6. Added Case Insensitive LIKE example Plugin
 
 -------------------------------------------------------------------------------
 Version 1.2.1:
