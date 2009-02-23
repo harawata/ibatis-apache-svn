@@ -174,14 +174,12 @@ public class DatabaseIntrospector {
                 // add warning that the table has no columns, remove from the list
                 String warning = Messages.getString("Warning.1", introspectedTable.getFullyQualifiedTable().toString());  //$NON-NLS-1$
                 warnings.add(warning);
-                logger.debug(warning);
                 iter.remove();
             } else if (!introspectedTable.hasPrimaryKeyColumns()
                     && !introspectedTable.hasBaseColumns()) {
                 // add warning that the table has only BLOB columns, remove from the list
                 String warning = Messages.getString("Warning.18", introspectedTable.getFullyQualifiedTable().toString()); //$NON-NLS-1$ 
                 warnings.add(warning);
-                logger.debug(warning);
                 iter.remove();
             } else {
                 // now make sure that all columns called out in the configuration
@@ -269,7 +267,6 @@ public class DatabaseIntrospector {
                                 introspectedColumn.getActualColumnName());
                         
                         warnings.add(warning);
-                        logger.debug(warning);
                     }
                     
                 }
@@ -461,6 +458,29 @@ public class DatabaseIntrospector {
         }
         
         closeResultSet(rs);
+        
+        if (answer.size() > 1
+                && !StringUtility.stringContainsSQLWildcard(localSchema)
+                && !StringUtility.stringContainsSQLWildcard(localTableName)) {
+            // issue a warning if there is more than one table and
+            // no wildcards were used
+            ActualTableName inputAtn = new ActualTableName(tc.getCatalog(),
+                    tc.getSchema(), tc.getTableName());
+            
+            StringBuilder sb = new StringBuilder();
+            boolean comma = false;
+            for (ActualTableName atn : answer.keySet()) {
+                if (comma) {
+                    sb.append(',');
+                } else {
+                    comma = true;
+                }
+                sb.append(atn.toString());
+            }
+            
+            warnings.add(Messages.getString("Warning.25", //$NON-NLS-1$
+                    inputAtn.toString(), sb.toString()));
+        }
         
         return answer;
     }

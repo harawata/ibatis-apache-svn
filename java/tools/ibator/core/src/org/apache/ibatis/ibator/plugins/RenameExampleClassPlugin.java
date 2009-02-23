@@ -77,10 +77,14 @@ public class RenameExampleClassPlugin extends IbatorPluginAdapter {
             pattern = Pattern.compile(searchString);
         } else {
             if (!StringUtility.stringHasValue(searchString)) {
-                warnings.add(Messages.getString("Warning.27")); //$NON-NLS-1$
+                warnings.add(Messages.getString("ValidationError.18", //$NON-NLS-1$
+                        "RenameExampleClassPlugin", //$NON-NLS-1$
+                        "searchString")); //$NON-NLS-1$
             }
             if (!StringUtility.stringHasValue(replaceString)) {
-                warnings.add(Messages.getString("Warning.28")); //$NON-NLS-1$
+                warnings.add(Messages.getString("ValidationError.18", //$NON-NLS-1$
+                        "RenameExampleClassPlugin", //$NON-NLS-1$
+                        "replaceString")); //$NON-NLS-1$
             }
         }
         

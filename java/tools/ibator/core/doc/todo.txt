@@ -1,5 +1,10 @@
 Core:
 
+  1.2.2
+
+    1. Add a way to override default types in the JavaTypeResolver
+
+
   Future
 
     1. Write page explaining how to use the GENERIC DAOs
@@ -11,6 +16,7 @@ Core:
     3. Relationships?
 
     4. Java merger with ANTLR?
+
 
 Eclipse:
 

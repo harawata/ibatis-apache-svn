@@ -64,12 +64,16 @@ public class SqlMapConfigPlugin extends IbatorPluginAdapter {
         boolean valid = true;
         
         if (!StringUtility.stringHasValue(properties.getProperty("targetProject"))) { //$NON-NLS-1$
-            warnings.add(Messages.getString("Warning.25")); //$NON-NLS-1$
+            warnings.add(Messages.getString("ValidationError.18", //$NON-NLS-1$
+                    "SqlMapConfigPlugin", //$NON-NLS-1$
+                    "targetProject")); //$NON-NLS-1$
             valid = false;
         }
         
         if (!StringUtility.stringHasValue(properties.getProperty("targetPackage"))) { //$NON-NLS-1$
-            warnings.add(Messages.getString("Warning.26")); //$NON-NLS-1$
+            warnings.add(Messages.getString("ValidationError.18", //$NON-NLS-1$
+                    "SqlMapConfigPlugin", //$NON-NLS-1$
+                    "targetPackage")); //$NON-NLS-1$
             valid = false;
         }
         
