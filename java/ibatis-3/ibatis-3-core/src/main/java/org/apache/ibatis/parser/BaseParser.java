@@ -70,6 +70,15 @@ public class BaseParser {
     }
   }
 
+  protected Object resolveInstance(Class type) {
+    if (type == null) return null;
+    try {
+      return type.newInstance();
+    } catch (Exception e) {
+      throw new ParserException("Error instantiating class. Cause: " + e, e);
+    }
+  }
+
   protected String resolveAlias(String alias) {
     return typeAliasRegistry.resolveAlias(alias);
   }
