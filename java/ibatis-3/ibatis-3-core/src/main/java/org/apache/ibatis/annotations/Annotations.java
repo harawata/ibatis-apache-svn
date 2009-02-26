@@ -89,18 +89,6 @@ public class Annotations {
 
   @Retention(RetentionPolicy.RUNTIME)
   @Target(ElementType.METHOD)
-  public @interface Procedure {
-    String[] value();
-  }
-
-  @Retention(RetentionPolicy.RUNTIME)
-  @Target(ElementType.METHOD)
-  public @interface Statement {
-    String[] value();
-  }
-
-  @Retention(RetentionPolicy.RUNTIME)
-  @Target(ElementType.METHOD)
   public @interface Options {
     boolean useCache() default true;
     boolean flushCache() default false;

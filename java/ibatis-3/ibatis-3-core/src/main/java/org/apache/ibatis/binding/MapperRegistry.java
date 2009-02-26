@@ -2,15 +2,8 @@ package org.apache.ibatis.binding;
 
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.mapping.*;
-import static org.apache.ibatis.annotations.Annotations.*;
-import org.apache.ibatis.cache.Cache;
-import org.apache.ibatis.parser.SqlSourceParser;
-import org.apache.ibatis.parser.MapperConfigurator;
 
 import java.util.*;
-import java.lang.reflect.Method;
-import java.lang.reflect.TypeVariable;
-import java.lang.annotation.Annotation;
 
 public class MapperRegistry {
 
@@ -37,6 +30,6 @@ public class MapperRegistry {
     if (knownMappers.contains(type))
       throw new BindingException("Type " + type + " is already known to the MapperRegistry.");
     knownMappers.add(type);
-    //...
+    new MapperAnnotationParser(config,type).parse();
   }
 }

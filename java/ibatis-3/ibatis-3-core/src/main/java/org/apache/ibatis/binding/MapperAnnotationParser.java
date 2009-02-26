@@ -3,24 +3,20 @@ package org.apache.ibatis.binding;
 import static org.apache.ibatis.annotations.Annotations.*;
 import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.parser.MapperConfigurator;
-import org.apache.ibatis.parser.SqlSourceParser;
-import org.apache.ibatis.cache.Cache;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.TypeVariable;
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
 import java.util.Collection;
 
 public class MapperAnnotationParser {
 
   private MapperConfigurator configurator;
-  private Configuration config;
   private Class type;
 
   public MapperAnnotationParser(Configuration config, Class type) {
-    this.configurator = new MapperConfigurator(config, type.getName() + ".java");
-    this.config = config;
+    String resource = type.getName().replace('.', '/') + ".java (best guess)";
+    this.configurator = new MapperConfigurator(config, resource);
     this.type = type;
   }
 
@@ -28,10 +24,11 @@ public class MapperAnnotationParser {
     configurator.namespace(type.getName());
     parseCache(type, configurator);
     parseCacheRef(type, configurator);
-    parseMethodAnnotations(type);
+    Method[] methods = type.getMethods();
+    for (Method method : methods) {
+      parseStatement(method);
+    }
   }
-
-
   private void parseCache(Class type, MapperConfigurator mapperConfigurator) {
     CacheDomain cacheDomain = (CacheDomain) type.getAnnotation(CacheDomain.class);
     if (cacheDomain != null) {
@@ -46,73 +43,41 @@ public class MapperAnnotationParser {
     }
   }
 
-  private void parseMethodAnnotations(Class type) {
-    Method[] methods = type.getMethods();
-    for (Method method : methods) {
-      MappedStatement statement = parseMappedStatement(method);
-      if (statement != null) {
-        config.addMappedStatement(statement);
-      }
-    }
-  }
-
-  private MappedStatement parseMappedStatement(Method method) {
+  private void parseStatement(Method method) {
     Class annotationType = getSqlAnnotationType(method);
     Options options = method.getAnnotation(Options.class);
-
     if (annotationType != null) {
       final String sql = getSqlAnnotationValue(method, annotationType);
       final String mappedStatementId = method.getDeclaringClass().getName() + "." + method.getName();
-      final SqlSource sqlSource = new SqlSourceParser(config).parse(sql);
-
-      MappedStatement.Builder builder = new MappedStatement.Builder(config, mappedStatementId, sqlSource);
-      builder.resource(method.getDeclaringClass().getName().replace('.', '/') + ".java (best guess)");
-      setOptions(method, builder);
-      setParameterMap(method, mappedStatementId, builder);
-      setResultMaps(method, mappedStatementId, builder);
-
-      //configurator.statement(mappedStatementId,sql,options.fetchSize(),options.timeout(),options);
-
-      return builder.build();
-    }
-    return null;
-  }
-
-  private void setResultMaps(Method method, final String mappedStatementId, MappedStatement.Builder builder) {
-    final Class returnType = getReturnType(method);
-
-    Results results = method.getAnnotation(Results.class);
-
-
-    builder.resultMaps(new ArrayList<ResultMap>() {
-      {
-        add(new ResultMap.Builder(
-            config,
-            mappedStatementId + "-BoundResultMap",
-            returnType,
-            new ArrayList<ResultMapping>()).build());
+      boolean isSelect = method.getAnnotation(Select.class) != null;
+      boolean flushCache = false;
+      boolean useCache = true;
+      Integer fetchSize = null;
+      Integer timeout = null;
+      StatementType statementType = StatementType.PREPARED;
+      ResultSetType resultSetType = ResultSetType.FORWARD_ONLY;
+      if (options != null) {
+        flushCache = options.flushCache();
+        useCache = options.useCache();
+        fetchSize = options.fetchSize() > -1 ? options.fetchSize() : null;
+        timeout = options.timeout() > -1 ? options.timeout() : null;
+        statementType = options.statementType();
+        resultSetType = options.resultSetType();
       }
-    });
-  }
-
-  private void setParameterMap(Method method, String mappedStatementId, MappedStatement.Builder builder) {
-    final Class parameterType = getParameterType(method);
-    builder.parameterMap(new ParameterMap.Builder(
-        config,
-        mappedStatementId + "-BoundParameterMap",
-        parameterType,
-        new ArrayList<ParameterMapping>()).build());
-  }
-
-  private void setOptions(Method method, MappedStatement.Builder builder) {
-    Options options = method.getAnnotation(Options.class);
-    if (options != null) {
-      builder.useCache(options.useCache());
-      builder.flushCacheRequired(options.flushCache());
-      builder.resultSetType(options.resultSetType());
-      builder.statementType(options.statementType());
-      builder.fetchSize(options.fetchSize());
-      builder.timeout(options.timeout());
+      configurator.statement(
+          mappedStatementId,
+          sql,
+          fetchSize,
+          timeout,
+          null,         // ParameterMapID
+          getParameterType(method),
+          null,         // ResultMapID
+          getReturnType(method),
+          resultSetType,
+          isSelect,                  // IsSelectStatement
+          flushCache,
+          useCache,
+          statementType);
     }
   }
 
@@ -157,7 +122,7 @@ public class MapperAnnotationParser {
   }
 
   private Class getSqlAnnotationType(Method method) {
-    Class[] types = {Select.class, Insert.class, Update.class, Delete.class, Procedure.class, Statement.class};
+    Class[] types = {Select.class, Insert.class, Update.class, Delete.class};
     for (Class type : types) {
       Annotation annotation = method.getAnnotation(type);
       if (annotation != null) {
