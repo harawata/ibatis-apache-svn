@@ -24,6 +24,9 @@ public class MapperParser extends BaseParser {
     this.parser.setValidation(true);
     this.parser.setVariables(configuration.getVariables());
     this.parser.setEntityResolver(new MapperEntityResolver());
+    this.typeAliasRegistry = configuration.getTypeAliasRegistry();
+    this.typeHandlerRegistry = configuration.getTypeHandlerRegistry();
+    this.configuration = configuration;
   }
 
   public void parse() {
@@ -50,10 +53,10 @@ public class MapperParser extends BaseParser {
   //  <cache type="LRU" flushInterval="3600000" size="1000" readOnly="false" />
   @Nodelet("/mapper/cache")
   public void cacheElement(NodeletContext context) throws Exception {
-    String type = context.getStringAttribute("perpetual");
+    String type = context.getStringAttribute("type","PERPETUAL");
     type = typeAliasRegistry.resolveAlias(type);
     Class typeClass = Class.forName(type);
-    String eviction = context.getStringAttribute("eviction");
+    String eviction = context.getStringAttribute("eviction","LRU");
     eviction = typeAliasRegistry.resolveAlias(eviction);
     Class evictionClass = Class.forName(eviction);
     Long flushInterval = context.getLongAttribute("flushInterval");

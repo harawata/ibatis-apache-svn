@@ -3,7 +3,6 @@ package org.apache.ibatis.binding;
 import static org.apache.ibatis.annotations.Annotations.*;
 import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.parser.MapperConfigurator;
-import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.JdbcType;
 
 import java.lang.annotation.Annotation;
@@ -11,7 +10,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 public class MapperAnnotationParser {
 
@@ -31,6 +29,7 @@ public class MapperAnnotationParser {
     parseCacheRef();
     Method[] methods = type.getMethods();
     for (Method method : methods) {
+      parseConstructor(method);
       parseResults(method);
       parseStatement(method);
     }
@@ -56,6 +55,8 @@ public class MapperAnnotationParser {
       String resultMapId = type.getName() + "." + method.getName();
       configurator.resultMapStart(resultMapId,getReturnType(method),null);
       for (Result result : results.value()) {
+        ArrayList<ResultFlag> flags = new ArrayList<ResultFlag>();
+        if (result.id()) flags.add(ResultFlag.ID);
         configurator.resultMapping(
             result.property(),
             result.column(),
@@ -64,8 +65,31 @@ public class MapperAnnotationParser {
             null,
             null,
             result.typeHandler() == void.class ? null : result.typeHandler(),
-            null);
+            flags);
       }
+      configurator.resultMapEnd();
+      hasResults = true;
+    }
+  }
+
+  public void parseConstructor(Method method) {
+    ConstructorArgs args = method.getAnnotation(ConstructorArgs.class);
+    if (args != null) {
+      String resultMapId = type.getName() + "." + method.getName();
+      configurator.resultMapStart(resultMapId,getReturnType(method),null);
+      for (Arg arg : args.value()) {
+        ArrayList<ResultFlag> flags = new ArrayList<ResultFlag>();
+        flags.add(ResultFlag.CONSTRUCTOR);
+        if (arg.id()) flags.add(ResultFlag.ID);
+        configurator.resultMapping(
+            null,
+            arg.column(),
+            arg.javaType() == void.class ? null : arg.javaType(),
+            arg.jdbcType() == JdbcType.UNDEFINED ? null : arg.jdbcType(),
+            null,
+            null,
+            arg.typeHandler() == void.class ? null : arg.typeHandler(),
+            flags);      }
       configurator.resultMapEnd();
       hasResults = true;
     }

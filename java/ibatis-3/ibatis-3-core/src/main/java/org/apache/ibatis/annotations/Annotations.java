@@ -35,7 +35,7 @@ public class Annotations {
   @Retention(RetentionPolicy.RUNTIME)
   @Target(ElementType.METHOD)
   public static @interface Result {
-    boolean key() default false;
+    boolean id() default false;
     String column() default "";
     String property() default "";
     Class javaType() default void.class;
