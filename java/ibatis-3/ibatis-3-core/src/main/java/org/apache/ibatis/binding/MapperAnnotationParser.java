@@ -3,16 +3,21 @@ package org.apache.ibatis.binding;
 import static org.apache.ibatis.annotations.Annotations.*;
 import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.parser.MapperConfigurator;
+import org.apache.ibatis.type.TypeHandler;
+import org.apache.ibatis.type.JdbcType;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.TypeVariable;
-import java.lang.annotation.Annotation;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class MapperAnnotationParser {
 
   private MapperConfigurator configurator;
   private Class type;
+  private boolean hasResults;
 
   public MapperAnnotationParser(Configuration config, Class type) {
     String resource = type.getName().replace('.', '/') + ".java (best guess)";
@@ -22,24 +27,47 @@ public class MapperAnnotationParser {
 
   public void parse() {
     configurator.namespace(type.getName());
-    parseCache(type, configurator);
-    parseCacheRef(type, configurator);
+    parseCache();
+    parseCacheRef();
     Method[] methods = type.getMethods();
     for (Method method : methods) {
+      parseResults(method);
       parseStatement(method);
     }
   }
-  private void parseCache(Class type, MapperConfigurator mapperConfigurator) {
+
+  private void parseCache() {
     CacheDomain cacheDomain = (CacheDomain) type.getAnnotation(CacheDomain.class);
     if (cacheDomain != null) {
-      mapperConfigurator.cache(cacheDomain.implementation(), cacheDomain.eviction(), cacheDomain.flushInterval(), cacheDomain.size(), !cacheDomain.readWrite(), null);
+      configurator.cache(cacheDomain.implementation(), cacheDomain.eviction(), cacheDomain.flushInterval(), cacheDomain.size(), !cacheDomain.readWrite(), null);
     }
   }
 
-  private void parseCacheRef(Class type, MapperConfigurator mapperConfigurator) {
+  private void parseCacheRef() {
     CacheDomainRef cacheDomainRef = (CacheDomainRef) type.getAnnotation(CacheDomainRef.class);
     if (cacheDomainRef != null) {
-      mapperConfigurator.cacheRef(cacheDomainRef.value().getName());
+      configurator.cacheRef(cacheDomainRef.value().getName());
+    }
+  }
+
+  private void parseResults(Method method) {
+    Results results = method.getAnnotation(Results.class);
+    if (results != null) {
+      String resultMapId = type.getName() + "." + method.getName();
+      configurator.resultMapStart(resultMapId,getReturnType(method),null);
+      for (Result result : results.value()) {
+        configurator.resultMapping(
+            result.property(),
+            result.column(),
+            result.javaType() == void.class ? null : result.javaType(),
+            result.jdbcType() == JdbcType.UNDEFINED ? null : result.jdbcType(),
+            null,
+            null,
+            result.typeHandler() == void.class ? null : result.typeHandler(),
+            null);
+      }
+      configurator.resultMapEnd();
+      hasResults = true;
     }
   }
 
@@ -71,7 +99,7 @@ public class MapperAnnotationParser {
           timeout,
           null,         // ParameterMapID
           getParameterType(method),
-          null,         // ResultMapID
+          hasResults ? mappedStatementId : null,         // ResultMapID
           getReturnType(method),
           resultSetType,
           isSelect,                  // IsSelectStatement

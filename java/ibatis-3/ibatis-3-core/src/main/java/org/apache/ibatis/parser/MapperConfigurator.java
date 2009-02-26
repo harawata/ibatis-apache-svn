@@ -326,7 +326,7 @@ public class MapperConfigurator extends BaseParser {
     builder.nestedQueryId(applyNamespace(nestedSelect));
     builder.nestedResultMapId(applyNamespace(nestedResultMap));
     builder.typeHandler(typeHandlerInstance);
-    builder.flags(flags);
+    builder.flags(flags == null ? new ArrayList<ResultFlag>() : flags);
 
     return builder.build();
   }

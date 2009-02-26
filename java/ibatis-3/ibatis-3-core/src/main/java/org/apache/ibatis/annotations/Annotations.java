@@ -21,9 +21,9 @@ public class Annotations {
   public static @interface Arg {
     boolean id() default false;
     String column() default "";
-    Class javaType() default Class.class;
+    Class javaType() default void.class;
     JdbcType jdbcType() default JdbcType.UNDEFINED;
-    Class typeHandler() default Class.class;
+    Class typeHandler() default void.class;
   }
 
   @Retention(RetentionPolicy.RUNTIME)
@@ -38,9 +38,9 @@ public class Annotations {
     boolean key() default false;
     String column() default "";
     String property() default "";
-    Class javaType() default Class.class;
+    Class javaType() default void.class;
     JdbcType jdbcType() default JdbcType.UNDEFINED;
-    Class typeHandler() default Class.class;
+    Class typeHandler() default void.class;
     String collectionSelect() default "";
     Results collectionResults() default @Results;
     String associationSelect() default "";
