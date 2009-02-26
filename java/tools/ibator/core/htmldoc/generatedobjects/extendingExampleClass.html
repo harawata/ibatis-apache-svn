@@ -68,11 +68,11 @@ public class ExtendedCustomerExample extends CustomerExample {
 </pre>
 
 <p>Once the basic class is created, adding additional predicates is a matter
-of adding additional methods the the extended <code>Criteria</code> class.</p>
+of adding additional methods to the extended <code>Criteria</code> class.</p>
 
 <h2>Extending vs. Plugging In</h2>
 <p>If you find that you are extending the example classes frequently, it might be
-more convenient for you to create an Ibator Plugin to generate the additional
+more convenient for you to create an Ibator plugin to generate the additional
 functionality rather than hand coding the extended classes.  The example below (under
 the heading "Single Parameter Predicates") can also be accomplished with a plugin
 as demonstrated by the class
@@ -102,7 +102,7 @@ This method can be used to add any kind of test to the generated where clause.</
 name search.  In MySQL, the predicate should look like this:</p>
 <code>SOUNDEX(FIRST_NAME) = SOUNDEX('frod')</code>
 <p>This predicate is too complex to use one of the other methods, so it must
-be inserted into the where clause by simple string substitition.  Add the following
+be inserted into the where clause by simple string substitution.  Add the following
 method to the <code>ExtendedCriteria</code> for this functionality:</p>
 <pre>
 public ExtendedCriteria andFirstNameSoundsLike(String value) {
@@ -126,7 +126,7 @@ List results = selectByExample(example);
 
 <p>This method can be used to add virtually any predicate to a where clause.
 However, it is generally better to use parameter substitution if possible because
-the problems of formatting different datatypes properly (most notably
+the problems of formatting different data types properly (most notably
 dates, times, and timestamps).  Also, there is a chance of SQL
 injection issues with this method if you expose a too generic method.
 If possible, we suggest using one of the other methods listed below.</p>
