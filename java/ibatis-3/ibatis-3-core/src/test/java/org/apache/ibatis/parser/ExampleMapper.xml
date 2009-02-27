@@ -21,8 +21,8 @@
 
   <resultMap id="" type="" extends="">
     <constructor>
-      <id column="" javaType="" jdbcType="" typeHandler=""/>
-      <result column="" javaType="" jdbcType="" typeHandler=""/>
+      <idArg column="" javaType="" jdbcType="" typeHandler=""/>
+      <arg column="" javaType="" jdbcType="" typeHandler=""/>
     </constructor>
     <result property="" column="" javaType="" jdbcType="" typeHandler=""/>
     <collection property="" column="" javaType="" select="" resultMap=""/>
