@@ -204,9 +204,9 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       List<Class> argTypes = new ArrayList<Class>();
       List<Object> argValues = new ArrayList<Object>();
       for (ResultMapping resultMapping : rm.getConstructorResultMappings()) {
-        processResult(rs, rm, resultMapping, null, constructorArgs);
+        Object value = processResult(rs, rm, resultMapping, null, constructorArgs);
         argTypes.add(resultMapping.getJavaType());
-        argValues.add(constructorArgs.get(resultMapping.getProperty()));
+        argValues.add(value);
       }
       resultObject = objectFactory.create(rm.getType(), argTypes, argValues);
     } else {
@@ -259,10 +259,11 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   private Object processSimpleResult(ResultSet rs, ResultMap rm, ResultMapping resultMapping, Object resultObject) throws SQLException {
     MetaObject metaResultObject = MetaObject.forObject(resultObject);
     Object value = getPrimitiveResultMappingValue(rs, resultMapping);
-    if (typeHandlerRegistry.hasTypeHandler(rm.getType())) {
+    String property = resultMapping.getProperty();
+    if (typeHandlerRegistry.hasTypeHandler(rm.getType()) || property == null) {
       resultObject = value;
     } else if (value != null) {
-      metaResultObject.setValue(resultMapping.getProperty(), value);
+      metaResultObject.setValue(property, value);
     }
     foundValues.set(value != null || foundValues.get());
     return resultObject;

@@ -6,11 +6,11 @@ public class Author extends ImmutableAuthor {
     super(-1, null, null, null, null, null);
   }
 
-  public Author(int id, String username, String password, String email, String bio, Section section) {
+  public Author(Integer id, String username, String password, String email, String bio, Section section) {
     super(id, username, password, email, bio, section);
   }
 
-  public Author(int id) {
+  public Author(Integer id) {
     super(id, null, null, null, null, null);
   }
 

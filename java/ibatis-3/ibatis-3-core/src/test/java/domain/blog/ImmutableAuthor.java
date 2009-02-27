@@ -10,7 +10,7 @@ public class ImmutableAuthor implements Serializable {
   protected String bio;
   protected Section favouriteSection;
 
-  public ImmutableAuthor(int id, String username, String password, String email, String bio, Section section) {
+  public ImmutableAuthor(Integer id, String username, String password, String email, String bio, Section section) {
     this.id = id;
     this.username = username;
     this.password = password;

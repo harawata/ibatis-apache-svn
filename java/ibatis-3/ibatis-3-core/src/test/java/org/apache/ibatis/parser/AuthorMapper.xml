@@ -22,12 +22,12 @@
 
   <resultMap id="selectImmutableAuthor" type="domain.blog.ImmutableAuthor">
     <constructor>
-      <id column="id" javaType="int"/>
-      <result column="username" javaType="string"/>
-      <result column="password" javaType="string"/>
-      <result column="email" javaType="string"/>
-      <result column="bio" javaType="string"/>
-      <result column="favourite_section" javaType="domain.blog.Section"/>
+      <idArg column="id" javaType="int"/>
+      <arg column="username" javaType="string"/>
+      <arg column="password" javaType="string"/>
+      <arg column="email" javaType="string"/>
+      <arg column="bio" javaType="string"/>
+      <arg column="favourite_section" javaType="domain.blog.Section"/>
     </constructor>
   </resultMap>
 

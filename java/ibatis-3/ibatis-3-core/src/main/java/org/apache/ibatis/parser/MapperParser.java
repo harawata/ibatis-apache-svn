@@ -111,7 +111,7 @@ public class MapperParser extends BaseParser {
 
   //  <constructor>
   //    <id column="" javaType="" jdbcType="" typeHandler=""/>
-  @Nodelet("/mapper/resultMap/constructor/id")
+  @Nodelet("/mapper/resultMap/constructor/idArg")
   public void resultMapConstructorIdElement(NodeletContext context) throws Exception {
     buildResultMappingFromContext(context,
         new ArrayList<ResultFlag>() {
@@ -124,7 +124,7 @@ public class MapperParser extends BaseParser {
 
   //  <constructor>
   //    <result column="" javaType="" jdbcType="" typeHandler=""/>
-  @Nodelet("/mapper/resultMap/constructor/result")
+  @Nodelet("/mapper/resultMap/constructor/arg")
   public void resultMapConstructorResultElement(NodeletContext context) throws Exception {
     buildResultMappingFromContext(context, new ArrayList<ResultFlag>() {
       {

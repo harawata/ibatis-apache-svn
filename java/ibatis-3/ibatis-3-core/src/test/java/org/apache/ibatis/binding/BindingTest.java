@@ -60,5 +60,21 @@ public class BindingTest {
     }
   }
 
+  @Test
+  public void shouldSelectOneAuthorByConstructor() {
+    SqlSession session = sqlSessionFactory.openSession();
+    try {
+      BoundAuthorMapper mapper = session.getMapper(BoundAuthorMapper.class);
+      Author author = mapper.selectAuthorConstructor(101);
+      assertEquals(101,author.getId());
+      assertEquals("jim",author.getUsername());
+      assertEquals("********",author.getPassword());
+      assertEquals("jim@ibatis.apache.org",author.getEmail());
+      assertEquals("", author.getBio());
+    } finally {
+      session.close();
+    }
+  }
+
 
 }

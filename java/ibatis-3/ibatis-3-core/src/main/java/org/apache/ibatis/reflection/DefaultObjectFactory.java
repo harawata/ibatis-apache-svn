@@ -35,7 +35,17 @@ public class DefaultObjectFactory implements ObjectFactory {
         return constructor.newInstance(constructorArgs.toArray(new Object[constructorArgs.size()]));
       }
     } catch (Exception e) {
-      throw new ReflectionException("Error instantiating " + type + ". Cause: " + e, e);
+      StringBuilder argTypes = new StringBuilder();
+      for (Class argType : constructorArgTypes) {
+        argTypes.append(argType.getSimpleName());
+        argTypes.append(",");
+      }
+      StringBuilder argValues = new StringBuilder();
+      for (Object argValue : constructorArgs) {
+        argValues.append(String.valueOf(argValue));
+        argValues.append(",");
+      }
+      throw new ReflectionException("Error instantiating " + type + " with invalid types (" + argTypes + ") or values ("+argValues+"). Cause: " + e, e);
     }
   }
 

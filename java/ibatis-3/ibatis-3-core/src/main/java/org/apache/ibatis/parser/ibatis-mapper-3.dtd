@@ -44,7 +44,7 @@ type CDATA #REQUIRED
 extends CDATA #IMPLIED
 >
 
-<!ELEMENT constructor (id*,result*)>
+<!ELEMENT constructor (idArg*,arg*)>
 
 <!ELEMENT id EMPTY>
 <!ATTLIST id
@@ -58,6 +58,22 @@ typeHandler CDATA #IMPLIED
 <!ELEMENT result EMPTY>
 <!ATTLIST result
 property CDATA #IMPLIED
+javaType CDATA #IMPLIED
+column CDATA #IMPLIED
+jdbcType CDATA #IMPLIED
+typeHandler CDATA #IMPLIED
+>
+
+<!ELEMENT idArg EMPTY>
+<!ATTLIST idArg
+javaType CDATA #IMPLIED
+column CDATA #IMPLIED
+jdbcType CDATA #IMPLIED
+typeHandler CDATA #IMPLIED
+>
+
+<!ELEMENT arg EMPTY>
+<!ATTLIST arg
 javaType CDATA #IMPLIED
 column CDATA #IMPLIED
 jdbcType CDATA #IMPLIED
