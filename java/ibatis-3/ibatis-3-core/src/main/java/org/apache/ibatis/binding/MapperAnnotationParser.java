@@ -32,7 +32,7 @@ public class MapperAnnotationParser {
     parseCacheRef();
     Method[] methods = type.getMethods();
     for (Method method : methods) {
-      parseResults(method);
+      parseResultsAndConstructorArgs(method);
       parseStatement(method);
     }
   }
@@ -51,7 +51,7 @@ public class MapperAnnotationParser {
     }
   }
 
-  private void parseResults(Method method) {
+  private void parseResultsAndConstructorArgs(Method method) {
     ConstructorArgs args = method.getAnnotation(ConstructorArgs.class);
     Results results = method.getAnnotation(Results.class);
     if (results != null || args != null) {
@@ -59,6 +59,7 @@ public class MapperAnnotationParser {
       configurator.resultMapStart(resultMapId, getReturnType(method), null);
       applyConstructorArgs(args);
       applyResults(results);
+      configurator.resultMapEnd();
     }
   }
 
