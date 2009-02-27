@@ -1,7 +1,10 @@
 package org.apache.ibatis.binding;
 
 import static org.apache.ibatis.annotations.Annotations.*;
-import org.apache.ibatis.mapping.*;
+import org.apache.ibatis.mapping.Configuration;
+import org.apache.ibatis.mapping.ResultFlag;
+import org.apache.ibatis.mapping.ResultSetType;
+import org.apache.ibatis.mapping.StatementType;
 import org.apache.ibatis.parser.MapperConfigurator;
 import org.apache.ibatis.type.JdbcType;
 
@@ -29,7 +32,6 @@ public class MapperAnnotationParser {
     parseCacheRef();
     Method[] methods = type.getMethods();
     for (Method method : methods) {
-      parseConstructor(method);
       parseResults(method);
       parseStatement(method);
     }
@@ -50,48 +52,13 @@ public class MapperAnnotationParser {
   }
 
   private void parseResults(Method method) {
-    Results results = method.getAnnotation(Results.class);
-    if (results != null) {
-      String resultMapId = type.getName() + "." + method.getName();
-      configurator.resultMapStart(resultMapId,getReturnType(method),null);
-      for (Result result : results.value()) {
-        ArrayList<ResultFlag> flags = new ArrayList<ResultFlag>();
-        if (result.id()) flags.add(ResultFlag.ID);
-        configurator.resultMapping(
-            result.property(),
-            result.column(),
-            result.javaType() == void.class ? null : result.javaType(),
-            result.jdbcType() == JdbcType.UNDEFINED ? null : result.jdbcType(),
-            null,
-            null,
-            result.typeHandler() == void.class ? null : result.typeHandler(),
-            flags);
-      }
-      configurator.resultMapEnd();
-      hasResults = true;
-    }
-  }
-
-  public void parseConstructor(Method method) {
     ConstructorArgs args = method.getAnnotation(ConstructorArgs.class);
-    if (args != null) {
+    Results results = method.getAnnotation(Results.class);
+    if (results != null || args != null) {
       String resultMapId = type.getName() + "." + method.getName();
-      configurator.resultMapStart(resultMapId,getReturnType(method),null);
-      for (Arg arg : args.value()) {
-        ArrayList<ResultFlag> flags = new ArrayList<ResultFlag>();
-        flags.add(ResultFlag.CONSTRUCTOR);
-        if (arg.id()) flags.add(ResultFlag.ID);
-        configurator.resultMapping(
-            null,
-            arg.column(),
-            arg.javaType() == void.class ? null : arg.javaType(),
-            arg.jdbcType() == JdbcType.UNDEFINED ? null : arg.jdbcType(),
-            null,
-            null,
-            arg.typeHandler() == void.class ? null : arg.typeHandler(),
-            flags);      }
-      configurator.resultMapEnd();
-      hasResults = true;
+      configurator.resultMapStart(resultMapId, getReturnType(method), null);
+      applyConstructorArgs(args);
+      applyResults(results);
     }
   }
 
@@ -184,5 +151,43 @@ public class MapperAnnotationParser {
     return null;
   }
 
+  private void applyResults(Results results) {
+    if (results != null) {
+      for (Result result : results.value()) {
+        ArrayList<ResultFlag> flags = new ArrayList<ResultFlag>();
+        if (result.id()) flags.add(ResultFlag.ID);
+        configurator.resultMapping(
+            result.property(),
+            result.column(),
+            result.javaType() == void.class ? null : result.javaType(),
+            result.jdbcType() == JdbcType.UNDEFINED ? null : result.jdbcType(),
+            null,
+            null,
+            result.typeHandler() == void.class ? null : result.typeHandler(),
+            flags);
+      }
+      hasResults = true;
+    }
+  }
+
+  private void applyConstructorArgs(ConstructorArgs args) {
+    if (args != null) {
+      for (Arg arg : args.value()) {
+        ArrayList<ResultFlag> flags = new ArrayList<ResultFlag>();
+        flags.add(ResultFlag.CONSTRUCTOR);
+        if (arg.id()) flags.add(ResultFlag.ID);
+        configurator.resultMapping(
+            null,
+            arg.column(),
+            arg.javaType() == void.class ? null : arg.javaType(),
+            arg.jdbcType() == JdbcType.UNDEFINED ? null : arg.jdbcType(),
+            null,
+            null,
+            arg.typeHandler() == void.class ? null : arg.typeHandler(),
+            flags);
+      }
+      hasResults = true;
+    }
+  }
 
 }

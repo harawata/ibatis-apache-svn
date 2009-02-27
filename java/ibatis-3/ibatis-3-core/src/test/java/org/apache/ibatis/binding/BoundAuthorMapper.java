@@ -5,11 +5,11 @@ import domain.blog.Author;
 
 public interface BoundAuthorMapper {
 
-//  @ConstructorArgs({
-//      @Arg(column = "AUTHOR_ID")
-//      })
+  @ConstructorArgs({
+      @Arg(column = "AUTHOR_ID",javaType = int.class)
+      })
   @Results({
-    @Result(property="id",column = "AUTHOR_ID"),
+//    @Result(property="id",column = "AUTHOR_ID"),
       @Result(property = "username",column = "AUTHOR_USERNAME"),
       @Result(property = "password",column = "AUTHOR_PASSWORD"),
       @Result(property = "email",column = "AUTHOR_EMAIL"),

@@ -332,7 +332,7 @@ public class MapperConfigurator extends BaseParser {
   }
 
   private Class resolveResultJavaType(Class resultType, String property, Class javaType) {
-    if (javaType == null) {
+    if (javaType == null && property != null) {
       MetaClass metaResultType = MetaClass.forClass(resultType);
       javaType = metaResultType.getSetterType(property);
     }
