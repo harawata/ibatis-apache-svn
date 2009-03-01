@@ -1,7 +1,6 @@
 package domain.blog;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class Post {
 
@@ -85,5 +84,9 @@ public class Post {
 
   public void setTags(List<Tag> tags) {
     this.tags = tags;
+  }
+
+  public String toString() {
+    return "Post: " + id + " : " + subject + " : " + body + " : " + section + " : " + createdOn + " (" + author + ") (" + blog + ")";
   }
 }

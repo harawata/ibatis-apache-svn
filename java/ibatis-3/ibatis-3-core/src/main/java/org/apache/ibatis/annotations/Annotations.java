@@ -41,10 +41,25 @@ public class Annotations {
     Class javaType() default void.class;
     JdbcType jdbcType() default JdbcType.UNDEFINED;
     Class typeHandler() default void.class;
-    String collectionSelect() default "";
-    Results collectionResults() default @Results;
-    String associationSelect() default "";
-    Results associationResults() default @Results;
+    One one() default @One;
+    Many many() default @Many(javaType = void.class);
+  }
+
+  @Retention(RetentionPolicy.RUNTIME)
+  @Target(ElementType.METHOD)
+  public static @interface One {
+    String select() default "";
+    ConstructorArgs constructor() default @ConstructorArgs;
+    Results results() default @Results;
+  }
+
+  @Retention(RetentionPolicy.RUNTIME)
+  @Target(ElementType.METHOD)
+  public static @interface Many {
+    Class javaType();
+    String select() default "";
+    ConstructorArgs constructor() default @ConstructorArgs;
+    Results results() default @Results;
   }
 
   @Retention(RetentionPolicy.RUNTIME)

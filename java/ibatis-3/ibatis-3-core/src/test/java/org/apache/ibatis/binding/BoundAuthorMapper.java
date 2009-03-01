@@ -6,6 +6,8 @@ import static org.apache.ibatis.annotations.Annotations.*;
 
 public interface BoundAuthorMapper {
 
+  //======================================================
+
   @ConstructorArgs({
     @Arg(column = "AUTHOR_ID", javaType = Integer.class)
       })
@@ -25,6 +27,7 @@ public interface BoundAuthorMapper {
       "FROM AUTHOR WHERE ID = #{id}"})
   Author selectAuthor(int id);
 
+  //======================================================
 
   @ConstructorArgs({
     @Arg(column = "AUTHOR_ID", javaType = Integer.class),
@@ -44,5 +47,7 @@ public interface BoundAuthorMapper {
       "  FAVOURITE_SECTION as AUTHOR_SECTION",
       "FROM AUTHOR WHERE ID = #{id}"})
   Author selectAuthorConstructor(int id);
+
+  //======================================================
 
 }

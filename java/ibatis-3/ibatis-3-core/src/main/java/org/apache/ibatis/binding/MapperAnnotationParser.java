@@ -1,13 +1,13 @@
 package org.apache.ibatis.binding;
 
 import static org.apache.ibatis.annotations.Annotations.*;
-import org.apache.ibatis.annotations.Annotations;
 import org.apache.ibatis.mapping.Configuration;
 import org.apache.ibatis.mapping.ResultFlag;
 import org.apache.ibatis.mapping.ResultSetType;
 import org.apache.ibatis.mapping.StatementType;
 import org.apache.ibatis.parser.MapperConfigurator;
 import org.apache.ibatis.type.JdbcType;
+import org.apache.ibatis.reflection.MetaClass;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
@@ -53,19 +53,39 @@ public class MapperAnnotationParser {
   private void parseResultsAndConstructorArgs(Method method) {
     ConstructorArgs args = method.getAnnotation(ConstructorArgs.class);
     Results results = method.getAnnotation(Results.class);
+    Class returnType = getReturnType(method);
+    String resultMapId = type.getName() + "." + method.getName();
     if (hasResults(method)) {
-      String resultMapId = type.getName() + "." + method.getName();
-      configurator.resultMapStart(resultMapId, getReturnType(method), null);
-      applyConstructorArgs(args);
-      applyResults(results);
-      configurator.resultMapEnd();
+      applyResultMap(resultMapId, returnType, argsIf(args), resultsIf(results));
     }
   }
 
-  private boolean hasResults(Method method) {
-    ConstructorArgs args = method.getAnnotation(ConstructorArgs.class);
-    Results results = method.getAnnotation(Results.class);
-    return results != null || args != null;
+  private void applyResultMap(String resultMapId, Class returnType, Arg[] args, Result[] results) {
+    applyNestedResultMaps(resultMapId, returnType, results);
+    configurator.resultMapStart(resultMapId, returnType, null);
+    applyConstructorArgs(args);
+    applyResults(resultMapId, results);
+    configurator.resultMapEnd();
+  }
+
+  private void applyNestedResultMaps(String resultMapId, Class returnType, Result[] results) {
+    if (results != null) {
+      for (Result result : results) {
+        ensureHasOnlyCollectionOrResultNotBoth(result);
+        if (hasCollection(result)) {
+          Class propertyType = result.many().javaType();
+          Arg[] nestedArgs = result.many().constructor().value();
+          Result[] nestedResults = result.many().results().value();
+          applyResultMap(nestedResultMapId(resultMapId, result),propertyType, nestedArgs, nestedResults);
+        }
+        if (hasAssociation(result)) {
+          Class propertyType = MetaClass.forClass(returnType).getSetterType(result.property());
+          Arg[] nestedArgs = result.one().constructor().value();
+          Result[] nestedResults = result.one().results().value();
+          applyResultMap(nestedResultMapId(resultMapId, result),propertyType, nestedArgs, nestedResults);
+        }
+      }
+    }
   }
 
   private void parseStatement(Method method) {
@@ -163,9 +183,9 @@ public class MapperAnnotationParser {
     return null;
   }
 
-  private void applyResults(Results results) {
-    if (results != null) {
-      for (Result result : results.value()) {
+  private void applyResults(String resultMapId, Result[] results) {
+    if (results.length > 0) {
+      for (Result result : results) {
         ArrayList<ResultFlag> flags = new ArrayList<ResultFlag>();
         if (result.id()) flags.add(ResultFlag.ID);
         configurator.resultMapping(
@@ -174,16 +194,16 @@ public class MapperAnnotationParser {
             result.javaType() == void.class ? null : result.javaType(),
             result.jdbcType() == JdbcType.UNDEFINED ? null : result.jdbcType(),
             null,
-            null,
+            hasCollectionOrAssociation(result) ? nestedResultMapId(resultMapId, result) : null,
             result.typeHandler() == void.class ? null : result.typeHandler(),
             flags);
       }
     }
   }
 
-  private void applyConstructorArgs(ConstructorArgs args) {
-    if (args != null) {
-      for (Arg arg : args.value()) {
+  private void applyConstructorArgs(Arg[] args) {
+    if (args.length > 0) {
+      for (Arg arg : args) {
         ArrayList<ResultFlag> flags = new ArrayList<ResultFlag>();
         flags.add(ResultFlag.CONSTRUCTOR);
         if (arg.id()) flags.add(ResultFlag.ID);
@@ -198,6 +218,44 @@ public class MapperAnnotationParser {
             flags);
       }
     }
+  }
+
+  private String nestedResultMapId(String resultMapId, Result result) {
+    return resultMapId + "." + result.property();
+  }
+
+  private void ensureHasOnlyCollectionOrResultNotBoth(Result result) {
+    if (hasCollection(result) && hasAssociation(result)) {
+      throw new BindingException("On each result you can only use an association or a collection, not both!");
+    }
+  }
+
+  private boolean hasCollectionOrAssociation(Result result) {
+    return hasCollection(result) || hasAssociation(result);
+  }
+
+  private boolean hasAssociation(Result result) {
+    return result.one().constructor().value().length > 1
+        || result.one().results().value().length > 1;
+  }
+
+  private boolean hasCollection(Result result) {
+    return result.many().constructor().value().length > 1
+        || result.many().results().value().length > 1;
+  }
+
+  private boolean hasResults(Method method) {
+    ConstructorArgs args = method.getAnnotation(ConstructorArgs.class);
+    Results results = method.getAnnotation(Results.class);
+    return results != null || args != null;
+  }
+
+  private Result[] resultsIf(Results results) {
+    return results == null ? new Result[0] : results.value();
+  }
+
+  private Arg[] argsIf(ConstructorArgs args) {
+    return args == null ? new Arg[0] : args.value();
   }
 
 }

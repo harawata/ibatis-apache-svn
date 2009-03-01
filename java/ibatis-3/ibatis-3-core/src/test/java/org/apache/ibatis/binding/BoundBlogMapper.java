@@ -8,11 +8,15 @@ import java.util.*;
 @CacheDomain
 public interface BoundBlogMapper {
 
+  //======================================================
+
   @Select({
       "SELECT *",
       "FROM blog"
       })
   List<Blog> selectBlogs();
+
+  //======================================================
 
   @Select({
       "SELECT *",
@@ -20,20 +24,54 @@ public interface BoundBlogMapper {
       })
   List<Map> selectBlogsAsMaps();
 
+  //======================================================
+
   @Select("SELECT * FROM " +
       "blog WHERE id = #{id}")
   Blog selectBlog(int id);
+
+  //======================================================
 
   @Select("SELECT * FROM " +
       "blog WHERE id = #{id}")
   Map selectBlogAsMap(Map params);
 
+  //======================================================
+
   @Results({
       @Result(id=true,property="id",column="blog_id"),
       @Result(property="title",column="blog_title"),
-      @Result(property="author.id",column="author_id"),
-      @Result(property="author.username",column="author_username"),
-      @Result(property="author.email",column="author_email")
+      @Result(property="author", column="author_id", one = @One(
+          results = @Results({
+            @Result(id = true, property="id",column="author_id"),
+            @Result(property="username",column="author_username"),
+            @Result(property="email",column="author_email")
+              }))),
+      @Result(property="posts", column="post_id", many = @Many(
+          javaType = Post.class,
+          results = @Results({
+            @Result(id = true, property="id",column="post_id"),
+            @Result(property="subject",column="post_subject"),
+            @Result(property="body",column="post_body"),
+            @Result(property="section",column="post_section"),
+            @Result(id = true, property="author.id",column="author_id"),
+            @Result(property="author.username",column="author_username"),
+            @Result(property="author.email",column="author_email"),
+            @Result(property="createdOn",column="post_created_on")
+            ,@Result(property="tags",column="tag_id",many = @Many(
+                javaType = Tag.class,
+                results = @Results({
+                  @Result(id = true, property="id",column="tag_id"),
+                  @Result(property="name",column="tag_name")
+                    })))
+            ,@Result(property="comments",column="comment_id",many = @Many(
+                javaType = Comment.class,
+                results = @Results({
+                  @Result(id = true, property="id",column="comment_id"),
+                  @Result(property="name",column="comment_name"),
+                  @Result(property="comment",column="comment_text")
+                    })))
+              })))
       })
   @Select("select" +
       "    B.id as blog_id," +
@@ -67,5 +105,7 @@ public interface BoundBlogMapper {
       "    left outer join Tag T on PT.tag_id = T.id" +
       "    where B.id = #{id}")
   List<Blog> selectBlogWithAssociations(int id);
+
+  //======================================================
 
 }

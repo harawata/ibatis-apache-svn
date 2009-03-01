@@ -14,10 +14,10 @@ public class MapperParser extends BaseParser {
 
   protected Reader reader;
   protected NodeletParser parser;
-  protected MapperConfigurator mapperBuilder;
+  protected MapperConfigurator mapperConfigurator;
 
   public MapperParser(Reader reader, Configuration configuration, String resource) {
-    this.mapperBuilder = new MapperConfigurator(configuration,resource);
+    this.mapperConfigurator = new MapperConfigurator(configuration,resource);
     this.reader = reader;
     this.parser = new NodeletParser();
     this.parser.addNodeletHandler(this);
@@ -41,13 +41,13 @@ public class MapperParser extends BaseParser {
   //  <configuration namespace="com.domain.MapperClass" />
   @Nodelet("/mapper")
   public void configurationElement(NodeletContext context) throws Exception {
-    mapperBuilder.namespace(context.getStringAttribute("namespace"));
+    mapperConfigurator.namespace(context.getStringAttribute("namespace"));
   }
 
   //  <cache type="LRU" flushInterval="3600000" size="1000" readOnly="false" />
   @Nodelet("/mapper/cache-ref")
   public void cacheRefElement(NodeletContext context) throws Exception {
-    mapperBuilder.cacheRef(context.getStringAttribute("namespace"));
+    mapperConfigurator.cacheRef(context.getStringAttribute("namespace"));
   }
 
   //  <cache type="LRU" flushInterval="3600000" size="1000" readOnly="false" />
@@ -63,7 +63,7 @@ public class MapperParser extends BaseParser {
     Integer size = context.getIntAttribute("size");
     boolean readOnly = context.getBooleanAttribute("readOnly", false);
     Properties props = context.getChildrenAsProperties();
-    mapperBuilder.cache(typeClass,evictionClass,flushInterval,size,readOnly,props);
+    mapperConfigurator.cache(typeClass,evictionClass,flushInterval,size,readOnly,props);
   }
 
   //  <parameterMap id="" type="">
@@ -72,7 +72,7 @@ public class MapperParser extends BaseParser {
     String id = context.getStringAttribute("id");
     String type = context.getStringAttribute("type");
     Class parameterClass = resolveClass(type);
-    mapperBuilder.parameterMapStart(id,parameterClass);
+    mapperConfigurator.parameterMapStart(id,parameterClass);
   }
 
   //  <parameterMap id="" type="">
@@ -90,13 +90,13 @@ public class MapperParser extends BaseParser {
     Class javaTypeClass = resolveClass(javaType);
     JdbcType jdbcTypeEnum = resolveJdbcType(jdbcType);
     Class typeHandlerClass = resolveClass(typeHandler);
-    mapperBuilder.parameterMapping(property,javaTypeClass,jdbcTypeEnum,resultMap,modeEnum,typeHandlerClass,numericScale);
+    mapperConfigurator.parameterMapping(property,javaTypeClass,jdbcTypeEnum,resultMap,modeEnum,typeHandlerClass,numericScale);
   }
 
   //  </parameterMap>
   @Nodelet("/mapper/parameterMap/end()")
   public void parameterMapClosingElement(NodeletContext context) throws Exception {
-    mapperBuilder.parameterMapEnd();
+    mapperConfigurator.parameterMapEnd();
   }
 
   //  <resultMap id="" type="" extends="">
@@ -106,7 +106,7 @@ public class MapperParser extends BaseParser {
     String type = context.getStringAttribute("type");
     String extend = context.getStringAttribute("extends");
     Class typeClass = resolveClass(type);
-    mapperBuilder.resultMapStart(id,typeClass,extend);
+    mapperConfigurator.resultMapStart(id,typeClass,extend);
   }
 
   //  <constructor>
@@ -174,7 +174,7 @@ public class MapperParser extends BaseParser {
     Class javaTypeClass = resolveClass(javaType);
     Class typeHandlerClass =  resolveClass(typeHandler);
     JdbcType jdbcTypeEnum = resolveJdbcType(jdbcType);
-    mapperBuilder.resultMapDiscriminatorStart(property,column,javaTypeClass,jdbcTypeEnum,nestedSelect,nestedResultMap,typeHandlerClass);
+    mapperConfigurator.resultMapDiscriminatorStart(property,column,javaTypeClass,jdbcTypeEnum,nestedSelect,nestedResultMap,typeHandlerClass);
   }
 
   //  <discriminator column="" javaType="" jdbcType="">
@@ -183,19 +183,19 @@ public class MapperParser extends BaseParser {
   public void resultMapDiscriminatorCaseElement(NodeletContext context) throws Exception {
     String value = context.getStringAttribute("value");
     String resultMap = context.getStringAttribute("resultMap");
-    mapperBuilder.resultMapDiscriminatorCase(value,resultMap);
+    mapperConfigurator.resultMapDiscriminatorCase(value,resultMap);
   }
 
   //  </discriminator>
   @Nodelet("/mapper/resultMap/discriminator/end()")
   public void resultMapDiscriminatorClosingElement(NodeletContext context) throws Exception {
-    mapperBuilder.resultMapDiscriminatorEnd();
+    mapperConfigurator.resultMapDiscriminatorEnd();
   }
 
   //  </resultMap>
   @Nodelet("/mapper/resultMap/end()")
   public void resultMapClosingElement(NodeletContext context) throws Exception {
-    mapperBuilder.resultMapEnd();
+    mapperConfigurator.resultMapEnd();
   }
 
   //  <select ...>
@@ -250,7 +250,7 @@ public class MapperParser extends BaseParser {
     Class resultTypeClass = resolveClass(resultType);
     String resultSetType = context.getStringAttribute("resultSetType");
     ResultSetType resultSetTypeEnum = resolveResultSetType(resultSetType);
-    mapperBuilder.statement(id,sql,fetchSize,timeout,parameterMap, parameterTypeClass,
+    mapperConfigurator.statement(id,sql,fetchSize,timeout,parameterMap, parameterTypeClass,
         resultMap, resultTypeClass,resultSetTypeEnum,isSelect,flushCache,useCache,statementType);
   }
 
@@ -266,7 +266,7 @@ public class MapperParser extends BaseParser {
     Class javaTypeClass = resolveClass(javaType);
     Class typeHandlerClass =  resolveClass(typeHandler);
     JdbcType jdbcTypeEnum = resolveJdbcType(jdbcType);
-    mapperBuilder.resultMapping(property,column,javaTypeClass,jdbcTypeEnum,nestedSelect,nestedResultMap,typeHandlerClass,flags);
+    mapperConfigurator.resultMapping(property,column,javaTypeClass,jdbcTypeEnum,nestedSelect,nestedResultMap,typeHandlerClass,flags);
   }
 
 }
