@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Ibator Core Plug-in
 Bundle-SymbolicName: org.apache.ibatis.ibator.core
-Bundle-Version: 1.2.1
+Bundle-Version: 1.2.2
 Bundle-ClassPath: ibator.jar
 Export-Package: org.apache.ibatis.ibator.ant,
  org.apache.ibatis.ibator.api,
@@ -26,5 +26,6 @@ Export-Package: org.apache.ibatis.ibator.ant,
  org.apache.ibatis.ibator.internal.types,
  org.apache.ibatis.ibator.internal.util,
  org.apache.ibatis.ibator.internal.util.messages,
+ org.apache.ibatis.ibator.logging,
  org.apache.ibatis.ibator.plugins
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

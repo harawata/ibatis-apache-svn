@@ -25,6 +25,7 @@
       <topic href="html/javadoc/org/apache/ibatis/ibator/internal/types/package-summary.html" label="org.apache.ibatis.ibator.internal.types" />
       <topic href="html/javadoc/org/apache/ibatis/ibator/internal/util/package-summary.html" label="org.apache.ibatis.ibator.internal.util" />
       <topic href="html/javadoc/org/apache/ibatis/ibator/internal/util/messages/package-summary.html" label="org.apache.ibatis.ibator.internal.util.messages" />
+      <topic href="html/javadoc/org/apache/ibatis/ibator/logging/package-summary.html" label="org.apache.ibatis.ibator.logging" />
       <topic href="html/javadoc/org/apache/ibatis/ibator/plugins/package-summary.html" label="org.apache.ibatis.ibator.plugins" />
    </topic>
    

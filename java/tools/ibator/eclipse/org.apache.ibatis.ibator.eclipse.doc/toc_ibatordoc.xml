@@ -60,6 +60,8 @@
       </topic>
       <topic href="html/ibatordoc/reference/pluggingIn.html" label="Implementing Ibator Plugins">
       </topic>
+      <topic href="html/ibatordoc/reference/logging.html" label="Logging Information">
+      </topic>
    </topic>
    <topic href="html/ibatordoc/philosophy.html" label="Design Philisophy">
    </topic>
