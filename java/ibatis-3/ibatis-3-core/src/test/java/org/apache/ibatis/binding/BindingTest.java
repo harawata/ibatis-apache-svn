@@ -8,7 +8,7 @@ import static org.junit.Assert.*;
 
 import domain.blog.*;
 
-import java.util.List;
+import java.util.*;
 
 public class BindingTest {
   private static SqlSessionFactory sqlSessionFactory;
@@ -39,6 +39,19 @@ public class BindingTest {
       Blog blog = mapper.selectBlog(1);
       assertEquals(1,blog.getId());
       assertEquals("Jim Business",blog.getTitle());
+    } finally {
+      session.close();
+    }
+  }
+
+  @Test
+  public void shouldSelectOneBlogAsMap() {
+    SqlSession session = sqlSessionFactory.openSession();
+    try {
+      BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
+      Map blog = mapper.selectBlogAsMap(new HashMap() {{put("id",1);}});
+      assertEquals(1,blog.get("ID"));
+      assertEquals("Jim Business",blog.get("TITLE"));
     } finally {
       session.close();
     }
