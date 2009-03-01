@@ -37,7 +37,20 @@ public class BindingTest {
       BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
       List<Map> blogs = mapper.selectBlogsAsMaps();
       assertEquals(2,blogs.size());
-      System.out.println(blogs); 
+    } finally {
+      session.close();
+    }
+  }
+
+  @Test
+  public void shouldSelectBlogWithAssociations() {
+    SqlSession session = sqlSessionFactory.openSession();
+    try {
+      BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
+      List<Blog> blogs = mapper.selectBlogWithAssociations(1);
+      for(Blog blog : blogs) {
+        System.out.println(blog);
+      }
     } finally {
       session.close();
     }

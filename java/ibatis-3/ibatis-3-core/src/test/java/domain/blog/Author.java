@@ -38,4 +38,7 @@ public class Author extends ImmutableAuthor {
     this.favouriteSection = favouriteSection;
   }
 
+  public String toString() {
+    return "Author : " + id + " : " + username + " : " + email;
+  }
 }

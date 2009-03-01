@@ -40,4 +40,8 @@ public class Blog {
   public void setPosts(List<Post> posts) {
     this.posts = posts;
   }
+
+  public String toString() {
+    return "Blog: " + id + " : " + title + " (" + author + ")";
+  }
 }

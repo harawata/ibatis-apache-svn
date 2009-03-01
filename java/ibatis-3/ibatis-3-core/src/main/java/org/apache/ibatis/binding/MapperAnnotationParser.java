@@ -1,6 +1,7 @@
 package org.apache.ibatis.binding;
 
 import static org.apache.ibatis.annotations.Annotations.*;
+import org.apache.ibatis.annotations.Annotations;
 import org.apache.ibatis.mapping.Configuration;
 import org.apache.ibatis.mapping.ResultFlag;
 import org.apache.ibatis.mapping.ResultSetType;
@@ -17,7 +18,6 @@ public class MapperAnnotationParser {
 
   private MapperConfigurator configurator;
   private Class type;
-  private boolean hasResults;
 
   public MapperAnnotationParser(Configuration config, Class type) {
     String resource = type.getName().replace('.', '/') + ".java (best guess)";
@@ -53,13 +53,19 @@ public class MapperAnnotationParser {
   private void parseResultsAndConstructorArgs(Method method) {
     ConstructorArgs args = method.getAnnotation(ConstructorArgs.class);
     Results results = method.getAnnotation(Results.class);
-    if (results != null || args != null) {
+    if (hasResults(method)) {
       String resultMapId = type.getName() + "." + method.getName();
       configurator.resultMapStart(resultMapId, getReturnType(method), null);
       applyConstructorArgs(args);
       applyResults(results);
       configurator.resultMapEnd();
     }
+  }
+
+  private boolean hasResults(Method method) {
+    ConstructorArgs args = method.getAnnotation(ConstructorArgs.class);
+    Results results = method.getAnnotation(Results.class);
+    return results != null || args != null;
   }
 
   private void parseStatement(Method method) {
@@ -90,7 +96,7 @@ public class MapperAnnotationParser {
           timeout,
           null,         // ParameterMapID
           getParameterType(method),
-          hasResults ? mappedStatementId : null,         // ResultMapID
+          hasResults(method) ? mappedStatementId : null,         // ResultMapID
           getReturnType(method),
           resultSetType,
           isSelect,                  // IsSelectStatement
@@ -172,7 +178,6 @@ public class MapperAnnotationParser {
             result.typeHandler() == void.class ? null : result.typeHandler(),
             flags);
       }
-      hasResults = true;
     }
   }
 
@@ -192,7 +197,6 @@ public class MapperAnnotationParser {
             arg.typeHandler() == void.class ? null : arg.typeHandler(),
             flags);
       }
-      hasResults = true;
     }
   }
 
