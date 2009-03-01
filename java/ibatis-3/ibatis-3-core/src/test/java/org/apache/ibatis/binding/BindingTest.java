@@ -28,7 +28,19 @@ public class BindingTest {
     } finally {
       session.close();
     }
+  }
 
+  @Test
+  public void shouldExecuteBoundSelectListOfBlogsAsMaps() {
+    SqlSession session = sqlSessionFactory.openSession();
+    try {
+      BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
+      List<Map> blogs = mapper.selectBlogsAsMaps();
+      assertEquals(2,blogs.size());
+      System.out.println(blogs); 
+    } finally {
+      session.close();
+    }
   }
 
   @Test

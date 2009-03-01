@@ -9,8 +9,7 @@ import org.apache.ibatis.parser.MapperConfigurator;
 import org.apache.ibatis.type.JdbcType;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.lang.reflect.TypeVariable;
+import java.lang.reflect.*;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -114,10 +113,16 @@ public class MapperAnnotationParser {
 
   private Class getReturnType(Method method) {
     Class returnType = method.getReturnType();
-    if (returnType.isAssignableFrom(Collection.class)) {
-      TypeVariable<? extends Class<?>>[] returnTypeVariables = returnType.getTypeParameters();
-      if (returnTypeVariables.length == 1) {
-        returnType = returnTypeVariables[0].getGenericDeclaration();
+    if (Collection.class.isAssignableFrom(returnType)) {
+      Type returnTypeParameter = method.getGenericReturnType();
+      if (returnTypeParameter instanceof ParameterizedType) {
+        Type[] actualTypeArguments = ((ParameterizedType) returnTypeParameter).getActualTypeArguments();
+        if (actualTypeArguments != null && actualTypeArguments.length == 1) {
+          returnTypeParameter = actualTypeArguments[0];
+          if (returnTypeParameter instanceof Class) {
+            returnType = (Class) returnTypeParameter;
+          }
+        }
       }
     }
     return returnType;

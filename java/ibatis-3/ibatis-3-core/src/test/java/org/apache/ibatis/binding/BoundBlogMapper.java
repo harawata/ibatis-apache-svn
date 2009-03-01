@@ -14,6 +14,12 @@ public interface BoundBlogMapper {
       })
   List<Blog> selectBlogs();
 
+  @Select({
+      "SELECT *",
+      "FROM blog"
+      })
+  List<Map> selectBlogsAsMaps();
+
   @Select("SELECT * FROM " +
       "blog WHERE id = #{id}")
   Blog selectBlog(int id);
