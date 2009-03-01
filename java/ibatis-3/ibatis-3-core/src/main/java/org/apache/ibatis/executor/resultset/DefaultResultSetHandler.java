@@ -37,8 +37,6 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 
   private ResultHandler resultHandler;
 
-  private Reference<Boolean> foundValues;
-
   public DefaultResultSetHandler(Configuration configuration, Executor executor, MappedStatement mappedStatement, ParameterHandler parameterHandler, int rowOffset, int rowLimit, ResultHandler resultHandler) {
     this.configuration = configuration;
     this.executor = executor;
@@ -50,7 +48,6 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     this.parameterObject = parameterHandler.getParameterObject();
     this.nestedResultObjects = new HashMap();
     this.resultHandler = resultHandler;
-    this.foundValues = new Reference<Boolean>(false);
   }
 
   public List handleResultSets(Statement statement) throws SQLException {
@@ -121,7 +118,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       while ((maxResults == Executor.NO_ROW_LIMIT || resultsFetched < maxResults) && rs.next()) {
         currentNestedKey = null;
         ResultMap rm = resolveSubMap(rs, resultMap);
-        Object resultObject = loadResultObject(rs, rm);
+        Object resultObject = loadResultObject(rs, rm, new Reference(false));
         if (resultObject != NO_VALUE) {
           if (resultObject instanceof PlatformTypeHolder) {
             resultObject = ((PlatformTypeHolder) resultObject).get(null);
@@ -133,7 +130,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     }
   }
 
-  private Object loadResultObject(ResultSet rs, ResultMap rm) throws SQLException {
+  private Object loadResultObject(ResultSet rs, ResultMap rm, Reference<Boolean> foundValues) throws SQLException {
     if (rm.getType() == null) {
       throw new ExecutorException("The result class was null when trying to get results for ResultMap.");
     }
@@ -145,15 +142,13 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       resultObject = ResultObjectProxy.createProxy(rm.getType(), resultObject, lazyLoader);
     }
 
-    // Rethink this implementation of foundValues.  It's the only volatile state on the class...
-    foundValues = new Reference<Boolean>(false);
     List<ResultMapping> appliedResultMappings = new ArrayList<ResultMapping>();
-    resultObject = mapResults(rs, rm, lazyLoader, resultObject, appliedResultMappings);
+    resultObject = mapResults(rs, rm, lazyLoader, resultObject, appliedResultMappings, foundValues);
     resultObject = processNestedJoinResults(rs, appliedResultMappings, resultObject);
     return resultObject;
   }
 
-  private Object mapResults(ResultSet rs, ResultMap rm, ResultLoaderRegistry lazyLoader, Object resultObject, List<ResultMapping> appliedResultMappings) throws SQLException {
+  private Object mapResults(ResultSet rs, ResultMap rm, ResultLoaderRegistry lazyLoader, Object resultObject, List<ResultMapping> appliedResultMappings, Reference<Boolean> foundValues) throws SQLException {
     MetaObject metaResultObject = MetaObject.forObject(resultObject);
     Set<String> propSet = new HashSet<String>();
     Set<String> colSet = new HashSet<String>();
@@ -181,14 +176,14 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       colName = colName == null ? null : colName.toUpperCase();
       autoMappings.remove(propName);
       if (colName == null || colSet.contains(colName)) {
-        resultObject = processResult(rs, rm, resultMapping, lazyLoader, resultObject);
+        resultObject = processResult(rs, rm, resultMapping, lazyLoader, resultObject, foundValues);
         appliedResultMappings.add(resultMapping);
       }
     }
     // Automap remaining results
     for (String key : autoMappings.keySet()) {
       ResultMapping autoMapping = autoMappings.get(key);
-      resultObject = processResult(rs, rm, autoMapping, lazyLoader, resultObject);
+      resultObject = processResult(rs, rm, autoMapping, lazyLoader, resultObject,foundValues);
       appliedResultMappings.add(autoMapping);
     }
     return resultObject;
@@ -204,7 +199,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       List<Class> argTypes = new ArrayList<Class>();
       List<Object> argValues = new ArrayList<Object>();
       for (ResultMapping resultMapping : rm.getConstructorResultMappings()) {
-        Object value = processResult(rs, rm, resultMapping, null, constructorArgs);
+        Object value = processResult(rs, rm, resultMapping, null, constructorArgs, new Reference(false));
         argTypes.add(resultMapping.getJavaType());
         argValues.add(value);
       }
@@ -243,7 +238,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     return resultObject;
   }
 
-  private Object processResult(ResultSet rs, ResultMap rm, ResultMapping resultMapping, ResultLoaderRegistry lazyLoader, Object resultObject) throws SQLException {
+  private Object processResult(ResultSet rs, ResultMap rm, ResultMapping resultMapping, ResultLoaderRegistry lazyLoader, Object resultObject, Reference<Boolean> foundValues) throws SQLException {
     if (resultMapping.getNestedQueryId() != null) {
       Configuration configuration = mappedStatement.getConfiguration();
       MappedStatement nestedQuery = configuration.getMappedStatement(resultMapping.getNestedQueryId());
@@ -251,12 +246,12 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       Object parameterObject = prepareNestedParameterObject(rs, resultMapping, parameterType);
       resultObject = processNestedSelectResult(nestedQuery, rm, resultMapping, lazyLoader, parameterObject, resultObject);
     } else if (resultMapping.getNestedResultMapId() == null) {
-      resultObject = processSimpleResult(rs, rm, resultMapping, resultObject);
+      resultObject = processSimpleResult(rs, rm, resultMapping, resultObject, foundValues);
     }
     return resultObject;
   }
 
-  private Object processSimpleResult(ResultSet rs, ResultMap rm, ResultMapping resultMapping, Object resultObject) throws SQLException {
+  private Object processSimpleResult(ResultSet rs, ResultMap rm, ResultMapping resultMapping, Object resultObject, Reference<Boolean> foundValues) throws SQLException {
     MetaObject metaResultObject = MetaObject.forObject(resultObject);
     Object value = getPrimitiveResultMappingValue(rs, resultMapping);
     String property = resultMapping.getProperty();
@@ -296,8 +291,8 @@ public class DefaultResultSetHandler implements ResultSetHandler {
               String propertyName = resultMapping.getProperty();
 
               MetaObject metaObject = MetaObject.forObject(knownResultObject);
-              Object obj = metaObject.getValue(propertyName);
-              if (obj == null) {
+              Object propertyValue = metaObject.getValue(propertyName);
+              if (propertyValue == null) {
                 if (type == null) {
                   type = metaObject.getSetterType(propertyName);
                 }
@@ -307,22 +302,23 @@ public class DefaultResultSetHandler implements ResultSetHandler {
                   // then we will just set the property to the object created
                   // in processing the nested result map
                   if (Collection.class.isAssignableFrom(type)) {
-                    obj = objectFactory.create(type);
-                    metaObject.setValue(propertyName, obj);
+                    propertyValue = objectFactory.create(type);
+                    metaObject.setValue(propertyName, propertyValue);
                   }
                 } catch (Exception e) {
                   throw new ExecutorException("Error instantiating collection property for result '" + resultMapping.getProperty() + "'.  Cause: " + e, e);
                 }
               }
 
-              Object o = loadResultObject(rs, nestedResultMap);
-              if (o != null && o != NO_VALUE) {
-                if (obj != null && obj instanceof Collection) {
+              Reference<Boolean> foundValues = new Reference(false);
+              Object nestedResultObject = loadResultObject(rs, nestedResultMap, foundValues);
+              if (nestedResultObject != null && nestedResultObject != NO_VALUE) {
+                if (propertyValue != null && propertyValue instanceof Collection) {
                   if (foundValues.get()) {
-                    ((Collection) obj).add(o);
+                    ((Collection) propertyValue).add(nestedResultObject);
                   }
                 } else {
-                  metaObject.setValue(propertyName, o);
+                  metaObject.setValue(propertyName, nestedResultObject);
                 }
               }
             } catch (SQLException e) {
@@ -487,4 +483,5 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       this.value = value;
     }
   }
+
 }

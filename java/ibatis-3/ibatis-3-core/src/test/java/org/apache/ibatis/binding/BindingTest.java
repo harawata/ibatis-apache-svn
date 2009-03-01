@@ -45,31 +45,15 @@ public class BindingTest {
     try {
       BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
       List<Blog> blogs = mapper.selectBlogWithAssociations(1);
-      for (Blog blog : blogs) {
-        System.out.println(blog);
-        for (Post post : blog.getPosts()) {
-          System.out.println("    " + post);
-          if (post.getComments() != null) {
-            for (Comment comment : post.getComments()) {
-              System.out.println("        " + comment);
-            }
-          }
-          if (post.getTags() != null) {
-            for (Tag tag : post.getTags()) {
-              System.out.println("        " + tag);
-            }
-          }
-        }
-      }
       assertEquals(1, blogs.size());
       Blog blog = blogs.get(0);
       assertEquals(2, blog.getPosts().size());
       Post firstPost = blog.getPosts().get(0);
-      assertEquals(2, firstPost.getComments().size());
       assertEquals(3, firstPost.getTags().size());
+      assertEquals(2, firstPost.getComments().size());
       Post secondPost = blog.getPosts().get(1);
-      assertEquals(0, secondPost.getComments().size());
       assertEquals(1, secondPost.getTags().size());
+      assertEquals(0, secondPost.getComments().size());
     } finally {
       session.close();
     }
