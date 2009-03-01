@@ -61,6 +61,15 @@ public class BindingTest {
           }
         }
       }
+      assertEquals(1, blogs.size());
+      Blog blog = blogs.get(0);
+      assertEquals(2, blog.getPosts().size());
+      Post firstPost = blog.getPosts().get(0);
+      assertEquals(2, firstPost.getComments().size());
+      assertEquals(3, firstPost.getTags().size());
+      Post secondPost = blog.getPosts().get(1);
+      assertEquals(0, secondPost.getComments().size());
+      assertEquals(1, secondPost.getTags().size());
     } finally {
       session.close();
     }

@@ -24,6 +24,6 @@ INSERT INTO post_tag (post_id,tag_id) VALUES (4,3);
 
 INSERT INTO comment (id,post_id,name,comment) VALUES (1,1,'troll','I disagree and think...');
 INSERT INTO comment (id,post_id,name,comment) VALUES (2,1,'anonymous','I agree and think troll is an...');
-INSERT INTO comment (id,post_id,name,comment) VALUES (4,2,'another','I don not agree and still think troll is an...');
+--INSERT INTO comment (id,post_id,name,comment) VALUES (4,2,'another','I don not agree and still think troll is an...');
 INSERT INTO comment (id,post_id,name,comment) VALUES (3,3,'rider','I prefer motorcycles to monster trucks...');
 
