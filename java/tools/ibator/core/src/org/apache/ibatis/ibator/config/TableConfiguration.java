@@ -69,6 +69,7 @@ public class TableConfiguration extends PropertyHolder {
     private boolean delimitIdentifiers;
     
     private ColumnRenamingRule columnRenamingRule;
+    private boolean isAllColumnDelimitingEnabled;
     
 	public TableConfiguration(IbatorContext ibatorContext) {
 		super();
@@ -401,6 +402,14 @@ public class TableConfiguration extends PropertyHolder {
             xmlElement.addAttribute(new Attribute("escapeWildcards", "true")); //$NON-NLS-1$ //$NON-NLS-2$
         }
         
+        if (isAllColumnDelimitingEnabled) {
+            xmlElement.addAttribute(new Attribute("delimitAllColumns", "true")); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+        
+        if (delimitIdentifiers) {
+            xmlElement.addAttribute(new Attribute("delimitIdentifiers", "true")); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+        
         addPropertyXmlElements(xmlElement);
         
         if (generatedKey != null) {
@@ -506,5 +515,13 @@ public class TableConfiguration extends PropertyHolder {
 
     public void setColumnRenamingRule(ColumnRenamingRule columnRenamingRule) {
         this.columnRenamingRule = columnRenamingRule;
+    }
+
+    public boolean isAllColumnDelimitingEnabled() {
+        return isAllColumnDelimitingEnabled;
+    }
+
+    public void setAllColumnDelimitingEnabled(boolean isAllColumnDelimitingEnabled) {
+        this.isAllColumnDelimitingEnabled = isAllColumnDelimitingEnabled;
     }
 }

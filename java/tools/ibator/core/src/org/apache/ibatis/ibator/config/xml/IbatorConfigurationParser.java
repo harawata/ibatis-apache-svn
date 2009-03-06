@@ -344,7 +344,8 @@ public class IbatorConfigurationParser {
                 .getProperty("selectByExampleQueryId"); //$NON-NLS-1$
         String modelType = attributes.getProperty("modelType"); //$NON-NLS-1$
         String escapeWildcards = attributes.getProperty("escapeWildcards"); //$NON-NLS-1$
-        String delmitIdentifiers = attributes.getProperty("delimitIdentifiers"); //$NON-NLS-1$
+        String delimitIdentifiers = attributes.getProperty("delimitIdentifiers"); //$NON-NLS-1$
+        String delimitAllColumns = attributes.getProperty("delimitAllColumns"); //$NON-NLS-1$
 
         if (StringUtility.stringHasValue(catalog)) {
             tc.setCatalog(catalog);
@@ -414,8 +415,12 @@ public class IbatorConfigurationParser {
             tc.setWildcardEscapingEnabled(StringUtility.isTrue(escapeWildcards));
         }
 
-        if (StringUtility.stringHasValue(delmitIdentifiers)) {
-            tc.setDelimitIdentifiers(StringUtility.isTrue(delmitIdentifiers));
+        if (StringUtility.stringHasValue(delimitIdentifiers)) {
+            tc.setDelimitIdentifiers(StringUtility.isTrue(delimitIdentifiers));
+        }
+        
+        if (StringUtility.stringHasValue(delimitAllColumns)) {
+            tc.setAllColumnDelimitingEnabled(StringUtility.isTrue(delimitAllColumns));
         }
         
         NodeList nodeList = node.getChildNodes();

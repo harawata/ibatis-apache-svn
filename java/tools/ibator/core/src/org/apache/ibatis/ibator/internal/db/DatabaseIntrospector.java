@@ -276,6 +276,10 @@ public class DatabaseIntrospector {
                         introspectedColumn.setColumnNameDelimited(true);
                     }
                 }
+                
+                if (tc.isAllColumnDelimitingEnabled()) {
+                    introspectedColumn.setColumnNameDelimited(true);
+                }
             }
         }
     }

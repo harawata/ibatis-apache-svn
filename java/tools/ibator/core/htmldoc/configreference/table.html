@@ -240,6 +240,17 @@ identifiers in upper case.  In this instance, you should specify the attribute
         <code>schema</code>, or <code>tableName</code> attributes
         contain a space, then <i>true</i>.</p></td>
   </tr>
+  <tr>
+    <td valign="top">delimitAllColumns</td>
+    <td>Signifies whether Ibator should add delimiters to all column names in the generated
+        SQL.  This is an alternative to coding a <code>&lt;columnOverride&gt;</code>
+        for every column
+        specifying that the column should be delimited.  This is useful for databases
+        like PostgreSQL that are case sensitive with identifiers.
+        <p>The delimiter characters are specified on the
+        <a href="ibatorContext.html">&lt;ibatorContext&gt;</a> element.</p>
+        <p>The default is <i>false</i>.</p></td>
+  </tr>
 </table>
 
 <h2>Child Elements</h2>

@@ -94,6 +94,7 @@ public class JavaTypeResolverDefaultImpl implements JavaTypeResolver {
     public FullyQualifiedJavaType calculateJavaType(IntrospectedColumn introspectedColumn) {
 
         FullyQualifiedJavaType answer;
+        
         switch (introspectedColumn.getJdbcType()) {
         case Types.DECIMAL:
         case Types.NUMERIC:

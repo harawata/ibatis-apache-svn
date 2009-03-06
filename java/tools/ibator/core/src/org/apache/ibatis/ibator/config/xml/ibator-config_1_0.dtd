@@ -159,7 +159,8 @@
   selectByExampleQueryId CDATA #IMPLIED
   modelType CDATA #IMPLIED
   escapeWildcards CDATA #IMPLIED
-  delimitIdentifiers CDATA #IMPLIED>
+  delimitIdentifiers CDATA #IMPLIED
+  delimitAllColumns CDATA #IMPLIED>
 
 <!--
   The columnOverride element is used to change certain attributes of the column

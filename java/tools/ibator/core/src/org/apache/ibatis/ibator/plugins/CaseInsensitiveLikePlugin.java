@@ -62,7 +62,7 @@ public class CaseInsensitiveLikePlugin extends IbatorPluginAdapter {
         InnerClass criteria = null;
         // first, find the Criteria inner class
         for (InnerClass innerClass : topLevelClass.getInnerClasses()) {
-            if ("Criteria".equals(innerClass.getType().getShortName())) {
+            if ("Criteria".equals(innerClass.getType().getShortName())) { //$NON-NLS-1$
                 criteria = innerClass;
                 break;
             }
@@ -88,14 +88,14 @@ public class CaseInsensitiveLikePlugin extends IbatorPluginAdapter {
             sb.append(introspectedColumn.getJavaProperty());
             sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
             sb.insert(0, "and"); //$NON-NLS-1$
-            sb.append("LikeInsensitive");
+            sb.append("LikeInsensitive"); //$NON-NLS-1$
             method.setName(sb.toString());
             method.setReturnType(FullyQualifiedJavaType.getCriteriaInstance());
 
             sb.setLength(0);
             sb.append("addCriterion(\"upper("); //$NON-NLS-1$
             sb.append(introspectedColumn.getAliasedActualColumnName());
-            sb.append(") like\", value.toUpperCase(), \"");
+            sb.append(") like\", value.toUpperCase(), \""); //$NON-NLS-1$
             sb.append(introspectedColumn.getJavaProperty());
             sb.append("\");"); //$NON-NLS-1$
             method.addBodyLine(sb.toString());
