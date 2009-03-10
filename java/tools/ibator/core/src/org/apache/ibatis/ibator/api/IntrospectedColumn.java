@@ -16,6 +16,7 @@
 package org.apache.ibatis.ibator.api;
 
 import java.sql.Types;
+import java.util.Properties;
 
 import org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.ibator.config.IbatorContext;
@@ -56,6 +57,8 @@ public class IntrospectedColumn {
     protected boolean isColumnNameDelimited;
     
     protected IntrospectedTable introspectedTable;
+    
+    protected Properties properties;
 
     /**
      * Constructs a Column definition.  This object holds all the 
@@ -64,6 +67,7 @@ public class IntrospectedColumn {
      */
     public IntrospectedColumn() {
         super();
+        properties = new Properties();
     }
 
     public int getJdbcType() {
@@ -390,5 +394,13 @@ public class IntrospectedColumn {
 
     public void setIntrospectedTable(IntrospectedTable introspectedTable) {
         this.introspectedTable = introspectedTable;
+    }
+
+    public Properties getProperties() {
+        return properties;
+    }
+
+    public void setProperties(Properties properties) {
+        this.properties.putAll(properties);
     }
 }

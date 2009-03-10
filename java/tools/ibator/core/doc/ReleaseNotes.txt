@@ -14,6 +14,10 @@ Enhancements:
 4. Added some additional command line arguments
 5. Added logging
 6. Added Case Insensitive LIKE example Plugin
+7. Added delimitAllCoumns to table configurations
+8. Added page describing some of PostgreSQL idiosyncracies with Ibator
+9. IBATIS-586 - Added the ability to specify nested property elements on
+   columnOverrides (thanks to Dan Turkenkopf for the idea and a nice initial patch)
 
 -------------------------------------------------------------------------------
 Version 1.2.1:

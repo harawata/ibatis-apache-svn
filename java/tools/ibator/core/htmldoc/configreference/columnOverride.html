@@ -95,7 +95,14 @@ element of the <a href="table.html">&lt;table&gt;</a> element.</p>
 </table>
 
 <h2>Child Elements</h2>
-<p>None</p>
+<ul>
+  <li><a href="property.html">&lt;property&gt;</a> (0..N)
+    Note: any properties specified here will be added to the
+    properties collection of the corresponding IntrospectedColumn.  Ibator does not currently
+    respond to any properties.  This element is provided so that special values
+    for each column may be provided to a plugin in the event that a plugin is
+    coded to generate or modify something unique to a particular column.</li>
+</ul>
 
 </body>
 </html>

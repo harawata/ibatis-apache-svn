@@ -174,7 +174,7 @@ public class IbatorConfigurationParser {
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node childNode = nodeList.item(i);
 
-            if (childNode.getNodeType() != 1) {
+            if (childNode.getNodeType() != Node.ELEMENT_NODE) {
                 continue;
             }
 
@@ -260,7 +260,7 @@ public class IbatorConfigurationParser {
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node childNode = nodeList.item(i);
 
-            if (childNode.getNodeType() != 1) {
+            if (childNode.getNodeType() != Node.ELEMENT_NODE) {
                 continue;
             }
 
@@ -303,7 +303,7 @@ public class IbatorConfigurationParser {
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node childNode = nodeList.item(i);
 
-            if (childNode.getNodeType() != 1) {
+            if (childNode.getNodeType() != Node.ELEMENT_NODE) {
                 continue;
             }
 
@@ -427,7 +427,7 @@ public class IbatorConfigurationParser {
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node childNode = nodeList.item(i);
 
-            if (childNode.getNodeType() != 1) {
+            if (childNode.getNodeType() != Node.ELEMENT_NODE) {
                 continue;
             }
 
@@ -474,6 +474,19 @@ public class IbatorConfigurationParser {
 
         if (StringUtility.stringHasValue(delimitedColumnName)) {
             co.setColumnNameDelimited(StringUtility.isTrue(delimitedColumnName));
+        }
+        
+        NodeList nodeList = node.getChildNodes();
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node childNode = nodeList.item(i);
+
+            if (childNode.getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
+
+            if ("property".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseProperty(co, childNode);
+            }
         }
         
         tc.addColumnOverride(co);
@@ -539,7 +552,7 @@ public class IbatorConfigurationParser {
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node childNode = nodeList.item(i);
 
-            if (childNode.getNodeType() != 1) {
+            if (childNode.getNodeType() != Node.ELEMENT_NODE) {
                 continue;
             }
 
@@ -563,7 +576,7 @@ public class IbatorConfigurationParser {
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node childNode = nodeList.item(i);
 
-            if (childNode.getNodeType() != 1) {
+            if (childNode.getNodeType() != Node.ELEMENT_NODE) {
                 continue;
             }
 
@@ -590,7 +603,7 @@ public class IbatorConfigurationParser {
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node childNode = nodeList.item(i);
 
-            if (childNode.getNodeType() != 1) {
+            if (childNode.getNodeType() != Node.ELEMENT_NODE) {
                 continue;
             }
 
@@ -620,7 +633,7 @@ public class IbatorConfigurationParser {
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node childNode = nodeList.item(i);
 
-            if (childNode.getNodeType() != 1) {
+            if (childNode.getNodeType() != Node.ELEMENT_NODE) {
                 continue;
             }
 
@@ -657,7 +670,7 @@ public class IbatorConfigurationParser {
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node childNode = nodeList.item(i);
 
-            if (childNode.getNodeType() != 1) {
+            if (childNode.getNodeType() != Node.ELEMENT_NODE) {
                 continue;
             }
 
@@ -739,7 +752,7 @@ public class IbatorConfigurationParser {
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node childNode = nodeList.item(i);
 
-            if (childNode.getNodeType() != 1) {
+            if (childNode.getNodeType() != Node.ELEMENT_NODE) {
                 continue;
             }
 

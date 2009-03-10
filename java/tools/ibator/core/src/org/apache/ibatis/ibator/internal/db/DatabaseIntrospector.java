@@ -343,6 +343,8 @@ public class DatabaseIntrospector {
                     if (columnOverride.isColumnNameDelimited()) {
                         introspectedColumn.setColumnNameDelimited(true);
                     }
+                    
+                    introspectedColumn.setProperties(columnOverride.getProperties());
                 }
             }
         }

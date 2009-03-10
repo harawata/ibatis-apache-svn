@@ -23,13 +23,15 @@ has a distinct preference for all identifiers being in all lower case letters.
 If you use all lower case identifiers for PostgreSQL, then Ibator will find tables
 and write correct SQL with no additional consideration.  If you used mixed cased,
 or upper case, identifiers you will
-need to configure Ibator appropriately.</p>
-<p>Use the <code>delimitIdentifiers</code> option if your table or schema
-is mixed case or all upper case.</p>
-<p>For each mixed case or upper case column you could specify a
-<code>&lt;columnOverride&gt;</code> element to specifically delimit the column,
-or you could specify the <code>delimitAllColumns</code> attribute
-to delimit all column names.</p>
+need to configure Ibator appropriately:</p>
+<ul>
+  <li>Use the <code>delimitIdentifiers</code> option if your table or schema
+      is mixed case or all upper case.</li>
+  <li>For each mixed case or upper case column you could specify a
+      <code>&lt;columnOverride&gt;</code> element to specifically delimit the column,
+      or you could specify the <code>delimitAllColumns</code> attribute
+      to delimit all column names.</li>
+</ul>
 <p>Examples:</p>
 <pre>
   &lt;table schema="HR" tableName="Employees"

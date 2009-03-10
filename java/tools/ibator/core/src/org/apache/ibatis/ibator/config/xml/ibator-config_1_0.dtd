@@ -166,7 +166,7 @@
   The columnOverride element is used to change certain attributes of the column
   from their default values.
 -->
-<!ELEMENT columnOverride EMPTY>
+<!ELEMENT columnOverride (property*)>
 <!ATTLIST columnOverride
   column CDATA #REQUIRED
   property CDATA #IMPLIED

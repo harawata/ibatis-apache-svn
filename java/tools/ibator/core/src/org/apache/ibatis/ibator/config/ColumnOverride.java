@@ -22,7 +22,7 @@ import org.apache.ibatis.ibator.internal.util.StringUtility;
 /**
  * @author Jeff Butler
  */
-public class ColumnOverride {
+public class ColumnOverride extends PropertyHolder {
 
 	private String columnName;
 
@@ -107,6 +107,8 @@ public class ColumnOverride {
         if (StringUtility.stringHasValue(configuredDelimitedColumnName)) {
             xmlElement.addAttribute(new Attribute("delimitedColumnName", configuredDelimitedColumnName)); //$NON-NLS-1$
         }
+        
+        addPropertyXmlElements(xmlElement);
         
         return xmlElement;
     }
