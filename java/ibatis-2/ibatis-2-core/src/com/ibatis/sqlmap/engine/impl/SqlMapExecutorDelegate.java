@@ -26,6 +26,7 @@ import com.ibatis.sqlmap.engine.cache.CacheModel;
 import com.ibatis.sqlmap.engine.exchange.DataExchangeFactory;
 import com.ibatis.sqlmap.engine.execution.BatchException;
 import com.ibatis.sqlmap.engine.execution.SqlExecutor;
+import com.ibatis.sqlmap.engine.execution.DefaultSqlExecutor;
 import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMap;
 import com.ibatis.sqlmap.engine.mapping.result.ResultMap;
 import com.ibatis.sqlmap.engine.mapping.result.ResultObjectFactory;
@@ -86,11 +87,20 @@ public class SqlMapExecutorDelegate {
     resultMaps = new HashMap();
     parameterMaps = new HashMap();
 
-    sqlExecutor = new SqlExecutor();
+    sqlExecutor = new DefaultSqlExecutor();
     typeHandlerFactory = new TypeHandlerFactory();
     dataExchangeFactory = new DataExchangeFactory(typeHandlerFactory);
   }
 
+  public void setCustomExecutor(String sqlExecutorClass) {
+    try {
+      Class factoryClass = Class.forName(sqlExecutorClass);
+      sqlExecutor = (SqlExecutor) factoryClass.newInstance();
+    } catch (Exception e) {
+      throw new SqlMapException("Error instantiating " + sqlExecutorClass + ". Please check the class given in properties file. Cause: " + e, e);
+    }
+  }
+  
   /**
    * DO NOT DEPEND ON THIS. Here to avoid breaking spring integration.
    * @deprecated
@@ -815,7 +825,7 @@ public class SqlMapExecutorDelegate {
    * @return the SqlExecutor
    */
   public SqlExecutor getSqlExecutor() {
-    return sqlExecutor;
+	  return sqlExecutor;
   }
 
   /**

@@ -129,6 +129,19 @@ public class XmlParserState {
         props.putAll(globalProps);
         globalProps = props;
       }
+
+      // Check for custom executors
+      String customizedSQLExecutor = globalProps.getProperty("sql_executor_class");
+      config.getErrorContext().setActivity("Loading SQLExecutor.");
+      if (customizedSQLExecutor != null) {
+        try {
+          config.getClient().getDelegate().setCustomExecutor(customizedSQLExecutor);
+        } catch (Exception e) {
+          config.getErrorContext().setCause(e);
+          config.getErrorContext().setMoreInfo("Loading of customizedSQLExecutor failed. Please check Properties file.");
+        }
+      }
+      
     } catch (Exception e) {
       throw new RuntimeException("Error loading properties.  Cause: " + e, e);
     }
