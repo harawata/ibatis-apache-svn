@@ -81,25 +81,36 @@ public class Annotations {
   @Retention(RetentionPolicy.RUNTIME)
   @Target(ElementType.METHOD)
   public @interface Insert {
-    String[] value();
+    String[] value() default {};
+    SqlProvider sqlProvider() default @SqlProvider(type = void.class, method = "");
   }
 
   @Retention(RetentionPolicy.RUNTIME)
   @Target(ElementType.METHOD)
   public @interface Update {
-    String[] value();
+    String[] value() default {};
+    SqlProvider sqlProvider() default @SqlProvider(type = void.class, method = "");
   }
 
   @Retention(RetentionPolicy.RUNTIME)
   @Target(ElementType.METHOD)
   public @interface Delete {
-    String[] value();
+    String[] value() default {};
+    SqlProvider sqlProvider() default @SqlProvider(type = void.class, method = "");
   }
 
   @Retention(RetentionPolicy.RUNTIME)
   @Target(ElementType.METHOD)
   public @interface Select {
-    String[] value();
+    String[] value() default {};
+    SqlProvider sqlProvider() default @SqlProvider(type = void.class, method = "");
+  }
+
+  @Retention(RetentionPolicy.RUNTIME)
+  @Target(ElementType.METHOD)
+  public @interface SqlProvider {
+    Class type();
+    String method();
   }
 
   @Retention(RetentionPolicy.RUNTIME)

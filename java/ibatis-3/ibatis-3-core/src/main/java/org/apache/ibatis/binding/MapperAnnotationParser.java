@@ -193,12 +193,28 @@ public class MapperAnnotationParser {
             result.column(),
             result.javaType() == void.class ? null : result.javaType(),
             result.jdbcType() == JdbcType.UNDEFINED ? null : result.jdbcType(),
-            null,
+            hasNestedSelect(result) ? nestedSelectId(result) : null,
             hasCollectionOrAssociation(result) ? nestedResultMapId(resultMapId, result) : null,
             result.typeHandler() == void.class ? null : result.typeHandler(),
             flags);
       }
     }
+  }
+
+  private String nestedSelectId(Result result) {
+    String nestedSelect = result.one().select();
+    if (nestedSelect.length() < 1) {
+      nestedSelect = result.many().select();
+    }
+    if (!nestedSelect.contains(".")) {
+      nestedSelect = type.getName() + "." + nestedSelect;
+    }
+    return nestedSelect;
+  }
+
+  private boolean hasNestedSelect(Result result) {
+    return result.one().select().length() > 0
+        || result.many().select().length() > 0;
   }
 
   private void applyConstructorArgs(Arg[] args) {
