@@ -124,4 +124,22 @@ public class Annotations {
     int timeout() default -1;
   }
 
+  @Retention(RetentionPolicy.RUNTIME)
+  @Target(ElementType.METHOD)
+  public @interface TypeDiscriminator {
+    String column();
+    Class javaType() default void.class;
+    JdbcType jdbcType() default JdbcType.UNDEFINED;
+    Class typeHandler() default void.class;
+    Case[] cases();
+  }
+
+  @Retention(RetentionPolicy.RUNTIME)
+  @Target(ElementType.METHOD)
+  public @interface Case {
+    String value();
+    Class type();
+    Result[] results();
+  }
+
 }

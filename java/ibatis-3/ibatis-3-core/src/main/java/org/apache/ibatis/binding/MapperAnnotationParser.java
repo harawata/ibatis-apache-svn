@@ -1,18 +1,18 @@
 package org.apache.ibatis.binding;
 
 import static org.apache.ibatis.annotations.Annotations.*;
-import org.apache.ibatis.mapping.Configuration;
-import org.apache.ibatis.mapping.ResultFlag;
-import org.apache.ibatis.mapping.ResultSetType;
-import org.apache.ibatis.mapping.StatementType;
+import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.parser.MapperConfigurator;
-import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.reflection.MetaClass;
+import org.apache.ibatis.type.JdbcType;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.*;
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class MapperAnnotationParser {
 
@@ -56,16 +56,64 @@ public class MapperAnnotationParser {
     Class returnType = getReturnType(method);
     String resultMapId = type.getName() + "." + method.getName();
     if (hasResults(method)) {
-      applyResultMap(resultMapId, returnType, argsIf(args), resultsIf(results));
+      TypeDiscriminator typeDiscriminator = method.getAnnotation(TypeDiscriminator.class);
+      applyResultMap(resultMapId, returnType, argsIf(args), resultsIf(results), typeDiscriminator);
     }
   }
 
-  private void applyResultMap(String resultMapId, Class returnType, Arg[] args, Result[] results) {
+  private void applyResultMap(String resultMapId, Class returnType, Arg[] args, Result[] results, TypeDiscriminator discriminator) {
     applyNestedResultMaps(resultMapId, returnType, results);
     configurator.resultMapStart(resultMapId, returnType, null);
     applyConstructorArgs(args);
     applyResults(resultMapId, results);
+    applyDiscriminator(resultMapId, discriminator);
     configurator.resultMapEnd();
+    createDiscriminatorResultMaps(resultMapId, discriminator);
+  }
+
+  private void createDiscriminatorResultMaps(String resultMapId, TypeDiscriminator discriminator) {
+    if (discriminator != null) {
+      for (Case c : discriminator.cases()) {
+        String value = c.value();
+        Class type = c.type();
+        String caseResultMapId = resultMapId + "-" + value;
+        configurator.resultMapStart(caseResultMapId, type, resultMapId);
+        for (Result result : c.results()) {
+          List<ResultFlag> flags = new ArrayList<ResultFlag>();
+          if (result.id()) {
+            flags.add(ResultFlag.ID);
+          }
+          configurator.resultMapping(
+            result.property(),
+            result.column(),
+            result.javaType() == void.class ? null : result.javaType(),
+            result.jdbcType() == JdbcType.UNDEFINED ? null : result.jdbcType(),
+            hasNestedSelect(result) ? nestedSelectId(result) : null,
+            hasCollectionOrAssociation(result) ? nestedResultMapId(resultMapId, result) : null,
+            result.typeHandler() == void.class ? null : result.typeHandler(),
+            flags);
+        }
+
+      }
+    }
+  }
+
+  private void applyDiscriminator(String resultMapId, TypeDiscriminator discriminator) {
+    if (discriminator != null) {
+      String column = discriminator.column();
+      Class javaType = discriminator.javaType();
+      JdbcType jdbcType = discriminator.jdbcType();
+      Class typeHandler = discriminator.typeHandler();
+      Case[] cases = discriminator.cases();
+
+      configurator.resultMapDiscriminatorStart(column, javaType, jdbcType, typeHandler);
+      for (Case c : cases) {
+        String value = c.value();
+        String caseResultMapId = resultMapId + "-" + value;
+        configurator.resultMapDiscriminatorCase(value, caseResultMapId);
+      }
+      configurator.resultMapDiscriminatorEnd();
+    }
   }
 
   private void applyNestedResultMaps(String resultMapId, Class returnType, Result[] results) {
@@ -76,13 +124,13 @@ public class MapperAnnotationParser {
           Class propertyType = result.many().javaType();
           Arg[] nestedArgs = result.many().constructor().value();
           Result[] nestedResults = result.many().results().value();
-          applyResultMap(nestedResultMapId(resultMapId, result),propertyType, nestedArgs, nestedResults);
+          applyResultMap(nestedResultMapId(resultMapId, result), propertyType, nestedArgs, nestedResults, null);
         }
         if (hasAssociation(result)) {
           Class propertyType = MetaClass.forClass(returnType).getSetterType(result.property());
           Arg[] nestedArgs = result.one().constructor().value();
           Result[] nestedResults = result.one().results().value();
-          applyResultMap(nestedResultMapId(resultMapId, result),propertyType, nestedArgs, nestedResults);
+          applyResultMap(nestedResultMapId(resultMapId, result), propertyType, nestedArgs, nestedResults, null);
         }
       }
     }

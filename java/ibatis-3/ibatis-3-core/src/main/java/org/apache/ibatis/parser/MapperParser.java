@@ -164,17 +164,14 @@ public class MapperParser extends BaseParser {
   //  <discriminator column="" javaType="" jdbcType="">
   @Nodelet("/mapper/resultMap/discriminator")
   public void resultMapDiscriminatorElement(NodeletContext context) throws Exception {
-    String property = context.getStringAttribute("property");
     String column = context.getStringAttribute("column");
     String javaType = context.getStringAttribute("javaType");
     String jdbcType = context.getStringAttribute("jdbcType");
-    String nestedSelect = context.getStringAttribute("select");
-    String nestedResultMap = context.getStringAttribute("resultMap");
     String typeHandler = context.getStringAttribute("typeHandler");
     Class javaTypeClass = resolveClass(javaType);
     Class typeHandlerClass =  resolveClass(typeHandler);
     JdbcType jdbcTypeEnum = resolveJdbcType(jdbcType);
-    mapperConfigurator.resultMapDiscriminatorStart(property,column,javaTypeClass,jdbcTypeEnum,nestedSelect,nestedResultMap,typeHandlerClass);
+    mapperConfigurator.resultMapDiscriminatorStart(column,javaTypeClass,jdbcTypeEnum,typeHandlerClass);
   }
 
   //  <discriminator column="" javaType="" jdbcType="">

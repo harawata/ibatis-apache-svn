@@ -145,7 +145,7 @@ public class MapperConfigurator extends BaseParser {
       String nestedSelect,
       String nestedResultMap,
       Class typeHandler,
-      ArrayList<ResultFlag> flags) {
+      List<ResultFlag> flags) {
     ResultMapping resultMapping = buildResultMapping(
         property,
         column,
@@ -161,20 +161,17 @@ public class MapperConfigurator extends BaseParser {
 
   //  <discriminator column="" javaType="" jdbcType="">
   public void resultMapDiscriminatorStart(
-      String property,
       String column,
       Class javaType,
       JdbcType jdbcType,
-      String nestedSelect,
-      String nestedResultMap,
       Class typeHandler) {
     ResultMapping resultMapping = buildResultMapping(
-        property,
+        null,
         column,
         javaType,
         jdbcType,
-        nestedSelect,
-        nestedResultMap,
+        null,
+        null,
         typeHandler,
         new ArrayList<ResultFlag>());
     discriminatorMap = new HashMap<String, String>();
@@ -314,7 +311,7 @@ public class MapperConfigurator extends BaseParser {
       String nestedSelect,
       String nestedResultMap,
       Class typeHandler,
-      ArrayList<ResultFlag> flags) {
+      List<ResultFlag> flags) {
 
     nestedResultMap = applyNamespace(nestedResultMap);
     Class resultType = resultMapBuilder.type();
