@@ -8,52 +8,91 @@ public class SelectBuilder {
   private static final String OR = ") \nOR (";
 
 
-  private static final ThreadLocal<Query> localQuery = new ThreadLocal<Query>();
+  private static final ThreadLocal<SelectSQL> localSQL = new ThreadLocal<SelectSQL>();
 
   static {
-    localQuery.set(new Query());
+    RESET();
   }
 
-  private static class Query {
-    List<String> select = new ArrayList<String>();
-    List<String> from = new ArrayList<String>();
-    List<String> join = new ArrayList<String>();
-    List<String> innerJoin = new ArrayList<String>();
-    List<String> outerJoin = new ArrayList<String>();
-    List<String> leftOuterJoin = new ArrayList<String>();
-    List<String> rightOuterJoin = new ArrayList<String>();
-    List<String> where = new ArrayList<String>();
-    List<String> having = new ArrayList<String>();
-    List<String> groupBy = new ArrayList<String>();
-    List<String> orderBy = new ArrayList<String>();
-    List<String> lastList = new ArrayList<String>();
+  public static void RESET() {
+    localSQL.set(new SelectSQL());
   }
 
-  private static Query query() {
-    return localQuery.get();
+  public static void SELECT(String columns) {
+    sql().select.add(columns);
+  }
+
+  public static void FROM(String table) {
+    sql().from.add(table);
+  }
+
+  public static void JOIN(String join) {
+    sql().join.add(join);
+  }
+
+  public static void INNER_JOIN(String join) {
+    sql().innerJoin.add(join);
+  }
+
+  public static void LEFT_OUTER_JOIN(String join) {
+    sql().leftOuterJoin.add(join);
+  }
+
+  public static void RIGHT_OUTER_JOIN(String join) {
+    sql().rightOuterJoin.add(join);
+  }
+
+  public static void OUTER_JOIN(String join) {
+    sql().outerJoin.add(join);
+  }
+
+  public static void WHERE(String conditions) {
+    sql().where.add(conditions);
+    sql().lastList = sql().where;
+  }
+
+  public static void OR() {
+    sql().lastList.add(OR);
+  }
+
+  public static void AND() {
+    sql().lastList.add(AND);
+  }
+
+  public static void GROUP_BY(String columns) {
+    sql().groupBy.add(columns);
+  }
+
+  public static void HAVING(String conditions) {
+    sql().having.add(conditions);
+    sql().lastList = sql().having;
+  }
+
+  public static void ORDER_BY(String columns) {
+    sql().orderBy.add(columns);
   }
 
   public static String SQL() {
     try {
       StringBuilder builder = new StringBuilder();
-      sqlClause(builder, "SELECT", query().select, "", "", ", ");
-      sqlClause(builder, "FROM", query().from, "", "", ", ");
-      sqlClause(builder, "JOIN", query().join, "", "", "JOIN");
-      sqlClause(builder, "INNER JOIN", query().innerJoin, "", "", "\nINNER JOIN ");
-      sqlClause(builder, "OUTER JOIN", query().outerJoin, "", "", "\nOUTER JOIN ");
-      sqlClause(builder, "LEFT OUTER JOIN", query().leftOuterJoin, "", "", "\nLEFT OUTER JOIN ");
-      sqlClause(builder, "RIGHT OUTER JOIN", query().rightOuterJoin, "", "", "\nRIGHT OUTER JOIN ");
-      sqlClause(builder, "WHERE", query().where, "(", ")", " AND ");
-      sqlClause(builder, "GROUP BY", query().groupBy, "", "", ", ");
-      sqlClause(builder, "HAVING", query().having, "(", ")", " AND ");
-      sqlClause(builder, "ORDER BY", query().orderBy, "", "", ", ");
+      selectClause(builder, "SELECT", sql().select, "", "", ", ");
+      selectClause(builder, "FROM", sql().from, "", "", ", ");
+      selectClause(builder, "JOIN", sql().join, "", "", "JOIN");
+      selectClause(builder, "INNER JOIN", sql().innerJoin, "", "", "\nINNER JOIN ");
+      selectClause(builder, "OUTER JOIN", sql().outerJoin, "", "", "\nOUTER JOIN ");
+      selectClause(builder, "LEFT OUTER JOIN", sql().leftOuterJoin, "", "", "\nLEFT OUTER JOIN ");
+      selectClause(builder, "RIGHT OUTER JOIN", sql().rightOuterJoin, "", "", "\nRIGHT OUTER JOIN ");
+      selectClause(builder, "WHERE", sql().where, "(", ")", " AND ");
+      selectClause(builder, "GROUP BY", sql().groupBy, "", "", ", ");
+      selectClause(builder, "HAVING", sql().having, "(", ")", " AND ");
+      selectClause(builder, "ORDER BY", sql().orderBy, "", "", ", ");
       return builder.toString();
     } finally {
-      localQuery.set(new Query());
+      RESET();
     }
   }
 
-  private static void sqlClause(StringBuilder builder, String keyword, List<String> parts, String open, String close, String conjunction) {
+  private static void selectClause(StringBuilder builder, String keyword, List<String> parts, String open, String close, String conjunction) {
     if (!parts.isEmpty()) {
       if (builder.length() > 0) builder.append("\n");
       builder.append(keyword);
@@ -72,59 +111,23 @@ public class SelectBuilder {
     }
   }
 
-  public static void SELECT(String columns) {
-    query().select.add(columns);
+  private static SelectSQL sql() {
+    return localSQL.get();
   }
 
-  public static void FROM(String table) {
-    query().from.add(table);
+  private static class SelectSQL {
+    List<String> select = new ArrayList<String>();
+    List<String> from = new ArrayList<String>();
+    List<String> join = new ArrayList<String>();
+    List<String> innerJoin = new ArrayList<String>();
+    List<String> outerJoin = new ArrayList<String>();
+    List<String> leftOuterJoin = new ArrayList<String>();
+    List<String> rightOuterJoin = new ArrayList<String>();
+    List<String> where = new ArrayList<String>();
+    List<String> having = new ArrayList<String>();
+    List<String> groupBy = new ArrayList<String>();
+    List<String> orderBy = new ArrayList<String>();
+    List<String> lastList = new ArrayList<String>();
   }
-
-  public static void JOIN(String join) {
-    query().join.add(join);
-  }
-
-  public static void INNER_JOIN(String join) {
-    query().innerJoin.add(join);
-  }
-
-  public static void LEFT_OUTER_JOIN(String join) {
-    query().leftOuterJoin.add(join);
-  }
-
-  public static void RIGHT_OUTER_JOIN(String join) {
-    query().rightOuterJoin.add(join);
-  }
-
-  public static void OUTER_JOIN(String join) {
-    query().outerJoin.add(join);
-  }
-
-  public static void WHERE(String conditions) {
-    query().where.add(conditions);
-    query().lastList = query().where;
-  }
-
-  public static void OR() {
-    query().lastList.add(OR);
-  }
-
-  public static void AND() {
-    query().lastList.add(AND);
-  }
-
-  public static void GROUP_BY(String columns) {
-    query().groupBy.add(columns);
-  }
-
-  public static void HAVING(String conditions) {
-    query().having.add(conditions);
-    query().lastList = query().having;
-  }
-
-  public static void ORDER_BY(String columns) {
-    query().orderBy.add(columns);
-  }
-
 
 }
