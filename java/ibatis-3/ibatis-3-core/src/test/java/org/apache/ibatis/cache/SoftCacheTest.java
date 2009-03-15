@@ -18,7 +18,6 @@ public class SoftCacheTest {
       cache.putObject(i, array);
       Object value = cache.getObject(i);
     }
-    System.out.println(cache.getSize());
     assertTrue(cache.getSize() < N);
   }
 

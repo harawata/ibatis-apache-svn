@@ -26,6 +26,30 @@ public interface BoundBlogMapper {
 
   //======================================================
 
+  @Select("SELECT * FROM post ORDER BY id")
+  @TypeDiscriminator(
+      column = "draft",
+      javaType = String.class,
+      cases={@Case(value = "1", type = DraftPost.class)}
+      )
+  List<Post> selectPosts();
+
+  //======================================================
+
+  @Select("SELECT * FROM post ORDER BY id")
+  @Results({
+      @Result(id = true,property = "id",column = "id" )
+      })
+  @TypeDiscriminator(
+      column = "draft",
+      javaType = int.class,
+      cases={@Case(value = "1", type = DraftPost.class,
+          results = {@Result(id=true,property = "id",column="id")})}
+      )
+  List<Post> selectPostsWithResultMap();
+
+  //======================================================
+
   @Select("SELECT * FROM " +
       "blog WHERE id = #{id}")
   Blog selectBlog(int id);

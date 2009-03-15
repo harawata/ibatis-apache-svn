@@ -26,7 +26,6 @@ public class SuperCacheTest {
       Object o = cache.getObject(i);
       assertTrue(o == null || i == ((Integer) o));
     }
-    System.out.println(cache.getSize());
     assertTrue(cache.getSize() < N);
   }
 

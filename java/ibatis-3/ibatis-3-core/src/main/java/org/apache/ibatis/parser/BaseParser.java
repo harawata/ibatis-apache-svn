@@ -80,7 +80,6 @@ public class BaseParser {
   }
 
   protected String resolveAlias(String alias) {
-    System.out.println(this.getClass() +" " + typeAliasRegistry);
     return typeAliasRegistry.resolveAlias(alias);
   }
 }

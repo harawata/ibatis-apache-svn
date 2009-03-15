@@ -298,7 +298,6 @@ public class SqlSessionTest extends BaseDataTest {
     SqlSession session = sqlMapper.openSession();
     try {
       AuthorMapper mapper = session.getMapper(AuthorMapper.class);
-      System.out.println(mapper.getClass());
       List authors = mapper.selectAllAuthors();
       assertEquals(2,authors.size());
     } finally {
@@ -311,7 +310,6 @@ public class SqlSessionTest extends BaseDataTest {
     SqlSession session = sqlMapper.openSession();
     try {
       AuthorMapper mapper = session.getMapper(AuthorMapper.class);
-      System.out.println(mapper.getClass());
       Author author = mapper.selectAuthor(101);
       assertEquals(101,author.getId());
     } finally {

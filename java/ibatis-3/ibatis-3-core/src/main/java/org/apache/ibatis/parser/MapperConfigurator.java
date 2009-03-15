@@ -263,7 +263,7 @@ public class MapperConfigurator extends BaseParser {
       List<ParameterMapping> parameterMappings = new ArrayList<ParameterMapping>();
       ParameterMap.Builder inlineParameterMapBuilder = new ParameterMap.Builder(
           configuration,
-          statementBuilder.id() + "-inline-parameter-map",
+          statementBuilder.id() + "-Inline",
           parameterTypeClass,
           parameterMappings);
       statementBuilder.parameterMap(inlineParameterMapBuilder.build());
@@ -286,7 +286,7 @@ public class MapperConfigurator extends BaseParser {
     } else if (resultType != null) {
       ResultMap.Builder inlineResultMapBuilder = new ResultMap.Builder(
           configuration,
-          statementBuilder.id() + "-inline-result-map",
+          statementBuilder.id() + "-Inline",
           resultType,
           new ArrayList<ResultMapping>());
       resultMaps.add(inlineResultMapBuilder.build());

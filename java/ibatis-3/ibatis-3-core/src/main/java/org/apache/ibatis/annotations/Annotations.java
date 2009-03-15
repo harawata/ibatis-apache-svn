@@ -139,7 +139,7 @@ public class Annotations {
   public @interface Case {
     String value();
     Class type();
-    Result[] results();
+    Result[] results() default {};
   }
 
 }

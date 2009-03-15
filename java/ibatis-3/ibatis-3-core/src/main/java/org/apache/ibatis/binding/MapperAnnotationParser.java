@@ -51,14 +51,26 @@ public class MapperAnnotationParser {
   }
 
   private void parseResultsAndConstructorArgs(Method method) {
-    ConstructorArgs args = method.getAnnotation(ConstructorArgs.class);
-    Results results = method.getAnnotation(Results.class);
     Class returnType = getReturnType(method);
-    String resultMapId = type.getName() + "." + method.getName();
-    if (hasResults(method)) {
+    if (returnType != null) {
+      ConstructorArgs args = method.getAnnotation(ConstructorArgs.class);
+      Results results = method.getAnnotation(Results.class);
       TypeDiscriminator typeDiscriminator = method.getAnnotation(TypeDiscriminator.class);
+      String resultMapId = generateResultMapName(method);
       applyResultMap(resultMapId, returnType, argsIf(args), resultsIf(results), typeDiscriminator);
     }
+  }
+
+  private String generateResultMapName(Method method) {
+    StringBuilder suffix = new StringBuilder();
+    for (Class c : method.getParameterTypes()) {
+      suffix.append("-");
+      suffix.append(c.getSimpleName());
+    }
+    if (suffix.length() < 1) {
+      suffix.append("-void");
+    }
+    return type.getName() + "." + method.getName() + suffix;
   }
 
   private void applyResultMap(String resultMapId, Class returnType, Arg[] args, Result[] results, TypeDiscriminator discriminator) {
@@ -93,7 +105,7 @@ public class MapperAnnotationParser {
             result.typeHandler() == void.class ? null : result.typeHandler(),
             flags);
         }
-
+        configurator.resultMapEnd();
       }
     }
   }
@@ -101,9 +113,9 @@ public class MapperAnnotationParser {
   private void applyDiscriminator(String resultMapId, TypeDiscriminator discriminator) {
     if (discriminator != null) {
       String column = discriminator.column();
-      Class javaType = discriminator.javaType();
-      JdbcType jdbcType = discriminator.jdbcType();
-      Class typeHandler = discriminator.typeHandler();
+      Class javaType = discriminator.javaType() == void.class ? String.class : discriminator.javaType();
+      JdbcType jdbcType = discriminator.jdbcType() == JdbcType.UNDEFINED ? null : discriminator.jdbcType();
+      Class typeHandler = discriminator.typeHandler() == void.class ? null : discriminator.typeHandler();
       Case[] cases = discriminator.cases();
 
       configurator.resultMapDiscriminatorStart(column, javaType, jdbcType, typeHandler);
@@ -164,7 +176,7 @@ public class MapperAnnotationParser {
           timeout,
           null,         // ParameterMapID
           getParameterType(method),
-          hasResults(method) ? mappedStatementId : null,         // ResultMapID
+          generateResultMapName(method),         // ResultMapID
           getReturnType(method),
           resultSetType,
           isSelect,                  // IsSelectStatement
@@ -306,12 +318,6 @@ public class MapperAnnotationParser {
   private boolean hasCollection(Result result) {
     return result.many().constructor().value().length > 1
         || result.many().results().value().length > 1;
-  }
-
-  private boolean hasResults(Method method) {
-    ConstructorArgs args = method.getAnnotation(ConstructorArgs.class);
-    Results results = method.getAnnotation(Results.class);
-    return results != null || args != null;
   }
 
   private Result[] resultsIf(Results results) {
