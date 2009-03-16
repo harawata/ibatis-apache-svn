@@ -3,6 +3,7 @@ package org.apache.ibatis.binding;
 import static org.apache.ibatis.annotations.Annotations.*;
 import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.parser.MapperConfigurator;
+import org.apache.ibatis.parser.SqlSourceParser;
 import org.apache.ibatis.reflection.MetaClass;
 import org.apache.ibatis.type.JdbcType;
 
@@ -169,9 +170,10 @@ public class MapperAnnotationParser {
         statementType = options.statementType();
         resultSetType = options.resultSetType();
       }
+      SqlSource sqlSource = new SqlSourceParser(configurator.getConfiguration()).parse(sql);
       configurator.statement(
           mappedStatementId,
-          sql,
+          sqlSource,
           fetchSize,
           timeout,
           null,         // ParameterMapID
@@ -219,17 +221,19 @@ public class MapperAnnotationParser {
     if (annotation != null) {
       try {
         String[] strings = (String[]) annotation.getClass().getMethod("value").invoke(annotation);
-        StringBuilder sql = new StringBuilder();
-        for (String fragment : strings) {
-          sql.append(fragment);
-          sql.append(" ");
+        if (strings != null && strings.length > 0) {
+          StringBuilder sql = new StringBuilder();
+          for (String fragment : strings) {
+            sql.append(fragment);
+            sql.append(" ");
+          }
+          return sql.toString();
         }
-        return sql.toString();
       } catch (Exception e) {
         throw new RuntimeException("Could not find value method on SQL annotation.  Cause: " + e, e);
       }
     }
-    throw new BindingException("Reuested value from annotation that does not exist: " + annotationType);
+    throw new BindingException("Requested value from annotation that does not exist: " + annotationType);
   }
 
   private Class getSqlAnnotationType(Method method) {

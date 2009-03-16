@@ -199,7 +199,7 @@ public class MapperConfigurator extends BaseParser {
 
   public void statement(
       String id,
-      String sql,
+      SqlSource sqlSource,
       Integer fetchSize,
       Integer timeout,
       String parameterMap,
@@ -212,8 +212,6 @@ public class MapperConfigurator extends BaseParser {
       boolean useCache,
       StatementType statementType) {
     id = applyNamespace(id);
-
-    SqlSource sqlSource = new SqlSourceParser(configuration).parse(sql);
 
     MappedStatement.Builder statementBuilder = new MappedStatement.Builder(configuration, id, sqlSource);
     statementBuilder.resource(resource);

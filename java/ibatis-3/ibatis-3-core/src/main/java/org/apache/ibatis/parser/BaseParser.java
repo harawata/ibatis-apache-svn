@@ -12,6 +12,10 @@ public class BaseParser {
   protected TypeAliasRegistry typeAliasRegistry;
   protected TypeHandlerRegistry typeHandlerRegistry;
 
+  public Configuration getConfiguration() {
+    return configuration;
+  }
+
   protected String stringValueOf(String value, String defaultValue) {
     return value == null ? defaultValue : value;
   }

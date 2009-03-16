@@ -247,7 +247,8 @@ public class MapperParser extends BaseParser {
     Class resultTypeClass = resolveClass(resultType);
     String resultSetType = context.getStringAttribute("resultSetType");
     ResultSetType resultSetTypeEnum = resolveResultSetType(resultSetType);
-    mapperConfigurator.statement(id,sql,fetchSize,timeout,parameterMap, parameterTypeClass,
+    SqlSource sqlSource = new SqlSourceParser(configuration).parse(sql);
+    mapperConfigurator.statement(id,sqlSource,fetchSize,timeout,parameterMap, parameterTypeClass,
         resultMap, resultTypeClass,resultSetTypeEnum,isSelect,flushCache,useCache,statementType);
   }
 
