@@ -22,7 +22,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 
 /**
- * This class is used in the ibator build to force emma to dump
+ * This class is used in the Ibator build to force emma to dump
  * coverage information to disk.  This is needed because emma
  * doesn't normally dump until a JVM exit and there are several
  * places where emma is run during the build - and most data is

@@ -33,7 +33,7 @@ package org.apache.ibatis.ibator.api;
  *   <li>done()</li>
  * </ol>
  * <p>
- * Periodically, ibator will call <code>checkCancel()</code> to see if the method should
+ * Periodically, Ibator will call <code>checkCancel()</code> to see if the method should
  * be canceled.
  * <p>
  * For planning purposes, the most common use case will have a ratio
@@ -80,12 +80,12 @@ public interface ProgressCallback {
     void startTask(String taskName);
     
     /**
-     * ibator calls this method when all generated files have been saved
+     * Ibator calls this method when all generated files have been saved
      */
     void done();
     
     /**
-     * ibator will call this method periodically during a long running method.
+     * Ibator will call this method periodically during a long running method.
      * If the the implementation throws <code>InterruptedException</code> then the method
      * will be canceled.  Any files that have already been saved will remain on
      * the file system.

@@ -17,6 +17,34 @@
 
 <h1>What's New in Ibator</h1>
 <h2>Version 1.2.2</h2>
+<h3>Announcements</h3>
+<ul>
+  <li>The <code>org.apache.ibatis.ibator.api.CommentGenerator</code> interface
+      has changed.  Classes that implement this interface <b>must be changed</b>.  With
+      this change, implementing classes have access to many more data elements
+      from which to generate comments.  Additionally, this change makes the comment
+      generator interface more consistent with the other public Ibator interfaces.
+      Details of the change follow:
+      <ul>
+        <li>Methods which accepted the parameter <code>FullyQualifiedTable</code>
+            now accept the parameter <code>IntrospectedTable</code> instead.
+            The <code>FullyQualifiedTable</code> instance is available through
+            the method <code>IntrospectedTable.getFullyQualifiedTable()</code>.
+        </li> 
+        <li>Methods which accepted the <code>String</code> parameter <code>columnName</code>
+            now accept the parameter <code>IntrospectedColumn</code> instead.
+            The column name is available through
+            the method <code>IntrospectedColumn.getActualColumnName()</code>.
+        </li> 
+      </ul>
+      <p><b>Important Note:</b> any implementation that subclasses the Ibator
+      supplied class <code>DefaultCommentGenerator</code> does not need to
+      change immediately with this release.
+      The old methods have been deprecated and will be removed with the next
+      release of Ibator - so subclasses should be reworked as soon as
+      convenient.</p>
+  </li>
+</ul>
 <h3>Bugs Fixed</h3>
 <ul>
   <li>NPE when no DAOs are generated.</li>
@@ -49,7 +77,7 @@
       support to generated Example classes.  See the
      <a href="configreference/ibatorPlugin.html">&lt;ibatorPlugin&gt;</a> page
       for more information.</li>
-  <li>Added "delimitAllColumns" attribute to table configurations.  This suppports databases
+  <li>Added "delimitAllColumns" attribute to table configurations.  This supports databases
       like PosgreSQL that are case sensitive for identifiers. See the
      <a href="configreference/table.html">&lt;table&gt;</a> page
       for more information.</li>
@@ -59,6 +87,8 @@
   <li>IBATIS-586 - Added the ability to specify nested property elements on columnOverrides.
       See the <a href="configreference/columnOverride.html">&lt;columnOverride&gt;</a> page
       for more information. Thanks to Dan Turkenkopf for the idea and a nice initial patch.</li>
+  <li>The IntrospectedColumn class now contains any column remarks returned during
+      database introspection. This may be useful for some CommentGenerators.</li> 
 </ul>
 
 <h2>Version 1.2.1</h2>

@@ -108,7 +108,6 @@ public class DAOGenerator extends AbstractJavaGenerator {
         
         CommentGenerator commentGenerator = ibatorContext.getCommentGenerator();
         
-        FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
         TopLevelClass answer = new TopLevelClass(implementationType);
         answer.setVisibility(JavaVisibility.PUBLIC);
         answer.setSuperClass(daoTemplate.getSuperClass());
@@ -124,15 +123,15 @@ public class DAOGenerator extends AbstractJavaGenerator {
 
         // add constructor from the template
         answer.addMethod(daoTemplate.getConstructorClone(commentGenerator,
-                implementationType, table));
+                implementationType, introspectedTable));
 
         // add any fields from the template
-        for (Field field : daoTemplate.getFieldClones(commentGenerator, table)) {
+        for (Field field : daoTemplate.getFieldClones(commentGenerator, introspectedTable)) {
             answer.addField(field);
         }
 
         // add any methods from the template
-        for (Method method : daoTemplate.getMethodClones(commentGenerator, table)) {
+        for (Method method : daoTemplate.getMethodClones(commentGenerator, introspectedTable)) {
             answer.addMethod(method);
         }
         

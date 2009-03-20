@@ -99,8 +99,6 @@ public class DeleteByPrimaryKeyMethodGenerator extends AbstractDAOElementGenerat
     }
 
     private Method getMethodShell(Set<FullyQualifiedJavaType> importedTypes) {
-        FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
-
         Method method = new Method();
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setReturnType(FullyQualifiedJavaType.getIntInstance());
@@ -126,7 +124,7 @@ public class DeleteByPrimaryKeyMethodGenerator extends AbstractDAOElementGenerat
         }
 
         ibatorContext.getCommentGenerator().addGeneralMethodComment(method,
-                table);
+                introspectedTable);
 
         return method;
     }

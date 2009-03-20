@@ -59,6 +59,9 @@ public class IntrospectedColumn {
     protected IntrospectedTable introspectedTable;
     
     protected Properties properties;
+    
+    // any database comment associated with this column.  May be null
+    protected String remarks;
 
     /**
      * Constructs a Column definition.  This object holds all the 
@@ -402,5 +405,13 @@ public class IntrospectedColumn {
 
     public void setProperties(Properties properties) {
         this.properties.putAll(properties);
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
     }
 }

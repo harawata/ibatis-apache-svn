@@ -106,8 +106,6 @@ public class SelectByPrimaryKeyMethodGenerator extends AbstractDAOElementGenerat
     }
     
     private Method getMethodShell(Set<FullyQualifiedJavaType> importedTypes) {
-        FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
-
         Method method = new Method();
         method.setVisibility(JavaVisibility.PUBLIC);
 
@@ -137,7 +135,7 @@ public class SelectByPrimaryKeyMethodGenerator extends AbstractDAOElementGenerat
         }
 
         ibatorContext.getCommentGenerator().addGeneralMethodComment(method,
-                table);
+                introspectedTable);
 
         return method;
     }

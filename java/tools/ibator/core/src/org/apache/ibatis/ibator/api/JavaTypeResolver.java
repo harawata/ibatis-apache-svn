@@ -53,7 +53,7 @@ public interface JavaTypeResolver {
     void setIbatorContext(IbatorContext ibatorContext);
 	
 	/**
-	 * ibator will supply a list to this method.  The implementation class may
+	 * Ibator will supply a list to this method.  The implementation class may
 	 * add strings to the list that will be treated as warning messages and
 	 * displayed to the user.  The concept of a warning is that code generation
 	 * can continue, but that the results may not be what is expected.
@@ -69,7 +69,7 @@ public interface JavaTypeResolver {
 	 * @param introspectedColumn the column whose Java type needs to be
 	 *        calculated
      * @return true the calculated type, or null if an unsupported data type.  If null
-     * is returned, ibator will set the type to Object and issue a warning
+     * is returned, Ibator will set the type to Object and issue a warning
      * unless the column is ignored or otherwise overridden
 	 */
     FullyQualifiedJavaType calculateJavaType(IntrospectedColumn introspectedColumn);

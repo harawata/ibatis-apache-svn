@@ -129,7 +129,7 @@ public class SqlMapConfigPlugin extends IbatorPluginAdapter {
 
     /*
      * This method collects the name of every SqlMap file generated
-     * by ibator in this context.
+     * by Ibator in this context.
      */
     @Override
     public boolean sqlMapGenerated(GeneratedXmlFile sqlMap, IntrospectedTable introspectedTable) {

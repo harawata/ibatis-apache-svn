@@ -101,7 +101,7 @@ public class EqualsHashCodePlugin extends IbatorPluginAdapter {
      * <p>
      * The generated <tt>equals</tt> method will be correct unless:
      * <ul>
-     *   <li>Other fields have been added to the ibator generated classes</li>
+     *   <li>Other fields have been added to the Ibator generated classes</li>
      *   <li>A <tt>rootClass</tt> is specified that holds state</li>
      * </ul>
      * 
@@ -125,7 +125,7 @@ public class EqualsHashCodePlugin extends IbatorPluginAdapter {
         }
 
         ibatorContext.getCommentGenerator().addGeneralMethodComment(method,
-                introspectedTable.getFullyQualifiedTable());
+                introspectedTable);
 
         method.addBodyLine("if (this == that) {"); //$NON-NLS-1$
         method.addBodyLine("return true;"); //$NON-NLS-1$
@@ -217,7 +217,7 @@ public class EqualsHashCodePlugin extends IbatorPluginAdapter {
         }
 
         ibatorContext.getCommentGenerator().addGeneralMethodComment(method,
-                introspectedTable.getFullyQualifiedTable());
+                introspectedTable);
 
         method.addBodyLine("int hash = 23;"); //$NON-NLS-1$
 

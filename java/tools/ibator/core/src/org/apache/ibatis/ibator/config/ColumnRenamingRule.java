@@ -23,7 +23,7 @@ import org.apache.ibatis.ibator.internal.util.StringUtility;
 import org.apache.ibatis.ibator.internal.util.messages.Messages;
 
 /**
- * This class is used to specify a renaming fule for columns
+ * This class is used to specify a renaming rule for columns
  * in a table.  This renaming rule will be run against all
  * column names before calculating the corresponding property name.
  * The most common use case is when columns in a table are all
@@ -47,7 +47,7 @@ import org.apache.ibatis.ibator.internal.util.messages.Messages;
  *   <li>replaceString=""</li>
  * </ul>
  * 
- * Note that internally, ibator uses the 
+ * Note that internally, Ibator uses the 
  * <code>java.util.regex.Matcher.replaceAll</code> method
  * for this function.  See the documentation of that method
  * for example of the regular expression language used in

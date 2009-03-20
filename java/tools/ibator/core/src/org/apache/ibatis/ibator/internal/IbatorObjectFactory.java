@@ -35,7 +35,7 @@ import org.apache.ibatis.ibator.internal.util.StringUtility;
 import org.apache.ibatis.ibator.internal.util.messages.Messages;
 
 /**
- * This class creates the different configurable ibator generators
+ * This class creates the different configurable Ibator generators
  * 
  * @author Jeff Butler
  */

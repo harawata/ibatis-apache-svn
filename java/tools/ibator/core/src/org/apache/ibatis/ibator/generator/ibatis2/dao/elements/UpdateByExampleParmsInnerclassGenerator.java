@@ -15,7 +15,6 @@
  */
 package org.apache.ibatis.ibator.generator.ibatis2.dao.elements;
 
-import org.apache.ibatis.ibator.api.FullyQualifiedTable;
 import org.apache.ibatis.ibator.api.dom.java.Field;
 import org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.ibator.api.dom.java.InnerClass;
@@ -39,7 +38,6 @@ public class UpdateByExampleParmsInnerclassGenerator extends
 
     @Override
     public void addImplementationElements(TopLevelClass topLevelClass) {
-        FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
         topLevelClass.addImportedType(introspectedTable.getExampleType());
         
         InnerClass innerClass = new InnerClass(
@@ -47,7 +45,7 @@ public class UpdateByExampleParmsInnerclassGenerator extends
         innerClass.setVisibility(JavaVisibility.PRIVATE);
         innerClass.setStatic(true);
         innerClass.setSuperClass(introspectedTable.getExampleType());
-        ibatorContext.getCommentGenerator().addClassComment(innerClass, table);
+        ibatorContext.getCommentGenerator().addClassComment(innerClass, introspectedTable);
         
         Method method = new Method();
         method.setConstructor(true);

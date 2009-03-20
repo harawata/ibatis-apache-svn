@@ -56,8 +56,8 @@ public abstract class BaseModelClassGenerator extends AbstractJavaGenerator {
         field.setType(fqjt);
         field.setName(property);
         ibatorContext.getCommentGenerator().addFieldComment(field,
-                introspectedTable.getFullyQualifiedTable(),
-                introspectedColumn.getActualColumnName());
+                introspectedTable,
+                introspectedColumn);
 
         return field;
     }
@@ -72,8 +72,8 @@ public abstract class BaseModelClassGenerator extends AbstractJavaGenerator {
         method.setName(JavaBeansUtil.getSetterMethodName(property));
         method.addParameter(new Parameter(fqjt, property));
         ibatorContext.getCommentGenerator().addSetterComment(method,
-                introspectedTable.getFullyQualifiedTable(),
-                introspectedColumn.getActualColumnName());
+                introspectedTable,
+                introspectedColumn);
 
         StringBuilder sb = new StringBuilder();
         if (isTrimStringsEnabled() && introspectedColumn.isStringColumn()) {
@@ -107,8 +107,8 @@ public abstract class BaseModelClassGenerator extends AbstractJavaGenerator {
         method.setReturnType(fqjt);
         method.setName(JavaBeansUtil.getGetterMethodName(property, fqjt));
         ibatorContext.getCommentGenerator().addGetterComment(method,
-                introspectedTable.getFullyQualifiedTable(),
-                introspectedColumn.getActualColumnName());
+                introspectedTable,
+                introspectedColumn);
 
         StringBuilder sb = new StringBuilder();
         sb.append("return "); //$NON-NLS-1$

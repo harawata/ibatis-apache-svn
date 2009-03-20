@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.ibatis.ibator.api.CommentGenerator;
-import org.apache.ibatis.ibator.api.FullyQualifiedTable;
+import org.apache.ibatis.ibator.api.IntrospectedTable;
 import org.apache.ibatis.ibator.api.dom.java.Field;
 import org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.ibator.api.dom.java.Method;
@@ -73,7 +73,7 @@ public abstract class AbstractDAOTemplate {
         configured = false;
     }
 
-    public final Method getConstructorClone(CommentGenerator commentGenerator, FullyQualifiedJavaType type, FullyQualifiedTable table) {
+    public final Method getConstructorClone(CommentGenerator commentGenerator, FullyQualifiedJavaType type, IntrospectedTable introspectedTable) {
         configure();
         Method answer = new Method();
         answer.setConstructor(true);
@@ -91,7 +91,7 @@ public abstract class AbstractDAOTemplate {
             answer.addException(fqjt);
         }
         
-        commentGenerator.addGeneralMethodComment(answer, table);
+        commentGenerator.addGeneralMethodComment(answer, introspectedTable);
         
         return answer;
     }
@@ -161,7 +161,7 @@ public abstract class AbstractDAOTemplate {
         return checkedExceptions;
     }
 
-    public final List<Field> getFieldClones(CommentGenerator commentGenerator, FullyQualifiedTable table) {
+    public final List<Field> getFieldClones(CommentGenerator commentGenerator, IntrospectedTable introspectedTable) {
         configure();
         List<Field> answer = new ArrayList<Field>();
         for (Field oldField : fields) {
@@ -173,14 +173,14 @@ public abstract class AbstractDAOTemplate {
             field.setName(oldField.getName());
             field.setType(oldField.getType());
             field.setVisibility(oldField.getVisibility());
-            commentGenerator.addFieldComment(field, table);
+            commentGenerator.addFieldComment(field, introspectedTable);
             answer.add(field);
         }
         
         return answer;
     }
 
-    public final List<Method> getMethodClones(CommentGenerator commentGenerator, FullyQualifiedTable table) {
+    public final List<Method> getMethodClones(CommentGenerator commentGenerator, IntrospectedTable introspectedTable) {
         configure();
         List<Method> answer = new ArrayList<Method>();
         for (Method oldMethod : methods) {
@@ -205,7 +205,7 @@ public abstract class AbstractDAOTemplate {
             method.setReturnType(oldMethod.getReturnType());
             method.setVisibility(oldMethod.getVisibility());
             
-            commentGenerator.addGeneralMethodComment(method, table);
+            commentGenerator.addGeneralMethodComment(method, introspectedTable);
             
             answer.add(method);
         }
@@ -343,7 +343,7 @@ public abstract class AbstractDAOTemplate {
     
     /**
      * Override this method to configure a constructor for generated
-     * DAO implementation classes.  During code generation, ibator will
+     * DAO implementation classes.  During code generation, Ibator will
      * build a new constructor using the visibility, parameters, body lines,
      * and exceptions set on the constructor template.  When overriding this
      * method, call <code>setConstructorTemplate(Method)</code> to
@@ -354,7 +354,7 @@ public abstract class AbstractDAOTemplate {
     /**
      * Override this method to configure an insert method template.
      * A method template is a string with three substitution
-     * markers that ibator will fill in when generating code.  The
+     * markers that Ibator will fill in when generating code.  The
      * substitution markers will be:
      * <ul>
      *   <li>{0} - The SqlMap namespace</li>
@@ -377,7 +377,7 @@ public abstract class AbstractDAOTemplate {
     /**
      * Override this method to configure a queryForList method template.
      * A method template is a string with three substitution
-     * markers that ibator will fill in when generating code.  The
+     * markers that Ibator will fill in when generating code.  The
      * substitution markers will be:
      * <ul>
      *   <li>{0} - The SqlMap namespace</li>
@@ -399,7 +399,7 @@ public abstract class AbstractDAOTemplate {
     /**
      * Override this method to configure a queryForObject method template.
      * A method template is a string with three substitution
-     * markers that ibator will fill in when generating code.  The
+     * markers that Ibator will fill in when generating code.  The
      * substitution markers will be:
      * <ul>
      *   <li>{0} - The SqlMap namespace</li>
@@ -421,7 +421,7 @@ public abstract class AbstractDAOTemplate {
     /**
      * Override this method to configure an update method template.
      * A method template is a string with three substitution
-     * markers that ibator will fill in when generating code.  The
+     * markers that Ibator will fill in when generating code.  The
      * substitution markers will be:
      * <ul>
      *   <li>{0} - The SqlMap namespace</li>
@@ -443,7 +443,7 @@ public abstract class AbstractDAOTemplate {
     /**
      * Override this method to configure a delete method template.
      * A method template is a string with three substitution
-     * markers that ibator will fill in when generating code.  The
+     * markers that Ibator will fill in when generating code.  The
      * substitution markers will be:
      * <ul>
      *   <li>{0} - The SqlMap namespace</li>

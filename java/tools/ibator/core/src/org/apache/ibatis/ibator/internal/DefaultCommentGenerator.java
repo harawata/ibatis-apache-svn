@@ -21,6 +21,8 @@ import java.util.Properties;
 
 import org.apache.ibatis.ibator.api.CommentGenerator;
 import org.apache.ibatis.ibator.api.FullyQualifiedTable;
+import org.apache.ibatis.ibator.api.IntrospectedColumn;
+import org.apache.ibatis.ibator.api.IntrospectedTable;
 import org.apache.ibatis.ibator.api.dom.java.CompilationUnit;
 import org.apache.ibatis.ibator.api.dom.java.Field;
 import org.apache.ibatis.ibator.api.dom.java.InnerClass;
@@ -49,6 +51,14 @@ public class DefaultCommentGenerator implements CommentGenerator {
         suppressDate = false;
     }
 
+    /**
+     * Method from the old version of the interface.
+     * 
+     * TODO - remove in release 1.2.3
+     * 
+     * @deprecated as of version 1.2.2.
+     * @see DefaultCommentGenerator#addFieldComment(Field, IntrospectedTable, IntrospectedColumn)
+     */
     public void addFieldComment(Field field, FullyQualifiedTable table, String columnName) {
         StringBuilder sb = new StringBuilder();
         
@@ -66,6 +76,14 @@ public class DefaultCommentGenerator implements CommentGenerator {
         field.addJavaDocLine(" */"); //$NON-NLS-1$
     }
     
+    /**
+     * Method from the old version of the interface.
+     * 
+     * TODO - remove in release 1.2.3
+     * 
+     * @deprecated as of version 1.2.2.
+     * @see DefaultCommentGenerator#addFieldComment(Field, IntrospectedTable)
+     */
     public void addFieldComment(Field field, FullyQualifiedTable table) {
         StringBuilder sb = new StringBuilder();
         
@@ -81,6 +99,14 @@ public class DefaultCommentGenerator implements CommentGenerator {
         field.addJavaDocLine(" */"); //$NON-NLS-1$
     }
 
+    /**
+     * Method from the old version of the interface.
+     * 
+     * TODO - remove in release 1.2.3
+     * 
+     * @deprecated as of version 1.2.2.
+     * @see DefaultCommentGenerator#addClassComment(InnerClass, IntrospectedTable)
+     */
     public void addClassComment(InnerClass innerClass, FullyQualifiedTable table) {
         StringBuilder sb = new StringBuilder();
         
@@ -96,6 +122,14 @@ public class DefaultCommentGenerator implements CommentGenerator {
         innerClass.addJavaDocLine(" */"); //$NON-NLS-1$
     }
 
+    /**
+     * Method from the old version of the interface.
+     * 
+     * TODO - remove in release 1.2.3
+     * 
+     * @deprecated as of version 1.2.2.
+     * @see DefaultCommentGenerator#addEnumComment(InnerEnum, IntrospectedTable)
+     */
     public void addEnumComment(InnerEnum innerEnum, FullyQualifiedTable table) {
         StringBuilder sb = new StringBuilder();
         
@@ -111,6 +145,14 @@ public class DefaultCommentGenerator implements CommentGenerator {
         innerEnum.addJavaDocLine(" */"); //$NON-NLS-1$
     }
 
+    /**
+     * Method from the old version of the interface.
+     * 
+     * TODO - remove in release 1.2.3
+     * 
+     * @deprecated as of version 1.2.2.
+     * @see DefaultCommentGenerator#addGetterComment(Method, IntrospectedTable, IntrospectedColumn)
+     */
     public void addGetterComment(Method method, FullyQualifiedTable table, String columnName) {
         StringBuilder sb = new StringBuilder();
         
@@ -137,6 +179,14 @@ public class DefaultCommentGenerator implements CommentGenerator {
         method.addJavaDocLine(" */"); //$NON-NLS-1$
     }
 
+    /**
+     * Method from the old version of the interface.
+     * 
+     * TODO - remove in release 1.2.3
+     * 
+     * @deprecated as of version 1.2.2.
+     * @see DefaultCommentGenerator#addSetterComment(Method, IntrospectedTable, IntrospectedColumn)
+     */
     public void addSetterComment(Method method, FullyQualifiedTable table, String columnName) {
         StringBuilder sb = new StringBuilder();
         
@@ -166,6 +216,14 @@ public class DefaultCommentGenerator implements CommentGenerator {
         method.addJavaDocLine(" */"); //$NON-NLS-1$
     }
 
+    /**
+     * Method from the old version of the interface.
+     * 
+     * TODO - remove in release 1.2.3
+     * 
+     * @deprecated as of version 1.2.2.
+     * @see DefaultCommentGenerator#addGeneralMethodComment(Method, IntrospectedTable)
+     */
     public void addGeneralMethodComment(Method method, FullyQualifiedTable table) {
         StringBuilder sb = new StringBuilder();
         
@@ -254,5 +312,45 @@ public class DefaultCommentGenerator implements CommentGenerator {
         } else {
             return new Date().toString();
         }
+    }
+
+    public void addClassComment(InnerClass innerClass,
+            IntrospectedTable introspectedTable) {
+        addClassComment(innerClass, introspectedTable.getFullyQualifiedTable());
+    }
+
+    public void addEnumComment(InnerEnum innerEnum,
+            IntrospectedTable introspectedTable) {
+        addEnumComment(innerEnum, introspectedTable.getFullyQualifiedTable());
+    }
+
+    public void addFieldComment(Field field,
+            IntrospectedTable introspectedTable,
+            IntrospectedColumn introspectedColumn) {
+        addFieldComment(field, introspectedTable.getFullyQualifiedTable(),
+                introspectedColumn.getActualColumnName());
+    }
+
+    public void addFieldComment(Field field, IntrospectedTable introspectedTable) {
+        addFieldComment(field, introspectedTable.getFullyQualifiedTable());
+    }
+
+    public void addGeneralMethodComment(Method method,
+            IntrospectedTable introspectedTable) {
+        addGeneralMethodComment(method, introspectedTable.getFullyQualifiedTable());
+    }
+
+    public void addGetterComment(Method method,
+            IntrospectedTable introspectedTable,
+            IntrospectedColumn introspectedColumn) {
+        addGetterComment(method, introspectedTable.getFullyQualifiedTable(),
+                introspectedColumn.getActualColumnName());
+    }
+
+    public void addSetterComment(Method method,
+            IntrospectedTable introspectedTable,
+            IntrospectedColumn introspectedColumn) {
+        addSetterComment(method, introspectedTable.getFullyQualifiedTable(),
+                introspectedColumn.getActualColumnName());
     }
 }

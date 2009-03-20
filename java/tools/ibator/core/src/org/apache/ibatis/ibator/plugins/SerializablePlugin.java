@@ -17,7 +17,6 @@ package org.apache.ibatis.ibator.plugins;
 
 import java.util.List;
 
-import org.apache.ibatis.ibator.api.FullyQualifiedTable;
 import org.apache.ibatis.ibator.api.IbatorPluginAdapter;
 import org.apache.ibatis.ibator.api.IntrospectedTable;
 import org.apache.ibatis.ibator.api.dom.java.Field;
@@ -55,23 +54,23 @@ public class SerializablePlugin extends IbatorPluginAdapter {
 
     @Override
     public boolean modelBaseRecordClassGenerated(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
-        makeSerializable(topLevelClass, introspectedTable.getFullyQualifiedTable());
+        makeSerializable(topLevelClass, introspectedTable);
         return true;
     }
 
     @Override
     public boolean modelPrimaryKeyClassGenerated(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
-        makeSerializable(topLevelClass, introspectedTable.getFullyQualifiedTable());
+        makeSerializable(topLevelClass, introspectedTable);
         return true;
     }
 
     @Override
     public boolean modelRecordWithBLOBsClassGenerated(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
-        makeSerializable(topLevelClass, introspectedTable.getFullyQualifiedTable());
+        makeSerializable(topLevelClass, introspectedTable);
         return true;
     }
     
-    protected void makeSerializable(TopLevelClass topLevelClass, FullyQualifiedTable table) {
+    protected void makeSerializable(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
         topLevelClass.addImportedType(serializable);
         topLevelClass.addSuperInterface(serializable);
 
@@ -82,7 +81,7 @@ public class SerializablePlugin extends IbatorPluginAdapter {
         field.setStatic(true);
         field.setType(new FullyQualifiedJavaType("long")); //$NON-NLS-1$
         field.setVisibility(JavaVisibility.PRIVATE);
-        ibatorContext.getCommentGenerator().addFieldComment(field, table);
+        ibatorContext.getCommentGenerator().addFieldComment(field, introspectedTable);
 
         topLevelClass.addField(field);
     }

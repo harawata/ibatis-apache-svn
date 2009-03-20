@@ -31,7 +31,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 
 /**
- * This task executes an SQL script.  It is used during the ibator build
+ * This task executes an SQL script.  It is used during the Ibator build
  * because the built in Ant SQL task treats some of the columns in "awful table"
  * as properties.
  * 

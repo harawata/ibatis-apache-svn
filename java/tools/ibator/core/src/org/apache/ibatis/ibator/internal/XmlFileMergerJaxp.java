@@ -111,8 +111,8 @@ public class XmlFileMergerJaxp {
                 existingRootElement.setAttribute(node.getNodeName(), node.getNodeValue());
             }
             
-            // remove the old ibator generated elements and any
-            // white space before the old ibator nodes
+            // remove the old Ibator generated elements and any
+            // white space before the old Ibator nodes
             List<Node> nodesToDelete = new ArrayList<Node>();
             NodeList children = existingRootElement.getChildNodes();
             int length = children.getLength();
@@ -129,7 +129,7 @@ public class XmlFileMergerJaxp {
                 existingRootElement.removeChild(node);
             }
 
-            // add the new ibator generated elements
+            // add the new Ibator generated elements
             children = newRootElement.getChildNodes();
             length = children.getLength();
             Node firstChild = existingRootElement.getFirstChild();

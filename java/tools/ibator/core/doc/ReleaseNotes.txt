@@ -1,6 +1,9 @@
 -------------------------------------------------------------------------------
 Version 1.2.2:
 
+Announcements:
+1. CommentGenerator interface has changed
+
 Bugs:
 1. Fixed NPE when no DAOs are generated
 2. Fixed IBATIS-579 - don't allow column names with spaces to break
@@ -18,6 +21,7 @@ Enhancements:
 8. Added page describing some of PostgreSQL idiosyncracies with Ibator
 9. IBATIS-586 - Added the ability to specify nested property elements on
    columnOverrides (thanks to Dan Turkenkopf for the idea and a nice initial patch)
+10. Gather column comments during introspection
 
 -------------------------------------------------------------------------------
 Version 1.2.1:

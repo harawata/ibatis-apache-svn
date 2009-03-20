@@ -59,14 +59,14 @@ import org.apache.tools.ant.types.PropertySet;
  * </pre>
  *
  * The task requires that the attribute "configFile" be set to an
- * existing ibator XML configuration file.
+ * existing Ibator XML configuration file.
  * <p>
  * The task supports these optional attributes:
  * <ul>
  *   <li>"overwrite" - if true, then existing Java files will be overwritten.
  *       if false (default), then existing Java files will be untouched and
- *       ibator will write new Java files with a unique name</li>
- *   <li>"verbose" - if true, then ibator will log progress messages to
+ *       Ibator will write new Java files with a unique name</li>
+ *   <li>"verbose" - if true, then Ibator will log progress messages to
  *       the Ant log.  Default is false</li>
  *   <li>"contextIds" - a comma delimited list of contaxtIds to use
  *      for this run</li>

@@ -72,7 +72,6 @@ public class UpdateByPrimaryKeySelectiveMethodGenerator extends
     }
     
     private Method getMethodShell(Set<FullyQualifiedJavaType> importedTypes) {
-        FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
         FullyQualifiedJavaType parameterType;
         
         if (introspectedTable.getRules().generateRecordWithBLOBsClass()) {
@@ -94,7 +93,7 @@ public class UpdateByPrimaryKeySelectiveMethodGenerator extends
             importedTypes.add(fqjt);
         }
 
-        ibatorContext.getCommentGenerator().addGeneralMethodComment(method, table);
+        ibatorContext.getCommentGenerator().addGeneralMethodComment(method, introspectedTable);
 
         return method;
     }

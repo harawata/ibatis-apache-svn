@@ -72,7 +72,6 @@ public class UpdateByPrimaryKeyWithoutBLOBsMethodGenerator extends
     }
     
     private Method getMethodShell(Set<FullyQualifiedJavaType> importedTypes) {
-        FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
         FullyQualifiedJavaType parameterType = 
             introspectedTable.getBaseRecordType();
         importedTypes.add(parameterType);
@@ -88,7 +87,7 @@ public class UpdateByPrimaryKeyWithoutBLOBsMethodGenerator extends
             importedTypes.add(fqjt);
         }
 
-        ibatorContext.getCommentGenerator().addGeneralMethodComment(method, table);
+        ibatorContext.getCommentGenerator().addGeneralMethodComment(method, introspectedTable);
 
         return method;
     }

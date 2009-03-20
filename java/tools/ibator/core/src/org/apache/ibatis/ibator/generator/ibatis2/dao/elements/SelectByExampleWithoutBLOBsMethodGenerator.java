@@ -81,7 +81,6 @@ public class SelectByExampleWithoutBLOBsMethodGenerator extends
     }
 
     private Method getMethodShell(Set<FullyQualifiedJavaType> importedTypes) {
-        FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
         FullyQualifiedJavaType type = introspectedTable.getExampleType();
         importedTypes.add(type);
         importedTypes.add(FullyQualifiedJavaType.getNewListInstance());
@@ -123,7 +122,7 @@ public class SelectByExampleWithoutBLOBsMethodGenerator extends
         }
 
         ibatorContext.getCommentGenerator().addGeneralMethodComment(method,
-                table);
+                introspectedTable);
 
         return method;
     }

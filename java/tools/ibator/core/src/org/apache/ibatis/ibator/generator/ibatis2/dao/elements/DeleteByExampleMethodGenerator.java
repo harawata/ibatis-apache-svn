@@ -71,7 +71,6 @@ public class DeleteByExampleMethodGenerator extends AbstractDAOElementGenerator 
     }
 
     private Method getMethodShell(Set<FullyQualifiedJavaType> importedTypes) {
-        FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
         FullyQualifiedJavaType type = introspectedTable.getExampleType();
         importedTypes.add(type);
 
@@ -88,7 +87,7 @@ public class DeleteByExampleMethodGenerator extends AbstractDAOElementGenerator 
         }
 
         ibatorContext.getCommentGenerator().addGeneralMethodComment(method,
-                table);
+                introspectedTable);
 
         return method;
     }

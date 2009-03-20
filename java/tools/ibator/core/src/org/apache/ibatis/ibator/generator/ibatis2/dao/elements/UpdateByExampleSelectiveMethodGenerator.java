@@ -75,7 +75,6 @@ public class UpdateByExampleSelectiveMethodGenerator extends
     }
 
     private Method getMethodShell(Set<FullyQualifiedJavaType> importedTypes) {
-        FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
         FullyQualifiedJavaType parameterType;
 
         if (introspectedTable.getRules().generateRecordWithBLOBsClass()) {
@@ -103,7 +102,7 @@ public class UpdateByExampleSelectiveMethodGenerator extends
         }
 
         ibatorContext.getCommentGenerator().addGeneralMethodComment(method,
-                table);
+                introspectedTable);
 
         return method;
     }
