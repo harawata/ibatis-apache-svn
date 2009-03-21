@@ -153,7 +153,7 @@ public class MapperAnnotationParser {
     Class annotationType = getSqlAnnotationType(method);
     Options options = method.getAnnotation(Options.class);
     if (annotationType != null) {
-      final String sql = getSqlAnnotationValue(method, annotationType);
+      final SqlSource sqlSource = getSqlAnnotationValue(method, annotationType);
       final String mappedStatementId = method.getDeclaringClass().getName() + "." + method.getName();
       boolean isSelect = method.getAnnotation(Select.class) != null;
       boolean flushCache = false;
@@ -170,7 +170,6 @@ public class MapperAnnotationParser {
         statementType = options.statementType();
         resultSetType = options.resultSetType();
       }
-      SqlSource sqlSource = new SqlSourceParser(configurator.getConfiguration()).parse(sql);
       configurator.statement(
           mappedStatementId,
           sqlSource,
@@ -216,18 +215,22 @@ public class MapperAnnotationParser {
     return returnType;
   }
 
-  private String getSqlAnnotationValue(Method method, Class annotationType) {
+  private SqlSource getSqlAnnotationValue(Method method, Class annotationType) {
     Annotation annotation = method.getAnnotation(annotationType);
     if (annotation != null) {
       try {
-        String[] strings = (String[]) annotation.getClass().getMethod("value").invoke(annotation);
+        final String[] strings = (String[]) annotation.getClass().getMethod("value").invoke(annotation);
+        final SqlProvider provider = (SqlProvider) annotation.getClass().getMethod("sqlProvider").invoke(annotation);
         if (strings != null && strings.length > 0) {
           StringBuilder sql = new StringBuilder();
           for (String fragment : strings) {
             sql.append(fragment);
             sql.append(" ");
           }
-          return sql.toString();
+          SqlSourceParser parser = new SqlSourceParser(configurator.getConfiguration());
+          return parser.parse(sql.toString());
+        } else if (provider != null) {
+          return new DynamicInlineSqlSource(configurator.getConfiguration(), provider);
         }
       } catch (Exception e) {
         throw new RuntimeException("Could not find value method on SQL annotation.  Cause: " + e, e);
