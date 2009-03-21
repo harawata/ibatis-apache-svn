@@ -1,6 +1,5 @@
 package org.apache.ibatis.binding;
 
-import static org.apache.ibatis.annotations.Annotations.SqlProvider;
 import org.apache.ibatis.mapping.Configuration;
 import org.apache.ibatis.mapping.ParameterMapping;
 import org.apache.ibatis.mapping.SqlSource;
@@ -16,12 +15,11 @@ public class DynamicInlineSqlSource implements SqlSource {
   private Method providerMethod;
   private boolean providerTakesParameterObject;
 
-  public DynamicInlineSqlSource(Configuration config, SqlProvider provider) {
+  public DynamicInlineSqlSource(Configuration config, Object provider) {
     try {
       this.sqlSourceParser = new SqlSourceParser(config);
-      this.providerType = provider.type();
-      Class providerType = provider.type();
-      String providerMethod = provider.method();
+      this.providerType = (Class)provider.getClass().getMethod("type").invoke(provider);
+      String providerMethod = (String)provider.getClass().getMethod("method").invoke(provider);;
       for (Method m : providerType.getMethods()) {
         if (providerMethod.equals(m.getName())) {
           if (m.getParameterTypes().length < 2

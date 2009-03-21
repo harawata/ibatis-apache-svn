@@ -81,34 +81,51 @@ public class Annotations {
   @Retention(RetentionPolicy.RUNTIME)
   @Target(ElementType.METHOD)
   public @interface Insert {
-    String[] value() default {};
-    SqlProvider sqlProvider() default @SqlProvider(type = void.class, method = "");
+    String[] value();
   }
 
   @Retention(RetentionPolicy.RUNTIME)
   @Target(ElementType.METHOD)
   public @interface Update {
-    String[] value() default {};
-    SqlProvider sqlProvider() default @SqlProvider(type = void.class, method = "");
+    String[] value();
   }
 
   @Retention(RetentionPolicy.RUNTIME)
   @Target(ElementType.METHOD)
   public @interface Delete {
-    String[] value() default {};
-    SqlProvider sqlProvider() default @SqlProvider(type = void.class, method = "");
+    String[] value();
   }
 
   @Retention(RetentionPolicy.RUNTIME)
   @Target(ElementType.METHOD)
   public @interface Select {
-    String[] value() default {};
-    SqlProvider sqlProvider() default @SqlProvider(type = void.class, method = "");
+    String[] value();
   }
 
   @Retention(RetentionPolicy.RUNTIME)
   @Target(ElementType.METHOD)
-  public @interface SqlProvider {
+  public @interface InsertProvider {
+    Class type();
+    String method();
+  }
+
+  @Retention(RetentionPolicy.RUNTIME)
+  @Target(ElementType.METHOD)
+  public @interface UpdateProvider {
+    Class type();
+    String method();
+  }
+
+  @Retention(RetentionPolicy.RUNTIME)
+  @Target(ElementType.METHOD)
+  public @interface DeleteProvider {
+    Class type();
+    String method();
+  }
+
+  @Retention(RetentionPolicy.RUNTIME)
+  @Target(ElementType.METHOD)
+  public @interface SelectProvider {
     Class type();
     String method();
   }

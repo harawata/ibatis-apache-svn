@@ -215,35 +215,43 @@ public class MapperAnnotationParser {
   }
 
   private SqlSource getSqlSourceFromAnnotations(Method method) {
-    Class annotationType = getSqlAnnotationType(method);
-    if (annotationType != null) {
-      try {
-        Annotation annotation = method.getAnnotation(annotationType);
-        final String[] strings = (String[]) annotation.getClass().getMethod("value").invoke(annotation);
-        final SqlProvider provider = (SqlProvider) annotation.getClass().getMethod("sqlProvider").invoke(annotation);
-        if (strings != null && strings.length > 0) {
-          if (provider.type() != void.class) {
-            throw new BindingException("You cannot supply both a static SQL and SqlProvider to method named " + method.getName());
-          }
-          StringBuilder sql = new StringBuilder();
-          for (String fragment : strings) {
-            sql.append(fragment);
-            sql.append(" ");
-          }
-          SqlSourceParser parser = new SqlSourceParser(configurator.getConfiguration());
-          return parser.parse(sql.toString());
-        } else if (provider.type() != void.class) {
-          return new DynamicInlineSqlSource(configurator.getConfiguration(), provider);
+    try {
+      Class sqlAnnotationType = getSqlAnnotationType(method);
+      Class sqlProviderAnnotationType = getSqlProviderAnnotationType(method);
+      if (sqlAnnotationType != null) {
+        if (sqlProviderAnnotationType != null) {
+          throw new BindingException("You cannot supply both a static SQL and SqlProvider to method named " + method.getName());
         }
-      } catch (Exception e) {
-        throw new RuntimeException("Could not find value method on SQL annotation.  Cause: " + e, e);
+        Annotation sqlAnnotation = method.getAnnotation(sqlAnnotationType);
+        final String[] strings = (String[]) sqlAnnotation.getClass().getMethod("value").invoke(sqlAnnotation);
+        StringBuilder sql = new StringBuilder();
+        for (String fragment : strings) {
+          sql.append(fragment);
+          sql.append(" ");
+        }
+        SqlSourceParser parser = new SqlSourceParser(configurator.getConfiguration());
+        return parser.parse(sql.toString());
+      } else if (sqlProviderAnnotationType != null) {
+        Annotation sqlProviderAnnotation = method.getAnnotation(sqlProviderAnnotationType);
+        return new DynamicInlineSqlSource(configurator.getConfiguration(), sqlProviderAnnotation);
       }
+      return null;
+    } catch (Exception e) {
+      throw new RuntimeException("Could not find value method on SQL annotation.  Cause: " + e, e);
     }
-    return null;
   }
 
   private Class getSqlAnnotationType(Method method) {
     Class[] types = {Select.class, Insert.class, Update.class, Delete.class};
+    return chooseAnnotationType(method, types);
+  }
+
+  private Class getSqlProviderAnnotationType(Method method) {
+    Class[] types = {SelectProvider.class, InsertProvider.class, UpdateProvider.class, DeleteProvider.class};
+    return chooseAnnotationType(method, types);
+  }
+
+  private Class chooseAnnotationType(Method method, Class[] types) {
     for (Class type : types) {
       Annotation annotation = method.getAnnotation(type);
       if (annotation != null) {

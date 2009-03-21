@@ -26,8 +26,7 @@ public interface BoundBlogMapper {
 
   //======================================================
 
-  @Select(
-      sqlProvider = @SqlProvider(type = BoundBlogSql.class, method = "selectBlogsSql"))
+  @SelectProvider(type = BoundBlogSql.class, method = "selectBlogsSql")
   List<Blog> selectBlogsUsingProvider();
 
   //======================================================
