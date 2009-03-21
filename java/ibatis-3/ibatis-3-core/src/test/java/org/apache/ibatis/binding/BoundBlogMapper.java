@@ -26,6 +26,12 @@ public interface BoundBlogMapper {
 
   //======================================================
 
+  @Select(
+      sqlProvider = @SqlProvider(type = BoundBlogSql.class, method = "selectBlogsSql"))
+  List<Blog> selectBlogsUsingProvider();
+
+  //======================================================
+
   @Select("SELECT * FROM post ORDER BY id")
   @TypeDiscriminator(
       column = "draft",

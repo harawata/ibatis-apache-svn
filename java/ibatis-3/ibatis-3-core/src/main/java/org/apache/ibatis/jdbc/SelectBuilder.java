@@ -10,10 +10,6 @@ public class SelectBuilder {
 
   private static final ThreadLocal<SelectSQL> localSQL = new ThreadLocal<SelectSQL>();
 
-  static {
-    RESET();
-  }
-
   public static void RESET() {
     localSQL.set(new SelectSQL());
   }
@@ -112,7 +108,12 @@ public class SelectBuilder {
   }
 
   private static SelectSQL sql() {
-    return localSQL.get();
+    SelectSQL selectSQL = localSQL.get();
+    if (selectSQL == null) {
+      RESET();
+      selectSQL = localSQL.get();
+    }
+    return selectSQL;
   }
 
   private static class SelectSQL {

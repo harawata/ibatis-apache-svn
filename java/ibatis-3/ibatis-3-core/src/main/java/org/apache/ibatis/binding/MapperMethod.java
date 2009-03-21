@@ -94,7 +94,7 @@ public class MapperMethod {
     try {
       config.getMappedStatement(commandName);
     } catch (Exception e) {
-      throw new BindingException("Invalid bound statement (not found): " + commandName);
+      throw new BindingException("Invalid bound statement (not found): " + commandName,e);
     }
   }
 
