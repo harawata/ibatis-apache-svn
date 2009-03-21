@@ -106,7 +106,9 @@
       <instr instrpathref="classes-to-instrument"
         destdir="${classes.instrumented}"
         metadatafile="./coverage.ec"
-        merge="true"/>
+        merge="true">
+        <filter excludes="org.apache.ibatis.ognl.*"/>
+      </instr>
     </emma>
   </target>
 

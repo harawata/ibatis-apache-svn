@@ -14,28 +14,28 @@ import java.util.Properties;
 
 public class JndiDataSourceFactory implements DataSourceFactory {
 
+  public static final String INITIAL_CONTEXT = "initial_context";
+  public static final String DATA_SOURCE = "data_source";
+  public static final String ENV_PREFIX = "env.";
+
   private DataSource dataSource;
-  private static final String INITIAL_CONTEXT = "initialContext";
-  private static final String DATA_SOURCE = "dataSource";
-  private static final String CONTEXT_PREFIX = "context.";
 
   public void setProperties(Properties properties) {
     try {
       InitialContext initCtx = null;
-      Hashtable context = getContextProperties(properties);
-
-      if (context == null) {
+      Hashtable env = getEnvProperties(properties);
+      if (env == null) {
         initCtx = new InitialContext();
       } else {
-        initCtx = new InitialContext(context);
+        initCtx = new InitialContext(env);
       }
 
       if (properties.containsKey(INITIAL_CONTEXT)
           && properties.containsKey(DATA_SOURCE)) {
-        Context ctx = (Context) initCtx.lookup((String) properties.get(INITIAL_CONTEXT));
-        dataSource = (DataSource) ctx.lookup((String) properties.get(DATA_SOURCE));
+        Context ctx = (Context) initCtx.lookup(properties.getProperty(INITIAL_CONTEXT));
+        dataSource = (DataSource) ctx.lookup(properties.getProperty(DATA_SOURCE));
       } else if (properties.containsKey(DATA_SOURCE)) {
-        dataSource = (DataSource) initCtx.lookup((String) properties.get(DATA_SOURCE));
+        dataSource = (DataSource) initCtx.lookup(properties.getProperty(DATA_SOURCE));
       }
 
     } catch (NamingException e) {
@@ -47,8 +47,8 @@ public class JndiDataSourceFactory implements DataSourceFactory {
     return dataSource;
   }
 
-  private static Hashtable getContextProperties(Map allProps) {
-    final String PREFIX = CONTEXT_PREFIX;
+  private static Hashtable getEnvProperties(Map allProps) {
+    final String PREFIX = ENV_PREFIX;
     Hashtable contextProperties = null;
     Iterator keys = allProps.keySet().iterator();
     while (keys.hasNext()) {
