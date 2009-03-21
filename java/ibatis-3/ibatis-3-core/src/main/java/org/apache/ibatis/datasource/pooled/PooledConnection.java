@@ -1,6 +1,6 @@
 package org.apache.ibatis.datasource.pooled;
 
-import org.apache.ibatis.datasource.unpooled.DataSourceException;
+import org.apache.ibatis.datasource.DataSourceException;
 import org.apache.ibatis.reflection.ExceptionUtil;
 
 import java.lang.reflect.InvocationHandler;

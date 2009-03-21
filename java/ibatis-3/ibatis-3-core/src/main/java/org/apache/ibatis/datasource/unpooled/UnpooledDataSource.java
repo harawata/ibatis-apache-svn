@@ -1,5 +1,7 @@
 package org.apache.ibatis.datasource.unpooled;
 
+import org.apache.ibatis.datasource.DataSourceException;
+
 import javax.sql.DataSource;
 import java.io.PrintWriter;
 import java.sql.*;
