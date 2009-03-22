@@ -1,11 +1,8 @@
 TODO
-  * Mapper Interface Binding
-  * Named parameter parsing/merging
   * Dynamic SQL
   * Add resultType automapping option for collections so a resultMap isn' t required
+  * Named parameter parsing/merging
 Testing
-  * Improve test coverage
-  * Functional tests
   * Perf/Threaded Integration Tests
 
 
