@@ -1,6 +1,7 @@
 TODO
   * Dynamic SQL
   * Add resultType automapping option for collections so a resultMap isn' t required
+  * Auto result/param types detected for bound XML statements
   * Named parameter parsing/merging
 Testing
   * Perf/Threaded Integration Tests
