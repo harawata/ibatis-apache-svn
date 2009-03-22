@@ -290,6 +290,10 @@ public class Configuration {
     return mapperRegistry.getMapper(type,sqlSession);
   }
 
+  public boolean hasMapper (Class type) {
+    return mapperRegistry.hasMapper(type);
+  }
+
   private static class StrictMap<J, K> extends HashMap<J, K> {
 
     private String name;

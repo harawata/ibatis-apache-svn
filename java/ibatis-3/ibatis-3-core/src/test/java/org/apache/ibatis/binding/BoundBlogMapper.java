@@ -18,6 +18,10 @@ public interface BoundBlogMapper {
 
   //======================================================
 
+  List<Blog> selectBlogsFromXML();
+
+  //======================================================
+
   @Select({
       "SELECT *",
       "FROM blog"

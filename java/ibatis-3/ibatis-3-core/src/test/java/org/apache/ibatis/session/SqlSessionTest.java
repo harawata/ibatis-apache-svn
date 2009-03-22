@@ -24,8 +24,6 @@ public class SqlSessionTest extends BaseDataTest {
     final String resource = "org/apache/ibatis/parser/MapperConfig.xml";
     final Reader reader = Resources.getResourceAsReader(resource);
     sqlMapper = new SqlSessionFactoryBuilder().build(reader);
-    sqlMapper.getConfiguration().addMapper(AuthorMapper.class);
-    sqlMapper.getConfiguration().addMapper(BlogMapper.class);
   }
 
   @Test

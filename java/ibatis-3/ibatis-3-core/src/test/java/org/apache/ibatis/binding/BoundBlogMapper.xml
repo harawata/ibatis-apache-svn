@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-mapper-3.dtd">
+
+<mapper>
+
+  <select id="selectBlogsFromXML" resultType="domain.blog.Blog">
+      SELECT * FROM blog
+  </select>
+
+</mapper>

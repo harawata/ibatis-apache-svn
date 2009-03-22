@@ -4,8 +4,10 @@ import static org.apache.ibatis.annotations.Annotations.*;
 import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.parser.MapperConfigurator;
 import org.apache.ibatis.parser.SqlSourceParser;
+import org.apache.ibatis.parser.MapperParser;
 import org.apache.ibatis.reflection.MetaClass;
 import org.apache.ibatis.type.JdbcType;
+import org.apache.ibatis.io.Resources;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -14,6 +16,8 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.io.Reader;
+import java.io.IOException;
 
 public class MapperAnnotationParser {
 
@@ -27,6 +31,7 @@ public class MapperAnnotationParser {
   }
 
   public void parse() {
+    loadXmlResource();
     configurator.namespace(type.getName());
     parseCache();
     parseCacheRef();
@@ -34,6 +39,20 @@ public class MapperAnnotationParser {
     for (Method method : methods) {
       parseResultsAndConstructorArgs(method);
       parseStatement(method);
+    }
+  }
+
+  private void loadXmlResource() {
+    String xmlResource = type.getName().replace('.', '/') + ".xml";
+    Reader xmlReader = null;
+    try {
+      xmlReader = Resources.getResourceAsReader(type.getClassLoader(), xmlResource);
+    } catch (IOException e) {
+      // ignore, resource is not required
+    }
+    if (xmlReader != null) {
+      MapperParser xmlParser = new MapperParser(xmlReader, configurator.getConfiguration(), xmlResource, type.getName());
+      xmlParser.parse();
     }
   }
 

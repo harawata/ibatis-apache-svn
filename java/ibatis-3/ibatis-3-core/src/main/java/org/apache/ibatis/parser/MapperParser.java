@@ -16,6 +16,11 @@ public class MapperParser extends BaseParser {
   protected NodeletParser parser;
   protected MapperConfigurator mapperConfigurator;
 
+  public MapperParser(Reader reader, Configuration configuration, String resource, String namespace) {
+    this(reader, configuration, resource);
+    this.mapperConfigurator.namespace(namespace);
+  }
+
   public MapperParser(Reader reader, Configuration configuration, String resource) {
     this.mapperConfigurator = new MapperConfigurator(configuration,resource);
     this.reader = reader;
@@ -36,12 +41,14 @@ public class MapperParser extends BaseParser {
     assert typeAliasRegistry != null;
     assert typeHandlerRegistry != null;
     parser.parse(reader);
+    bindMapperForNamespace();
   }
 
   //  <configuration namespace="com.domain.MapperClass" />
   @Nodelet("/mapper")
   public void configurationElement(NodeletContext context) throws Exception {
-    mapperConfigurator.namespace(context.getStringAttribute("namespace"));
+    String namespace = context.getStringAttribute("namespace");
+    mapperConfigurator.namespace(namespace);
   }
 
   //  <cache type="LRU" flushInterval="3600000" size="1000" readOnly="false" />
@@ -265,6 +272,23 @@ public class MapperParser extends BaseParser {
     Class typeHandlerClass =  resolveClass(typeHandler);
     JdbcType jdbcTypeEnum = resolveJdbcType(jdbcType);
     mapperConfigurator.resultMapping(property,column,javaTypeClass,jdbcTypeEnum,nestedSelect,nestedResultMap,typeHandlerClass,flags);
+  }
+
+  private void bindMapperForNamespace() {
+    String namespace = mapperConfigurator.namespace();
+    if (namespace != null) {
+      Class boundType = null;
+      try {
+        boundType = Class.forName(namespace);
+      } catch (ClassNotFoundException e) {
+        //ignore, bound type is not required
+      }
+      if (boundType != null) {
+        if (!configuration.hasMapper(boundType)) {
+          configuration.addMapper(boundType);
+        }
+      }
+    }
   }
 
 }

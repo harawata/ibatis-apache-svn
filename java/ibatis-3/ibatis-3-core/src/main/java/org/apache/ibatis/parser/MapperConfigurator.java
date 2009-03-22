@@ -16,7 +16,7 @@ import java.util.Properties;
 
 public class MapperConfigurator extends BaseParser {
 
-  protected String namespace;
+  private String namespace;
   private String resource;
 
   private ParameterMap.Builder parameterMapBuilder;
@@ -38,9 +38,15 @@ public class MapperConfigurator extends BaseParser {
     this.typeHandlerRegistry = configuration.getTypeHandlerRegistry();
   }
 
+  public String namespace() {
+    return namespace;
+  }
+
   public void namespace(String namespace) {
-    this.namespace = namespace;
-    if (namespace == null) {
+    if (namespace != null) {
+      this.namespace = namespace;
+    }
+    if (this.namespace == null) {
       throw new ParserException("The mapper element requires a namespace attribute to be specified.");
     }
   }
