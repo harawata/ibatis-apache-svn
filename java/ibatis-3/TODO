@@ -1,11 +1,22 @@
 TODO
-  * Dynamic SQL
+
+Enhancements
   * Add resultType automapping option for collections so a resultMap isn' t required
   * Auto result/param types detected for bound XML statements
   * Named parameter parsing/merging
+
 Testing
   * Perf/Threaded Integration Tests
 
 
+Dynamic SQL
 
+  <choose>
+      <when prepend test>
+      <otherwise prepend>
+
+  <if prepend test>
+      <else prepend>
+
+  <foreach test indexvar itemvar open close conjuction prepend>
 
