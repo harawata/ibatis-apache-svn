@@ -3,7 +3,7 @@ package org.apache.ibatis.session;
 import org.apache.ibatis.session.defaults.DefaultSqlSessionFactory;
 import org.apache.ibatis.exceptions.ExceptionFactory;
 import org.apache.ibatis.mapping.Configuration;
-import org.apache.ibatis.parser.MapperConfigParser;
+import org.apache.ibatis.parser.XMLMapperConfigParser;
 
 import java.io.Reader;
 import java.util.Properties;
@@ -24,7 +24,7 @@ public class SqlSessionFactoryBuilder {
 
   public SqlSessionFactory build(Reader reader, String environment, Properties props) {
     try {
-      MapperConfigParser parser = new MapperConfigParser(reader, environment, props);
+      XMLMapperConfigParser parser = new XMLMapperConfigParser(reader, environment, props);
       Configuration config = parser.parse();
       return new DefaultSqlSessionFactory(config);
     } catch (Exception e) {

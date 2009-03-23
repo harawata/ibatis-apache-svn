@@ -4,7 +4,7 @@ import static org.apache.ibatis.annotations.Annotations.*;
 import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.parser.MapperConfigurator;
 import org.apache.ibatis.parser.SqlSourceParser;
-import org.apache.ibatis.parser.MapperParser;
+import org.apache.ibatis.parser.XMLMapperParser;
 import org.apache.ibatis.reflection.MetaClass;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.io.Resources;
@@ -51,7 +51,7 @@ public class MapperAnnotationParser {
       // ignore, resource is not required
     }
     if (xmlReader != null) {
-      MapperParser xmlParser = new MapperParser(xmlReader, configurator.getConfiguration(), xmlResource, type.getName());
+      XMLMapperParser xmlParser = new XMLMapperParser(xmlReader, configurator.getConfiguration(), xmlResource, type.getName());
       xmlParser.parse();
     }
   }

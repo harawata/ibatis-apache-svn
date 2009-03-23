@@ -19,7 +19,7 @@ import java.io.Reader;
 import java.util.Map;
 import java.util.Properties;
 
-public class MapperConfigParser extends BaseParser {
+public class XMLMapperConfigParser extends BaseParser {
 
   private boolean parsed;
 
@@ -29,15 +29,15 @@ public class MapperConfigParser extends BaseParser {
   private String environment;
   private Environment.Builder environmentBuilder;
 
-  public MapperConfigParser(Reader reader) {
+  public XMLMapperConfigParser(Reader reader) {
     this(reader, null, null);
   }
 
-  public MapperConfigParser(Reader reader, String environment) {
+  public XMLMapperConfigParser(Reader reader, String environment) {
     this(reader, environment, null);
   }
 
-  public MapperConfigParser(Reader reader, String environment, Properties props) {
+  public XMLMapperConfigParser(Reader reader, String environment, Properties props) {
     ErrorContext.instance().resource("SQL Mapper Configuration");
     this.parsed = false;
     this.reader = reader;
@@ -52,7 +52,7 @@ public class MapperConfigParser extends BaseParser {
     this.parser.addNodeletHandler(this);
     this.parser.setValidation(true);
     this.parser.setVariables(props);
-    this.parser.setEntityResolver(new MapperEntityResolver());
+    this.parser.setEntityResolver(new XMLMapperEntityResolver());
   }
 
   public Configuration parse() {
@@ -223,12 +223,12 @@ public class MapperConfigParser extends BaseParser {
     if (resource != null && url == null) {
       ErrorContext.instance().resource(resource);
       reader = Resources.getResourceAsReader(resource);
-      MapperParser mapperParser = new MapperParser(reader, configuration, resource);
+      XMLMapperParser mapperParser = new XMLMapperParser(reader, configuration, resource);
       mapperParser.parse();
     } else if (url != null && resource == null) {
       ErrorContext.instance().resource(url);
       reader = Resources.getUrlAsReader(url);
-      MapperParser mapperParser = new MapperParser(reader, configuration, url);
+      XMLMapperParser mapperParser = new XMLMapperParser(reader, configuration, url);
       mapperParser.parse();
     } else {
       throw new ParserException("A mapper element may only specify a url or resource, but not both.");

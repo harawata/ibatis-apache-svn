@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * Offline entity resolver for the iBATIS DTDs
  */
-public class MapperEntityResolver implements EntityResolver {
+public class XMLMapperEntityResolver implements EntityResolver {
 
   private static final String MAPPER_CONFIG_DTD_RESOURCE = "org/apache/ibatis/parser/ibatis-config-3.dtd";
   private static final String MAPPER_DTD_RESOURCE = "org/apache/ibatis/parser/ibatis-mapper-3.dtd";

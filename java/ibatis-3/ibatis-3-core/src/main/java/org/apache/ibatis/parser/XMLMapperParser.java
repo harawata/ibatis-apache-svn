@@ -10,25 +10,25 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Properties;
 
-public class MapperParser extends BaseParser {
+public class XMLMapperParser extends BaseParser {
 
   protected Reader reader;
   protected NodeletParser parser;
   protected MapperConfigurator mapperConfigurator;
 
-  public MapperParser(Reader reader, Configuration configuration, String resource, String namespace) {
+  public XMLMapperParser(Reader reader, Configuration configuration, String resource, String namespace) {
     this(reader, configuration, resource);
     this.mapperConfigurator.namespace(namespace);
   }
 
-  public MapperParser(Reader reader, Configuration configuration, String resource) {
+  public XMLMapperParser(Reader reader, Configuration configuration, String resource) {
     this.mapperConfigurator = new MapperConfigurator(configuration,resource);
     this.reader = reader;
     this.parser = new NodeletParser();
     this.parser.addNodeletHandler(this);
     this.parser.setValidation(true);
     this.parser.setVariables(configuration.getVariables());
-    this.parser.setEntityResolver(new MapperEntityResolver());
+    this.parser.setEntityResolver(new XMLMapperEntityResolver());
     this.typeAliasRegistry = configuration.getTypeAliasRegistry();
     this.typeHandlerRegistry = configuration.getTypeHandlerRegistry();
     this.configuration = configuration;
