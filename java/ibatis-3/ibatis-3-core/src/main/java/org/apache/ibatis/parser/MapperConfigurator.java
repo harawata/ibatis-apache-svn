@@ -31,11 +31,9 @@ public class MapperConfigurator extends BaseParser {
   private Cache cache;
 
   public MapperConfigurator(Configuration configuration, String resource) {
+    super(configuration);
     ErrorContext.instance().resource(resource);
     this.resource = resource;
-    this.configuration = configuration;
-    this.typeAliasRegistry = configuration.getTypeAliasRegistry();
-    this.typeHandlerRegistry = configuration.getTypeHandlerRegistry();
   }
 
   public String namespace() {

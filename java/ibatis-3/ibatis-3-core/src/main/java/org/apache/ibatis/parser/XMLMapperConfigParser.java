@@ -38,15 +38,15 @@ public class XMLMapperConfigParser extends BaseParser {
   }
 
   public XMLMapperConfigParser(Reader reader, String environment, Properties props) {
+    super(new Configuration());
+
     ErrorContext.instance().resource("SQL Mapper Configuration");
+
+    this.configuration.setVariables(props);
+
     this.parsed = false;
     this.reader = reader;
     this.environment = environment;
-
-    this.configuration = new Configuration();
-    this.configuration.setVariables(props);
-    this.typeAliasRegistry = this.configuration.getTypeAliasRegistry();
-    this.typeHandlerRegistry = this.configuration.getTypeHandlerRegistry();
 
     this.parser = new NodeletParser();
     this.parser.addNodeletHandler(this);

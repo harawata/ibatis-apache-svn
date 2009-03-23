@@ -22,6 +22,7 @@ public class XMLMapperParser extends BaseParser {
   }
 
   public XMLMapperParser(Reader reader, Configuration configuration, String resource) {
+    super(configuration);
     this.mapperConfigurator = new MapperConfigurator(configuration,resource);
     this.reader = reader;
     this.parser = new NodeletParser();
@@ -29,9 +30,6 @@ public class XMLMapperParser extends BaseParser {
     this.parser.setValidation(true);
     this.parser.setVariables(configuration.getVariables());
     this.parser.setEntityResolver(new XMLMapperEntityResolver());
-    this.typeAliasRegistry = configuration.getTypeAliasRegistry();
-    this.typeHandlerRegistry = configuration.getTypeHandlerRegistry();
-    this.configuration = configuration;
   }
 
   public void parse() {

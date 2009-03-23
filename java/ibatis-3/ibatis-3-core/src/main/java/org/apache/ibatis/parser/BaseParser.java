@@ -8,9 +8,15 @@ import org.apache.ibatis.type.TypeAliasRegistry;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 
 public class BaseParser {
-  protected Configuration configuration;
-  protected TypeAliasRegistry typeAliasRegistry;
-  protected TypeHandlerRegistry typeHandlerRegistry;
+  protected final Configuration configuration;
+  protected final TypeAliasRegistry typeAliasRegistry;
+  protected final TypeHandlerRegistry typeHandlerRegistry;
+
+  public BaseParser(Configuration configuration) {
+    this.configuration = configuration;
+    this.typeAliasRegistry = this.configuration.getTypeAliasRegistry();
+    this.typeHandlerRegistry = this.configuration.getTypeHandlerRegistry();
+  }
 
   public Configuration getConfiguration() {
     return configuration;

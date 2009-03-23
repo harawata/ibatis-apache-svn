@@ -1,21 +1,20 @@
-package org.apache.ibatis.binding;
+package org.apache.ibatis.parser;
 
 import org.apache.ibatis.mapping.Configuration;
 import org.apache.ibatis.mapping.ParameterMapping;
 import org.apache.ibatis.mapping.SqlSource;
-import org.apache.ibatis.parser.SqlSourceParser;
 
 import java.lang.reflect.Method;
 import java.util.List;
 
-public class DynamicInlineSqlSource implements SqlSource {
+public class ProviderSqlSource implements SqlSource {
 
   private SqlSourceParser sqlSourceParser;
   private Class providerType;
   private Method providerMethod;
   private boolean providerTakesParameterObject;
 
-  public DynamicInlineSqlSource(Configuration config, Object provider) {
+  public ProviderSqlSource(Configuration config, Object provider) {
     try {
       this.sqlSourceParser = new SqlSourceParser(config);
       this.providerType = (Class)provider.getClass().getMethod("type").invoke(provider);

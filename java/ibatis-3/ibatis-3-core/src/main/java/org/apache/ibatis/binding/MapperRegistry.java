@@ -2,6 +2,7 @@ package org.apache.ibatis.binding;
 
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.mapping.*;
+import org.apache.ibatis.parser.MapperAnnotationParser;
 
 import java.util.*;
 

@@ -1,14 +1,14 @@
-package org.apache.ibatis.binding;
+package org.apache.ibatis.parser;
 
 import static org.apache.ibatis.annotations.Annotations.*;
+import org.apache.ibatis.binding.BindingException;
+import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.*;
-import org.apache.ibatis.parser.MapperConfigurator;
-import org.apache.ibatis.parser.SqlSourceParser;
-import org.apache.ibatis.parser.XMLMapperParser;
 import org.apache.ibatis.reflection.MetaClass;
 import org.apache.ibatis.type.JdbcType;
-import org.apache.ibatis.io.Resources;
 
+import java.io.IOException;
+import java.io.Reader;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -16,8 +16,6 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.io.Reader;
-import java.io.IOException;
 
 public class MapperAnnotationParser {
 
@@ -252,7 +250,7 @@ public class MapperAnnotationParser {
         return parser.parse(sql.toString());
       } else if (sqlProviderAnnotationType != null) {
         Annotation sqlProviderAnnotation = method.getAnnotation(sqlProviderAnnotationType);
-        return new DynamicInlineSqlSource(configurator.getConfiguration(), sqlProviderAnnotation);
+        return new ProviderSqlSource(configurator.getConfiguration(), sqlProviderAnnotation);
       }
       return null;
     } catch (Exception e) {

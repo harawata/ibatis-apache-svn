@@ -5,12 +5,12 @@ import org.apache.ibatis.mapping.SqlSource;
 
 import java.util.List;
 
-public class InlineSqlSource implements SqlSource {
+public class StaticSqlSource implements SqlSource {
 
   private String sql;
   private List<ParameterMapping> parameterMappings;
 
-  public InlineSqlSource(String sql, List<ParameterMapping> parameterMappings) {
+  public StaticSqlSource(String sql, List<ParameterMapping> parameterMappings) {
     this.sql = sql;
     this.parameterMappings = parameterMappings;
   }
