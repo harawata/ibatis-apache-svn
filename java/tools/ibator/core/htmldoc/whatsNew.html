@@ -50,6 +50,10 @@
   <li>NPE when no DAOs are generated.</li>
   <li>IBATIS-579 - Don't allow column names that contain spaces to
       break across lines in generated XML.</li>
+  <li>Fixed NPE and incorrect calculation in generated equals method
+      (from EqualsHashCodePlugin) when certain
+      fields are null - thanks to Benjamin Klatt for finding this bug.</li>
+  
 </ul>
 
 <h3>Enhancements</h3>

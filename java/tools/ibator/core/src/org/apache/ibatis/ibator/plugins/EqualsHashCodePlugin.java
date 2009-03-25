@@ -154,11 +154,11 @@ public class EqualsHashCodePlugin extends IbatorPluginAdapter {
             sb.setLength(0);
 
             if (first) {
-                sb.append("return "); //$NON-NLS-1$
+                sb.append("return ("); //$NON-NLS-1$
                 first = false;
             } else {
                 OutputUtilities.javaIndent(sb, 1);
-                sb.append("&& "); //$NON-NLS-1$
+                sb.append("&& ("); //$NON-NLS-1$
             }
 
             String getterMethod = JavaBeansUtil.getGetterMethodName(
@@ -172,15 +172,17 @@ public class EqualsHashCodePlugin extends IbatorPluginAdapter {
                 sb.append("() == "); //$NON-NLS-1$
                 sb.append("other."); //$NON-NLS-1$
                 sb.append(getterMethod);
-                sb.append("()"); //$NON-NLS-1$
+                sb.append("())"); //$NON-NLS-1$
             } else {
                 sb.append("this."); //$NON-NLS-1$
                 sb.append(getterMethod);
-                sb.append("() == null ? other == null : this."); //$NON-NLS-1$
+                sb.append("() == null ? other."); //$NON-NLS-1$
+                sb.append(getterMethod);
+                sb.append("() == null : this."); //$NON-NLS-1$
                 sb.append(getterMethod);
                 sb.append("().equals(other."); //$NON-NLS-1$
                 sb.append(getterMethod);
-                sb.append("())"); //$NON-NLS-1$
+                sb.append("()))"); //$NON-NLS-1$
             }
             
             if (!iter.hasNext()) {

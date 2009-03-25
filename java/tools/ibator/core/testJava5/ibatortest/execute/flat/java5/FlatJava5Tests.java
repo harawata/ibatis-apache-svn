@@ -3005,4 +3005,134 @@ public class FlatJava5Tests extends BaseFlatJava5Test {
             fail(e.getMessage());
         }
     }
+    
+    public void testEquals1() {
+        Pkfields pkfields1 = new Pkfields();
+        assertFalse(pkfields1.equals(null));
+    }
+    
+    public void testEquals2() {
+        Pkfields pkfields1 = new Pkfields();
+        Pkfields pkfields2 = new Pkfields();
+        assertTrue(pkfields1.equals(pkfields2));
+    }
+    
+    public void testEquals3() {
+        Pkfields pkfields1 = new Pkfields();
+        pkfields1.setId1(2);
+        
+        Pkfields pkfields2 = new Pkfields();
+        pkfields2.setId1(2);
+        
+        assertTrue(pkfields1.equals(pkfields2));
+    }
+    
+    public void testEquals4() {
+        Pkfields pkfields1 = new Pkfields();
+        pkfields1.setId1(2);
+        
+        Pkfields pkfields2 = new Pkfields();
+        pkfields2.setId1(3);
+        
+        assertFalse(pkfields1.equals(pkfields2));
+    }
+
+    public void testEquals5() {
+        AwfulTable awfulTable1 = new AwfulTable();
+        awfulTable1.setActive(false);
+        awfulTable1.setCustomerId(3);
+        awfulTable1.seteMail("fred@fred.com");
+        awfulTable1.setEmailaddress("fred@fred.com");
+        awfulTable1.setFirstFirstName("Fred");
+        awfulTable1.setFourthFirstName("Betty");
+        awfulTable1.setFrom("from");
+        awfulTable1.setId1(22);
+        awfulTable1.setId2(33);
+        awfulTable1.setId5(55);
+        awfulTable1.setId6(66);
+        awfulTable1.setId7(77);
+        awfulTable1.setLastName("Rubble");
+        awfulTable1.setSecondCustomerId(532);
+        awfulTable1.setSecondFirstName("Bamm Bamm");
+        awfulTable1.setThirdFirstName("Pebbles");
+
+        AwfulTable awfulTable2 = new AwfulTable();
+        awfulTable2.setActive(false);
+        awfulTable2.setCustomerId(3);
+        awfulTable2.seteMail("fred@fred.com");
+        awfulTable2.setEmailaddress("fred@fred.com");
+        awfulTable2.setFirstFirstName("Fred");
+        awfulTable2.setFourthFirstName("Betty");
+        awfulTable2.setFrom("from");
+        awfulTable2.setId1(22);
+        awfulTable2.setId2(33);
+        awfulTable2.setId5(55);
+        awfulTable2.setId6(66);
+        awfulTable2.setId7(77);
+        awfulTable2.setLastName("Rubble");
+        awfulTable2.setSecondCustomerId(532);
+        awfulTable2.setSecondFirstName("Bamm Bamm");
+        awfulTable2.setThirdFirstName("Pebbles");
+        
+        assertTrue(awfulTable1.equals(awfulTable2));
+        
+        awfulTable2.setActive(true);
+        assertFalse(awfulTable1.equals(awfulTable2));
+    }
+
+    public void testHashCode1() {
+        Pkfields pkfields1 = new Pkfields();
+        Pkfields pkfields2 = new Pkfields();
+        assertTrue(pkfields1.hashCode() == pkfields2.hashCode());
+    }
+    
+    public void testHashCode2() {
+        Pkfields pkfields1 = new Pkfields();
+        pkfields1.setId1(2);
+        
+        Pkfields pkfields2 = new Pkfields();
+        pkfields2.setId1(2);
+        
+        assertTrue(pkfields1.hashCode() == pkfields2.hashCode());
+    }
+
+    public void testHashCode3() {
+        AwfulTable awfulTable1 = new AwfulTable();
+        awfulTable1.setActive(false);
+        awfulTable1.setCustomerId(3);
+        awfulTable1.seteMail("fred@fred.com");
+        awfulTable1.setEmailaddress("fred@fred.com");
+        awfulTable1.setFirstFirstName("Fred");
+        awfulTable1.setFourthFirstName("Betty");
+        awfulTable1.setFrom("from");
+        awfulTable1.setId1(22);
+        awfulTable1.setId2(33);
+        awfulTable1.setId5(55);
+        awfulTable1.setId6(66);
+        awfulTable1.setId7(77);
+        awfulTable1.setLastName("Rubble");
+        awfulTable1.setSecondCustomerId(532);
+        awfulTable1.setSecondFirstName("Bamm Bamm");
+        awfulTable1.setThirdFirstName("Pebbles");
+
+        AwfulTable awfulTable2 = new AwfulTable();
+        awfulTable2.setActive(false);
+        awfulTable2.setCustomerId(3);
+        awfulTable2.seteMail("fred@fred.com");
+        awfulTable2.setEmailaddress("fred@fred.com");
+        awfulTable2.setFirstFirstName("Fred");
+        awfulTable2.setFourthFirstName("Betty");
+        awfulTable2.setFrom("from");
+        awfulTable2.setId1(22);
+        awfulTable2.setId2(33);
+        awfulTable2.setId5(55);
+        awfulTable2.setId6(66);
+        awfulTable2.setId7(77);
+        awfulTable2.setLastName("Rubble");
+        awfulTable2.setSecondCustomerId(532);
+        awfulTable2.setSecondFirstName("Bamm Bamm");
+        awfulTable2.setThirdFirstName("Pebbles");
+        
+        assertTrue(awfulTable1.hashCode() == awfulTable2.hashCode());
+    }
 }

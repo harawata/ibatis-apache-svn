@@ -8,6 +8,8 @@ Bugs:
 1. Fixed NPE when no DAOs are generated
 2. Fixed IBATIS-579 - don't allow column names with spaces to break
    across lines
+3. Fixed NPE and incorrect calculation in generated equals when certain
+   fields are null - thanks to Benjamin Klatt for finding this bug
 
 Enhancements:
 1. IBATIS-569 - Make it easier to override IbatorRules in plugins
