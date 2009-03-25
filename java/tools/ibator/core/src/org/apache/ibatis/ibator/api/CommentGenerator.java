@@ -54,7 +54,7 @@ public interface CommentGenerator {
      * 
      * @param field
      * @param introspectedTable
-     * @param columnName
+     * @param introspectedColumn
      */
     public void addFieldComment(Field field, IntrospectedTable introspectedTable, IntrospectedColumn introspectedColumn);
 
@@ -88,6 +88,8 @@ public interface CommentGenerator {
      * This method should add a suitable comment as a child element of the
      * specified xmlElement to warn users that the element was generated and
      * is subject to regeneration.
+     * 
+     * @param xmlElement
      */
     public void addComment(XmlElement xmlElement);
     

@@ -49,6 +49,21 @@ Ibator from Java:</p>
 <p><code>org.apache.ibatis.ibator.logging.LogFactory.forceJavaLogging();</code></p>
 <p><b>Important:</b> You should specify the above line of code <i>before</i> any other Ibator code.</p>
 
+<h2>Supplying an Alternate Implementation</h2>
+<p>If you prefer to use a different logging implementation than Log4J or
+standard Java logging, you may supply an alternate implementation of the key logging
+interfaces as follows:</p>
+<ol>
+  <li>Create an implementation of the <code>org.apache.ibatis.ibator.logging.Log</code>
+      interface that implements the key logging methods for you logging implementation
+      of choice.</li>
+  <li>Create an implementation of the <code>org.apache.ibatis.ibator.logging.AbstractLogFactory</code>
+      interface that will return instances of your <code>Log</code> implementation.</li>
+  <li>Configure Ibator to use your new LogFactory by calling the method
+      <code>org.apache.ibatis.ibator.logging.LogFactory.setLogFactory(AbstractLogFactory)</code>
+      and supplying an instance of your <code>AbstractLogFactory</code> implementation.</li>
+</ol>
+
 <h2>Configuring Log4J Logging</h2>
 <p>The following is a sample Log4J configuration file:</p>
 <pre>

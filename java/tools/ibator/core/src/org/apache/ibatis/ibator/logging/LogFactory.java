@@ -15,47 +15,35 @@
  */
 package org.apache.ibatis.ibator.logging;
 
-import java.lang.reflect.Constructor;
-
 import org.apache.ibatis.ibator.internal.IbatorObjectFactory;
 import org.apache.ibatis.ibator.internal.util.messages.Messages;
 
+
 /**
+ * Factory for creating loggers.  Uses runtime introspection
+ * to determine the AbstractLogFactory implementation.
  * 
- * @author Clinton Begin
  * @author Jeff Butler
  *
  */
 public class LogFactory {
-
-    private static Constructor<?> logConstructor;
-
+    private static AbstractLogFactory logFactory;
+    
     static {
-        tryImplementation("org.apache.log4j.Logger", //$NON-NLS-1$
-                "org.apache.ibatis.ibator.logging.Log4jImpl"); //$NON-NLS-1$
-        tryImplementation("java.util.logging.Logger", //$NON-NLS-1$
-                "org.apache.ibatis.ibator.logging.JdkLoggingImpl"); //$NON-NLS-1$
-    }
-
-    private static void tryImplementation(String testClassName,
-            String implClassName) {
-        if (logConstructor == null) {
-            try {
-                IbatorObjectFactory.internalClassForName(testClassName);
-                Class<?> implClass = IbatorObjectFactory.internalClassForName(implClassName);
-                logConstructor = implClass
-                        .getConstructor(new Class[] { Class.class });
-            } catch (Throwable t) {
-            }
+        try {
+            IbatorObjectFactory.internalClassForName("org.apache.log4j.Logger"); //$NON-NLS-1$
+            logFactory = new Log4jLoggingLogFactory();
+        } catch (Exception e) {
+            logFactory = new JdkLoggingLogFactory();
         }
     }
 
-    public static Log getLog(Class<?> aClass) {
+    public static Log getLog(Class<?> clazz) {
         try {
-            return (Log) logConstructor.newInstance(new Object[] { aClass });
+            return logFactory.getLog(clazz);
         } catch (Throwable t) {
             throw new RuntimeException(Messages.getString("RuntimeError.21", //$NON-NLS-1$
-                    aClass.getName(), t.getMessage()), t);
+                    clazz.getName(), t.getMessage()), t);
         }
     }
 
@@ -69,13 +57,22 @@ public class LogFactory {
      * Ibator method.
      */
     public static synchronized void forceJavaLogging() {
-        try {
-            IbatorObjectFactory.internalClassForName("java.util.logging.Logger"); //$NON-NLS-1$
-            Class<?> implClass = IbatorObjectFactory.internalClassForName(
-                    "org.apache.ibatis.ibator.logging.JdkLoggingImpl"); //$NON-NLS-1$
-            logConstructor = implClass
-                    .getConstructor(new Class[] { Class.class });
-        } catch (Throwable t) {
+        logFactory = new JdkLoggingLogFactory();
+    }
+    
+    private static class JdkLoggingLogFactory implements AbstractLogFactory {
+        public Log getLog(Class<?> clazz) {
+            return new JdkLoggingImpl(clazz);
         }
+    }
+    
+    private static class Log4jLoggingLogFactory implements AbstractLogFactory {
+        public Log getLog(Class<?> clazz) {
+            return new Log4jImpl(clazz);
+        }
+    }
+    
+    public static void setLogFactory(AbstractLogFactory logFactory) {
+        LogFactory.logFactory = logFactory;
     }
 }
