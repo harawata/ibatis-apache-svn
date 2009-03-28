@@ -155,11 +155,13 @@ public class MappedStatement {
   }
 
   public String getSql(Object parameterObject) {
-    return sqlSource.getSql(parameterObject);
+    BoundSql boundSql = sqlSource.getBoundSql(parameterObject);
+    return boundSql.getSql();
   }
 
   public List<ParameterMapping> getDynamicParameterMappings(Object parameterObject) {
-    List<ParameterMapping> parameterMappings = sqlSource.getParameterMappings(parameterObject);
+    BoundSql boundSql = sqlSource.getBoundSql(parameterObject);
+    List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
     if (parameterMappings == null || parameterMappings.size() <= 0) {
       parameterMappings = parameterMap.getParameterMappings();
     }

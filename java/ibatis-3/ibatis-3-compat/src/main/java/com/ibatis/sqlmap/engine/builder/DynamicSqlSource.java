@@ -6,6 +6,7 @@ import com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements.*;
 import org.apache.ibatis.mapping.Configuration;
 import org.apache.ibatis.mapping.ParameterMapping;
 import org.apache.ibatis.mapping.SqlSource;
+import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.xml.NodeletContext;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -25,13 +26,17 @@ public class DynamicSqlSource implements SqlSource {
     this.mapParser = mapParser;
   }
 
-  public List<ParameterMapping> getParameterMappings(Object parameterObject) {
+  public BoundSql getBoundSql(Object parameterObject) {
+    return new BoundSql(getSql(parameterObject),getParameterMappings(parameterObject));
+  }
+
+  private List<ParameterMapping> getParameterMappings(Object parameterObject) {
     DynamicSql dynamic = new DynamicSql(configuration);
     parseDynamicTags(context, dynamic, true);
     return dynamic.getParameterMappings(parameterObject);
   }
 
-  public String getSql(Object parameterObject) {
+  private String getSql(Object parameterObject) {
     DynamicSql dynamic = new DynamicSql(configuration);
     parseDynamicTags(context, dynamic, true);
     return dynamic.getSql(parameterObject);

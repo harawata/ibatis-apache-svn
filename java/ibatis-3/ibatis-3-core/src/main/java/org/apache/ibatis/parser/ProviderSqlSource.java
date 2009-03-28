@@ -1,8 +1,8 @@
 package org.apache.ibatis.parser;
 
 import org.apache.ibatis.mapping.Configuration;
-import org.apache.ibatis.mapping.ParameterMapping;
 import org.apache.ibatis.mapping.SqlSource;
+import org.apache.ibatis.mapping.BoundSql;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -33,14 +33,9 @@ public class ProviderSqlSource implements SqlSource {
     }
   }
 
-  public String getSql(Object parameterObject) {
+  public BoundSql getBoundSql(Object parameterObject) {
     SqlSource sqlSource = createSqlSource(parameterObject);
-    return sqlSource.getSql(parameterObject);
-  }
-
-  public List<ParameterMapping> getParameterMappings(Object parameterObject) {
-    SqlSource sqlSource = createSqlSource(parameterObject);
-    return sqlSource.getParameterMappings(parameterObject);
+    return sqlSource.getBoundSql(parameterObject);
   }
 
   private SqlSource createSqlSource(Object parameterObject) {

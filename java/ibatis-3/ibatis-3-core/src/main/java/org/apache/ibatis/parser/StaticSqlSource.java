@@ -2,24 +2,25 @@ package org.apache.ibatis.parser;
 
 import org.apache.ibatis.mapping.ParameterMapping;
 import org.apache.ibatis.mapping.SqlSource;
+import org.apache.ibatis.mapping.BoundSql;
 
 import java.util.List;
 
 public class StaticSqlSource implements SqlSource {
 
-  private String sql;
-  private List<ParameterMapping> parameterMappings;
+
+  private BoundSql boundSql;
+
+  public StaticSqlSource(String sql) {
+    this.boundSql = new BoundSql(sql, null);
+  }
 
   public StaticSqlSource(String sql, List<ParameterMapping> parameterMappings) {
-    this.sql = sql;
-    this.parameterMappings = parameterMappings;
+    this.boundSql = new BoundSql(sql, parameterMappings);
   }
 
-  public String getSql(Object parameterObject) {
-    return sql;
+  public BoundSql getBoundSql(Object parameterObject) {
+    return boundSql;
   }
 
-  public List<ParameterMapping> getParameterMappings(Object parameterObject) {
-    return parameterMappings;
-  }
 }

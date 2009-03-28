@@ -6,6 +6,7 @@ import com.ibatis.sqlmap.engine.mapping.sql.statik.StaticSql;
 import org.apache.ibatis.mapping.Configuration;
 import org.apache.ibatis.mapping.ParameterMapping;
 import org.apache.ibatis.mapping.SqlSource;
+import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.xml.NodeletContext;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -29,14 +30,18 @@ public class SimpleSqlSource implements SqlSource {
     this.parseNodes(context);
   }
 
-  public String getSql(Object parameterObject) {
+  public BoundSql getBoundSql(Object parameterObject) {
+    return new BoundSql(getSql(parameterObject), getParameterMappings(parameterObject));
+  }
+
+  private String getSql(Object parameterObject) {
     if (SimpleDynamicSql.isSimpleDynamicSql(sql)) {
       return new SimpleDynamicSql(sql, parameterMappings, configuration.getTypeHandlerRegistry()).getSql(parameterObject);
     }
     return new StaticSql(sql).getSql(parameterObject);
   }
 
-  public List<ParameterMapping> getParameterMappings(Object parameterObject) {
+  private List<ParameterMapping> getParameterMappings(Object parameterObject) {
     return parameterMappings;
   }
 

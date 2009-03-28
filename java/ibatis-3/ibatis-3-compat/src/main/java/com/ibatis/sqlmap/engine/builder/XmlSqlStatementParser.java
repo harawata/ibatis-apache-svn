@@ -92,7 +92,7 @@ public class XmlSqlStatementParser {
       Class parameterClass = resolveClass(parameterClassName);
       List<ParameterMapping> parameterMappings = new ArrayList<ParameterMapping>();
       if (sqlSource instanceof SimpleSqlSource) {
-        parameterMappings = sqlSource.getParameterMappings(null);
+        parameterMappings = sqlSource.getBoundSql(null).getParameterMappings();
       }
       ParameterMap.Builder parameterMapBuilder = new ParameterMap.Builder(configuration, id + "-ParameterMap", parameterClass, parameterMappings);
       builder.parameterMap(parameterMapBuilder.build());
