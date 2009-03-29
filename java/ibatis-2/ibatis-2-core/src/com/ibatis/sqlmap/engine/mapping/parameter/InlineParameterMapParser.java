@@ -1,5 +1,9 @@
 package com.ibatis.sqlmap.engine.mapping.parameter;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
+
 import com.ibatis.common.beans.Probe;
 import com.ibatis.common.beans.ProbeFactory;
 import com.ibatis.common.resources.Resources;
@@ -10,10 +14,6 @@ import com.ibatis.sqlmap.engine.type.CustomTypeHandler;
 import com.ibatis.sqlmap.engine.type.DomTypeMarker;
 import com.ibatis.sqlmap.engine.type.TypeHandler;
 import com.ibatis.sqlmap.engine.type.TypeHandlerFactory;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
 
 public class InlineParameterMapParser {
 
@@ -52,9 +52,13 @@ public class InlineParameterMapParser {
 
           mappingList.add(mapping);
           newSqlBuffer.append("?");
-          token = parser.nextToken();
-          if (!PARAMETER_TOKEN.equals(token)) {
-            throw new SqlMapException("Unterminated inline parameter in mapped statement (" + "statement.getId()" + ").");
+          boolean hasMoreTokens = parser.hasMoreTokens();
+          if (hasMoreTokens)
+              token = parser.nextToken();
+          if (!hasMoreTokens || !PARAMETER_TOKEN.equals(token)) {
+              throw new SqlMapException(
+        	      "Unterminated inline parameter in mapped statement near '"
+        	      + newSqlBuffer.toString() + "'");
           }
           token = null;
         }
