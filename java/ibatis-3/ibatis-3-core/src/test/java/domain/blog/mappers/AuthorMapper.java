@@ -6,10 +6,14 @@ import java.util.List;
 
 public interface AuthorMapper {
 
-  List selectAllAuthors ();
+  List selectAllAuthors();
+
   Author selectAuthor(int id);
+
   void insertAuthor(Author author);
+
   int deleteAuthor(int id);
+
   int updateAuthor(Author author);
 
 }

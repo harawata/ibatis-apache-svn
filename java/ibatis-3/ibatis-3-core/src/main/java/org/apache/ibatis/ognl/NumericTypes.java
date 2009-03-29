@@ -92,6 +92,6 @@ public interface NumericTypes {
    * constant: all tags less than this constant represent integers, and all tags
    * greater than or equal to this constant represent reals.  Of course, you must also
    * check for NONNUMERIC, which means it is not a number at all.
-       */
-    int MIN_REAL_TYPE = FLOAT;
+   */
+  int MIN_REAL_TYPE = FLOAT;
 }

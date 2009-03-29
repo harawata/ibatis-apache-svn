@@ -72,5 +72,5 @@ public interface PropertyAccessor {
    * @param value  the new value for the property
    * @throws OgnlException if there is an error setting the property in the given object
    */
-  void setProperty(Map context, Object target, Object name, Object value ) throws OgnlException;
+  void setProperty(Map context, Object target, Object name, Object value) throws OgnlException;
 }

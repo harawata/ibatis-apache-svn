@@ -318,5 +318,5 @@ out its children. */
 
       this.children = newChildren;
     }
-    }
+  }
 }

@@ -136,5 +136,5 @@ public class DefaultMemberAccess implements MemberAccess {
       }
     }
     return result;
-	}
+  }
 }

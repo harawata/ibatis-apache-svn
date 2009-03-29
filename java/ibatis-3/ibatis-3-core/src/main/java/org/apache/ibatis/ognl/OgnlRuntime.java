@@ -1628,7 +1628,7 @@ public abstract class OgnlRuntime extends Object {
   }
 
   public static ObjectArrayPool getObjectArrayPool() {
-        return objectArrayPool;
-    }
+    return objectArrayPool;
+  }
 }
 

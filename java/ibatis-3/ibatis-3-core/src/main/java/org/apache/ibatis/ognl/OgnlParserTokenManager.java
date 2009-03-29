@@ -1699,6 +1699,6 @@ public class OgnlParserTokenManager implements OgnlParserConstants {
         break;
       default:
         break;
-   }
-}
+    }
+  }
 }

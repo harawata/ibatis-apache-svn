@@ -146,8 +146,8 @@ public class OgnlException extends Exception {
       if (reason != null) {
         s.println("/-- Encapsulated exception ------------\\");
         reason.printStackTrace(s);
-        s.println("\\--------------------------------------/" );
-            }
-          }
+        s.println("\\--------------------------------------/");
+      }
     }
+  }
 }

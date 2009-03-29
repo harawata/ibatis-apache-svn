@@ -1,10 +1,11 @@
 package org.apache.ibatis.mapping;
 
+import org.apache.ibatis.binding.MapperRegistry;
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.decorators.FifoCache;
 import org.apache.ibatis.cache.decorators.LruCache;
-import org.apache.ibatis.cache.decorators.WeakCache;
 import org.apache.ibatis.cache.decorators.SoftCache;
+import org.apache.ibatis.cache.decorators.WeakCache;
 import org.apache.ibatis.cache.impl.PerpetualCache;
 import org.apache.ibatis.datasource.jndi.JndiDataSourceFactory;
 import org.apache.ibatis.datasource.pooled.PooledDataSourceFactory;
@@ -21,13 +22,12 @@ import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.plugin.InterceptorChain;
 import org.apache.ibatis.reflection.DefaultObjectFactory;
 import org.apache.ibatis.reflection.ObjectFactory;
+import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.transaction.Transaction;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.apache.ibatis.transaction.managed.ManagedTransactionFactory;
 import org.apache.ibatis.type.TypeAliasRegistry;
 import org.apache.ibatis.type.TypeHandlerRegistry;
-import org.apache.ibatis.binding.MapperRegistry;
-import org.apache.ibatis.session.SqlSession;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -286,10 +286,10 @@ public class Configuration {
   }
 
   public <T> T getMapper(Class<T> type, SqlSession sqlSession) {
-    return mapperRegistry.getMapper(type,sqlSession);
+    return mapperRegistry.getMapper(type, sqlSession);
   }
 
-  public boolean hasMapper (Class type) {
+  public boolean hasMapper(Class type) {
     return mapperRegistry.hasMapper(type);
   }
 

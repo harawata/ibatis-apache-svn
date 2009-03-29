@@ -1,8 +1,8 @@
 package org.apache.ibatis.jdbc;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
 import static org.apache.ibatis.jdbc.SelectBuilder.*;
+import static org.junit.Assert.assertEquals;
+import org.junit.Test;
 
 public class SelectBuilderTest {
 
@@ -10,39 +10,39 @@ public class SelectBuilderTest {
   public void shouldProduceExpectedSimpleSelectStatement() {
     String expected =
         "SELECT P.ID, P.USERNAME, P.PASSWORD, P.FIRST_NAME, P.LAST_NAME\n" +
-        "FROM PERSON P\n" +
-        "WHERE (P.ID like #id# AND P.FIRST_NAME like #firstName# AND P.LAST_NAME like #lastName#)\n" +
-        "ORDER BY P.LAST_NAME";
-    assertEquals(expected, example2("a","b","c"));
+            "FROM PERSON P\n" +
+            "WHERE (P.ID like #id# AND P.FIRST_NAME like #firstName# AND P.LAST_NAME like #lastName#)\n" +
+            "ORDER BY P.LAST_NAME";
+    assertEquals(expected, example2("a", "b", "c"));
   }
 
   @Test
   public void shouldProduceExpectedSimpleSelectStatementMissingFirstParam() {
     String expected =
         "SELECT P.ID, P.USERNAME, P.PASSWORD, P.FIRST_NAME, P.LAST_NAME\n" +
-        "FROM PERSON P\n" +
-        "WHERE (P.FIRST_NAME like #firstName# AND P.LAST_NAME like #lastName#)\n" +
-        "ORDER BY P.LAST_NAME";
-    assertEquals(expected, example2(null,"b","c"));
+            "FROM PERSON P\n" +
+            "WHERE (P.FIRST_NAME like #firstName# AND P.LAST_NAME like #lastName#)\n" +
+            "ORDER BY P.LAST_NAME";
+    assertEquals(expected, example2(null, "b", "c"));
   }
 
   @Test
   public void shouldProduceExpectedSimpleSelectStatementMissingFirstTwoParams() {
     String expected =
         "SELECT P.ID, P.USERNAME, P.PASSWORD, P.FIRST_NAME, P.LAST_NAME\n" +
-        "FROM PERSON P\n" +
-        "WHERE (P.LAST_NAME like #lastName#)\n" +
-        "ORDER BY P.LAST_NAME";
-    assertEquals(expected, example2(null,null,"c"));
+            "FROM PERSON P\n" +
+            "WHERE (P.LAST_NAME like #lastName#)\n" +
+            "ORDER BY P.LAST_NAME";
+    assertEquals(expected, example2(null, null, "c"));
   }
 
   @Test
   public void shouldProduceExpectedSimpleSelectStatementMissingAllParams() {
     String expected =
         "SELECT P.ID, P.USERNAME, P.PASSWORD, P.FIRST_NAME, P.LAST_NAME\n" +
-        "FROM PERSON P\n" +
-        "ORDER BY P.LAST_NAME";
-    assertEquals(expected, example2(null,null,null));
+            "FROM PERSON P\n" +
+            "ORDER BY P.LAST_NAME";
+    assertEquals(expected, example2(null, null, null));
   }
 
   @Test
@@ -96,7 +96,6 @@ public class SelectBuilderTest {
     ORDER_BY("P.LAST_NAME");
     return SQL();
   }
-
 
 
 }

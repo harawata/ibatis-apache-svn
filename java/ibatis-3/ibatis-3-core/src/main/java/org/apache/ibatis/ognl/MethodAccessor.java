@@ -63,5 +63,5 @@ public interface MethodAccessor {
    * @throws MethodFailedException if there is an error calling the method
    * @result result of calling the method
    */
-  Object callMethod(Map context, Object target, String methodName, Object[] args ) throws MethodFailedException;
+  Object callMethod(Map context, Object target, String methodName, Object[] args) throws MethodFailedException;
 }

@@ -44,7 +44,7 @@ public interface BoundAuthorMapper {
       "  PASSWORD as AUTHOR_PASSWORD,",
       "  EMAIL as AUTHOR_EMAIL,",
       "  BIO as AUTHOR_BIO," +
-      "  FAVOURITE_SECTION as AUTHOR_SECTION",
+          "  FAVOURITE_SECTION as AUTHOR_SECTION",
       "FROM AUTHOR WHERE ID = #{id}"})
   Author selectAuthorConstructor(int id);
 

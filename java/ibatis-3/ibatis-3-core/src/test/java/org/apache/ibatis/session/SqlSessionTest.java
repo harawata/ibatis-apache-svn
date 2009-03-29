@@ -1,6 +1,8 @@
 package org.apache.ibatis.session;
 
 import domain.blog.*;
+import domain.blog.mappers.AuthorMapper;
+import domain.blog.mappers.BlogMapper;
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.Configuration;
@@ -11,9 +13,6 @@ import org.junit.Test;
 import java.io.Reader;
 import java.util.List;
 import java.util.Map;
-
-import domain.blog.mappers.AuthorMapper;
-import domain.blog.mappers.BlogMapper;
 
 public class SqlSessionTest extends BaseDataTest {
   private static SqlSessionFactory sqlMapper;
@@ -267,7 +266,7 @@ public class SqlSessionTest extends BaseDataTest {
     } finally {
       session.close();
     }
-    assertEquals (first, second);
+    assertEquals(first, second);
   }
 
   @Test
@@ -297,7 +296,7 @@ public class SqlSessionTest extends BaseDataTest {
     try {
       AuthorMapper mapper = session.getMapper(AuthorMapper.class);
       List authors = mapper.selectAllAuthors();
-      assertEquals(2,authors.size());
+      assertEquals(2, authors.size());
     } finally {
       session.close();
     }
@@ -309,7 +308,7 @@ public class SqlSessionTest extends BaseDataTest {
     try {
       AuthorMapper mapper = session.getMapper(AuthorMapper.class);
       Author author = mapper.selectAuthor(101);
-      assertEquals(101,author.getId());
+      assertEquals(101, author.getId());
     } finally {
       session.close();
     }
@@ -341,10 +340,10 @@ public class SqlSessionTest extends BaseDataTest {
       AuthorMapper mapper = session.getMapper(AuthorMapper.class);
       int count = mapper.deleteAuthor(101);
       assertEquals(1, count);
-      try{
+      try {
         mapper.selectAuthor(101);
         fail("Expected exception.");
-      } catch(Exception e) {
+      } catch (Exception e) {
         assertEquals(SessionException.class, e.getClass());
       }
     } finally {
@@ -385,7 +384,7 @@ public class SqlSessionTest extends BaseDataTest {
     SqlSession session = sqlMapper.openSession();
     try {
       BlogMapper mapper = session.getMapper(BlogMapper.class);
-      List<Map> posts = mapper.selectAllPosts(null,0,2);
+      List<Map> posts = mapper.selectAllPosts(null, 0, 2);
       assertEquals(2, posts.size());
       assertEquals(1, posts.get(0).get("ID"));
       assertEquals(2, posts.get(1).get("ID"));
@@ -399,7 +398,7 @@ public class SqlSessionTest extends BaseDataTest {
     SqlSession session = sqlMapper.openSession();
     try {
       BlogMapper mapper = session.getMapper(BlogMapper.class);
-      List<Map> posts = mapper.selectAllPosts(2,3);
+      List<Map> posts = mapper.selectAllPosts(2, 3);
       assertEquals(3, posts.size());
       assertEquals(3, posts.get(0).get("ID"));
       assertEquals(4, posts.get(1).get("ID"));

@@ -51,7 +51,7 @@ public class JndiDataSourceFactoryTest extends BaseDataTest {
 
       MockContext ctx = new MockContext(false);
       ctx.bind(TEST_DATA_SOURCE, expectedDataSource);
-      
+
       InitialContext initCtx = new InitialContext(env);
       initCtx.bind(TEST_INITIAL_CONTEXT, ctx);
     } catch (NamingException e) {

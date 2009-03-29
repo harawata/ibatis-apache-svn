@@ -1,11 +1,12 @@
 package org.apache.ibatis.binding;
 
+import org.apache.ibatis.BaseDataTest;
+import org.apache.ibatis.mapping.Configuration;
+import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.defaults.DefaultSqlSessionFactory;
-import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.transaction.TransactionFactory;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
-import org.apache.ibatis.BaseDataTest;
 
 import javax.sql.DataSource;
 

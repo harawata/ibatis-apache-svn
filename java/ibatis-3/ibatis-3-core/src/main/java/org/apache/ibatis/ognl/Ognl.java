@@ -550,22 +550,19 @@ public abstract class Ognl {
 
   public static boolean isSimpleNavigationChain(String expression, Map context) throws OgnlException {
     return isSimpleNavigationChain(parseExpression(expression), context);
-    }
+  }
 
-    public static boolean isSimpleNavigationChain( Object tree ) throws OgnlException
-    {
-        return isSimpleNavigationChain(tree, createDefaultContext(null));
-    }
+  public static boolean isSimpleNavigationChain(Object tree) throws OgnlException {
+    return isSimpleNavigationChain(tree, createDefaultContext(null));
+  }
 
-    public static boolean isSimpleNavigationChain( String expression ) throws OgnlException
-    {
-        return isSimpleNavigationChain(parseExpression(expression), createDefaultContext(null));
-    }
+  public static boolean isSimpleNavigationChain(String expression) throws OgnlException {
+    return isSimpleNavigationChain(parseExpression(expression), createDefaultContext(null));
+  }
 
-      /**
-       * You can't make one of these.
-       */
-    private Ognl()
-    {
-    }
+  /**
+   * You can't make one of these.
+   */
+  private Ognl() {
+  }
 }

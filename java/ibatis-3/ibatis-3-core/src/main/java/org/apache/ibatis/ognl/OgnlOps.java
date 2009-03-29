@@ -695,8 +695,10 @@ public abstract class OgnlOps implements NumericTypes {
     int type = getNumericType(value);
     switch (type) {
       case BIGDEC:
-            case BIGINT:    return bigIntValue(value).not();
-            default:        return newInteger( type, ~longValue(value) );
-          }
+      case BIGINT:
+        return bigIntValue(value).not();
+      default:
+        return newInteger(type, ~longValue(value));
     }
+  }
 }

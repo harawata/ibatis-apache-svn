@@ -1,22 +1,22 @@
 package org.apache.ibatis.exceptions;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
 import org.apache.ibatis.binding.BindingException;
-import org.apache.ibatis.executor.BatchExecutorException;
-import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.cache.CacheException;
 import org.apache.ibatis.datasource.DataSourceException;
+import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.logging.LogException;
+import org.apache.ibatis.mapping.SqlMapperException;
 import org.apache.ibatis.migration.MigrationException;
-import org.apache.ibatis.xml.NodeletException;
 import org.apache.ibatis.parser.ParserException;
-import org.apache.ibatis.session.SessionException;
 import org.apache.ibatis.plugin.PluginException;
 import org.apache.ibatis.reflection.ReflectionException;
-import org.apache.ibatis.mapping.SqlMapperException;
+import org.apache.ibatis.session.SessionException;
 import org.apache.ibatis.transaction.TransactionException;
 import org.apache.ibatis.type.TypeException;
+import org.apache.ibatis.xml.NodeletException;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -58,13 +58,13 @@ public class GeneralExceptionsTest {
   }
 
   private void testExceptionConstructors(Class exceptionType) throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
-    Exception e = (Exception)exceptionType.newInstance();
+    Exception e = (Exception) exceptionType.newInstance();
     testThrowException(e);
-    e = (Exception)exceptionType.getConstructor(String.class).newInstance(EXPECTED_MESSAGE);
+    e = (Exception) exceptionType.getConstructor(String.class).newInstance(EXPECTED_MESSAGE);
     testThrowException(e);
-    e = (Exception)exceptionType.getConstructor(String.class, Throwable.class).newInstance(EXPECTED_MESSAGE, EXPECTED_CAUSE);
+    e = (Exception) exceptionType.getConstructor(String.class, Throwable.class).newInstance(EXPECTED_MESSAGE, EXPECTED_CAUSE);
     testThrowException(e);
-    e = (Exception)exceptionType.getConstructor(Throwable.class).newInstance(EXPECTED_CAUSE);
+    e = (Exception) exceptionType.getConstructor(Throwable.class).newInstance(EXPECTED_CAUSE);
     testThrowException(e);
   }
 

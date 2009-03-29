@@ -3,10 +3,10 @@ package com.ibatis.sqlmap.engine.builder;
 import com.ibatis.sqlmap.engine.mapping.sql.SqlText;
 import com.ibatis.sqlmap.engine.mapping.sql.dynamic.DynamicSql;
 import com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements.*;
+import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.Configuration;
 import org.apache.ibatis.mapping.ParameterMapping;
 import org.apache.ibatis.mapping.SqlSource;
-import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.xml.NodeletContext;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -27,7 +27,7 @@ public class DynamicSqlSource implements SqlSource {
   }
 
   public BoundSql getBoundSql(Object parameterObject) {
-    return new BoundSql(getSql(parameterObject),getParameterMappings(parameterObject));
+    return new BoundSql(getSql(parameterObject), getParameterMappings(parameterObject));
   }
 
   private List<ParameterMapping> getParameterMappings(Object parameterObject) {

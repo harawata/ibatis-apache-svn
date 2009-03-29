@@ -7,7 +7,7 @@
 <mapper>
 
   <select id="selectBlogsFromXML" resultType="domain.blog.Blog">
-      SELECT * FROM blog
+    SELECT * FROM blog
   </select>
 
 </mapper>

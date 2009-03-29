@@ -114,14 +114,14 @@ public class MapperAnnotationParser {
             flags.add(ResultFlag.ID);
           }
           configurator.resultMapping(
-            result.property(),
-            result.column(),
-            result.javaType() == void.class ? null : result.javaType(),
-            result.jdbcType() == JdbcType.UNDEFINED ? null : result.jdbcType(),
-            hasNestedSelect(result) ? nestedSelectId(result) : null,
-            hasCollectionOrAssociation(result) ? nestedResultMapId(resultMapId, result) : null,
-            result.typeHandler() == void.class ? null : result.typeHandler(),
-            flags);
+              result.property(),
+              result.column(),
+              result.javaType() == void.class ? null : result.javaType(),
+              result.jdbcType() == JdbcType.UNDEFINED ? null : result.jdbcType(),
+              hasNestedSelect(result) ? nestedSelectId(result) : null,
+              hasCollectionOrAssociation(result) ? nestedResultMapId(resultMapId, result) : null,
+              result.typeHandler() == void.class ? null : result.typeHandler(),
+              flags);
         }
         configurator.resultMapEnd();
       }

@@ -9,7 +9,8 @@
   <resultMap id="blogWithPosts" type="Blog">
     <id property="id" column="id"/>
     <result property="title" column="title"/>
-    <association property="author" column="author_id" select="domain.blog.mappers.AuthorMapper.selectAuthorWithInlineParams"/>
+    <association property="author" column="author_id"
+                 select="domain.blog.mappers.AuthorMapper.selectAuthorWithInlineParams"/>
     <collection property="posts" column="id" select="selectPostsForBlog"/>
   </resultMap>
 

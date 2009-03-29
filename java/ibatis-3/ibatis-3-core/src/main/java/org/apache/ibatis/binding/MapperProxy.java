@@ -1,10 +1,10 @@
 package org.apache.ibatis.binding;
 
+import org.apache.ibatis.session.SqlSession;
+
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-
-import org.apache.ibatis.session.SqlSession;
 
 public class MapperProxy implements InvocationHandler {
 
@@ -18,11 +18,11 @@ public class MapperProxy implements InvocationHandler {
     return new MapperMethod(method, sqlSession).execute(args);
   }
 
-  public static <T> T newMapperProxy (Class<T> mapperInterface, SqlSession sqlSession) {
+  public static <T> T newMapperProxy(Class<T> mapperInterface, SqlSession sqlSession) {
     ClassLoader classLoader = mapperInterface.getClassLoader();
     Class[] interfaces = new Class[]{mapperInterface};
     MapperProxy proxy = new MapperProxy(sqlSession);
-    return (T)Proxy.newProxyInstance(classLoader, interfaces, proxy);
+    return (T) Proxy.newProxyInstance(classLoader, interfaces, proxy);
   }
 
 }

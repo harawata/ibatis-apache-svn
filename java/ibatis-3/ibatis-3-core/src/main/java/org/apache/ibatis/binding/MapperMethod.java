@@ -1,8 +1,8 @@
 package org.apache.ibatis.binding;
 
-import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.mapping.Configuration;
 import org.apache.ibatis.executor.Executor;
+import org.apache.ibatis.mapping.Configuration;
+import org.apache.ibatis.session.SqlSession;
 
 import java.lang.reflect.Method;
 import java.sql.SQLException;
@@ -86,7 +86,7 @@ public class MapperMethod {
     } else if (methodName.startsWith("select") || methodName.startsWith("find")) {
       type = MapperMethodType.SELECT;
     } else {
-      throw new BindingException("Unkown execution method for: " + commandName);      
+      throw new BindingException("Unkown execution method for: " + commandName);
     }
   }
 
@@ -94,7 +94,7 @@ public class MapperMethod {
     try {
       config.getMappedStatement(commandName);
     } catch (Exception e) {
-      throw new BindingException("Invalid bound statement (not found): " + commandName,e);
+      throw new BindingException("Invalid bound statement (not found): " + commandName, e);
     }
   }
 

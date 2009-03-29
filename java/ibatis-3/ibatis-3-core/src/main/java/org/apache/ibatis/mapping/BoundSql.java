@@ -19,5 +19,5 @@ public class BoundSql {
   public List<ParameterMapping> getParameterMappings() {
     return parameterMappings;
   }
-  
+
 }

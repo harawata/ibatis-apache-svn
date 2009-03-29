@@ -3,7 +3,8 @@ package org.apache.ibatis.binding;
 import domain.blog.*;
 import static org.apache.ibatis.annotations.Annotations.*;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 @CacheDomain
 public interface BoundBlogMapper {
@@ -39,22 +40,22 @@ public interface BoundBlogMapper {
   @TypeDiscriminator(
       column = "draft",
       javaType = String.class,
-      cases={@Case(value = "1", type = DraftPost.class)}
-      )
+      cases = {@Case(value = "1", type = DraftPost.class)}
+  )
   List<Post> selectPosts();
 
   //======================================================
 
   @Select("SELECT * FROM post ORDER BY id")
   @Results({
-      @Result(id = true,property = "id",column = "id" )
+    @Result(id = true, property = "id", column = "id")
       })
   @TypeDiscriminator(
       column = "draft",
       javaType = int.class,
-      cases={@Case(value = "1", type = DraftPost.class,
-          results = {@Result(id=true,property = "id",column="id")})}
-      )
+      cases = {@Case(value = "1", type = DraftPost.class,
+          results = {@Result(id = true, property = "id", column = "id")})}
+  )
   List<Post> selectPostsWithResultMap();
 
   //======================================================
@@ -72,39 +73,39 @@ public interface BoundBlogMapper {
   //======================================================
 
   @Results({
-      @Result(id=true,property="id",column="blog_id"),
-      @Result(property="title",column="blog_title"),
-      @Result(property="author", column="author_id", one = @One(
-          results = @Results({
-            @Result(id = true, property="id",column="author_id"),
-            @Result(property="username",column="author_username"),
-            @Result(property="email",column="author_email")
-              }))),
-      @Result(property="posts", column="post_id", many = @Many(
-          javaType = Post.class,
-          results = @Results({
-            @Result(id = true, property="id",column="post_id"),
-            @Result(property="subject",column="post_subject"),
-            @Result(property="body",column="post_body"),
-            @Result(property="section",column="post_section"),
-            @Result(id = true, property="author.id",column="author_id"),
-            @Result(property="author.username",column="author_username"),
-            @Result(property="author.email",column="author_email"),
-            @Result(property="createdOn",column="post_created_on")
-            ,@Result(property="tags",column="tag_id",many = @Many(
-                javaType = Tag.class,
-                results = @Results({
-                  @Result(id = true, property="id",column="tag_id"),
-                  @Result(property="name",column="tag_name")
-                    })))
-            ,@Result(property="comments",column="comment_id",many = @Many(
-                javaType = Comment.class,
-                results = @Results({
-                  @Result(id = true, property="id",column="comment_id"),
-                  @Result(property="name",column="comment_name"),
-                  @Result(property="comment",column="comment_text")
-                    })))
-              })))
+    @Result(id = true, property = "id", column = "blog_id"),
+    @Result(property = "title", column = "blog_title"),
+    @Result(property = "author", column = "author_id", one = @One(
+        results = @Results({
+          @Result(id = true, property = "id", column = "author_id"),
+          @Result(property = "username", column = "author_username"),
+          @Result(property = "email", column = "author_email")
+            }))),
+    @Result(property = "posts", column = "post_id", many = @Many(
+        javaType = Post.class,
+        results = @Results({
+          @Result(id = true, property = "id", column = "post_id"),
+          @Result(property = "subject", column = "post_subject"),
+          @Result(property = "body", column = "post_body"),
+          @Result(property = "section", column = "post_section"),
+          @Result(id = true, property = "author.id", column = "author_id"),
+          @Result(property = "author.username", column = "author_username"),
+          @Result(property = "author.email", column = "author_email"),
+          @Result(property = "createdOn", column = "post_created_on")
+            , @Result(property = "tags", column = "tag_id", many = @Many(
+            javaType = Tag.class,
+            results = @Results({
+              @Result(id = true, property = "id", column = "tag_id"),
+              @Result(property = "name", column = "tag_name")
+                })))
+            , @Result(property = "comments", column = "comment_id", many = @Many(
+            javaType = Comment.class,
+            results = @Results({
+              @Result(id = true, property = "id", column = "comment_id"),
+              @Result(property = "name", column = "comment_name"),
+              @Result(property = "comment", column = "comment_text")
+                })))
+            })))
       })
   @Select("select" +
       "    B.id as blog_id," +
