@@ -8,6 +8,8 @@ import org.apache.ibatis.executor.result.ResultHandler;
 import org.apache.ibatis.executor.resultset.ResultSetHandler;
 import org.apache.ibatis.mapping.Configuration;
 import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.mapping.BoundSql;
+import org.apache.ibatis.mapping.ParameterMapping;
 import org.apache.ibatis.reflection.ObjectFactory;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 
@@ -15,6 +17,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 
 public abstract class BaseStatementHandler implements StatementHandler {
 
@@ -28,7 +31,10 @@ public abstract class BaseStatementHandler implements StatementHandler {
   protected final Object parameterObject;
   protected final int rowOffset;
   protected final int rowLimit;
+
+  protected final List<ParameterMapping> parameterMappings;
   protected final String sql;
+  protected final BoundSql boundSql;
 
   protected BaseStatementHandler(Executor executor, MappedStatement mappedStatement, Object parameterObject, int rowOffset, int rowLimit, ResultHandler resultHandler) {
     this.executor = executor;
@@ -40,10 +46,13 @@ public abstract class BaseStatementHandler implements StatementHandler {
     Configuration configuration = mappedStatement.getConfiguration();
     this.typeHandlerRegistry = configuration.getTypeHandlerRegistry();
     this.objectFactory = configuration.getObjectFactory();
-    this.parameterHandler = configuration.newParameterHandler(mappedStatement, parameterObject);
-    this.resultSetHandler = configuration.newResultSetHandler(executor, mappedStatement, rowOffset, rowLimit, parameterHandler, resultHandler);
 
-    this.sql = mappedStatement.getSql(parameterObject);
+    this.boundSql = mappedStatement.getBoundSql(parameterObject);
+    this.sql = boundSql.getSql();
+    this.parameterMappings = boundSql.getParameterMappings();
+
+    this.parameterHandler = configuration.newParameterHandler(mappedStatement, parameterObject, boundSql);
+    this.resultSetHandler = configuration.newResultSetHandler(executor, mappedStatement, rowOffset, rowLimit, parameterHandler, resultHandler, boundSql);
   }
 
   public String getSql() {

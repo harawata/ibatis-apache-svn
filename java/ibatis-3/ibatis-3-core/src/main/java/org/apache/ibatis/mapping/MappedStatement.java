@@ -154,18 +154,14 @@ public class MappedStatement {
     return useCache;
   }
 
-  public String getSql(Object parameterObject) {
-    BoundSql boundSql = sqlSource.getBoundSql(parameterObject);
-    return boundSql.getSql();
-  }
-
-  public List<ParameterMapping> getDynamicParameterMappings(Object parameterObject) {
+  public BoundSql getBoundSql(Object parameterObject) {
     BoundSql boundSql = sqlSource.getBoundSql(parameterObject);
     List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
     if (parameterMappings == null || parameterMappings.size() <= 0) {
-      parameterMappings = parameterMap.getParameterMappings();
+      boundSql = new BoundSql(boundSql.getSql(), parameterMap.getParameterMappings());
     }
-    return parameterMappings;
+    return boundSql;
   }
+
 
 }

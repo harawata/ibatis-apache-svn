@@ -5,6 +5,7 @@ import org.apache.ibatis.cache.impl.PerpetualCache;
 import org.apache.ibatis.executor.result.ResultHandler;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.ParameterMapping;
+import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.transaction.Transaction;
 import org.apache.ibatis.type.TypeHandlerRegistry;
@@ -88,17 +89,18 @@ public abstract class BaseExecutor implements Executor {
   }
 
   public CacheKey createCacheKey(MappedStatement ms, Object parameterObject, int offset, int limit) {
+    BoundSql boundSql = ms.getBoundSql(parameterObject);
     CacheKey cacheKey = new CacheKey();
     cacheKey.update(ms.getId());
     cacheKey.update(offset);
     cacheKey.update(limit);
-    if (ms.getDynamicParameterMappings(parameterObject).size() > 0 && parameterObject != null) {
+    List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
+    if (parameterMappings.size() > 0 && parameterObject != null) {
       TypeHandlerRegistry typeHandlerRegistry = ms.getConfiguration().getTypeHandlerRegistry();
       if (typeHandlerRegistry.hasTypeHandler(parameterObject.getClass())) {
         cacheKey.update(parameterObject);
       } else {
         MetaObject metaObject = MetaObject.forObject(parameterObject);
-        List<ParameterMapping> parameterMappings = ms.getDynamicParameterMappings(parameterObject);
         for (ParameterMapping parameterMapping : parameterMappings) {
           cacheKey.update(metaObject.getValue(parameterMapping.getProperty()));
         }

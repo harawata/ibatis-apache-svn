@@ -5,6 +5,7 @@ import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.ParameterMapping;
 import org.apache.ibatis.mapping.ParameterMode;
+import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
@@ -19,11 +20,14 @@ public class DefaultParameterHandler implements ParameterHandler {
 
   private final MappedStatement mappedStatement;
   private final Object parameterObject;
+  private BoundSql boundSql;
 
-  public DefaultParameterHandler(MappedStatement mappedStatement, Object parameterObject) {
+
+  public DefaultParameterHandler(MappedStatement mappedStatement, Object parameterObject, BoundSql boundSql) {
     this.mappedStatement = mappedStatement;
     this.typeHandlerRegistry = mappedStatement.getConfiguration().getTypeHandlerRegistry();
     this.parameterObject = parameterObject;
+    this.boundSql = boundSql;
   }
 
   public Object getParameterObject() {
@@ -33,7 +37,7 @@ public class DefaultParameterHandler implements ParameterHandler {
   public void setParameters(PreparedStatement ps)
       throws SQLException {
     ErrorContext.instance().activity("setting parameters").object(mappedStatement.getParameterMap().getId());
-    List<ParameterMapping> parameterMappings = mappedStatement.getDynamicParameterMappings(parameterObject);
+    List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
     if (parameterMappings != null) {
       MetaObject metaObject = parameterObject == null ? null : MetaObject.forObject(parameterObject);
       for (int i = 0; i < parameterMappings.size(); i++) {

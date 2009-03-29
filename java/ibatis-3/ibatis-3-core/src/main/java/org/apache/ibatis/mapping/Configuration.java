@@ -174,15 +174,14 @@ public class Configuration {
     this.objectFactory = objectFactory;
   }
 
-  public ParameterHandler newParameterHandler(MappedStatement mappedStatement, Object parameterObject) {
-    ParameterHandler parameterHandler = new DefaultParameterHandler(mappedStatement, parameterObject);
+  public ParameterHandler newParameterHandler(MappedStatement mappedStatement, Object parameterObject, BoundSql boundSql) {
+    ParameterHandler parameterHandler = new DefaultParameterHandler(mappedStatement, parameterObject, boundSql);
     parameterHandler = (ParameterHandler) interceptorChain.pluginAll(parameterHandler);
     return parameterHandler;
   }
 
-  public ResultSetHandler newResultSetHandler(Executor executor, MappedStatement mappedStatement, int rowOffset, int rowLimit, ParameterHandler parameterHandler, ResultHandler resultHandler) {
-    ResultSetHandler resultSetHandler = new DefaultResultSetHandler(this, executor, mappedStatement, parameterHandler, rowOffset, rowLimit, resultHandler);
-    resultSetHandler = (ResultSetHandler) interceptorChain.pluginAll(resultSetHandler);
+  public ResultSetHandler newResultSetHandler(Executor executor, MappedStatement mappedStatement, int rowOffset, int rowLimit, ParameterHandler parameterHandler, ResultHandler resultHandler, BoundSql boundSql) {
+    ResultSetHandler resultSetHandler = new DefaultResultSetHandler(this, executor, mappedStatement, parameterHandler, rowOffset, rowLimit, resultHandler, boundSql);
     return resultSetHandler;
   }
 

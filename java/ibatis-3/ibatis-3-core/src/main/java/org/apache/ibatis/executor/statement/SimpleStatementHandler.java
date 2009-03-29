@@ -19,9 +19,9 @@ public class SimpleStatementHandler extends BaseStatementHandler {
   public int update(Statement statement)
       throws SQLException {
     if (mappedStatement.getConfiguration().isGeneratedKeysEnabled()) {
-      statement.execute(mappedStatement.getSql(parameterObject), Statement.RETURN_GENERATED_KEYS);
+      statement.execute(sql, Statement.RETURN_GENERATED_KEYS);
     } else {
-      statement.execute(mappedStatement.getSql(parameterObject));
+      statement.execute(sql);
     }
     int result = statement.getUpdateCount();
     if (mappedStatement.getConfiguration().isGeneratedKeysEnabled()) {
@@ -32,12 +32,12 @@ public class SimpleStatementHandler extends BaseStatementHandler {
 
   public void batch(Statement statement)
       throws SQLException {
-    statement.addBatch(mappedStatement.getSql(parameterObject));
+    statement.addBatch(sql);
   }
 
   public List query(Statement statement, ResultHandler resultHandler)
       throws SQLException {
-    statement.execute(mappedStatement.getSql(parameterObject));
+    statement.execute(sql);
     return resultSetHandler.handleResultSets(statement);
   }
 

@@ -33,11 +33,13 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   private final Object parameterObject;
 
   private final Map nestedResultObjects;
+
+  private final ResultHandler resultHandler;
+  private final BoundSql boundSql;
+
   private CacheKey currentNestedKey;
 
-  private ResultHandler resultHandler;
-
-  public DefaultResultSetHandler(Configuration configuration, Executor executor, MappedStatement mappedStatement, ParameterHandler parameterHandler, int rowOffset, int rowLimit, ResultHandler resultHandler) {
+  public DefaultResultSetHandler(Configuration configuration, Executor executor, MappedStatement mappedStatement, ParameterHandler parameterHandler, int rowOffset, int rowLimit, ResultHandler resultHandler, BoundSql boundSql) {
     this.configuration = configuration;
     this.executor = executor;
     this.objectFactory = mappedStatement.getConfiguration().getObjectFactory();
@@ -48,6 +50,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     this.parameterObject = parameterHandler.getParameterObject();
     this.nestedResultObjects = new HashMap();
     this.resultHandler = resultHandler;
+    this.boundSql = boundSql;
   }
 
   public List handleResultSets(Statement statement) throws SQLException {
@@ -86,7 +89,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   public void handleOutputParameters(CallableStatement callableStatement) throws SQLException {
     ErrorContext.instance().activity("handling output parameters");
     MetaObject metaParam = MetaObject.forObject(parameterObject);
-    List<ParameterMapping> parameterMappings = mappedStatement.getDynamicParameterMappings(parameterObject);
+    List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
     for (int i = 0; i < parameterMappings.size(); i++) {
       ParameterMapping parameterMapping = parameterMappings.get(i);
       if (parameterMapping.getMode() == ParameterMode.OUT || parameterMapping.getMode() == ParameterMode.INOUT) {

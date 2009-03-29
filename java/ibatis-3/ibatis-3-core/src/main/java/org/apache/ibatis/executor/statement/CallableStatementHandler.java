@@ -54,7 +54,6 @@ public class CallableStatementHandler extends BaseStatementHandler {
   }
 
   private void registerOutputParameters(CallableStatement cs, MappedStatement ms) throws SQLException {
-    List<ParameterMapping> parameterMappings = ms.getDynamicParameterMappings(parameterObject);
     for (int i = 0, n = parameterMappings.size(); i < n; i++) {
       ParameterMapping parameterMapping = parameterMappings.get(i);
       if (parameterMapping.getMode() == ParameterMode.OUT || parameterMapping.getMode() == ParameterMode.INOUT) {
