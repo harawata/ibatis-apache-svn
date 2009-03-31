@@ -13,6 +13,7 @@ Dynamic SQL
 
   <choose>
       <when prepend test>
+      <when prepend test>
       <otherwise prepend>
 
   <if prepend test>
