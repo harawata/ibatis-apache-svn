@@ -1,7 +1,7 @@
 package org.apache.ibatis.binding;
 
 import org.apache.ibatis.mapping.Configuration;
-import org.apache.ibatis.parser.MapperAnnotationParser;
+import org.apache.ibatis.parser.annotation.MapperAnnotationParser;
 import org.apache.ibatis.session.SqlSession;
 
 import java.util.HashSet;

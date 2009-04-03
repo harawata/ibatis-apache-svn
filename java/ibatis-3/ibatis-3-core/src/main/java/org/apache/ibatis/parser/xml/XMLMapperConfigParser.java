@@ -1,4 +1,4 @@
-package org.apache.ibatis.parser;
+package org.apache.ibatis.parser.xml;
 
 import org.apache.ibatis.datasource.DataSourceFactory;
 import org.apache.ibatis.executor.ErrorContext;
@@ -14,6 +14,8 @@ import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.xml.Nodelet;
 import org.apache.ibatis.xml.NodeletContext;
 import org.apache.ibatis.xml.NodeletParser;
+import org.apache.ibatis.parser.BaseParser;
+import org.apache.ibatis.parser.ParserException;
 
 import java.io.Reader;
 import java.util.Map;

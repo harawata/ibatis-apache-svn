@@ -1,10 +1,13 @@
-package org.apache.ibatis.parser;
+package org.apache.ibatis.parser.xml;
 
 import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.xml.Nodelet;
 import org.apache.ibatis.xml.NodeletContext;
 import org.apache.ibatis.xml.NodeletParser;
+import org.apache.ibatis.parser.BaseParser;
+import org.apache.ibatis.parser.MapperConfigurator;
+import org.apache.ibatis.parser.SqlSourceParser;
 
 import java.io.Reader;
 import java.util.ArrayList;

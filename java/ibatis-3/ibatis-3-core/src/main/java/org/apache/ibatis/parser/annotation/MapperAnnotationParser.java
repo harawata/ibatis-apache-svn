@@ -1,4 +1,4 @@
-package org.apache.ibatis.parser;
+package org.apache.ibatis.parser.annotation;
 
 import static org.apache.ibatis.annotations.Annotations.*;
 import org.apache.ibatis.binding.BindingException;
@@ -6,6 +6,9 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.reflection.MetaClass;
 import org.apache.ibatis.type.JdbcType;
+import org.apache.ibatis.parser.xml.XMLMapperParser;
+import org.apache.ibatis.parser.MapperConfigurator;
+import org.apache.ibatis.parser.SqlSourceParser;
 
 import java.io.IOException;
 import java.io.Reader;

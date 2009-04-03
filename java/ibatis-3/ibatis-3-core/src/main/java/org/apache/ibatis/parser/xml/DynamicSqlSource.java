@@ -1,8 +1,9 @@
-package org.apache.ibatis.parser;
+package org.apache.ibatis.parser.xml;
 
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.mapping.Configuration;
+import org.apache.ibatis.parser.SqlSourceParser;
 
 import java.util.List;
 
