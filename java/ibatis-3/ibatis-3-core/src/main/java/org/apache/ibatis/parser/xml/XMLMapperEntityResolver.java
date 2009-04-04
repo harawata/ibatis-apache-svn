@@ -15,8 +15,8 @@ import java.util.Map;
  */
 public class XMLMapperEntityResolver implements EntityResolver {
 
-  private static final String MAPPER_CONFIG_DTD_RESOURCE = "org/apache/ibatis/parser/xml/ibatis-config-3.dtd";
-  private static final String MAPPER_DTD_RESOURCE = "org/apache/ibatis/parser/xml/ibatis-mapper-3.dtd";
+  private static final String MAPPER_CONFIG_DTD_RESOURCE = "org/apache/ibatis/parser/xml/ibatis-3-config.dtd";
+  private static final String MAPPER_DTD_RESOURCE = "org/apache/ibatis/parser/xml/ibatis-3-mapper.dtd";
 
   private static final Map<String, String> doctypeMap = new HashMap<String, String>();
 
