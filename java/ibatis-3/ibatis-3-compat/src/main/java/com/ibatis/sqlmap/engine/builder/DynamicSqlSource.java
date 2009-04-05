@@ -27,7 +27,7 @@ public class DynamicSqlSource implements SqlSource {
   }
 
   public BoundSql getBoundSql(Object parameterObject) {
-    return new BoundSql(getSql(parameterObject), getParameterMappings(parameterObject));
+    return new BoundSql(getSql(parameterObject), getParameterMappings(parameterObject), parameterObject);
   }
 
   private List<ParameterMapping> getParameterMappings(Object parameterObject) {

@@ -31,7 +31,7 @@ public class SimpleSqlSource implements SqlSource {
   }
 
   public BoundSql getBoundSql(Object parameterObject) {
-    return new BoundSql(getSql(parameterObject), getParameterMappings(parameterObject));
+    return new BoundSql(getSql(parameterObject), parameterMappings, parameterObject);
   }
 
   private String getSql(Object parameterObject) {
@@ -39,10 +39,6 @@ public class SimpleSqlSource implements SqlSource {
       return new SimpleDynamicSql(sql, parameterMappings, configuration.getTypeHandlerRegistry()).getSql(parameterObject);
     }
     return new StaticSql(sql).getSql(parameterObject);
-  }
-
-  private List<ParameterMapping> getParameterMappings(Object parameterObject) {
-    return parameterMappings;
   }
 
   private void parseNodes(NodeletContext node) {

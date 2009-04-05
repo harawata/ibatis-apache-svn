@@ -8,19 +8,20 @@ import java.util.List;
 
 public class StaticSqlSource implements SqlSource {
 
-
-  private BoundSql boundSql;
+  private String sql;
+  private List<ParameterMapping> parameterMappings;
 
   public StaticSqlSource(String sql) {
-    this.boundSql = new BoundSql(sql, null);
+    this(sql, null);
   }
 
   public StaticSqlSource(String sql, List<ParameterMapping> parameterMappings) {
-    this.boundSql = new BoundSql(sql, parameterMappings);
+    this.sql = sql;
+    this.parameterMappings = parameterMappings;
   }
 
   public BoundSql getBoundSql(Object parameterObject) {
-    return boundSql;
+    return new BoundSql(sql, parameterMappings, parameterObject);
   }
 
 }

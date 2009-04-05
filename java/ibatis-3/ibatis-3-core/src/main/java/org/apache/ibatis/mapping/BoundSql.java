@@ -6,10 +6,12 @@ public class BoundSql {
 
   private String sql;
   private List<ParameterMapping> parameterMappings;
+  private Object parameterObject;
 
-  public BoundSql(String sql, List<ParameterMapping> parameterMappings) {
+  public BoundSql(String sql, List<ParameterMapping> parameterMappings, Object parameterObject) {
     this.sql = sql;
     this.parameterMappings = parameterMappings;
+    this.parameterObject = parameterObject;
   }
 
   public String getSql() {
@@ -18,6 +20,10 @@ public class BoundSql {
 
   public List<ParameterMapping> getParameterMappings() {
     return parameterMappings;
+  }
+
+  public Object getParameterObject() {
+    return parameterObject;
   }
 
 }
