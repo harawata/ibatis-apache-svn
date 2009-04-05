@@ -2,8 +2,7 @@ package org.apache.ibatis.executor;
 
 import org.apache.ibatis.executor.result.ResultHandler;
 import org.apache.ibatis.executor.statement.StatementHandler;
-import org.apache.ibatis.mapping.Configuration;
-import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.transaction.Transaction;
 
 import java.sql.Connection;
@@ -48,7 +47,8 @@ public class ReuseExecutor extends BaseExecutor {
   private Statement prepareStatement(StatementHandler handler)
       throws SQLException {
     Statement stmt;
-    String sql = handler.getSql();
+    BoundSql boundSql = handler.getBoundSql();
+    String sql = boundSql.getSql();
     if (hasStatementFor(sql)) {
       stmt = getStatement(sql);
     } else {

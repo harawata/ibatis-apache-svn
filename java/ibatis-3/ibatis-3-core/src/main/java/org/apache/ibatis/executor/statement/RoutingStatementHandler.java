@@ -4,7 +4,7 @@ import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.executor.result.ResultHandler;
-import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.mapping.*;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -53,8 +53,8 @@ public class RoutingStatementHandler implements StatementHandler {
     return delegate.query(statement, resultHandler);
   }
 
-  public String getSql() {
-    return delegate.getSql();
+  public BoundSql getBoundSql() {
+    return delegate.getBoundSql();
   }
 
   public ParameterHandler getParameterHandler() {

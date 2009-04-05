@@ -2,7 +2,7 @@ package org.apache.ibatis.executor.statement;
 
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.result.ResultHandler;
-import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.mapping.*;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -18,6 +18,8 @@ public class SimpleStatementHandler extends BaseStatementHandler {
 
   public int update(Statement statement)
       throws SQLException {
+    String sql = boundSql.getSql();
+    Object parameterObject = boundSql.getParameterObject();
     if (mappedStatement.getConfiguration().isGeneratedKeysEnabled()) {
       statement.execute(sql, Statement.RETURN_GENERATED_KEYS);
     } else {
@@ -32,11 +34,13 @@ public class SimpleStatementHandler extends BaseStatementHandler {
 
   public void batch(Statement statement)
       throws SQLException {
+    String sql = boundSql.getSql();
     statement.addBatch(sql);
   }
 
   public List query(Statement statement, ResultHandler resultHandler)
       throws SQLException {
+    String sql = boundSql.getSql();
     statement.execute(sql);
     return resultSetHandler.handleResultSets(statement);
   }

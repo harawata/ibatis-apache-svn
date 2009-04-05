@@ -17,7 +17,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.List;
 
 public abstract class BaseStatementHandler implements StatementHandler {
 
@@ -28,18 +27,14 @@ public abstract class BaseStatementHandler implements StatementHandler {
 
   protected final Executor executor;
   protected final MappedStatement mappedStatement;
-  protected final Object parameterObject;
   protected final int rowOffset;
   protected final int rowLimit;
 
-  protected final List<ParameterMapping> parameterMappings;
-  protected final String sql;
   protected final BoundSql boundSql;
 
   protected BaseStatementHandler(Executor executor, MappedStatement mappedStatement, Object parameterObject, int rowOffset, int rowLimit, ResultHandler resultHandler) {
     this.executor = executor;
     this.mappedStatement = mappedStatement;
-    this.parameterObject = parameterObject;
     this.rowOffset = rowOffset;
     this.rowLimit = rowLimit;
 
@@ -48,15 +43,13 @@ public abstract class BaseStatementHandler implements StatementHandler {
     this.objectFactory = configuration.getObjectFactory();
 
     this.boundSql = mappedStatement.getBoundSql(parameterObject);
-    this.sql = boundSql.getSql();
-    this.parameterMappings = boundSql.getParameterMappings();
 
     this.parameterHandler = configuration.newParameterHandler(mappedStatement, parameterObject, boundSql);
     this.resultSetHandler = configuration.newResultSetHandler(executor, mappedStatement, rowOffset, rowLimit, parameterHandler, resultHandler, boundSql);
   }
 
-  public String getSql() {
-    return sql;
+  public BoundSql getBoundSql() {
+    return boundSql;
   }
 
   public ParameterHandler getParameterHandler() {
@@ -65,7 +58,7 @@ public abstract class BaseStatementHandler implements StatementHandler {
 
   public Statement prepare(Connection connection)
       throws SQLException {
-    ErrorContext.instance().sql(sql);
+    ErrorContext.instance().sql(boundSql.getSql());
     Statement statement = null;
     try {
       statement = instantiateStatement(connection);

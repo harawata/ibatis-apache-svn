@@ -2,8 +2,7 @@ package org.apache.ibatis.executor;
 
 import org.apache.ibatis.executor.result.ResultHandler;
 import org.apache.ibatis.executor.statement.StatementHandler;
-import org.apache.ibatis.mapping.Configuration;
-import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.transaction.Transaction;
 
 import java.sql.BatchUpdateException;
@@ -29,7 +28,8 @@ public class BatchExecutor extends BaseExecutor {
       throws SQLException {
     Configuration configuration = ms.getConfiguration();
     StatementHandler handler = configuration.newStatementHandler(this, ms, parameterObject, Executor.NO_ROW_OFFSET, Executor.NO_ROW_LIMIT, null);
-    String sql = handler.getSql();
+    BoundSql boundSql = handler.getBoundSql();
+    String sql = boundSql.getSql();
     Statement stmt;
     if (currentSql != null && sql.hashCode() == currentSql.hashCode() && sql.length() == currentSql.length()) {
       int last = statementList.size() - 1;
