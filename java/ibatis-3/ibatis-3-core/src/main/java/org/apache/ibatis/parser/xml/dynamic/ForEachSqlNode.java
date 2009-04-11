@@ -6,6 +6,7 @@ public class ForEachSqlNode implements SqlNode {
   private MixedSqlNode contents;
 
   public ForEachSqlNode(String collectionExpression, MixedSqlNode contents) {
+    this.evaluator = new ExpressionEvaluator();
     this.collectionExpression = collectionExpression;
     this.contents = contents;
   }
