@@ -1,7 +1,6 @@
 package org.apache.ibatis.reflection;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
 
 class MethodInvoker implements Invoker {
 

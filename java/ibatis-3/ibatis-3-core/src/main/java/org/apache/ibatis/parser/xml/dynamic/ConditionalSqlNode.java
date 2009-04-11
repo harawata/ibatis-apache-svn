@@ -12,7 +12,7 @@ public class ConditionalSqlNode implements SqlNode {
   }
 
   public boolean apply(DynamicContext builder) {
-    for(SqlNode sqlNode : ifSqlNodes) {
+    for (SqlNode sqlNode : ifSqlNodes) {
       if (sqlNode.apply(builder)) {
         return true;
       }

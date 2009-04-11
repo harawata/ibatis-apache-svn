@@ -2,8 +2,7 @@ package org.apache.ibatis.transaction.managed;
 
 import org.apache.ibatis.transaction.Transaction;
 
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class ManagedTransaction implements Transaction {
 

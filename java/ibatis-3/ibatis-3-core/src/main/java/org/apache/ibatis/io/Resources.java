@@ -1,8 +1,7 @@
 package org.apache.ibatis.io;
 
 import java.io.*;
-import java.net.URL;
-import java.net.URLConnection;
+import java.net.*;
 import java.nio.charset.Charset;
 import java.util.Properties;
 

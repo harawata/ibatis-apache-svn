@@ -1,14 +1,10 @@
 package org.apache.ibatis.executor.loader;
 
-import org.apache.ibatis.executor.Executor;
-import org.apache.ibatis.executor.ExecutorException;
+import org.apache.ibatis.executor.*;
 import org.apache.ibatis.mapping.MappedStatement;
 
 import java.sql.SQLException;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class ResultLoader {
 

@@ -1,14 +1,10 @@
 package org.apache.ibatis.parser.xml;
 
 import org.apache.ibatis.io.Resources;
-import org.xml.sax.EntityResolver;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
+import org.xml.sax.*;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.*;
+import java.util.*;
 
 /**
  * Offline entity resolver for the iBATIS DTDs

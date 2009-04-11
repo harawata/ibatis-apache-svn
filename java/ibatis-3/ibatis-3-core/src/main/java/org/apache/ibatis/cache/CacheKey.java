@@ -1,7 +1,6 @@
 package org.apache.ibatis.cache;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class CacheKey {
 

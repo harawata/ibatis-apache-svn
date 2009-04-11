@@ -1,7 +1,6 @@
 package org.apache.ibatis.metadata;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Database {
 

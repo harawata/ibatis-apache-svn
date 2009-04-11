@@ -1,7 +1,6 @@
 package org.apache.ibatis.reflection;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class MetaObject {
 

@@ -1,7 +1,6 @@
 package org.apache.ibatis.plugin;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class InterceptorChain {
 

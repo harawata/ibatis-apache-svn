@@ -1,14 +1,10 @@
 package org.apache.ibatis.parser;
 
-import org.apache.ibatis.mapping.Configuration;
-import org.apache.ibatis.mapping.SqlSource;
-import org.apache.ibatis.mapping.ParameterMapping;
-import org.apache.ibatis.xml.GenericTokenParser;
+import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.type.TypeHandler;
+import org.apache.ibatis.xml.GenericTokenParser;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class SqlSourceParser extends BaseParser {
 
@@ -70,7 +66,6 @@ public class SqlSourceParser extends BaseParser {
       return builder.build();
     }
   }
-
 
 
 }

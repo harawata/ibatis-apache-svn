@@ -1,7 +1,6 @@
 package org.apache.ibatis.mapping;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class ParameterMap {
 

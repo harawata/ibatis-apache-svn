@@ -2,16 +2,13 @@ package org.apache.ibatis.migration.commands;
 
 import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
-import org.apache.ibatis.jdbc.SqlRunner;
-import org.apache.ibatis.migration.Change;
-import org.apache.ibatis.migration.MigrationException;
+import org.apache.ibatis.jdbc.*;
+import org.apache.ibatis.migration.*;
 import org.apache.ibatis.xml.PropertyParser;
 
 import java.io.*;
 import java.math.BigDecimal;
-import java.net.URL;
-import java.net.URLClassLoader;
+import java.net.*;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.*;

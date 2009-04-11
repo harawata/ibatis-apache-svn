@@ -1,7 +1,6 @@
 package org.apache.ibatis.session;
 
-import org.apache.ibatis.mapping.Configuration;
-import org.apache.ibatis.mapping.ExecutorType;
+import org.apache.ibatis.mapping.*;
 
 import java.sql.Connection;
 

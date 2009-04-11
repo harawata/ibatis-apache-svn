@@ -5,9 +5,7 @@ import domain.misc.generics.GenericConcrete;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class MetaClassTest {
 

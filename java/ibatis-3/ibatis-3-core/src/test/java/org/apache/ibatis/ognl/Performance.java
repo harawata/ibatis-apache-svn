@@ -33,8 +33,7 @@ package org.apache.ibatis.ognl;
 import org.apache.ibatis.ognl.objects.Bean1;
 
 import java.lang.reflect.Method;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
+import java.text.*;
 
 public class Performance extends Object {
   private static int MAX_ITERATIONS = -1;

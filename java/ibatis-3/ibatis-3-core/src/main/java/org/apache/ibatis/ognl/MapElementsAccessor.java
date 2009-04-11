@@ -30,8 +30,7 @@
 //--------------------------------------------------------------------------
 package org.apache.ibatis.ognl;
 
-import java.util.Enumeration;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Implementation of ElementsAccessor that returns an iterator over the map's values.

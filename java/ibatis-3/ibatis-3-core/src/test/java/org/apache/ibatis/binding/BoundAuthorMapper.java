@@ -1,7 +1,6 @@
 package org.apache.ibatis.binding;
 
-import domain.blog.Author;
-import domain.blog.Section;
+import domain.blog.*;
 import static org.apache.ibatis.annotations.Annotations.*;
 
 public interface BoundAuthorMapper {

@@ -1,20 +1,13 @@
 package org.apache.ibatis.executor.resultset;
 
 import org.apache.ibatis.cache.CacheKey;
-import org.apache.ibatis.executor.ErrorContext;
-import org.apache.ibatis.executor.Executor;
-import org.apache.ibatis.executor.ExecutorException;
-import org.apache.ibatis.executor.loader.ResultLoader;
-import org.apache.ibatis.executor.loader.ResultLoaderRegistry;
-import org.apache.ibatis.executor.loader.ResultObjectProxy;
+import org.apache.ibatis.executor.*;
+import org.apache.ibatis.executor.loader.*;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
-import org.apache.ibatis.executor.result.DefaultResultHandler;
-import org.apache.ibatis.executor.result.ResultHandler;
+import org.apache.ibatis.executor.result.*;
 import org.apache.ibatis.mapping.*;
-import org.apache.ibatis.reflection.MetaObject;
-import org.apache.ibatis.reflection.ObjectFactory;
-import org.apache.ibatis.type.TypeHandler;
-import org.apache.ibatis.type.TypeHandlerRegistry;
+import org.apache.ibatis.reflection.*;
+import org.apache.ibatis.type.*;
 
 import java.sql.*;
 import java.util.*;

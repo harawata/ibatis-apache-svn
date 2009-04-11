@@ -1,7 +1,6 @@
 package org.apache.ibatis.mapping;
 
-import java.util.Collections;
-import java.util.Map;
+import java.util.*;
 
 public class Discriminator {
 

@@ -9,11 +9,8 @@ import org.junit.Test;
 
 import javax.sql.DataSource;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.sql.*;
+import java.util.*;
 
 public class ScriptRunnerTest extends BaseDataTest {
 

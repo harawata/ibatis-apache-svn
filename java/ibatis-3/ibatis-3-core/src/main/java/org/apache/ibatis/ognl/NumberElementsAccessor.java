@@ -30,8 +30,7 @@
 //--------------------------------------------------------------------------
 package org.apache.ibatis.ognl;
 
-import java.util.Enumeration;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 /**
  * Implementation of ElementsAccessor that returns an iterator over integers from 0 up to

@@ -30,8 +30,7 @@
 //--------------------------------------------------------------------------
 package org.apache.ibatis.ognl;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Implementation of PropertyAccessor that uses reflection on the target object's class to

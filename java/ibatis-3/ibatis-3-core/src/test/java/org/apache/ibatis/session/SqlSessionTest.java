@@ -1,18 +1,15 @@
 package org.apache.ibatis.session;
 
 import domain.blog.*;
-import domain.blog.mappers.AuthorMapper;
-import domain.blog.mappers.BlogMapper;
+import domain.blog.mappers.*;
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.Configuration;
 import static org.junit.Assert.*;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 
 import java.io.Reader;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SqlSessionTest extends BaseDataTest {
   private static SqlSessionFactory sqlMapper;

@@ -4,8 +4,7 @@ import org.apache.ibatis.reflection.MetaObject;
 
 import java.io.Serializable;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class ResultLoaderRegistry implements Serializable {
 

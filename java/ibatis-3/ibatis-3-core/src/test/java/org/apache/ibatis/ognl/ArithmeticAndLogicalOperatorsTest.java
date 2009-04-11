@@ -32,8 +32,7 @@ package org.apache.ibatis.ognl;
 
 import junit.framework.TestSuite;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
+import java.math.*;
 
 public class ArithmeticAndLogicalOperatorsTest extends OgnlTestCase {
   private static Object[][] TESTS = {

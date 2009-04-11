@@ -1,7 +1,6 @@
 package org.apache.ibatis.transaction;
 
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.sql.*;
 
 public interface Transaction {
 

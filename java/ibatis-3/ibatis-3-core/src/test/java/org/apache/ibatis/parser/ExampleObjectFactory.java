@@ -2,8 +2,7 @@ package org.apache.ibatis.parser;
 
 import org.apache.ibatis.reflection.DefaultObjectFactory;
 
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 public class ExampleObjectFactory extends DefaultObjectFactory {
 

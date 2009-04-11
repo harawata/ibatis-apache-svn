@@ -1,9 +1,7 @@
 package org.apache.ibatis.executor.loader;
 
-import net.sf.cglib.proxy.Enhancer;
-import net.sf.cglib.proxy.InvocationHandler;
-import org.apache.ibatis.reflection.ExceptionUtil;
-import org.apache.ibatis.reflection.PropertyNamer;
+import net.sf.cglib.proxy.*;
+import org.apache.ibatis.reflection.*;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;

@@ -1,13 +1,8 @@
 package org.apache.ibatis.xml;
 
-import org.w3c.dom.CharacterData;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.w3c.dom.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 public class NodeletContext {
 

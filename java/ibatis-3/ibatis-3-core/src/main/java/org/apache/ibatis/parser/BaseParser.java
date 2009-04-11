@@ -1,11 +1,7 @@
 package org.apache.ibatis.parser;
 
-import org.apache.ibatis.mapping.Configuration;
-import org.apache.ibatis.mapping.ParameterMode;
-import org.apache.ibatis.mapping.ResultSetType;
-import org.apache.ibatis.type.JdbcType;
-import org.apache.ibatis.type.TypeAliasRegistry;
-import org.apache.ibatis.type.TypeHandlerRegistry;
+import org.apache.ibatis.mapping.*;
+import org.apache.ibatis.type.*;
 
 public class BaseParser {
   protected final Configuration configuration;

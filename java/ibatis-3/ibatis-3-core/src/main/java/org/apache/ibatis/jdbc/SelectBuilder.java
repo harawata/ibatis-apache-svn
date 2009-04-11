@@ -1,7 +1,6 @@
 package org.apache.ibatis.jdbc;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class SelectBuilder {
   private static final String AND = ") \nAND (";

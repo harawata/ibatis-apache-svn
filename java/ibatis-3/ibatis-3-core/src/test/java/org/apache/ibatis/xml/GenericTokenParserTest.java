@@ -3,8 +3,7 @@ package org.apache.ibatis.xml;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class GenericTokenParserTest {
 

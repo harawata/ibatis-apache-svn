@@ -30,8 +30,7 @@
 //--------------------------------------------------------------------------
 package org.apache.ibatis.ognl;
 
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Implementation of PropertyAccessor that uses numbers and dynamic subscripts as

@@ -2,12 +2,8 @@ package org.apache.ibatis.migration;
 
 import org.apache.ibatis.migration.commands.*;
 
-import java.io.File;
-import java.io.PrintStream;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.io.*;
+import java.util.*;
 
 public class CommandLine {
 

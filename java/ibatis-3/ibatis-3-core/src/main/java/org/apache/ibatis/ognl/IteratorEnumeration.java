@@ -30,8 +30,7 @@
 //--------------------------------------------------------------------------
 package org.apache.ibatis.ognl;
 
-import java.util.Enumeration;
-import java.util.Iterator;
+import java.util.*;
 
 /**
  * Maps an Iterator to an Enumeration

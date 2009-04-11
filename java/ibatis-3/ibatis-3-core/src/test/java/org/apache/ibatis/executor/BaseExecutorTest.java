@@ -1,12 +1,8 @@
 package org.apache.ibatis.executor;
 
-import domain.blog.Author;
-import domain.blog.Blog;
-import domain.blog.Post;
-import domain.blog.Section;
+import domain.blog.*;
 import org.apache.ibatis.BaseDataTest;
-import org.apache.ibatis.mapping.Configuration;
-import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.transaction.Transaction;
 import org.apache.ibatis.transaction.jdbc.JdbcTransaction;
 import static org.junit.Assert.*;
@@ -14,9 +10,7 @@ import org.junit.Test;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public abstract class BaseExecutorTest extends BaseDataTest {
   private final Configuration config;

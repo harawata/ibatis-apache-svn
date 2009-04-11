@@ -31,8 +31,7 @@
 package org.apache.ibatis.ognl;
 
 import junit.framework.TestSuite;
-import org.apache.ibatis.ognl.objects.Root;
-import org.apache.ibatis.ognl.objects.Simple;
+import org.apache.ibatis.ognl.objects.*;
 
 public class ArrayCreationTest extends OgnlTestCase {
   private static Root ROOT = new Root();

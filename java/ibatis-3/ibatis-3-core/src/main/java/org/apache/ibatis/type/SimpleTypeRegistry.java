@@ -1,7 +1,6 @@
 package org.apache.ibatis.type;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
+import java.math.*;
 import java.util.*;
 
 public class SimpleTypeRegistry {

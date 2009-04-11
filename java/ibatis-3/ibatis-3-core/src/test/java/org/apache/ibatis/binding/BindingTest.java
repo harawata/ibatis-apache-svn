@@ -1,18 +1,11 @@
 package org.apache.ibatis.binding;
 
-import domain.blog.Author;
-import domain.blog.Blog;
-import domain.blog.DraftPost;
-import domain.blog.Post;
-import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
+import domain.blog.*;
+import org.apache.ibatis.session.*;
 import static org.junit.Assert.assertEquals;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class BindingTest {
   private static SqlSessionFactory sqlSessionFactory;

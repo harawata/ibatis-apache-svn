@@ -1,10 +1,8 @@
 package org.apache.ibatis.transaction.jdbc;
 
-import org.apache.ibatis.transaction.Transaction;
-import org.apache.ibatis.transaction.TransactionException;
+import org.apache.ibatis.transaction.*;
 
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class JdbcTransaction implements Transaction {
 

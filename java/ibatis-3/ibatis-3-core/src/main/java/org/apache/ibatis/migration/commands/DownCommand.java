@@ -1,18 +1,11 @@
 package org.apache.ibatis.migration.commands;
 
-import org.apache.ibatis.jdbc.ScriptRunner;
-import org.apache.ibatis.jdbc.SqlRunner;
-import org.apache.ibatis.migration.Change;
-import org.apache.ibatis.migration.MigrationException;
-import org.apache.ibatis.migration.MigrationReader;
+import org.apache.ibatis.jdbc.*;
+import org.apache.ibatis.migration.*;
 
-import java.io.File;
-import java.io.FileReader;
+import java.io.*;
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 public class DownCommand extends BaseCommand {
 

@@ -1,7 +1,6 @@
 package org.apache.ibatis.ognl;
 
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import junit.framework.*;
 
 public class ObjectIndexedTest extends TestCase {
   protected OgnlContext context;

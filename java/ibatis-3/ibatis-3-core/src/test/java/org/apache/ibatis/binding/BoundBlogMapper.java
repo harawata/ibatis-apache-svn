@@ -3,8 +3,7 @@ package org.apache.ibatis.binding;
 import domain.blog.*;
 import static org.apache.ibatis.annotations.Annotations.*;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @CacheDomain
 public interface BoundBlogMapper {

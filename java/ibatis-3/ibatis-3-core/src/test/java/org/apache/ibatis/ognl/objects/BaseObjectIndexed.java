@@ -30,8 +30,7 @@
 //--------------------------------------------------------------------------
 package org.apache.ibatis.ognl.objects;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class BaseObjectIndexed extends Object {
   private Map attributes = new HashMap();

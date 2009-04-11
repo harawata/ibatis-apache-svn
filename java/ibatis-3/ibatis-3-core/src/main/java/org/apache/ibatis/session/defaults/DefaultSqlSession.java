@@ -3,10 +3,8 @@ package org.apache.ibatis.session.defaults;
 import org.apache.ibatis.exceptions.ExceptionFactory;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.result.ResultHandler;
-import org.apache.ibatis.mapping.Configuration;
-import org.apache.ibatis.mapping.MappedStatement;
-import org.apache.ibatis.session.SessionException;
-import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.mapping.*;
+import org.apache.ibatis.session.*;
 
 import java.util.List;
 

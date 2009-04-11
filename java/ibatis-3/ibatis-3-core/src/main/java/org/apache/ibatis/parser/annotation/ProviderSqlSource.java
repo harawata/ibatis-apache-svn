@@ -1,8 +1,6 @@
 package org.apache.ibatis.parser.annotation;
 
-import org.apache.ibatis.mapping.BoundSql;
-import org.apache.ibatis.mapping.Configuration;
-import org.apache.ibatis.mapping.SqlSource;
+import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.parser.SqlSourceParser;
 
 import java.lang.reflect.Method;
@@ -19,7 +17,7 @@ public class ProviderSqlSource implements SqlSource {
       this.sqlSourceParser = new SqlSourceParser(config);
       this.providerType = (Class) provider.getClass().getMethod("type").invoke(provider);
       String providerMethod = (String) provider.getClass().getMethod("method").invoke(provider);
-      
+
       for (Method m : providerType.getMethods()) {
         if (providerMethod.equals(m.getName())) {
           if (m.getParameterTypes().length < 2

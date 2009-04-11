@@ -1,7 +1,6 @@
 package org.apache.ibatis.cache;
 
-import org.apache.ibatis.cache.decorators.LoggingCache;
-import org.apache.ibatis.cache.decorators.ScheduledCache;
+import org.apache.ibatis.cache.decorators.*;
 import org.apache.ibatis.cache.impl.PerpetualCache;
 import static org.junit.Assert.*;
 import org.junit.Test;

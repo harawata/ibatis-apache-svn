@@ -30,8 +30,7 @@
 //--------------------------------------------------------------------------
 package org.apache.ibatis.ognl;
 
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Implementation of PropertyAccessor that provides "property" reference to

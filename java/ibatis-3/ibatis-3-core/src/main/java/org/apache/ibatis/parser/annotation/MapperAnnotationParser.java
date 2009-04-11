@@ -4,21 +4,15 @@ import static org.apache.ibatis.annotations.Annotations.*;
 import org.apache.ibatis.binding.BindingException;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.*;
+import org.apache.ibatis.parser.*;
+import org.apache.ibatis.parser.xml.XMLMapperParser;
 import org.apache.ibatis.reflection.MetaClass;
 import org.apache.ibatis.type.JdbcType;
-import org.apache.ibatis.parser.xml.XMLMapperParser;
-import org.apache.ibatis.parser.MapperConfigurator;
-import org.apache.ibatis.parser.SqlSourceParser;
 
-import java.io.IOException;
-import java.io.Reader;
+import java.io.*;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.lang.reflect.*;
+import java.util.*;
 
 public class MapperAnnotationParser {
 

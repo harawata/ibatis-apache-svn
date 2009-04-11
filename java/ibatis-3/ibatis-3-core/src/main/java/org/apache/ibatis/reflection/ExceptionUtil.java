@@ -1,7 +1,6 @@
 package org.apache.ibatis.reflection;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.UndeclaredThrowableException;
+import java.lang.reflect.*;
 
 public class ExceptionUtil {
 

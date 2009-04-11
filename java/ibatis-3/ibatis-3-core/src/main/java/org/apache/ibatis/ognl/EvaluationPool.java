@@ -30,8 +30,7 @@
 //--------------------------------------------------------------------------
 package org.apache.ibatis.ognl;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public final class EvaluationPool extends Object {
   private List evaluations = new ArrayList();

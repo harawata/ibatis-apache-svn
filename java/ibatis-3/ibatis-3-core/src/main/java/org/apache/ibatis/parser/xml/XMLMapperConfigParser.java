@@ -3,23 +3,16 @@ package org.apache.ibatis.parser.xml;
 import org.apache.ibatis.datasource.DataSourceFactory;
 import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.mapping.Configuration;
-import org.apache.ibatis.mapping.Environment;
-import org.apache.ibatis.mapping.ExecutorType;
+import org.apache.ibatis.mapping.*;
+import org.apache.ibatis.parser.*;
 import org.apache.ibatis.plugin.Interceptor;
-import org.apache.ibatis.reflection.MetaClass;
-import org.apache.ibatis.reflection.ObjectFactory;
+import org.apache.ibatis.reflection.*;
 import org.apache.ibatis.transaction.TransactionFactory;
 import org.apache.ibatis.type.TypeHandler;
-import org.apache.ibatis.xml.Nodelet;
-import org.apache.ibatis.xml.NodeletContext;
-import org.apache.ibatis.xml.NodeletParser;
-import org.apache.ibatis.parser.BaseParser;
-import org.apache.ibatis.parser.ParserException;
+import org.apache.ibatis.xml.*;
 
 import java.io.Reader;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 public class XMLMapperConfigParser extends BaseParser {
 

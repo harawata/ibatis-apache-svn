@@ -1,7 +1,6 @@
 package org.apache.ibatis.cache.decorators;
 
-import org.apache.ibatis.cache.Cache;
-import org.apache.ibatis.cache.CacheException;
+import org.apache.ibatis.cache.*;
 
 import java.io.*;
 import java.util.concurrent.locks.ReadWriteLock;

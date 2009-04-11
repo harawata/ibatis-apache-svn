@@ -1,9 +1,7 @@
 package org.apache.ibatis.executor;
 
-import domain.blog.Author;
-import domain.blog.Section;
-import org.apache.ibatis.executor.loader.ResultLoaderRegistry;
-import org.apache.ibatis.executor.loader.ResultObjectProxy;
+import domain.blog.*;
+import org.apache.ibatis.executor.loader.*;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 

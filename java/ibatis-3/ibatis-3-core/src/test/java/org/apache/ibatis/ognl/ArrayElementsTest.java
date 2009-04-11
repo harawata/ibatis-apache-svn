@@ -33,8 +33,7 @@ package org.apache.ibatis.ognl;
 import junit.framework.TestSuite;
 import org.apache.ibatis.ognl.objects.Root;
 
-import java.lang.reflect.Array;
-import java.lang.reflect.Member;
+import java.lang.reflect.*;
 import java.util.Map;
 
 public class ArrayElementsTest extends OgnlTestCase {
