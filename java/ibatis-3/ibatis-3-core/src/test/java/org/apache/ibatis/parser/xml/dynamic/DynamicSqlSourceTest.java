@@ -103,16 +103,16 @@ public class DynamicSqlSourceTest extends BaseDataTest {
   @Test
   public void shouldIterateOnceForEachItemInCollection() throws Exception {
     final HashMap<String,String[]> parameterObject = new HashMap() {{
-        put("array", new String[]{"1", "2", "3"});
+        put("array", new String[]{"one", "two", "three"});
       }};
-    final String expected = "SELECT * FROM BLOG WHERE ID in [ ? , ? , ? ]";
+    final String expected = "SELECT * FROM BLOG WHERE ID in ( one = ? AND two = ? AND three = ? )";
     DynamicSqlSource source = createDynamicSqlSource(
         new TextSqlNode("SELECT * FROM BLOG WHERE ID in"),
-        new ForEachSqlNode("array","[","]",",",mixedContents(new TextSqlNode("?"))));
+        new ForEachSqlNode("array","index","item","(",")","AND",mixedContents(new TextSqlNode("${item} = #{id[${index}]}"))));
     BoundSql boundSql = source.getBoundSql(parameterObject);
     assertEquals(expected, boundSql.getSql());
+    assertEquals(3, boundSql.getParameterMappings().size());
   }
-
 
   private DynamicSqlSource createDynamicSqlSource(SqlNode... contents) throws IOException, SQLException {
     createBlogDataSource();

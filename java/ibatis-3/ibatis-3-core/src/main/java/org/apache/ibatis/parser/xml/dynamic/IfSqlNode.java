@@ -12,7 +12,7 @@ public class IfSqlNode implements SqlNode {
   }
 
   public boolean apply(DynamicContext builder) {
-    if (evaluator.evaluateBoolean(test, builder.getParameterObject())) {
+    if (evaluator.evaluateBoolean(test, builder.getBindings())) {
       contents.apply(builder);
       return true;
     }
