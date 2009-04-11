@@ -1,10 +1,5 @@
 package org.apache.ibatis.parser.xml.dynamic;
 
-import org.apache.ibatis.ognl.*;
-import org.apache.ibatis.parser.ParserException;
-
-import java.math.BigDecimal;
-
 public class IfSqlNode implements SqlNode {
   private ExpressionEvaluator evaluator;
   private String test;
@@ -17,7 +12,7 @@ public class IfSqlNode implements SqlNode {
   }
 
   public boolean apply(DynamicContext builder) {
-    if (evaluator.evaluate(test, builder.getParameterObject())) {
+    if (evaluator.isTrue(test, builder.getParameterObject())) {
       contents.apply(builder);
       return true;
     }
