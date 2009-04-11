@@ -8,7 +8,7 @@ import java.util.Arrays;
 
 public class ExpressionEvaluator {
 
-  public boolean isTrue(String expression, Object parameterObject) {
+  public boolean evaluateBoolean(String expression, Object parameterObject) {
     try {
       Object value = Ognl.getValue(expression, parameterObject);
       if (value instanceof Boolean) return (Boolean) value;
@@ -19,7 +19,7 @@ public class ExpressionEvaluator {
     }
   }
 
-  public Iterable getIterable(String expression, Object parameterObject) {
+  public Iterable evaluateIterable(String expression, Object parameterObject) {
     try {
       Object value = Ognl.getValue(expression, parameterObject);
       if (value instanceof Iterable) return (Iterable) value;

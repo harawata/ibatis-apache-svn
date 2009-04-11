@@ -1,16 +1,18 @@
 package org.apache.ibatis.parser.xml.dynamic;
 
 public class ForEachSqlNode implements SqlNode {
-  private Iterable collection;
+  private ExpressionEvaluator evaluator;
+  private String collectionExpression;
   private MixedSqlNode contents;
 
-  public ForEachSqlNode(Iterable collection, MixedSqlNode contents) {
-    this.collection = collection;
+  public ForEachSqlNode(String collectionExpression, MixedSqlNode contents) {
+    this.collectionExpression = collectionExpression;
     this.contents = contents;
   }
 
   public boolean apply(DynamicContext builder) {
-    for (Object o : collection) {
+    final Iterable iterable = evaluator.evaluateIterable(collectionExpression, builder.getParameterObject());
+    for (Object o : iterable) {
       contents.apply(builder);
     }
     return true;
