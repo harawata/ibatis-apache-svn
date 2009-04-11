@@ -21,54 +21,54 @@ public class ForEachSqlNode implements SqlNode {
     this.item = item;
   }
 
-  public boolean apply(DynamicContext builder) {
-    final Iterable iterable = evaluator.evaluateIterable(collectionExpression, builder.getBindings());
+  public boolean apply(DynamicContext context) {
+    final Iterable iterable = evaluator.evaluateIterable(collectionExpression, context.getBindings());
     boolean first = true;
-    applyOpen(builder);
+    applyOpen(context);
     int i = 0;
     for (Object o : iterable) {
-      first = applySeparator(builder, first);
-      i = applyIndex(builder, i);
-      applyItem(builder, o);
-      contents.apply(builder);
+      first = applySeparator(context, first);
+      i = applyIndex(context, i);
+      applyItem(context, o);
+      contents.apply(context);
     }
-    applyClose(builder);
+    applyClose(context);
     return true;
   }
 
-  private int applyIndex(DynamicContext builder, int i) {
+  private int applyIndex(DynamicContext context, int i) {
     if (index != null) {
-      builder.bind(index, i++);
+      context.bind(index, i++);
     }
     return i;
   }
 
-  private void applyItem(DynamicContext builder, Object o) {
+  private void applyItem(DynamicContext context, Object o) {
     if (item != null) {
-      builder.bind(item, o);
+      context.bind(item, o);
     }
   }
 
-  private void applyOpen(DynamicContext builder) {
+  private void applyOpen(DynamicContext context) {
     if (open != null) {
-      builder.appendSql(open);
+      context.appendSql(open);
     }
   }
 
-  private boolean applySeparator(DynamicContext builder, boolean first) {
+  private boolean applySeparator(DynamicContext context, boolean first) {
     if (first) {
       first = false;
     } else {
       if (separator != null) {
-        builder.appendSql(separator);
+        context.appendSql(separator);
       }
     }
     return first;
   }
 
-  private void applyClose(DynamicContext builder) {
+  private void applyClose(DynamicContext context) {
     if (close != null) {
-      builder.appendSql(close);
+      context.appendSql(close);
     }
   }
 

@@ -9,9 +9,9 @@ public class MixedSqlNode implements SqlNode {
     this.contents = contents;
   }
 
-  public boolean apply(DynamicContext builder) {
+  public boolean apply(DynamicContext context) {
     for (SqlNode sqlNode : contents) {
-      sqlNode.apply(builder);
+      sqlNode.apply(context);
     }
     return true;
   }

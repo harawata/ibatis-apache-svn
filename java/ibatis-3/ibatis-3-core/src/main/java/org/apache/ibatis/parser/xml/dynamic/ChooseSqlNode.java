@@ -11,14 +11,14 @@ public class ChooseSqlNode implements SqlNode {
     this.defaultSqlNode = defaultSqlNode;
   }
 
-  public boolean apply(DynamicContext builder) {
+  public boolean apply(DynamicContext context) {
     for (SqlNode sqlNode : ifSqlNodes) {
-      if (sqlNode.apply(builder)) {
+      if (sqlNode.apply(context)) {
         return true;
       }
     }
     if (defaultSqlNode != null) {
-      defaultSqlNode.apply(builder);
+      defaultSqlNode.apply(context);
       return true;
     }
     return false;

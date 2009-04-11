@@ -11,9 +11,9 @@ public class IfSqlNode implements SqlNode {
     this.evaluator = new ExpressionEvaluator();
   }
 
-  public boolean apply(DynamicContext builder) {
-    if (evaluator.evaluateBoolean(test, builder.getBindings())) {
-      contents.apply(builder);
+  public boolean apply(DynamicContext context) {
+    if (evaluator.evaluateBoolean(test, context.getBindings())) {
+      contents.apply(context);
       return true;
     }
     return false;
