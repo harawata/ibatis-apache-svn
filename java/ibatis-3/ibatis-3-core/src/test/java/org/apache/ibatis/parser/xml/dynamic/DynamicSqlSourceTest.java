@@ -105,10 +105,10 @@ public class DynamicSqlSourceTest extends BaseDataTest {
     final HashMap<String,String[]> parameterObject = new HashMap() {{
         put("array", new String[]{"1", "2", "3"});
       }};
-    final String expected = "SELECT * FROM BLOG WHERE ID in ? ? ?";
+    final String expected = "SELECT * FROM BLOG WHERE ID in [ ? , ? , ? ]";
     DynamicSqlSource source = createDynamicSqlSource(
         new TextSqlNode("SELECT * FROM BLOG WHERE ID in"),
-        new ForEachSqlNode("array",mixedContents(new TextSqlNode("?"))));
+        new ForEachSqlNode("array","[","]",",",mixedContents(new TextSqlNode("?"))));
     BoundSql boundSql = source.getBoundSql(parameterObject);
     assertEquals(expected, boundSql.getSql());
   }
