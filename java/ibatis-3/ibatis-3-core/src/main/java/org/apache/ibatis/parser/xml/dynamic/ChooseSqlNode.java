@@ -2,11 +2,11 @@ package org.apache.ibatis.parser.xml.dynamic;
 
 import java.util.List;
 
-public class ConditionalSqlNode implements SqlNode {
+public class ChooseSqlNode implements SqlNode {
   private MixedSqlNode defaultSqlNode;
   private List<IfSqlNode> ifSqlNodes;
 
-  public ConditionalSqlNode(List<IfSqlNode> ifSqlNodes, MixedSqlNode defaultSqlNode) {
+  public ChooseSqlNode(List<IfSqlNode> ifSqlNodes, MixedSqlNode defaultSqlNode) {
     this.ifSqlNodes = ifSqlNodes;
     this.defaultSqlNode = defaultSqlNode;
   }

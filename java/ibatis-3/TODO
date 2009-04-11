@@ -19,5 +19,5 @@ Dynamic SQL
   <if prepend test>
       <else prepend>
 
-  <foreach prepend test item index open close conjuction >
+  <foreach prepend item index open close conjuction >
 
