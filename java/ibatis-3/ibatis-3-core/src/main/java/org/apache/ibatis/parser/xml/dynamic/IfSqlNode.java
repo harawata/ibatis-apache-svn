@@ -3,9 +3,9 @@ package org.apache.ibatis.parser.xml.dynamic;
 public class IfSqlNode implements SqlNode {
   private ExpressionEvaluator evaluator;
   private String test;
-  private MixedSqlNode contents;
+  private SqlNode contents;
 
-  public IfSqlNode(String test, MixedSqlNode contents) {
+  public IfSqlNode(SqlNode contents, String test) {
     this.test = test;
     this.contents = contents;
     this.evaluator = new ExpressionEvaluator();

@@ -3,14 +3,14 @@ package org.apache.ibatis.parser.xml.dynamic;
 public class ForEachSqlNode implements SqlNode {
   private ExpressionEvaluator evaluator;
   private String collectionExpression;
-  private MixedSqlNode contents;
+  private SqlNode contents;
   private String open;
   private String close;
   private String separator;
   private String item;
   private String index;
 
-  public ForEachSqlNode(String collectionExpression, String index, String item, String open, String close, String separator, MixedSqlNode contents) {
+  public ForEachSqlNode(SqlNode contents, String collectionExpression, String index, String item, String open, String close, String separator) {
     this.evaluator = new ExpressionEvaluator();
     this.collectionExpression = collectionExpression;
     this.contents = contents;
