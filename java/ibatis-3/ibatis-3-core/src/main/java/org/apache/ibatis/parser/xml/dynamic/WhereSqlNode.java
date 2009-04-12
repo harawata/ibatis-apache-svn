@@ -11,8 +11,7 @@ public class WhereSqlNode implements SqlNode {
   }
 
   public boolean apply(DynamicContext context) {
-
-    return false;
+    return contents.apply(new FilteredDynamicContext(context));
   }
 
 
@@ -36,12 +35,18 @@ public class WhereSqlNode implements SqlNode {
 
     public void appendSql(String sql) {
       if (!filtered) {
-        final String filteredSql = sql.trim().toUpperCase();
-        if (filteredSql.startsWith("AND")) {
+        filtered = true;
+        String filteredSql = sql.trim().toUpperCase();
+        if (filteredSql.startsWith("AND ")) {
+          sql = sql.trim().substring(3).trim();
+        } else if (filteredSql.startsWith("OR ")) {
+          sql = sql.trim().substring(2).trim();
         }
+        delegate.appendSql("WHERE");
+        delegate.appendSql(sql);
+      } else {
+        delegate.appendSql(sql);
       }
-      delegate.appendSql(sql);
-      filtered = true;
     }
 
     public String getSql() {

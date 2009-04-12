@@ -101,6 +101,96 @@ public class DynamicSqlSourceTest extends BaseDataTest {
   }
 
   @Test
+  public void shouldPrefixWHEREInsteadOfANDForFirstCondition() throws Exception {
+    final String expected = "SELECT * FROM BLOG WHERE ID = ?";
+    DynamicSqlSource source = createDynamicSqlSource(
+        new TextSqlNode("SELECT * FROM BLOG"),
+        new WhereSqlNode(mixedContents(
+          new IfSqlNode("true",
+            mixedContents(new TextSqlNode("   and ID = ?  "))),
+          new IfSqlNode("false",
+            mixedContents(new TextSqlNode("   or NAME = ?  ")))
+        )));
+    BoundSql boundSql = source.getBoundSql(null);
+    assertEquals(expected, boundSql.getSql());
+  }
+
+  @Test
+  public void shouldPrefixWHEREInsteadOfORForSecondCondition() throws Exception {
+    final String expected = "SELECT * FROM BLOG WHERE NAME = ?";
+    DynamicSqlSource source = createDynamicSqlSource(
+        new TextSqlNode("SELECT * FROM BLOG"),
+        new WhereSqlNode(mixedContents(
+          new IfSqlNode("false",
+            mixedContents(new TextSqlNode("   and ID = ?  "))),
+          new IfSqlNode("true",
+            mixedContents(new TextSqlNode("   or NAME = ?  ")))
+        )));
+    BoundSql boundSql = source.getBoundSql(null);
+    assertEquals(expected, boundSql.getSql());
+  }
+
+  @Test
+  public void shouldPrefixWHEREInsteadOfANDForBothConditions() throws Exception {
+    final String expected = "SELECT * FROM BLOG WHERE ID = ? OR NAME = ?";
+    DynamicSqlSource source = createDynamicSqlSource(
+        new TextSqlNode("SELECT * FROM BLOG"),
+        new WhereSqlNode(mixedContents(
+          new IfSqlNode("true",
+            mixedContents(new TextSqlNode("   and ID = ?   "))),
+          new IfSqlNode("true",
+            mixedContents(new TextSqlNode("OR NAME = ?  ")))
+        )));
+    BoundSql boundSql = source.getBoundSql(null);
+    assertEquals(expected, boundSql.getSql());
+  }
+
+  @Test
+  public void shouldPrefixNoWhereClause() throws Exception {
+    final String expected = "SELECT * FROM BLOG";
+    DynamicSqlSource source = createDynamicSqlSource(
+        new TextSqlNode("SELECT * FROM BLOG"),
+        new WhereSqlNode(mixedContents(
+          new IfSqlNode("false",
+            mixedContents(new TextSqlNode("   and ID = ?   "))),
+          new IfSqlNode("false",
+            mixedContents(new TextSqlNode("OR NAME = ?  ")))
+        )));
+    BoundSql boundSql = source.getBoundSql(null);
+    assertEquals(expected, boundSql.getSql());
+  }
+
+  @Test
+  public void shouldPrefixSETInsteadOfCOMMAForBothConditions() throws Exception {
+    final String expected = "UPDATE BLOG SET ID = ? , NAME = ?";
+    DynamicSqlSource source = createDynamicSqlSource(
+        new TextSqlNode("UPDATE BLOG"),
+        new SetSqlNode(mixedContents(
+          new IfSqlNode("true",
+            mixedContents(new TextSqlNode("   , ID = ?   "))),
+          new IfSqlNode("true",
+            mixedContents(new TextSqlNode(", NAME = ?  ")))
+        )));
+    BoundSql boundSql = source.getBoundSql(null);
+    assertEquals(expected, boundSql.getSql());
+  }
+
+  @Test
+  public void shouldPrefixNoSetClause() throws Exception {
+    final String expected = "UPDATE BLOG";
+    DynamicSqlSource source = createDynamicSqlSource(
+        new TextSqlNode("UPDATE BLOG"),
+        new SetSqlNode(mixedContents(
+          new IfSqlNode("false",
+            mixedContents(new TextSqlNode("   , ID = ?   "))),
+          new IfSqlNode("false",
+            mixedContents(new TextSqlNode(", NAME = ?  ")))
+        )));
+    BoundSql boundSql = source.getBoundSql(null);
+    assertEquals(expected, boundSql.getSql());
+  }
+
+  @Test
   public void shouldIterateOnceForEachItemInCollection() throws Exception {
     final HashMap<String,String[]> parameterObject = new HashMap() {{
         put("array", new String[]{"one", "two", "three"});
