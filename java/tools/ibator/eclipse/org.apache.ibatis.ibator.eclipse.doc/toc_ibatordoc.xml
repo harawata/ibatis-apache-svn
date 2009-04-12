@@ -52,6 +52,8 @@
       </topic>
       <topic href="html/ibatordoc/usage/oracle.html" label="Oracle">
       </topic>
+      <topic href="html/ibatordoc/usage/postgresql.html" label="PostgreSQL">
+      </topic>
    </topic>
    <topic href="html/ibatordoc/reference/intro.html" label="Other Reference Information">
       <topic href="html/ibatordoc/reference/building.html" label="Building Ibator From Source">

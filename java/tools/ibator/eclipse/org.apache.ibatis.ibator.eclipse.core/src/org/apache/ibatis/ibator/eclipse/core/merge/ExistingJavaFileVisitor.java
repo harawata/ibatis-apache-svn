@@ -44,7 +44,7 @@ public class ExistingJavaFileVisitor extends ASTVisitor {
     }
 
     /**
-     * Find the ibator generated fields and delete them
+     * Find the Ibator generated fields and delete them
      */
     @Override
     public boolean visit(FieldDeclaration node) {
@@ -56,7 +56,7 @@ public class ExistingJavaFileVisitor extends ASTVisitor {
     }
 
     /**
-     * Find the ibator generated methods and delete them
+     * Find the Ibator generated methods and delete them
      */
     @Override
     public boolean visit(MethodDeclaration node) {
@@ -68,7 +68,7 @@ public class ExistingJavaFileVisitor extends ASTVisitor {
     }
 
     /**
-     * Find any ibator generated inner types and delete them
+     * Find any Ibator generated inner types and delete them
      */
     @Override
     public boolean visit(TypeDeclaration node) {

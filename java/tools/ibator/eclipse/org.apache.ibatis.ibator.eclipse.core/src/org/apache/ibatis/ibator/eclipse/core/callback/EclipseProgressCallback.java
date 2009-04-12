@@ -51,7 +51,7 @@ public class EclipseProgressCallback implements ProgressCallback {
 
     public void generationStarted(int totalTasks) {
         currentChildProgress = parentProgress.newChild(GENERATION_FACTOR);
-        currentTick = totalTasks == 0 ? GENERATION_FACTOR : GENERATION_FACTOR / totalTasks;
+        currentTick = totalTasks <= 0 ? GENERATION_FACTOR : GENERATION_FACTOR / totalTasks;
         if (currentTick == 0) {
             currentTick = 1;
         }
@@ -61,7 +61,7 @@ public class EclipseProgressCallback implements ProgressCallback {
 
     public void introspectionStarted(int totalTasks) {
         currentChildProgress = parentProgress.newChild(INTROSPECTION_FACTOR);
-        currentTick = totalTasks == 0 ? INTROSPECTION_FACTOR : INTROSPECTION_FACTOR / totalTasks;
+        currentTick = totalTasks <= 0 ? INTROSPECTION_FACTOR : INTROSPECTION_FACTOR / totalTasks;
         if (currentTick == 0) {
             currentTick = 1;
         }
@@ -71,7 +71,7 @@ public class EclipseProgressCallback implements ProgressCallback {
 
     public void saveStarted(int totalTasks) {
         currentChildProgress = parentProgress.newChild(SAVE_FACTOR);
-        currentTick = totalTasks == 0 ? SAVE_FACTOR : SAVE_FACTOR / totalTasks;
+        currentTick = totalTasks <= 0 ? SAVE_FACTOR : SAVE_FACTOR / totalTasks;
         if (currentTick == 0) {
             currentTick = 1;
         }

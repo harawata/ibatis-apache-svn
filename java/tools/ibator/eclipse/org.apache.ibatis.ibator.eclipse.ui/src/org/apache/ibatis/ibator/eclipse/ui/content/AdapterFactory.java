@@ -28,7 +28,7 @@ import org.eclipse.jdt.core.IJavaProject;
 
 /**
  * This class provides a factory for different adapters used in the plugin.
- * Namely, this class decides if any particular file is an ibator configuration
+ * Namely, this class decides if any particular file is an Ibator configuration
  * file or not.
  * 
  * @author Jeff Butler
