@@ -6,6 +6,9 @@
 * Auto result/param types detected for bound XML statements
 * Named parameter parsing/merging
 * Statement and Procedure statement type attribute on SQL elements
+* Return selectKey or autogen key from session.insert()
+* commitRequired option at the statement level
+
 
 * Dynamic SQL XML Parser
     <where>
