@@ -11,12 +11,11 @@ Testing
 
 Dynamic SQL
 
+<where>
   <choose>
-      <when prepend test>
-      <when prepend test>
-      <otherwise prepend>
-
-  <if prepend test>
-
-  <foreach prepend item index open close separator >
-
+      <when test>
+      <when test>
+      <otherwise>
+  <if test>
+  <foreach item index open close separator>
+</where>
