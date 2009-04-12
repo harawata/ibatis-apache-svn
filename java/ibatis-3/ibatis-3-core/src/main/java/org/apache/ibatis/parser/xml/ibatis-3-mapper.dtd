@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<!ELEMENT mapper (cache-ref | cache | resultMap* | parameterMap* | sql* | statement* | insert* | update* | delete* | select* | procedure*)+>
+<!ELEMENT mapper (cache-ref | cache | resultMap* | parameterMap* | sql* | insert* | update* | delete* | select* )+>
 <!ATTLIST mapper
 xmlns:fo CDATA #IMPLIED
 namespace CDATA #IMPLIED
@@ -138,20 +138,6 @@ refid CDATA #REQUIRED
 id CDATA #REQUIRED
 >
 
-<!ELEMENT statement (#PCDATA | include)*>
-<!ATTLIST statement
-id CDATA #REQUIRED
-parameterMap CDATA #IMPLIED
-parameterType CDATA #IMPLIED
-resultMap CDATA #IMPLIED
-resultType CDATA #IMPLIED
-resultSetType (FORWARD_ONLY | SCROLL_INSENSITIVE | SCROLL_SENSITIVE) #IMPLIED
-fetchSize CDATA #IMPLIED
-timeout CDATA #IMPLIED
-flushCache (true|false) #IMPLIED
-useCache (true|false) #IMPLIED
->
-
 <!ELEMENT select (#PCDATA | include)*>
 <!ATTLIST select
 id CDATA #REQUIRED
@@ -198,18 +184,4 @@ parameterMap CDATA #IMPLIED
 parameterType CDATA #IMPLIED
 timeout CDATA #IMPLIED
 flushCache (true|false) #IMPLIED
->
-
-<!ELEMENT procedure (#PCDATA | include)*>
-<!ATTLIST procedure
-id CDATA #REQUIRED
-parameterMap CDATA #IMPLIED
-parameterType CDATA #IMPLIED
-resultMap CDATA #IMPLIED
-resultType CDATA #IMPLIED
-resultSetType (FORWARD_ONLY | SCROLL_INSENSITIVE | SCROLL_SENSITIVE) #IMPLIED
-fetchSize CDATA #IMPLIED
-timeout CDATA #IMPLIED
-flushCache (true|false) #IMPLIED
-useCache (true|false) #IMPLIED
 >
