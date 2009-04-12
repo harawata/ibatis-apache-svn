@@ -1,21 +1,18 @@
-TODO
+###################################
+#          TODO List              #
+###################################
 
-Enhancements
-  * Add resultType automapping option for collections so a resultMap isn' t required
-  * Auto result/param types detected for bound XML statements
-  * Named parameter parsing/merging
+* Add resultType automapping option for collections so a resultMap isn' t required
+* Auto result/param types detected for bound XML statements
+* Named parameter parsing/merging
+* Statement and Procedure statement type attribute on SQL elements
 
-Testing
-  * Perf/Threaded Integration Tests
-
-
-Dynamic SQL
-
-<where>
-  <choose>
-      <when test>
+* Dynamic SQL XML Parser
+    <where>
+    <set>
+    <prefix insert removeFirst>
+    <foreach item index open close separator>
+    <if test>
+    <choose>
       <when test>
       <otherwise>
-  <if test>
-  <foreach item index open close separator>
-</where>
