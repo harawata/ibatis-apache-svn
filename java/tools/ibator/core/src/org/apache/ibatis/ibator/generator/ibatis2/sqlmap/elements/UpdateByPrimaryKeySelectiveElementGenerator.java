@@ -15,7 +15,6 @@
  */
 package org.apache.ibatis.ibator.generator.ibatis2.sqlmap.elements;
 
-import org.apache.ibatis.ibator.api.FullyQualifiedTable;
 import org.apache.ibatis.ibator.api.IntrospectedColumn;
 import org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.ibator.api.dom.xml.Attribute;
@@ -38,7 +37,6 @@ public class UpdateByPrimaryKeySelectiveElementGenerator extends
     @Override
     public void addElements(XmlElement parentElement) {
         XmlElement answer = new XmlElement("update"); //$NON-NLS-1$
-        FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
 
         answer.addAttribute(new Attribute(
                 "id", XmlConstants.UPDATE_BY_PRIMARY_KEY_SELECTIVE_STATEMENT_ID)); //$NON-NLS-1$
@@ -59,7 +57,7 @@ public class UpdateByPrimaryKeySelectiveElementGenerator extends
         StringBuilder sb = new StringBuilder();
 
         sb.append("update "); //$NON-NLS-1$
-        sb.append(table.getFullyQualifiedTableNameAtRuntime());
+        sb.append(introspectedTable.getFullyQualifiedTableNameAtRuntime());
         answer.addElement(new TextElement(sb.toString()));
 
         XmlElement dynamicElement = new XmlElement("dynamic"); //$NON-NLS-1$

@@ -18,7 +18,6 @@ package org.apache.ibatis.ibator.generator.ibatis2.dao.elements;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.apache.ibatis.ibator.api.FullyQualifiedTable;
 import org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.ibator.api.dom.java.Interface;
 import org.apache.ibatis.ibator.api.dom.java.JavaVisibility;
@@ -43,10 +42,9 @@ public class DeleteByExampleMethodGenerator extends AbstractDAOElementGenerator 
         Set<FullyQualifiedJavaType> importedTypes = new TreeSet<FullyQualifiedJavaType>();
         Method method = getMethodShell(importedTypes);
 
-        FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
         StringBuilder sb = new StringBuilder();
         sb.append("int rows = "); //$NON-NLS-1$
-        sb.append(daoTemplate.getDeleteMethod(table.getSqlMapNamespace(),
+        sb.append(daoTemplate.getDeleteMethod(introspectedTable.getSqlMapNamespace(),
                 XmlConstants.DELETE_BY_EXAMPLE_STATEMENT_ID, "example")); //$NON-NLS-1$
         method.addBodyLine(sb.toString());
         method.addBodyLine("return rows;"); //$NON-NLS-1$

@@ -18,7 +18,6 @@ package org.apache.ibatis.ibator.generator.ibatis2.dao.elements;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.apache.ibatis.ibator.api.FullyQualifiedTable;
 import org.apache.ibatis.ibator.api.IntrospectedColumn;
 import org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.ibator.api.dom.java.Interface;
@@ -74,7 +73,6 @@ public class SelectByPrimaryKeyMethodGenerator extends AbstractDAOElementGenerat
             }
         }
 
-        FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
         FullyQualifiedJavaType returnType = method.getReturnType();
 
         sb.setLength(0);
@@ -82,7 +80,7 @@ public class SelectByPrimaryKeyMethodGenerator extends AbstractDAOElementGenerat
         sb.append(" record = ("); //$NON-NLS-1$
         sb.append(returnType.getShortName());
         sb.append(") "); //$NON-NLS-1$
-        sb.append(daoTemplate.getQueryForObjectMethod(table
+        sb.append(daoTemplate.getQueryForObjectMethod(introspectedTable
                 .getSqlMapNamespace(),
                 XmlConstants.SELECT_BY_PRIMARY_KEY_STATEMENT_ID, "key")); //$NON-NLS-1$
         method.addBodyLine(sb.toString());

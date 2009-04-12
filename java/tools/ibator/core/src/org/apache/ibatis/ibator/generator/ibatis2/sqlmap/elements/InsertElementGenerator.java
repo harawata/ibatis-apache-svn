@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.ibatis.ibator.api.FullyQualifiedTable;
 import org.apache.ibatis.ibator.api.IntrospectedColumn;
 import org.apache.ibatis.ibator.api.dom.OutputUtilities;
 import org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType;
@@ -44,7 +43,6 @@ public class InsertElementGenerator extends AbstractXmlElementGenerator {
     public void addElements(XmlElement parentElement) {
         XmlElement answer = new XmlElement("insert"); //$NON-NLS-1$
 
-        FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
         answer.addAttribute(new Attribute("id", XmlConstants.INSERT_STATEMENT_ID)); //$NON-NLS-1$
         
         FullyQualifiedJavaType parameterType =
@@ -71,7 +69,7 @@ public class InsertElementGenerator extends AbstractXmlElementGenerator {
         StringBuilder valuesClause = new StringBuilder();
 
         insertClause.append("insert into "); //$NON-NLS-1$
-        insertClause.append(table.getFullyQualifiedTableNameAtRuntime());
+        insertClause.append(introspectedTable.getFullyQualifiedTableNameAtRuntime());
         insertClause.append(" ("); //$NON-NLS-1$
 
         valuesClause.append("values ("); //$NON-NLS-1$

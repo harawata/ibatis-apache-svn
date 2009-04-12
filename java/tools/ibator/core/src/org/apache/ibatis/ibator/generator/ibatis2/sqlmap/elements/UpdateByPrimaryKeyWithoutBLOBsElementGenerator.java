@@ -17,7 +17,6 @@ package org.apache.ibatis.ibator.generator.ibatis2.sqlmap.elements;
 
 import java.util.Iterator;
 
-import org.apache.ibatis.ibator.api.FullyQualifiedTable;
 import org.apache.ibatis.ibator.api.IntrospectedColumn;
 import org.apache.ibatis.ibator.api.dom.OutputUtilities;
 import org.apache.ibatis.ibator.api.dom.xml.Attribute;
@@ -40,7 +39,6 @@ public class UpdateByPrimaryKeyWithoutBLOBsElementGenerator extends
     @Override
     public void addElements(XmlElement parentElement) {
         XmlElement answer = new XmlElement("update"); //$NON-NLS-1$
-        FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
 
         answer.addAttribute(new Attribute(
                 "id", XmlConstants.UPDATE_BY_PRIMARY_KEY_STATEMENT_ID)); //$NON-NLS-1$
@@ -51,7 +49,7 @@ public class UpdateByPrimaryKeyWithoutBLOBsElementGenerator extends
 
         StringBuilder sb = new StringBuilder();
         sb.append("update "); //$NON-NLS-1$
-        sb.append(table.getFullyQualifiedTableNameAtRuntime());
+        sb.append(introspectedTable.getFullyQualifiedTableNameAtRuntime());
         answer.addElement(new TextElement(sb.toString()));
 
         // set up for first column

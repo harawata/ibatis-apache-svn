@@ -15,7 +15,6 @@
  */
 package org.apache.ibatis.ibator.generator.ibatis2.sqlmap.elements;
 
-import org.apache.ibatis.ibator.api.FullyQualifiedTable;
 import org.apache.ibatis.ibator.api.IntrospectedColumn;
 import org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.ibator.api.dom.xml.Attribute;
@@ -41,7 +40,6 @@ public class ResultMapWithBLOBsElementGenerator extends AbstractXmlElementGenera
             StringUtility.isTrue(introspectedTable.getTableConfigurationProperty(PropertyRegistry.TABLE_USE_COLUMN_INDEXES));
 
         XmlElement answer = new XmlElement("resultMap"); //$NON-NLS-1$
-        FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
 
         answer.addAttribute(new Attribute("id",  //$NON-NLS-1$
                 XmlConstants.RESULT_MAP_WITH_BLOBS_ID));
@@ -59,7 +57,7 @@ public class ResultMapWithBLOBsElementGenerator extends AbstractXmlElementGenera
                 returnType.getFullyQualifiedName()));
 
         StringBuilder sb = new StringBuilder();
-        sb.append(table.getSqlMapNamespace());
+        sb.append(introspectedTable.getSqlMapNamespace());
         sb.append('.');
         sb.append(XmlConstants.BASE_RESULT_MAP_ID);
         answer.addAttribute(new Attribute("extends", sb.toString())); //$NON-NLS-1$

@@ -18,7 +18,6 @@ package org.apache.ibatis.ibator.generator.ibatis2.dao.elements;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.apache.ibatis.ibator.api.FullyQualifiedTable;
 import org.apache.ibatis.ibator.api.IntrospectedColumn;
 import org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.ibator.api.dom.java.Interface;
@@ -75,8 +74,7 @@ public class DeleteByPrimaryKeyMethodGenerator extends AbstractDAOElementGenerat
 
         sb.setLength(0);
         sb.append("int rows = "); //$NON-NLS-1$
-        FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
-        sb.append(daoTemplate.getDeleteMethod(table.getSqlMapNamespace(),
+        sb.append(daoTemplate.getDeleteMethod(introspectedTable.getSqlMapNamespace(),
                 XmlConstants.DELETE_BY_PRIMARY_KEY_STATEMENT_ID, "key")); //$NON-NLS-1$
         method.addBodyLine(sb.toString());
         method.addBodyLine("return rows;"); //$NON-NLS-1$

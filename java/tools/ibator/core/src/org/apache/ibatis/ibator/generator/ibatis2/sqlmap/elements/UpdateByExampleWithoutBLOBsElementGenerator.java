@@ -17,7 +17,6 @@ package org.apache.ibatis.ibator.generator.ibatis2.sqlmap.elements;
 
 import java.util.Iterator;
 
-import org.apache.ibatis.ibator.api.FullyQualifiedTable;
 import org.apache.ibatis.ibator.api.IntrospectedColumn;
 import org.apache.ibatis.ibator.api.dom.OutputUtilities;
 import org.apache.ibatis.ibator.api.dom.xml.Attribute;
@@ -40,7 +39,6 @@ public class UpdateByExampleWithoutBLOBsElementGenerator extends
     @Override
     public void addElements(XmlElement parentElement) {
         XmlElement answer = new XmlElement("update"); //$NON-NLS-1$
-        FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
 
         answer.addAttribute(new Attribute(
                 "id", XmlConstants.UPDATE_BY_EXAMPLE_STATEMENT_ID)); //$NON-NLS-1$
@@ -49,7 +47,7 @@ public class UpdateByExampleWithoutBLOBsElementGenerator extends
 
         StringBuilder sb = new StringBuilder();
         sb.append("update "); //$NON-NLS-1$
-        sb.append(table.getAliasedFullyQualifiedTableNameAtRuntime());
+        sb.append(introspectedTable.getAliasedFullyQualifiedTableNameAtRuntime());
         answer.addElement(new TextElement(sb.toString()));
 
         // set up for first column
@@ -83,7 +81,7 @@ public class UpdateByExampleWithoutBLOBsElementGenerator extends
         
         XmlElement includeElement = new XmlElement("include"); //$NON-NLS-1$
         includeElement.addAttribute(new Attribute("refid", //$NON-NLS-1$
-                table.getSqlMapNamespace() + "." + XmlConstants.EXAMPLE_WHERE_CLAUSE_ID)); //$NON-NLS-1$
+                introspectedTable.getSqlMapNamespace() + "." + XmlConstants.EXAMPLE_WHERE_CLAUSE_ID)); //$NON-NLS-1$
         isParameterPresentElement.addElement(includeElement);
 
         if (ibatorContext.getPlugins().sqlMapUpdateByExampleWithoutBLOBsElementGenerated(answer, introspectedTable)) {

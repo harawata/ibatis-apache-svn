@@ -19,7 +19,6 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.apache.ibatis.ibator.api.DAOMethodNameCalculator;
-import org.apache.ibatis.ibator.api.FullyQualifiedTable;
 import org.apache.ibatis.ibator.api.IntrospectedColumn;
 import org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.ibator.api.dom.java.Interface;
@@ -47,7 +46,6 @@ public class InsertMethodGenerator extends AbstractDAOElementGenerator {
         Method method = getMethodShell(importedTypes);
         
         FullyQualifiedJavaType returnType = method.getReturnType();
-        FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
 
         StringBuilder sb = new StringBuilder();
 
@@ -55,7 +53,7 @@ public class InsertMethodGenerator extends AbstractDAOElementGenerator {
             sb.append("Object newKey = "); //$NON-NLS-1$
         }
 
-        sb.append(daoTemplate.getInsertMethod(table.getSqlMapNamespace(),
+        sb.append(daoTemplate.getInsertMethod(introspectedTable.getSqlMapNamespace(),
                 XmlConstants.INSERT_STATEMENT_ID, "record")); //$NON-NLS-1$
         method.addBodyLine(sb.toString());
 

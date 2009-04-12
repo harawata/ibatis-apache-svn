@@ -15,7 +15,6 @@
  */
 package org.apache.ibatis.ibator.generator.ibatis2.sqlmap.elements;
 
-import org.apache.ibatis.ibator.api.FullyQualifiedTable;
 import org.apache.ibatis.ibator.api.IntrospectedColumn;
 import org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.ibator.api.dom.xml.Attribute;
@@ -37,7 +36,6 @@ public class DeleteByPrimaryKeyElementGenerator extends AbstractXmlElementGenera
     @Override
     public void addElements(XmlElement parentElement) {
         XmlElement answer = new XmlElement("delete"); //$NON-NLS-1$
-        FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
 
         answer.addAttribute(new Attribute(
                 "id", XmlConstants.DELETE_BY_PRIMARY_KEY_STATEMENT_ID)); //$NON-NLS-1$
@@ -54,7 +52,7 @@ public class DeleteByPrimaryKeyElementGenerator extends AbstractXmlElementGenera
 
         StringBuilder sb = new StringBuilder();
         sb.append("delete from "); //$NON-NLS-1$
-        sb.append(table.getFullyQualifiedTableNameAtRuntime());
+        sb.append(introspectedTable.getFullyQualifiedTableNameAtRuntime());
         answer.addElement(new TextElement(sb.toString()));
 
         boolean and = false;

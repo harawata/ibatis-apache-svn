@@ -15,7 +15,6 @@
  */
 package org.apache.ibatis.ibator.generator.ibatis2.sqlmap.elements;
 
-import org.apache.ibatis.ibator.api.FullyQualifiedTable;
 import org.apache.ibatis.ibator.api.IntrospectedColumn;
 import org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.ibator.api.dom.xml.Attribute;
@@ -39,7 +38,6 @@ public class InsertSelectiveElementGenerator extends AbstractXmlElementGenerator
     public void addElements(XmlElement parentElement) {
         XmlElement answer = new XmlElement("insert"); //$NON-NLS-1$
 
-        FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
         answer.addAttribute(new Attribute("id", XmlConstants.INSERT_SELECTIVE_STATEMENT_ID)); //$NON-NLS-1$
         
         FullyQualifiedJavaType parameterType =
@@ -65,7 +63,7 @@ public class InsertSelectiveElementGenerator extends AbstractXmlElementGenerator
         StringBuilder sb = new StringBuilder();
 
         sb.append("insert into "); //$NON-NLS-1$
-        sb.append(table.getFullyQualifiedTableNameAtRuntime());
+        sb.append(introspectedTable.getFullyQualifiedTableNameAtRuntime());
         answer.addElement(new TextElement(sb.toString()));
         
         XmlElement insertElement = new XmlElement("dynamic"); //$NON-NLS-1$

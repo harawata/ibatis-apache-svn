@@ -24,6 +24,7 @@ Enhancements:
 9. IBATIS-586 - Added the ability to specify nested property elements on
    columnOverrides (thanks to Dan Turkenkopf for the idea and a nice initial patch)
 10. Gather column comments during introspection
+11. IBATIS-592 - Additional attributes for SqlMaps
 
 -------------------------------------------------------------------------------
 Version 1.2.1:

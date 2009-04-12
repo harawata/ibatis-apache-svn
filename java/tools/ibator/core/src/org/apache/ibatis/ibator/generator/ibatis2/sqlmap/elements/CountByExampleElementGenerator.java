@@ -15,7 +15,6 @@
  */
 package org.apache.ibatis.ibator.generator.ibatis2.sqlmap.elements;
 
-import org.apache.ibatis.ibator.api.FullyQualifiedTable;
 import org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.ibator.api.dom.xml.Attribute;
 import org.apache.ibatis.ibator.api.dom.xml.TextElement;
@@ -37,7 +36,6 @@ public class CountByExampleElementGenerator extends AbstractXmlElementGenerator 
     public void addElements(XmlElement parentElement) {
         XmlElement answer = new XmlElement("select"); //$NON-NLS-1$
 
-        FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
         FullyQualifiedJavaType fqjt = introspectedTable.getExampleType();
 
         answer
@@ -52,12 +50,12 @@ public class CountByExampleElementGenerator extends AbstractXmlElementGenerator 
 
         StringBuilder sb = new StringBuilder();
         sb.append("select count(*) from "); //$NON-NLS-1$
-        sb.append(table.getAliasedFullyQualifiedTableNameAtRuntime());
+        sb.append(introspectedTable.getAliasedFullyQualifiedTableNameAtRuntime());
         answer.addElement(new TextElement(sb.toString()));
 
         XmlElement includeElement = new XmlElement("include"); //$NON-NLS-1$
         sb.setLength(0);
-        sb.append(table.getSqlMapNamespace());
+        sb.append(introspectedTable.getSqlMapNamespace());
         sb.append('.');
         sb.append(XmlConstants.EXAMPLE_WHERE_CLAUSE_ID);
         includeElement.addAttribute(new Attribute("refid", //$NON-NLS-1$

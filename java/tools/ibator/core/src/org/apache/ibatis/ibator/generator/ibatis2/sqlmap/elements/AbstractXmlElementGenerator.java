@@ -15,7 +15,6 @@
  */
 package org.apache.ibatis.ibator.generator.ibatis2.sqlmap.elements;
 
-import org.apache.ibatis.ibator.api.FullyQualifiedTable;
 import org.apache.ibatis.ibator.api.IntrospectedColumn;
 import org.apache.ibatis.ibator.api.dom.xml.Attribute;
 import org.apache.ibatis.ibator.api.dom.xml.TextElement;
@@ -63,17 +62,17 @@ public abstract class AbstractXmlElementGenerator extends AbstractGenerator {
         return answer;
     }
 
-    protected XmlElement getBaseColumnListElement(FullyQualifiedTable table) {
+    protected XmlElement getBaseColumnListElement() {
         XmlElement answer = new XmlElement("include"); //$NON-NLS-1$
         answer.addAttribute(new Attribute("refid", //$NON-NLS-1$
-                table.getSqlMapNamespace() + "." + XmlConstants.BASE_COLUMN_LIST_ID)); //$NON-NLS-1$
+                introspectedTable.getSqlMapNamespace() + "." + XmlConstants.BASE_COLUMN_LIST_ID)); //$NON-NLS-1$
         return answer;
     }
 
-    protected XmlElement getBlobColumnListElement(FullyQualifiedTable table) {
+    protected XmlElement getBlobColumnListElement() {
         XmlElement answer = new XmlElement("include"); //$NON-NLS-1$
         answer.addAttribute(new Attribute("refid", //$NON-NLS-1$
-                table.getSqlMapNamespace() + "." + XmlConstants.BLOB_COLUMN_LIST_ID)); //$NON-NLS-1$
+                introspectedTable.getSqlMapNamespace() + "." + XmlConstants.BLOB_COLUMN_LIST_ID)); //$NON-NLS-1$
         return answer;
     }
 }

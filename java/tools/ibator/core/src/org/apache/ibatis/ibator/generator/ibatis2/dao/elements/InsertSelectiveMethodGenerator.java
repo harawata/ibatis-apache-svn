@@ -18,7 +18,6 @@ package org.apache.ibatis.ibator.generator.ibatis2.dao.elements;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.apache.ibatis.ibator.api.FullyQualifiedTable;
 import org.apache.ibatis.ibator.api.IntrospectedColumn;
 import org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.ibator.api.dom.java.Interface;
@@ -45,7 +44,6 @@ public class InsertSelectiveMethodGenerator extends AbstractDAOElementGenerator 
         Set<FullyQualifiedJavaType> importedTypes = new TreeSet<FullyQualifiedJavaType>();
         Method method = getMethodShell(importedTypes);
 
-        FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
         FullyQualifiedJavaType returnType = method.getReturnType();
         StringBuilder sb = new StringBuilder();
 
@@ -53,7 +51,7 @@ public class InsertSelectiveMethodGenerator extends AbstractDAOElementGenerator 
             sb.append("Object newKey = "); //$NON-NLS-1$
         }
 
-        sb.append(daoTemplate.getInsertMethod(table.getSqlMapNamespace(),
+        sb.append(daoTemplate.getInsertMethod(introspectedTable.getSqlMapNamespace(),
                 XmlConstants.INSERT_SELECTIVE_STATEMENT_ID, "record")); //$NON-NLS-1$
         method.addBodyLine(sb.toString());
 

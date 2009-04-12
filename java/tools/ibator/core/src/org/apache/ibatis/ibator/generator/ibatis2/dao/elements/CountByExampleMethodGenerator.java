@@ -18,7 +18,6 @@ package org.apache.ibatis.ibator.generator.ibatis2.dao.elements;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.apache.ibatis.ibator.api.FullyQualifiedTable;
 import org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.ibator.api.dom.java.Interface;
 import org.apache.ibatis.ibator.api.dom.java.JavaVisibility;
@@ -45,14 +44,12 @@ public class CountByExampleMethodGenerator extends AbstractDAOElementGenerator {
     public void addImplementationElements(TopLevelClass topLevelClass) {
         Set<FullyQualifiedJavaType> importedTypes = new TreeSet<FullyQualifiedJavaType>();
         Method method = getMethodShell(importedTypes);
-        FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
 
         // generate the implementation method
         StringBuilder sb = new StringBuilder();
 
         sb.append("Integer count = (Integer)  "); //$NON-NLS-1$
-        sb.append(daoTemplate.getQueryForObjectMethod(table
-                .getSqlMapNamespace(),
+        sb.append(daoTemplate.getQueryForObjectMethod(introspectedTable.getSqlMapNamespace(),
                 XmlConstants.COUNT_BY_EXAMPLE_STATEMENT_ID, "example")); //$NON-NLS-1$
         method.addBodyLine(sb.toString());
 

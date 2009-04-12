@@ -18,7 +18,6 @@ package org.apache.ibatis.ibator.generator.ibatis2.dao.elements;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.apache.ibatis.ibator.api.FullyQualifiedTable;
 import org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.ibator.api.dom.java.Interface;
 import org.apache.ibatis.ibator.api.dom.java.JavaVisibility;
@@ -43,13 +42,12 @@ public class UpdateByExampleWithoutBLOBsMethodGenerator extends
     public void addImplementationElements(TopLevelClass topLevelClass) {
         Set<FullyQualifiedJavaType> importedTypes = new TreeSet<FullyQualifiedJavaType>();
         Method method = getMethodShell(importedTypes);
-        FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
         
         method.addBodyLine("UpdateByExampleParms parms = new UpdateByExampleParms(record, example);"); //$NON-NLS-1$
             
         StringBuilder sb = new StringBuilder();
         sb.append("int rows = "); //$NON-NLS-1$
-        sb.append(daoTemplate.getUpdateMethod(table.getSqlMapNamespace(),
+        sb.append(daoTemplate.getUpdateMethod(introspectedTable.getSqlMapNamespace(),
                 XmlConstants.UPDATE_BY_EXAMPLE_STATEMENT_ID,
                 "parms")); //$NON-NLS-1$
         method.addBodyLine(sb.toString());

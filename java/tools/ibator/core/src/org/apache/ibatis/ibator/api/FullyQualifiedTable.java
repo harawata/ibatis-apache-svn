@@ -139,6 +139,9 @@ public class FullyQualifiedTable {
 		return introspectedTableName;
 	}
 
+	/**
+	 * @return
+	 */
     public String getFullyQualifiedTableNameAtRuntime() {
         StringBuilder localCatalog = new StringBuilder();
         if (!ignoreQualifiersAtRuntime) {
@@ -179,6 +182,9 @@ public class FullyQualifiedTable {
                 '.');
     }
 
+    /**
+     * @return
+     */
     public String getAliasedFullyQualifiedTableNameAtRuntime() {
         StringBuilder sb = new StringBuilder();
 
@@ -194,7 +200,7 @@ public class FullyQualifiedTable {
 
     /**
      * This method returns a string that is the fully qualified table name, with
-     * underscores as the seperator.
+     * underscores as the separator.
      * 
      * @return the namespace
      */

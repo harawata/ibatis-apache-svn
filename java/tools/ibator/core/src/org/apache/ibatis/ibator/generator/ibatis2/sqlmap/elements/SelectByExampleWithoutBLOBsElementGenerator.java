@@ -15,7 +15,6 @@
  */
 package org.apache.ibatis.ibator.generator.ibatis2.sqlmap.elements;
 
-import org.apache.ibatis.ibator.api.FullyQualifiedTable;
 import org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.ibator.api.dom.xml.Attribute;
 import org.apache.ibatis.ibator.api.dom.xml.TextElement;
@@ -36,7 +35,6 @@ public class SelectByExampleWithoutBLOBsElementGenerator extends AbstractXmlElem
 
     @Override
     public void addElements(XmlElement parentElement) {
-        FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
         FullyQualifiedJavaType fqjt = introspectedTable.getExampleType();
 
         XmlElement answer = new XmlElement("select"); //$NON-NLS-1$
@@ -60,11 +58,11 @@ public class SelectByExampleWithoutBLOBsElementGenerator extends AbstractXmlElem
             sb.append("' as QUERYID,"); //$NON-NLS-1$
         }
         answer.addElement(new TextElement(sb.toString()));
-        answer.addElement(getBaseColumnListElement(table));
+        answer.addElement(getBaseColumnListElement());
 
         sb.setLength(0);
         sb.append("from "); //$NON-NLS-1$
-        sb.append(table.getAliasedFullyQualifiedTableNameAtRuntime());
+        sb.append(introspectedTable.getAliasedFullyQualifiedTableNameAtRuntime());
         answer.addElement((new TextElement(sb.toString())));
 
         XmlElement isParameterPresenteElement =
@@ -73,7 +71,7 @@ public class SelectByExampleWithoutBLOBsElementGenerator extends AbstractXmlElem
         
         XmlElement includeElement = new XmlElement("include"); //$NON-NLS-1$
         includeElement.addAttribute(new Attribute("refid", //$NON-NLS-1$
-                table.getSqlMapNamespace() + "." + XmlConstants.EXAMPLE_WHERE_CLAUSE_ID)); //$NON-NLS-1$
+                introspectedTable.getSqlMapNamespace() + "." + XmlConstants.EXAMPLE_WHERE_CLAUSE_ID)); //$NON-NLS-1$
         isParameterPresenteElement.addElement(includeElement);
 
         XmlElement isNotNullElement = new XmlElement("isNotNull"); //$NON-NLS-1$

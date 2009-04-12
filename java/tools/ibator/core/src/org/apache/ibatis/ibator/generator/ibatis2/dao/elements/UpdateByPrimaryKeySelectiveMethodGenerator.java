@@ -18,7 +18,6 @@ package org.apache.ibatis.ibator.generator.ibatis2.dao.elements;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.apache.ibatis.ibator.api.FullyQualifiedTable;
 import org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.ibator.api.dom.java.Interface;
 import org.apache.ibatis.ibator.api.dom.java.JavaVisibility;
@@ -43,11 +42,10 @@ public class UpdateByPrimaryKeySelectiveMethodGenerator extends
     public void addImplementationElements(TopLevelClass topLevelClass) {
         Set<FullyQualifiedJavaType> importedTypes = new TreeSet<FullyQualifiedJavaType>();
         Method method = getMethodShell(importedTypes);
-        FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
         
         StringBuilder sb = new StringBuilder();
         sb.append("int rows = "); //$NON-NLS-1$
-        sb.append(daoTemplate.getUpdateMethod(table.getSqlMapNamespace(),
+        sb.append(daoTemplate.getUpdateMethod(introspectedTable.getSqlMapNamespace(),
                 XmlConstants.UPDATE_BY_PRIMARY_KEY_SELECTIVE_STATEMENT_ID,
                 "record")); //$NON-NLS-1$
         method.addBodyLine(sb.toString());

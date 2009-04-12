@@ -120,6 +120,21 @@ public abstract class IntrospectedTable {
      */
     public static final String ATTR_SQL_MAP_FILE_NAME = "org.apache.ibatis.ibator.api.IntrospectedTable.ATTR_SQL_MAP_FILE_NAME"; //$NON-NLS-1$
     
+    /**
+     * This attribute must be a class of type java.lang.String
+     */
+    public static final String ATTR_SQL_MAP_NAMESPACE = "org.apache.ibatis.ibator.api.IntrospectedTable.ATTR_SQL_MAP_NAMESPACE"; //$NON-NLS-1$
+    
+    /**
+     * This attribute must be a class of type java.lang.String
+     */
+    public static final String ATTR_SQL_MAP_FULLY_QUALIFIED_TABLE_NAME_AT_RUNTIME = "org.apache.ibatis.ibator.api.IntrospectedTable.ATTR_SQL_MAP_FULLY_QUALIFIED_TABLE_NAME_AT_RUNTIME"; //$NON-NLS-1$
+    
+    /**
+     * This attribute must be a class of type java.lang.String
+     */
+    public static final String ATTR_SQL_MAP_ALIASED_FULLY_QUALIFIED_TABLE_NAME_AT_RUNTIME = "org.apache.ibatis.ibator.api.IntrospectedTable.ATTR_SQL_MAP_ALIASED_FULLY_QUALIFIED_TABLE_NAME_AT_RUNTIME"; //$NON-NLS-1$
+    
     protected TableConfiguration tableConfiguration;
     protected FullyQualifiedTable fullyQualifiedTable;
     protected IbatorContext ibatorContext;
@@ -388,6 +403,10 @@ public abstract class IntrospectedTable {
     public String getSqlMapFileName() {
         return (String) getAttribute(ATTR_SQL_MAP_FILE_NAME);
     }
+    
+    public String getSqlMapNamespace() {
+        return (String) getAttribute(ATTR_SQL_MAP_NAMESPACE);
+    }
 
     /**
      * Calculates the package for the current table.
@@ -501,6 +520,9 @@ public abstract class IntrospectedTable {
         
         calculateSqlMapPackage();
         calculateSqlMapFileName();
+        calculateSqlMapNamespace();
+        calculateSqlMapFullyQualifiedRuntimeTableName();
+        calculateSqlMapAliasedFullyQualifiedRuntimeTableName();
         
         if (tableConfiguration.getModelType() == ModelType.HIERARCHICAL) {
             rules = new HierarchicalModelRules(this);
@@ -513,7 +535,7 @@ public abstract class IntrospectedTable {
         ibatorContext.getPlugins().initialized(this);
     }
     
-    private void calculateDAOImplementationPackage() {
+    protected void calculateDAOImplementationPackage() {
         DAOGeneratorConfiguration config = ibatorContext.getDaoGeneratorConfiguration();
         if (config == null) {
             return;
@@ -532,7 +554,7 @@ public abstract class IntrospectedTable {
         setAttribute(ATTR_DAO_IMPLEMENTATION_PACKAGE, sb.toString());
     }
     
-    private void calculateDAOInterfacePackage() {
+    protected void calculateDAOInterfacePackage() {
         DAOGeneratorConfiguration config = ibatorContext.getDaoGeneratorConfiguration();
         if (config == null) {
             return;
@@ -547,7 +569,7 @@ public abstract class IntrospectedTable {
         setAttribute(ATTR_DAO_INTERFACE_PACKAGE, sb.toString());
     }
 
-    private void calculateDAOImplementationType() {
+    protected void calculateDAOImplementationType() {
         if (ibatorContext.getDaoGeneratorConfiguration() == null) {
             return;
         }
@@ -563,7 +585,7 @@ public abstract class IntrospectedTable {
         setAttribute(ATTR_DAO_IMPLEMENTATION_TYPE, fqjt);
     }
 
-    private void calculateDAOInterfaceType() {
+    protected void calculateDAOInterfaceType() {
         if (ibatorContext.getDaoGeneratorConfiguration() == null) {
             return;
         }
@@ -579,7 +601,7 @@ public abstract class IntrospectedTable {
         setAttribute(ATTR_DAO_INTERFACE_TYPE, fqjt);
     }
 
-    private void calculateJavaModelPackage() {
+    protected void calculateJavaModelPackage() {
         JavaModelGeneratorConfiguration config = ibatorContext.getJavaModelGeneratorConfiguration();
 
         StringBuilder sb = new StringBuilder();
@@ -591,7 +613,7 @@ public abstract class IntrospectedTable {
         setAttribute(ATTR_JAVA_MODEL_PACKAGE, sb.toString());
     }
     
-    private void calculatePrimaryKeyType() {
+    protected void calculatePrimaryKeyType() {
         StringBuilder sb = new StringBuilder();
         sb.append(getJavaModelPackage());
         sb.append('.');
@@ -603,7 +625,7 @@ public abstract class IntrospectedTable {
         setAttribute(ATTR_PRIMARY_KEY_TYPE, fqjt);
     }
     
-    private void calculateBaseRecordType() {
+    protected void calculateBaseRecordType() {
         StringBuilder sb = new StringBuilder();
         sb.append(getJavaModelPackage());
         sb.append('.');
@@ -614,7 +636,7 @@ public abstract class IntrospectedTable {
         setAttribute(ATTR_BASE_RECORD_TYPE, fqjt);
     }
     
-    private void calculateRecordWithBLOBsType() {
+    protected void calculateRecordWithBLOBsType() {
         StringBuilder sb = new StringBuilder();
         sb.append(getJavaModelPackage());
         sb.append('.');
@@ -626,7 +648,7 @@ public abstract class IntrospectedTable {
         setAttribute(ATTR_RECORD_WITH_BLOBS_TYPE, fqjt);
     }
 
-    private void calculateExampleType() {
+    protected void calculateExampleType() {
         StringBuilder sb = new StringBuilder();
         sb.append(getJavaModelPackage());
         sb.append('.');
@@ -638,7 +660,7 @@ public abstract class IntrospectedTable {
         setAttribute(ATTR_EXAMPLE_TYPE, fqjt);
     }
     
-    private void calculateSqlMapPackage() {
+    protected void calculateSqlMapPackage() {
         SqlMapGeneratorConfiguration config = ibatorContext.getSqlMapGeneratorConfiguration();
         
         StringBuilder sb = new StringBuilder(config.getTargetPackage());
@@ -649,13 +671,36 @@ public abstract class IntrospectedTable {
         setAttribute(ATTR_SQL_MAP_PACKAGE, sb.toString());;
     }
 
-    private void calculateSqlMapFileName() {
+    protected void calculateSqlMapFileName() {
         StringBuilder sb = new StringBuilder();
         sb.append(fullyQualifiedTable.getSqlMapNamespace());
         sb.append("_SqlMap.xml"); //$NON-NLS-1$
 
         setAttribute(ATTR_SQL_MAP_FILE_NAME, sb.toString());
     }
+    
+    protected void calculateSqlMapNamespace() {
+        setAttribute(ATTR_SQL_MAP_NAMESPACE, fullyQualifiedTable.getSqlMapNamespace());
+    }
+    
+    protected void calculateSqlMapFullyQualifiedRuntimeTableName() {
+        setAttribute(ATTR_SQL_MAP_FULLY_QUALIFIED_TABLE_NAME_AT_RUNTIME,
+                fullyQualifiedTable.getFullyQualifiedTableNameAtRuntime());
+    }
+    
+    protected void calculateSqlMapAliasedFullyQualifiedRuntimeTableName() {
+        setAttribute(ATTR_SQL_MAP_ALIASED_FULLY_QUALIFIED_TABLE_NAME_AT_RUNTIME,
+                fullyQualifiedTable.getAliasedFullyQualifiedTableNameAtRuntime());
+    }
+    
+    public String getFullyQualifiedTableNameAtRuntime() {
+        return (String) getAttribute(ATTR_SQL_MAP_FULLY_QUALIFIED_TABLE_NAME_AT_RUNTIME);
+    }
+    
+    public String getAliasedFullyQualifiedTableNameAtRuntime() {
+        return (String) getAttribute(ATTR_SQL_MAP_ALIASED_FULLY_QUALIFIED_TABLE_NAME_AT_RUNTIME);
+    }
+    
     
     /**
      * This method can be used to initialize the generators before they

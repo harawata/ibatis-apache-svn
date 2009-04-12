@@ -15,7 +15,6 @@
  */
 package org.apache.ibatis.ibator.generator.ibatis2.sqlmap.elements;
 
-import org.apache.ibatis.ibator.api.FullyQualifiedTable;
 import org.apache.ibatis.ibator.api.IntrospectedColumn;
 import org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.ibator.api.dom.xml.Attribute;
@@ -38,7 +37,6 @@ public class SelectByPrimaryKeyElementGenerator extends AbstractXmlElementGenera
     @Override
     public void addElements(XmlElement parentElement) {
         XmlElement answer = new XmlElement("select"); //$NON-NLS-1$
-        FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
 
         answer.addAttribute(new Attribute(
                 "id", XmlConstants.SELECT_BY_PRIMARY_KEY_STATEMENT_ID)); //$NON-NLS-1$
@@ -73,15 +71,15 @@ public class SelectByPrimaryKeyElementGenerator extends AbstractXmlElementGenera
             sb.append("' as QUERYID,"); //$NON-NLS-1$
         }
         answer.addElement(new TextElement(sb.toString()));
-        answer.addElement(getBaseColumnListElement(table));
+        answer.addElement(getBaseColumnListElement());
         if (introspectedTable.hasBLOBColumns()) {
             answer.addElement(new TextElement(",")); //$NON-NLS-1$
-            answer.addElement(getBlobColumnListElement(table));
+            answer.addElement(getBlobColumnListElement());
         }
 
         sb.setLength(0);
         sb.append("from "); //$NON-NLS-1$
-        sb.append(table.getAliasedFullyQualifiedTableNameAtRuntime());
+        sb.append(introspectedTable.getAliasedFullyQualifiedTableNameAtRuntime());
         answer.addElement(new TextElement(sb.toString()));
 
         boolean and = false;

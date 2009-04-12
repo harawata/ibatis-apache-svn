@@ -30,12 +30,12 @@
             now accept the parameter <code>IntrospectedTable</code> instead.
             The <code>FullyQualifiedTable</code> instance is available through
             the method <code>IntrospectedTable.getFullyQualifiedTable()</code>.
-        </li> 
+        </li>
         <li>Methods which accepted the <code>String</code> parameter <code>columnName</code>
             now accept the parameter <code>IntrospectedColumn</code> instead.
             The column name is available through
             the method <code>IntrospectedColumn.getActualColumnName()</code>.
-        </li> 
+        </li>
       </ul>
       <p><b>Important Note:</b> any implementation that subclasses the Ibator
       supplied class <code>DefaultCommentGenerator</code> does not need to
@@ -53,7 +53,7 @@
   <li>Fixed NPE and incorrect calculation in generated equals method
       (from EqualsHashCodePlugin) when certain
       fields are null - thanks to Benjamin Klatt for finding this bug.</li>
-  
+
 </ul>
 
 <h3>Enhancements</h3>
@@ -92,7 +92,10 @@
       See the <a href="configreference/columnOverride.html">&lt;columnOverride&gt;</a> page
       for more information. Thanks to Dan Turkenkopf for the idea and a nice initial patch.</li>
   <li>The IntrospectedColumn class now contains any column remarks returned during
-      database introspection. This may be useful for some CommentGenerators.</li> 
+      database introspection. This may be useful for some CommentGenerators.</li>
+  <li>IBATIS-592 - Added attributes to IntrospectedTable that contain the calculated
+      SqlMap namespace, and the calculated runtime table names.  These can now be overridden in
+      plugins.</li>
 </ul>
 
 <h2>Version 1.2.1</h2>
