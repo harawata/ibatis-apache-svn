@@ -17,10 +17,10 @@ public class XMLMapperEntityResolver implements EntityResolver {
   private static final Map<String, String> doctypeMap = new HashMap<String, String>();
 
   static {
-    doctypeMap.put("http://ibatis.apache.org/dtd/ibatis-config-3.dtd".toUpperCase(), MAPPER_CONFIG_DTD_RESOURCE);
+    doctypeMap.put("http://ibatis.apache.org/dtd/ibatis-3-config.dtd".toUpperCase(), MAPPER_CONFIG_DTD_RESOURCE);
     doctypeMap.put("-//ibatis.apache.org//DTD Config 3.0//EN".toUpperCase(), MAPPER_CONFIG_DTD_RESOURCE);
 
-    doctypeMap.put("http://ibatis.apache.org/dtd/ibatis-mapper-3.dtd".toUpperCase(), MAPPER_DTD_RESOURCE);
+    doctypeMap.put("http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd".toUpperCase(), MAPPER_DTD_RESOURCE);
     doctypeMap.put("-//ibatis.apache.org//DTD Mapper 3.0//EN".toUpperCase(), MAPPER_DTD_RESOURCE);
   }
 

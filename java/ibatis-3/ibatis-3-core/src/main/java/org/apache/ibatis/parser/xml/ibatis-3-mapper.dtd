@@ -128,17 +128,7 @@ alias CDATA #REQUIRED
 type CDATA #REQUIRED
 >
 
-<!ELEMENT include EMPTY>
-<!ATTLIST include
-refid CDATA #REQUIRED
->
-
-<!ELEMENT sql (#PCDATA | include)*>
-<!ATTLIST sql
-id CDATA #REQUIRED
->
-
-<!ELEMENT select (#PCDATA | include)*>
+<!ELEMENT select (#PCDATA | include | prefix | where | set | foreach | choose | if)*>
 <!ATTLIST select
 id CDATA #REQUIRED
 parameterMap CDATA #IMPLIED
@@ -152,7 +142,7 @@ flushCache (true|false) #IMPLIED
 useCache (true|false) #IMPLIED
 >
 
-<!ELEMENT insert (#PCDATA | selectKey | include)*>
+<!ELEMENT insert (#PCDATA | selectKey | include | prefix | where | set | foreach | choose | if)*>
 <!ATTLIST insert
 id CDATA #REQUIRED
 parameterMap CDATA #IMPLIED
@@ -161,14 +151,14 @@ timeout CDATA #IMPLIED
 flushCache (true|false) #IMPLIED
 >
 
-<!ELEMENT selectKey (#PCDATA | include)*>
+<!ELEMENT selectKey (#PCDATA | include | prefix | where | set | foreach | choose | if)*>
 <!ATTLIST selectKey
 resultType CDATA #IMPLIED
 keyProperty CDATA #IMPLIED
 order (before|after) #IMPLIED
 >
 
-<!ELEMENT update (#PCDATA | include)*>
+<!ELEMENT update (#PCDATA | include | prefix | where | set | foreach | choose | if)*>
 <!ATTLIST update
 id CDATA #REQUIRED
 parameterMap CDATA #IMPLIED
@@ -177,7 +167,7 @@ timeout CDATA #IMPLIED
 flushCache (true|false) #IMPLIED
 >
 
-<!ELEMENT delete (#PCDATA | include)*>
+<!ELEMENT delete (#PCDATA | include | prefix | where | set | foreach | choose | if)*>
 <!ATTLIST delete
 id CDATA #REQUIRED
 parameterMap CDATA #IMPLIED
@@ -185,3 +175,47 @@ parameterType CDATA #IMPLIED
 timeout CDATA #IMPLIED
 flushCache (true|false) #IMPLIED
 >
+
+<!-- Dynamic -->
+
+<!ELEMENT include EMPTY>
+<!ATTLIST include
+refid CDATA #REQUIRED
+>
+
+<!ELEMENT sql (#PCDATA | include | prefix | where | set | foreach | choose | if)*>
+<!ATTLIST sql
+id CDATA #REQUIRED
+>
+
+<!ELEMENT prefix (#PCDATA | include | prefix | where | set | foreach | choose | if)*>
+<!ATTLIST prefix
+with CDATA #IMPLIED
+overrides CDATA #IMPLIED
+>
+<!ELEMENT where (#PCDATA | include | prefix | where | set | foreach | choose | if)*>
+<!ELEMENT set (#PCDATA | include | prefix | where | set | foreach | choose | if)*>
+
+<!ELEMENT foreach (#PCDATA | include | prefix | where | set | foreach | choose | if)*>
+<!ATTLIST foreach
+collection CDATA #REQUIRED
+item CDATA #IMPLIED
+index CDATA #IMPLIED
+open CDATA #IMPLIED
+close CDATA #IMPLIED
+separator CDATA #IMPLIED
+>
+
+<!ELEMENT choose (when* , otherwise?)>
+<!ELEMENT when (#PCDATA | include | prefix | where | set | foreach | choose | if)*>
+<!ATTLIST when
+test CDATA #REQUIRED
+>
+<!ELEMENT otherwise (#PCDATA | include | prefix | where | set | foreach | choose | if)*>
+
+<!ELEMENT if (#PCDATA | include | prefix | where | set | foreach | choose | if)*>
+<!ATTLIST if
+test CDATA #REQUIRED
+>
+
+

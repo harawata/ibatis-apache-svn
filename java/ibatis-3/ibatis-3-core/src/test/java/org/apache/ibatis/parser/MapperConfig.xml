@@ -2,7 +2,7 @@
 
 <!DOCTYPE configuration
     PUBLIC "-//ibatis.apache.org//DTD Config 3.0//EN"
-    "http://ibatis.apache.org/dtd/ibatis-config-3.dtd">
+    "http://ibatis.apache.org/dtd/ibatis-3-config.dtd">
 
 <configuration>
 

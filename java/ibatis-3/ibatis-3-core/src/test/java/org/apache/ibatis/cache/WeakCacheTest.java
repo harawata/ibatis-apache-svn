@@ -4,10 +4,11 @@ import org.apache.ibatis.cache.decorators.*;
 import org.apache.ibatis.cache.impl.PerpetualCache;
 import static org.junit.Assert.*;
 import org.junit.Test;
+import org.junit.Ignore;
 
 public class WeakCacheTest {
 
-  @Test
+  @Test @Ignore
   public void shouldDemonstrateObjectsBeingCollectedAsNeeded() {
     final int N = 300000;
     WeakCache cache = new WeakCache(new PerpetualCache("default"));

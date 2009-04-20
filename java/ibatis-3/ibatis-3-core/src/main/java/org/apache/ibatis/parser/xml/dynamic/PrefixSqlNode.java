@@ -5,19 +5,30 @@ import java.util.*;
 public class PrefixSqlNode implements SqlNode {
 
   private SqlNode contents;
-  private List<String> stringsToRemove = new ArrayList<String>();
-  private String stringToInsert;
+  private String stringToPrefixWith;
+  private List<String> stringsToOverride = new ArrayList<String>();
 
-  public PrefixSqlNode(SqlNode contents, String stringToInsert, List<String> stringsToRemove) {
+  public PrefixSqlNode(SqlNode contents, String with, String overrides) {
     this.contents = contents;
-    this.stringsToRemove = stringsToRemove;
-    this.stringToInsert = stringToInsert;
+    this.stringToPrefixWith = with;
+    this.stringsToOverride = parseOverrides(overrides);
   }
 
   public boolean apply(DynamicContext context) {
     return contents.apply(new FilteredDynamicContext(context));
   }
 
+  private List<String> parseOverrides(String overrides) {
+    if (overrides != null) {
+      final StringTokenizer parser = new StringTokenizer(overrides, "|", false);
+      return new ArrayList<String>() {{
+          while (parser.hasMoreTokens()) {
+            add(parser.nextToken());
+          }}
+      };
+    }
+    return Collections.EMPTY_LIST;
+  }
 
   private class FilteredDynamicContext extends DynamicContext {
     private DynamicContext delegate;
@@ -41,14 +52,14 @@ public class PrefixSqlNode implements SqlNode {
       if (!filtered) {
         filtered = true;
         String filteredSql = sql.trim().toUpperCase();
-        for(String toRemove : stringsToRemove) {
+        for (String toRemove : stringsToOverride) {
           if (filteredSql.startsWith(toRemove)) {
             sql = sql.trim().substring(toRemove.trim().length()).trim();
             break;
           }
         }
-        if (stringToInsert != null) {
-          delegate.appendSql(stringToInsert);
+        if (stringToPrefixWith != null) {
+          delegate.appendSql(stringToPrefixWith);
         }
         delegate.appendSql(sql);
       } else {
