@@ -482,6 +482,10 @@ public class ExampleGenerator extends BaseModelClassGenerator {
                     .getDateInstance(), "value")); //$NON-NLS-1$
             method.addParameter(new Parameter(FullyQualifiedJavaType
                     .getStringInstance(), "property")); //$NON-NLS-1$
+            method.addBodyLine("if (value == null) {"); //$NON-NLS-1$
+            method
+                    .addBodyLine("throw new RuntimeException(\"Value for \" + property + \" cannot be null\");"); //$NON-NLS-1$
+            method.addBodyLine("}"); //$NON-NLS-1$
             method
                     .addBodyLine("addCriterion(condition, new java.sql.Date(value.getTime()), property);"); //$NON-NLS-1$
             answer.addMethod(method);
@@ -548,6 +552,10 @@ public class ExampleGenerator extends BaseModelClassGenerator {
                     .getDateInstance(), "value")); //$NON-NLS-1$
             method.addParameter(new Parameter(FullyQualifiedJavaType
                     .getStringInstance(), "property")); //$NON-NLS-1$
+            method.addBodyLine("if (value == null) {"); //$NON-NLS-1$
+            method
+                    .addBodyLine("throw new RuntimeException(\"Value for \" + property + \" cannot be null\");"); //$NON-NLS-1$
+            method.addBodyLine("}"); //$NON-NLS-1$
             method
                     .addBodyLine("addCriterion(condition, new java.sql.Time(value.getTime()), property);"); //$NON-NLS-1$
             answer.addMethod(method);

@@ -25,6 +25,7 @@ Enhancements:
    columnOverrides (thanks to Dan Turkenkopf for the idea and a nice initial patch)
 10. Gather column comments during introspection
 11. IBATIS-592 - Additional attributes for SqlMaps
+12. Fixed addCriterionfor JDBC* methods so that they all do a null check
 
 -------------------------------------------------------------------------------
 Version 1.2.1:
