@@ -1,6 +1,6 @@
 package org.apache.ibatis.parser.xml.dynamic;
 
-import org.apache.ibatis.xml.GenericTokenParser;
+import org.apache.ibatis.xpath.GenericTokenParser;
 
 public class TextSqlNode implements SqlNode {
   private String text;

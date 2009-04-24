@@ -2,7 +2,7 @@ package org.apache.ibatis.parser;
 
 import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.type.TypeHandler;
-import org.apache.ibatis.xml.GenericTokenParser;
+import org.apache.ibatis.xpath.GenericTokenParser;
 
 import java.util.*;
 

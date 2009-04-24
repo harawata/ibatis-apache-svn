@@ -1,19 +1,20 @@
-package org.apache.ibatis.xml;
+package org.apache.ibatis.xpath;
 
 import org.w3c.dom.*;
-import org.apache.ibatis.xpath.PropertyParser;
 
 import java.util.*;
 
-public class NodeletContext {
+public class XNode {
 
   private Node node;
+  private String name;
   private String body;
   private Properties attributes;
   private Properties variables;
 
-  public NodeletContext(Node node, Properties variables) {
+  public XNode(Node node, Properties variables) {
     this.node = node;
+    this.name = node.getNodeName();
     this.variables = variables;
     this.attributes = parseAttributes(node);
     this.body = parseBody(node);
@@ -21,6 +22,10 @@ public class NodeletContext {
 
   public Node getNode() {
     return node;
+  }
+
+  public String getName() {
+    return name;
   }
 
   public String getStringBody() {
@@ -173,12 +178,15 @@ public class NodeletContext {
     }
   }
 
-  public List<NodeletContext> getChildren() {
-    List<NodeletContext> children = new ArrayList<NodeletContext>();
+  public List<XNode> getChildren() {
+    List<XNode> children = new ArrayList<XNode>();
     NodeList nodeList = node.getChildNodes();
     if (nodeList != null) {
       for (int i = 0, n = nodeList.getLength(); i < n; i++) {
-        children.add(new NodeletContext(nodeList.item(i), variables));
+        Node node = nodeList.item(i);
+        if (node.getNodeType() == Node.ELEMENT_NODE) {
+          children.add(new XNode(node, variables));
+        }
       }
     }
     return children;
@@ -186,7 +194,7 @@ public class NodeletContext {
 
   public Properties getChildrenAsProperties() {
     Properties properties = new Properties();
-    for (NodeletContext child : getChildren()) {
+    for (XNode child : getChildren()) {
       String name = child.getStringAttribute("name");
       String value = child.getStringAttribute("value");
       if (name != null && value != null) {
@@ -194,6 +202,39 @@ public class NodeletContext {
       }
     }
     return properties;
+  }
+
+  public String toString() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("<");
+    builder.append(name);
+    for (Map.Entry entry : attributes.entrySet()) {
+      builder.append(" ");
+      builder.append(entry.getKey());
+      builder.append("=\"");
+      builder.append(entry.getValue());
+      builder.append("\"");
+    }
+    List<XNode> children = getChildren();
+    if (children.size() > 0) {
+      builder.append(">\n");
+      for (XNode node : children) {
+        builder.append(node.toString());
+      }
+      builder.append("</");
+      builder.append(name);
+      builder.append(">");
+    } else if (body != null) {
+      builder.append(">");
+      builder.append(body);
+      builder.append("</");
+      builder.append(name);
+      builder.append(">");
+    } else {
+      builder.append("/>");
+    }
+    builder.append("\n");
+    return builder.toString();
   }
 
   private Properties parseAttributes(Node n) {

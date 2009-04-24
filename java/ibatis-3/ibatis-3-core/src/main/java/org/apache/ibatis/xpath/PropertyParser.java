@@ -1,4 +1,4 @@
-package org.apache.ibatis.xml;
+package org.apache.ibatis.xpath;
 
 import java.util.Properties;
 
