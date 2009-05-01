@@ -46,6 +46,7 @@
   </transactionManager>
 
   <sqlMap resource="${SqlMapPath}/DerbyProc.xml"/>
+  <sqlMap resource="${SqlMapPath}/Account.xml"/>
   
 </sqlMapConfig>
 

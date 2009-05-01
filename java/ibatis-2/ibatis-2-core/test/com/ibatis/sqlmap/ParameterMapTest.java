@@ -54,8 +54,13 @@ public class ParameterMapTest extends BaseSqlMapTest {
 
 
     assertNotNull(expected);
-	assertTrue(expected.getMessage().indexOf("Attempt to insert null into a non-nullable column: column: ACC_ID table: ACCOUNT in statement") > -1);
+    assertMessageIsNullValueNotAllowed(expected.getMessage());
     assertNull(account);
+  }
+
+  protected void assertMessageIsNullValueNotAllowed(String message) {
+    assertTrue("Invalid exception message",
+               message.indexOf("Attempt to insert null into a non-nullable column: column: ACC_ID table: ACCOUNT in statement") > -1);
   }
 
   public void testSpecifiedType() throws SQLException {

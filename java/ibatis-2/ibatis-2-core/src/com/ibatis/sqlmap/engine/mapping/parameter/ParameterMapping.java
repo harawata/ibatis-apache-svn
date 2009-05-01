@@ -45,6 +45,8 @@ public class ParameterMapping {
     mode = "IN";
     inputAllowed = true;
     outputAllowed = false;
+    // Default JDBC type if UNKNOWN_TYPE
+    jdbcType = JdbcTypeRegistry.UNKNOWN_TYPE;
   }
 
   public String getNullValue() {

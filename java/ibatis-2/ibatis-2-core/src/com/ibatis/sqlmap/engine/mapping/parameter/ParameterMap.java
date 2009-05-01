@@ -15,6 +15,8 @@
  */
 package com.ibatis.sqlmap.engine.mapping.parameter;
 
+import com.ibatis.common.logging.Log;
+import com.ibatis.common.logging.LogFactory;
 import com.ibatis.sqlmap.engine.cache.CacheKey;
 import com.ibatis.sqlmap.engine.exchange.DataExchange;
 import com.ibatis.sqlmap.engine.impl.SqlMapExecutorDelegate;
@@ -24,6 +26,7 @@ import com.ibatis.sqlmap.engine.type.CustomTypeHandler;
 import com.ibatis.sqlmap.engine.type.JdbcTypeRegistry;
 import com.ibatis.sqlmap.engine.type.TypeHandler;
 
+import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Types;
@@ -33,10 +36,14 @@ import java.util.Map;
 
 public class ParameterMap {
 
+  private static final Log log = LogFactory.getLog(ParameterMap.class);
+
   private String id;
   private Class parameterClass;
 
   private ParameterMapping[] parameterMappings;
+  private Boolean useSetObjectForNullValue;
+  private int sqlTypeToUseForNullValue;
   private DataExchange dataExchange;
 
   private String resource;
@@ -171,7 +178,30 @@ public class ParameterMap {
       if (jdbcType != JdbcTypeRegistry.UNKNOWN_TYPE) {
         ps.setNull(i + 1, jdbcType);
       } else {
-        ps.setNull(i + 1, Types.OTHER);
+        // Cloned from Spring StatementCreatorUtils.java (IBATIS-536)
+        if (useSetObjectForNullValue == null) {
+          // Keep current JDBC connection preferences for limiting introspections
+          useSetObjectForNullValue = Boolean.FALSE;
+          sqlTypeToUseForNullValue = Types.NULL;
+          try {
+            DatabaseMetaData dbmd = ps.getConnection().getMetaData();
+            String databaseProductName = dbmd.getDatabaseProductName();
+            String jdbcDriverName = dbmd.getDriverName();
+            if (databaseProductName.startsWith("Informix") || jdbcDriverName.startsWith("Microsoft SQL Server")) {
+              useSetObjectForNullValue = Boolean.TRUE;
+            } else if (databaseProductName.startsWith("DB2") || jdbcDriverName.startsWith("jConnect") ||
+                       jdbcDriverName.startsWith("SQLServer") || jdbcDriverName.startsWith("Apache Derby Embedded")) {
+              sqlTypeToUseForNullValue = Types.VARCHAR;
+            }
+          } catch (Throwable ex) {
+            log.debug("Could not check database or driver name: " + ex.getMessage());
+          }
+        }
+        if (useSetObjectForNullValue.booleanValue()) {
+          ps.setObject(i + 1, null);
+        } else {
+          ps.setNull(i + 1, sqlTypeToUseForNullValue);
+        }
       }
     }
   }
