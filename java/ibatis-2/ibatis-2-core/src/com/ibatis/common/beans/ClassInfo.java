@@ -15,9 +15,31 @@
  */
 package com.ibatis.common.beans;
 
-import java.lang.reflect.*;
-import java.math.*;
-import java.util.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.ReflectPermission;
+import java.lang.reflect.UndeclaredThrowableException;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
+import java.util.Vector;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * This class represents a cached set of class definition information that
@@ -28,7 +50,7 @@ public class ClassInfo {
   private static boolean cacheEnabled = true;
   private static final String[] EMPTY_STRING_ARRAY = new String[0];
   private static final Set SIMPLE_TYPE_SET = new HashSet();
-  private static final Map CLASS_INFO_MAP = Collections.synchronizedMap(new HashMap());
+  private static final Map<Class, ClassInfo> CLASS_INFO_MAP = new ConcurrentHashMap<Class, ClassInfo>();
 
   private String className;
   private String[] readablePropertyNames = EMPTY_STRING_ARRAY;
@@ -491,14 +513,12 @@ public class ClassInfo {
    */
   public static ClassInfo getInstance(Class clazz) {
     if (cacheEnabled) {
-      synchronized (clazz) {
-        ClassInfo cached = (ClassInfo) CLASS_INFO_MAP.get(clazz);
-        if (cached == null) {
-          cached = new ClassInfo(clazz);
-          CLASS_INFO_MAP.put(clazz, cached);
-        }
-        return cached;
+      ClassInfo cached = (ClassInfo) CLASS_INFO_MAP.get(clazz);
+      if (cached == null) {
+        cached = new ClassInfo(clazz);
+        CLASS_INFO_MAP.put(clazz, cached);
       }
+      return cached;
     } else {
       return new ClassInfo(clazz);
     }
