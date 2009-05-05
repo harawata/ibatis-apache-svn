@@ -11,13 +11,35 @@ public class XNode {
   private String body;
   private Properties attributes;
   private Properties variables;
+  private XPathParser xpathParser;
 
-  public XNode(Node node, Properties variables) {
+  public XNode(XPathParser xpathParser, Node node, Properties variables) {
+    this.xpathParser = xpathParser;
     this.node = node;
     this.name = node.getNodeName();
     this.variables = variables;
     this.attributes = parseAttributes(node);
     this.body = parseBody(node);
+  }
+
+  public String evalString(String expression) {
+    return xpathParser.evalString(node, expression);
+  }
+
+  public Boolean evalBoolean(String expression) {
+    return xpathParser.evalBoolean(node, expression);
+  }
+
+  public Double evalDouble(String expression) {
+    return xpathParser.evalDouble(node, expression);
+  }
+
+  public List<XNode> evalNodes(String expression) {
+    return xpathParser.evalNodes(node, expression);
+  }
+
+  public XNode evalNode(String expression) {
+    return xpathParser.evalNode(node, expression);
   }
 
   public Node getNode() {
@@ -185,7 +207,7 @@ public class XNode {
       for (int i = 0, n = nodeList.getLength(); i < n; i++) {
         Node node = nodeList.item(i);
         if (node.getNodeType() == Node.ELEMENT_NODE) {
-          children.add(new XNode(node, variables));
+          children.add(new XNode(xpathParser, node, variables));
         }
       }
     }

@@ -33,37 +33,61 @@ public class XPathParser {
     this.xpath = factory.newXPath();
   }
 
-  public String getString(String expression) {
-    String result = (String) evaluate(expression, XPathConstants.STRING);
+  public void setVariables(Properties variables) {
+    this.variables = variables;
+  }
+
+  public String evalString(String expression) {
+    return evalString(document, expression);
+  }
+
+  public String evalString(Object root, String expression) {
+    String result = (String) evaluate(expression, root, XPathConstants.STRING);
     result = PropertyParser.parse(result, variables);
     return result;
   }
 
-  public Boolean getBoolean(String expression) {
-    return (Boolean)evaluate(expression, XPathConstants.BOOLEAN);
+  public Boolean evalBoolean(String expression) {
+    return evalBoolean(document, expression);
   }
 
-  public Double getDouble(String expression) {
-    return (Double)evaluate(expression, XPathConstants.NUMBER);
+  public Boolean evalBoolean(Object root, String expression) {
+    return (Boolean)evaluate(expression, root, XPathConstants.BOOLEAN);
   }
 
-  public List<XNode> getNodes(String expression) {
+  public Double evalDouble(String expression) {
+    return evalDouble(document, expression);
+  }
+
+  public Double evalDouble(Object root, String expression) {
+    return (Double)evaluate(expression, root, XPathConstants.NUMBER);
+  }
+
+  public List<XNode> evalNodes(String expression) {
+    return evalNodes(document, expression);
+  }
+
+  public List<XNode> evalNodes(Object root, String expression) {
     List<XNode> xnodes = new ArrayList<XNode>();
-    NodeList nodes = (NodeList) evaluate(expression, XPathConstants.NODESET);
+    NodeList nodes = (NodeList) evaluate(expression, root, XPathConstants.NODESET);
     for(int i = 0; i < nodes.getLength(); i++) {
-      xnodes.add(new XNode(nodes.item(i),variables));
+      xnodes.add(new XNode(this,nodes.item(i),variables));
     }
     return xnodes;
   }
 
-  public XNode getNode(String expression) {
-    Node node = (Node) evaluate(expression, XPathConstants.NODE);
-    return new XNode(node,variables);
+  public XNode evalNode(String expression) {
+    return evalNode(document, expression);
   }
 
-  private Object evaluate(String expression, QName returnType) {
+  public XNode evalNode(Object root, String expression) {
+    Node node = (Node) evaluate(expression, root, XPathConstants.NODE);
+    return new XNode(this,node,variables);
+  }
+
+  private Object evaluate(String expression, Object root, QName returnType) {
     try {
-      return xpath.evaluate(expression, document, returnType);
+      return xpath.evaluate(expression, root, returnType);
     } catch (Exception e) {
       throw new RuntimeException("Error evaluating XPath.  Cause: " + e, e);
     }
@@ -99,6 +123,5 @@ public class XPathParser {
       throw new RuntimeException("Error creating document instance.  Cause: " + e, e);
     }
   }
-
 
 }
