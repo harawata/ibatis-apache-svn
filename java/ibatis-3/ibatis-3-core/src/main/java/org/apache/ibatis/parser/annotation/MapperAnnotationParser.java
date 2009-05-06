@@ -16,18 +16,18 @@ import java.util.*;
 
 public class MapperAnnotationParser {
 
-  private SequentialMapperBuilder configurator;
+  private SequentialMapperBuilder sequentialBuilder;
   private Class type;
 
   public MapperAnnotationParser(Configuration config, Class type) {
     String resource = type.getName().replace('.', '/') + ".java (best guess)";
-    this.configurator = new SequentialMapperBuilder(config, resource);
+    this.sequentialBuilder = new SequentialMapperBuilder(config, resource);
     this.type = type;
   }
 
   public void parse() {
     loadXmlResource();
-    configurator.namespace(type.getName());
+    sequentialBuilder.namespace(type.getName());
     parseCache();
     parseCacheRef();
     Method[] methods = type.getMethods();
@@ -46,7 +46,7 @@ public class MapperAnnotationParser {
       // ignore, resource is not required
     }
     if (xmlReader != null) {
-      XMLMapperParser xmlParser = new XMLMapperParser(xmlReader, configurator.getConfiguration(), xmlResource, type.getName());
+      XMLMapperParser xmlParser = new XMLMapperParser(xmlReader, sequentialBuilder.getConfiguration(), xmlResource, type.getName());
       xmlParser.parse();
     }
   }
@@ -54,14 +54,14 @@ public class MapperAnnotationParser {
   private void parseCache() {
     CacheDomain cacheDomain = (CacheDomain) type.getAnnotation(CacheDomain.class);
     if (cacheDomain != null) {
-      configurator.cache(cacheDomain.implementation(), cacheDomain.eviction(), cacheDomain.flushInterval(), cacheDomain.size(), !cacheDomain.readWrite(), null);
+      sequentialBuilder.cache(cacheDomain.implementation(), cacheDomain.eviction(), cacheDomain.flushInterval(), cacheDomain.size(), !cacheDomain.readWrite(), null);
     }
   }
 
   private void parseCacheRef() {
     CacheDomainRef cacheDomainRef = (CacheDomainRef) type.getAnnotation(CacheDomainRef.class);
     if (cacheDomainRef != null) {
-      configurator.cacheRef(cacheDomainRef.value().getName());
+      sequentialBuilder.cacheRef(cacheDomainRef.value().getName());
     }
   }
 
@@ -90,11 +90,11 @@ public class MapperAnnotationParser {
 
   private void applyResultMap(String resultMapId, Class returnType, Arg[] args, Result[] results, TypeDiscriminator discriminator) {
     applyNestedResultMaps(resultMapId, returnType, results);
-    configurator.resultMapStart(resultMapId, returnType, null);
+    sequentialBuilder.resultMapStart(resultMapId, returnType, null);
     applyConstructorArgs(args);
     applyResults(resultMapId, results);
     applyDiscriminator(resultMapId, discriminator);
-    configurator.resultMapEnd();
+    sequentialBuilder.resultMapEnd();
     createDiscriminatorResultMaps(resultMapId, discriminator);
   }
 
@@ -104,13 +104,13 @@ public class MapperAnnotationParser {
         String value = c.value();
         Class type = c.type();
         String caseResultMapId = resultMapId + "-" + value;
-        configurator.resultMapStart(caseResultMapId, type, resultMapId);
+        sequentialBuilder.resultMapStart(caseResultMapId, type, resultMapId);
         for (Result result : c.results()) {
           List<ResultFlag> flags = new ArrayList<ResultFlag>();
           if (result.id()) {
             flags.add(ResultFlag.ID);
           }
-          configurator.resultMapping(
+          sequentialBuilder.resultMapping(
               result.property(),
               result.column(),
               result.javaType() == void.class ? null : result.javaType(),
@@ -120,7 +120,7 @@ public class MapperAnnotationParser {
               result.typeHandler() == void.class ? null : result.typeHandler(),
               flags);
         }
-        configurator.resultMapEnd();
+        sequentialBuilder.resultMapEnd();
       }
     }
   }
@@ -133,13 +133,13 @@ public class MapperAnnotationParser {
       Class typeHandler = discriminator.typeHandler() == void.class ? null : discriminator.typeHandler();
       Case[] cases = discriminator.cases();
 
-      configurator.resultMapDiscriminatorStart(column, javaType, jdbcType, typeHandler);
+      sequentialBuilder.resultMapDiscriminatorStart(column, javaType, jdbcType, typeHandler);
       for (Case c : cases) {
         String value = c.value();
         String caseResultMapId = resultMapId + "-" + value;
-        configurator.resultMapDiscriminatorCase(value, caseResultMapId);
+        sequentialBuilder.resultMapDiscriminatorCase(value, caseResultMapId);
       }
-      configurator.resultMapDiscriminatorEnd();
+      sequentialBuilder.resultMapDiscriminatorEnd();
     }
   }
 
@@ -183,7 +183,7 @@ public class MapperAnnotationParser {
         statementType = options.statementType();
         resultSetType = options.resultSetType();
       }
-      configurator.statement(
+      sequentialBuilder.statement(
           mappedStatementId,
           sqlSource,
           fetchSize,
@@ -243,11 +243,11 @@ public class MapperAnnotationParser {
           sql.append(fragment);
           sql.append(" ");
         }
-        SqlSourceParser parser = new SqlSourceParser(configurator.getConfiguration());
+        SqlSourceParser parser = new SqlSourceParser(sequentialBuilder.getConfiguration());
         return parser.parse(sql.toString());
       } else if (sqlProviderAnnotationType != null) {
         Annotation sqlProviderAnnotation = method.getAnnotation(sqlProviderAnnotationType);
-        return new ProviderSqlSource(configurator.getConfiguration(), sqlProviderAnnotation);
+        return new ProviderSqlSource(sequentialBuilder.getConfiguration(), sqlProviderAnnotation);
       }
       return null;
     } catch (Exception e) {
@@ -280,7 +280,7 @@ public class MapperAnnotationParser {
       for (Result result : results) {
         ArrayList<ResultFlag> flags = new ArrayList<ResultFlag>();
         if (result.id()) flags.add(ResultFlag.ID);
-        configurator.resultMapping(
+        sequentialBuilder.resultMapping(
             result.property(),
             result.column(),
             result.javaType() == void.class ? null : result.javaType(),
@@ -315,7 +315,7 @@ public class MapperAnnotationParser {
         ArrayList<ResultFlag> flags = new ArrayList<ResultFlag>();
         flags.add(ResultFlag.CONSTRUCTOR);
         if (arg.id()) flags.add(ResultFlag.ID);
-        configurator.resultMapping(
+        sequentialBuilder.resultMapping(
             null,
             arg.column(),
             arg.javaType() == void.class ? null : arg.javaType(),
