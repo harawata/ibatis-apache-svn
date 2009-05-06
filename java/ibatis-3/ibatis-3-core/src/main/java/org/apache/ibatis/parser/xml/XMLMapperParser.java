@@ -201,60 +201,31 @@ public class XMLMapperParser extends BaseParser {
   //  <select ...>
   @Nodelet("/mapper/select")
   public void selectElement(NodeletContext context) throws Exception {
-    buildStatementFromContext(context, StatementType.PREPARED);
+    buildStatementFromContext(context);
   }
 
   //  <insert ...>
   @Nodelet("/mapper/insert")
   public void insertElement(NodeletContext context) throws Exception {
-    buildStatementFromContext(context, StatementType.PREPARED);
+    buildStatementFromContext(context);
   }
 
   //  <update ...>
   @Nodelet("/mapper/update")
   public void updateElement(NodeletContext context) throws Exception {
-    buildStatementFromContext(context, StatementType.PREPARED);
+    buildStatementFromContext(context);
   }
 
   //  <delete ...>
   @Nodelet("/mapper/delete")
   public void deleteElement(NodeletContext context) throws Exception {
-    buildStatementFromContext(context, StatementType.PREPARED);
+    buildStatementFromContext(context);
   }
 
-  //  <procedure ...>
-  @Nodelet("/mapper/procedure")
-  public void procedureElement(NodeletContext context) throws Exception {
-    buildStatementFromContext(context, StatementType.CALLABLE);
+  private void buildStatementFromContext(NodeletContext context) {
+    final XMLStatementParser statementParser = new XMLStatementParser(configuration, sequentialBuilder);
+    statementParser.parseStatementNode(context);
   }
-
-  //  <procedure ...>
-  @Nodelet("/mapper/statement")
-  public void statementElement(NodeletContext context) throws Exception {
-    buildStatementFromContext(context, StatementType.STATEMENT);
-  }
-
-  private void buildStatementFromContext(NodeletContext context, StatementType statementType) {
-    String id = context.getStringAttribute("id");
-    String sql = context.getStringBody();
-    Integer fetchSize = context.getIntAttribute("fetchSize", null);
-    Integer timeout = context.getIntAttribute("timeout", null);
-    boolean isSelect = "select".equals(context.getNode().getNodeName());
-    boolean flushCache = context.getBooleanAttribute("flushCache", !isSelect);
-    boolean useCache = context.getBooleanAttribute("useCache", isSelect);
-    String parameterMap = context.getStringAttribute("parameterMap");
-    String parameterType = context.getStringAttribute("parameterType");
-    Class parameterTypeClass = resolveClass(parameterType);
-    String resultMap = context.getStringAttribute("resultMap");
-    String resultType = context.getStringAttribute("resultType");
-    Class resultTypeClass = resolveClass(resultType);
-    String resultSetType = context.getStringAttribute("resultSetType");
-    ResultSetType resultSetTypeEnum = resolveResultSetType(resultSetType);
-    SqlSource sqlSource = new SqlSourceParser(configuration).parse(sql);
-    sequentialBuilder.statement(id, sqlSource, fetchSize, timeout, parameterMap, parameterTypeClass,
-        resultMap, resultTypeClass, resultSetTypeEnum, isSelect, flushCache, useCache, statementType);
-  }
-
 
   private void buildResultMappingFromContext(NodeletContext context, ArrayList<ResultFlag> flags) {
     String property = context.getStringAttribute("property");

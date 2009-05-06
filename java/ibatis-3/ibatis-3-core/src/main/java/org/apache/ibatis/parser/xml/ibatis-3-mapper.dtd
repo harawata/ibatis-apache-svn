@@ -136,6 +136,7 @@ parameterType CDATA #IMPLIED
 resultMap CDATA #IMPLIED
 resultType CDATA #IMPLIED
 resultSetType (FORWARD_ONLY | SCROLL_INSENSITIVE | SCROLL_SENSITIVE) #IMPLIED
+statementType (STATEMENT|PREPARED|CALLABLE) #IMPLIED
 fetchSize CDATA #IMPLIED
 timeout CDATA #IMPLIED
 flushCache (true|false) #IMPLIED
@@ -149,11 +150,13 @@ parameterMap CDATA #IMPLIED
 parameterType CDATA #IMPLIED
 timeout CDATA #IMPLIED
 flushCache (true|false) #IMPLIED
+statementType (STATEMENT|PREPARED|CALLABLE) #IMPLIED
 >
 
 <!ELEMENT selectKey (#PCDATA | include | prefix | where | set | foreach | choose | if)*>
 <!ATTLIST selectKey
 resultType CDATA #IMPLIED
+statementType (STATEMENT|PREPARED|CALLABLE) #IMPLIED
 keyProperty CDATA #IMPLIED
 order (before|after) #IMPLIED
 >
@@ -165,6 +168,7 @@ parameterMap CDATA #IMPLIED
 parameterType CDATA #IMPLIED
 timeout CDATA #IMPLIED
 flushCache (true|false) #IMPLIED
+statementType (STATEMENT|PREPARED|CALLABLE) #IMPLIED
 >
 
 <!ELEMENT delete (#PCDATA | include | prefix | where | set | foreach | choose | if)*>
@@ -174,6 +178,7 @@ parameterMap CDATA #IMPLIED
 parameterType CDATA #IMPLIED
 timeout CDATA #IMPLIED
 flushCache (true|false) #IMPLIED
+statementType (STATEMENT|PREPARED|CALLABLE) #IMPLIED
 >
 
 <!-- Dynamic -->
