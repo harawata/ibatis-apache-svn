@@ -10,7 +10,7 @@ import org.apache.ibatis.type.*;
 
 import java.util.*;
 
-public class MapperConfigurator extends BaseParser {
+public class SequentialMapperBuilder extends BaseParser {
 
   private String namespace;
   private String resource;
@@ -26,13 +26,13 @@ public class MapperConfigurator extends BaseParser {
 
   private Cache cache;
 
-  public MapperConfigurator(Configuration configuration, String resource) {
+  public SequentialMapperBuilder(Configuration configuration, String resource) {
     super(configuration);
     ErrorContext.instance().resource(resource);
     this.resource = resource;
   }
 
-  public String namespace() {
+  public String getNamespace() {
     return namespace;
   }
 

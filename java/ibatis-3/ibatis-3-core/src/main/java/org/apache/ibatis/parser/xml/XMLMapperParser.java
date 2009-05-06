@@ -12,7 +12,7 @@ public class XMLMapperParser extends BaseParser {
 
   protected Reader reader;
   protected NodeletParser parser;
-  protected MapperConfigurator mapperConfigurator;
+  protected SequentialMapperBuilder mapperConfigurator;
 
   public XMLMapperParser(Reader reader, Configuration configuration, String resource, String namespace) {
     this(reader, configuration, resource);
@@ -21,7 +21,7 @@ public class XMLMapperParser extends BaseParser {
 
   public XMLMapperParser(Reader reader, Configuration configuration, String resource) {
     super(configuration);
-    this.mapperConfigurator = new MapperConfigurator(configuration, resource);
+    this.mapperConfigurator = new SequentialMapperBuilder(configuration, resource);
     this.reader = reader;
     this.parser = new NodeletParser();
     this.parser.addNodeletHandler(this);
@@ -271,7 +271,7 @@ public class XMLMapperParser extends BaseParser {
   }
 
   private void bindMapperForNamespace() {
-    String namespace = mapperConfigurator.namespace();
+    String namespace = mapperConfigurator.getNamespace();
     if (namespace != null) {
       Class boundType = null;
       try {

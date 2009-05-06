@@ -16,12 +16,12 @@ import java.util.*;
 
 public class MapperAnnotationParser {
 
-  private MapperConfigurator configurator;
+  private SequentialMapperBuilder configurator;
   private Class type;
 
   public MapperAnnotationParser(Configuration config, Class type) {
     String resource = type.getName().replace('.', '/') + ".java (best guess)";
-    this.configurator = new MapperConfigurator(config, resource);
+    this.configurator = new SequentialMapperBuilder(config, resource);
     this.type = type;
   }
 
