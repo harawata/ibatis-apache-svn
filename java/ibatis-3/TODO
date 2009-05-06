@@ -2,12 +2,9 @@
 #          TODO List              #
 ###################################
 
-* Add resultType automapping option for collections so a resultMap isn' t required
-* Auto result/param types detected for bound XML statements
-* Named parameter parsing/merging
-* commitRequired option at the statement level
-* Return selectKey or autogen key from session.insert()
+Required:
 
+* Return selectKey or autogen key from session.insert()
 * Dynamic SQL XML Parser
     <where>
     <set>
@@ -17,3 +14,10 @@
     <choose>
       <when test>
       <otherwise>
+
+Nice to Have:
+
+* Add resultType automapping option for collections so a resultMap isn' t required
+* Auto result/param types detected for bound XML statements
+* Named parameter parsing/merging
+* commitRequired option at the statement level
