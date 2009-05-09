@@ -31,7 +31,6 @@ public class XMLStatementParser extends BaseParser {
 
   public void parseStatementNode(NodeletContext context) {
     String id = context.getStringAttribute("id");
-    String sql = context.getStringBody();
     Integer fetchSize = context.getIntAttribute("fetchSize", null);
     Integer timeout = context.getIntAttribute("timeout", null);
     boolean isSelect = "select".equals(context.getNode().getNodeName());
@@ -46,7 +45,11 @@ public class XMLStatementParser extends BaseParser {
     String resultSetType = context.getStringAttribute("resultSetType");
     StatementType statementType = StatementType.valueOf(context.getStringAttribute("statementType", StatementType.PREPARED.toString()));
     ResultSetType resultSetTypeEnum = resolveResultSetType(resultSetType);
-    SqlSource sqlSource = new SqlSourceParser(configuration).parse(sql);
+
+    List<SqlNode> contents = parseDynamicTags(context);
+    MixedSqlNode rootSqlNode = new MixedSqlNode(contents);
+    SqlSource sqlSource = new DynamicSqlSource(configuration, rootSqlNode);
+
     sequentialBuilder.statement(id, sqlSource, fetchSize, timeout, parameterMap, parameterTypeClass,
         resultMap, resultTypeClass, resultSetTypeEnum, isSelect, flushCache, useCache, statementType);
   }
