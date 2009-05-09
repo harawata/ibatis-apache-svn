@@ -7,7 +7,7 @@ import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.Configuration;
 import org.apache.ibatis.mapping.ParameterMapping;
 import org.apache.ibatis.mapping.SqlSource;
-import org.apache.ibatis.xml.NodeletContext;
+import org.apache.ibatis.parsing.NodeletContext;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 

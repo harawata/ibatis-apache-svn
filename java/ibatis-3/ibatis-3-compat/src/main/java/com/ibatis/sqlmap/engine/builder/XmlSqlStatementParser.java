@@ -6,7 +6,7 @@ import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.type.TypeHandler;
-import org.apache.ibatis.xml.NodeletContext;
+import org.apache.ibatis.parsing.NodeletContext;
 import org.w3c.dom.CharacterData;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;

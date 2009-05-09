@@ -11,9 +11,9 @@ import org.apache.ibatis.reflection.MetaClass;
 import org.apache.ibatis.reflection.ObjectFactory;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
-import org.apache.ibatis.xml.Nodelet;
-import org.apache.ibatis.xml.NodeletContext;
-import org.apache.ibatis.xml.NodeletParser;
+import org.apache.ibatis.parsing.Nodelet;
+import org.apache.ibatis.parsing.NodeletContext;
+import org.apache.ibatis.parsing.NodeletParser;
 
 import java.io.Reader;
 import java.util.HashMap;

@@ -7,13 +7,13 @@ import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.logging.LogException;
 import org.apache.ibatis.mapping.SqlMapperException;
 import org.apache.ibatis.migration.MigrationException;
-import org.apache.ibatis.parser.ParserException;
+import org.apache.ibatis.builder.ParserException;
 import org.apache.ibatis.plugin.PluginException;
 import org.apache.ibatis.reflection.ReflectionException;
 import org.apache.ibatis.session.SessionException;
 import org.apache.ibatis.transaction.TransactionException;
 import org.apache.ibatis.type.TypeException;
-import org.apache.ibatis.xml.NodeletException;
+import org.apache.ibatis.parsing.NodeletException;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
