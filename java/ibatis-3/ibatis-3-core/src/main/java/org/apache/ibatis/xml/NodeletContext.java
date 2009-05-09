@@ -1,7 +1,7 @@
 package org.apache.ibatis.xml;
 
 import org.w3c.dom.*;
-import org.apache.ibatis.xpath.PropertyParser;
+import org.apache.ibatis.xml.PropertyParser;
 
 import java.util.*;
 

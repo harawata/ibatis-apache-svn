@@ -1,8 +1,9 @@
-package org.apache.ibatis.xpath;
+package org.apache.ibatis.xml;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
 import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.xml.XPathParser;
 
 import java.io.Reader;
 

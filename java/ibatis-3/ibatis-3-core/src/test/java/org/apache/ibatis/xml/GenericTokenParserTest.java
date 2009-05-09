@@ -1,8 +1,8 @@
-package org.apache.ibatis.xpath;
+package org.apache.ibatis.xml;
 
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
-import org.apache.ibatis.xpath.GenericTokenParser;
+import org.apache.ibatis.xml.GenericTokenParser;
 
 import java.util.*;
 

@@ -1,9 +1,10 @@
-package org.apache.ibatis.xpath;
+package org.apache.ibatis.xml;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.*;
+import org.apache.ibatis.xml.PropertyParser;
 
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathFactory;
