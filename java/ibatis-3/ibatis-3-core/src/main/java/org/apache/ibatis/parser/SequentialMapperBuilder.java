@@ -227,14 +227,14 @@ public class SequentialMapperBuilder extends BaseParser {
     configuration.addMappedStatement(statement);
   }
 
-  private <T> T valueOrDefault(T value, T defaultValue) {
-    return value == null ? defaultValue : value;
-  }
-
-  private String applyNamespace(String base) {
+  public String applyNamespace(String base) {
     if (base == null) return null;
     if (base.contains(".")) return base;
     return namespace + "." + base;
+  }
+
+  private <T> T valueOrDefault(T value, T defaultValue) {
+    return value == null ? defaultValue : value;
   }
 
   private void setStatementCache(

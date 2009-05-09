@@ -3,7 +3,7 @@ package org.apache.ibatis.parser;
 import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.type.*;
 
-public class BaseParser {
+public abstract class BaseParser {
   protected final Configuration configuration;
   protected final TypeAliasRegistry typeAliasRegistry;
   protected final TypeHandlerRegistry typeHandlerRegistry;

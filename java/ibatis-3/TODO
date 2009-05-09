@@ -1,19 +1,10 @@
 ###################################
-#          TODO List              #
+#          TO-DO List             #
 ###################################
 
 Required:
 
 * Return selectKey or autogen key from session.insert()
-* Dynamic SQL XML Parser
-    <where>
-    <set>
-    <prefix insert removeFirst>
-    <foreach item index open close separator>
-    <if test>
-    <choose>
-      <when test>
-      <otherwise>
 
 Nice to Have:
 

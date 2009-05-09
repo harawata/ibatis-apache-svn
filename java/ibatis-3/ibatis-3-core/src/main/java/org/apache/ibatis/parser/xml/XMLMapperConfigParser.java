@@ -18,8 +18,8 @@ public class XMLMapperConfigParser extends BaseParser {
 
   private boolean parsed;
 
-  protected Reader reader;
-  protected NodeletParser parser;
+  private Reader reader;
+  private NodeletParser parser;
 
   private String environment;
   private Environment.Builder environmentBuilder;

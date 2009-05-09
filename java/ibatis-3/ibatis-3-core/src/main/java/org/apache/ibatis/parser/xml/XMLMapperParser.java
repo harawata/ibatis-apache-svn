@@ -10,9 +10,11 @@ import java.util.*;
 
 public class XMLMapperParser extends BaseParser {
 
-  protected Reader reader;
-  protected NodeletParser parser;
-  protected SequentialMapperBuilder sequentialBuilder;
+  private Reader reader;
+  private NodeletParser parser;
+  private SequentialMapperBuilder sequentialBuilder;
+
+  private Map<String,NodeletContext> sqlFragments = new HashMap<String,NodeletContext>();
 
   public XMLMapperParser(Reader reader, Configuration configuration, String resource, String namespace) {
     this(reader, configuration, resource);
@@ -198,6 +200,14 @@ public class XMLMapperParser extends BaseParser {
     sequentialBuilder.resultMapEnd();
   }
 
+  //  <sql id="">
+  @Nodelet("/mapper/sql")
+  public void sqlElement(NodeletContext context) throws Exception {
+    String id = context.getStringAttribute("id");
+
+    sqlFragments.put(id, context);
+  }
+
   //  <select ...>
   @Nodelet("/mapper/select")
   public void selectElement(NodeletContext context) throws Exception {
@@ -222,8 +232,12 @@ public class XMLMapperParser extends BaseParser {
     buildStatementFromContext(context);
   }
 
+  public NodeletContext getSqlFragment(String refid) {
+    return sqlFragments.get(refid);
+  }
+
   private void buildStatementFromContext(NodeletContext context) {
-    final XMLStatementParser statementParser = new XMLStatementParser(configuration, sequentialBuilder);
+    final XMLStatementParser statementParser = new XMLStatementParser(configuration, sequentialBuilder, this);
     statementParser.parseStatementNode(context);
   }
 
