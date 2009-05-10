@@ -51,14 +51,14 @@ public class PrefixSqlNode implements SqlNode {
     public void appendSql(String sql) {
       if (!prefixApplied) {
         String filteredSql = sql.trim().toUpperCase();
-        for (String toRemove : stringsToOverride) {
-          if (filteredSql.startsWith(toRemove)) {
-            sql = sql.trim().substring(toRemove.trim().length()).trim();
-            break;
-          }
-        }
         if (filteredSql.length() > 0) {
           prefixApplied = true;
+          for (String toRemove : stringsToOverride) {
+            if (filteredSql.startsWith(toRemove) || filteredSql.startsWith(toRemove.trim())) {
+              sql = sql.trim().substring(toRemove.trim().length()).trim();
+              break;
+            }
+          }
           if (stringToPrefixWith != null) {
             delegate.appendSql(stringToPrefixWith);
           }

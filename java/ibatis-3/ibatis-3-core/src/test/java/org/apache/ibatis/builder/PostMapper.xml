@@ -6,12 +6,26 @@
 
 <mapper namespace="domain.blog.mappers.PostMapper">
 
+  <sql id="byBlogId">
+    <if test="blog_id != null">blog_id = #{blog_id}</if>
+  </sql>
+
   <select id="findPost" resultType="domain.blog.Post">
     SELECT *
     FROM POST P
     <where>
       <choose>
         <when test="id != null">id = #{id}</when>
+        <when test="author_id != null">AND author_id = #{author_id}</when>
+        <otherwise>
+          <if test="ids != null">
+            AND id IN
+            <foreach item="item_id" index="index" open="(" close=")" separator="," collection="ids">#{ids[${index}]}</foreach>
+          </if>
+          <prefix with="AND">
+            <include refid="byBlogId"/>
+          </prefix>
+        </otherwise>
       </choose>
     </where>
   </select>

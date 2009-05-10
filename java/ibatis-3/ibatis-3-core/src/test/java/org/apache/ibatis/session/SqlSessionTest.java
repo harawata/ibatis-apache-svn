@@ -410,7 +410,6 @@ public class SqlSessionTest extends BaseDataTest {
     SqlSession session = sqlMapper.openSession();
     try {
       List<Post> posts = session.selectList("domain.blog.mappers.PostMapper.findPost");
-      printPosts(posts);
       assertEquals(5,posts.size());
     } finally {
       session.close();
@@ -425,15 +424,74 @@ public class SqlSessionTest extends BaseDataTest {
           new HashMap() {{
             put("id",1);
           }});
-      printPosts(posts);
+      assertEquals(1, posts.size());
     } finally {
       session.close();
     }
   }
 
-  private void printPosts(List<Post> posts) {
-    for(Post p : posts) {
-      System.out.println(p);
+  @Test
+  public void shouldFindPostsInSetOfIDsWithDynamicSql() throws Exception {
+    SqlSession session = sqlMapper.openSession();
+    try {
+      List<Post> posts = session.selectList("domain.blog.mappers.PostMapper.findPost",
+          new HashMap() {{
+            put("ids",new ArrayList(){{
+              add(1);
+              add(2);
+              add(3);
+            }});
+          }});
+      assertEquals(3, posts.size());
+    } finally {
+      session.close();
+    }
+  }
+
+  @Test
+  public void shouldFindPostsWithBlogIdUsingDynamicSql() throws Exception {
+    SqlSession session = sqlMapper.openSession();
+    try {
+      List<Post> posts = session.selectList("domain.blog.mappers.PostMapper.findPost",
+          new HashMap() {{
+            put("blog_id",1);
+          }});
+      assertEquals(2, posts.size());
+    } finally {
+      session.close();
+    }
+  }
+
+  @Test
+  public void shouldFindPostsWithAuthorIdUsingDynamicSql() throws Exception {
+    SqlSession session = sqlMapper.openSession();
+    try {
+      List<Post> posts = session.selectList("domain.blog.mappers.PostMapper.findPost",
+          new HashMap() {{
+            put("author_id",101);
+          }});
+      assertEquals(3, posts.size());
+    } finally {
+      session.close();
+    }
+  }
+
+  @Test
+  public void shouldFindPostsWithAuthorAndBlogIdUsingDynamicSql() throws Exception {
+    SqlSession session = sqlMapper.openSession();
+    try {
+      List<Post> posts = session.selectList("domain.blog.mappers.PostMapper.findPost",
+          new HashMap() {{
+            put("ids",new ArrayList(){{
+              add(1);
+              add(2);
+              add(3);
+            }});
+            put("blog_id",1);
+          }});
+      assertEquals(2, posts.size());
+    } finally {
+      session.close();
     }
   }
 

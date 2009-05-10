@@ -12,3 +12,4 @@ Nice to Have:
 * Auto result/param types detected for bound XML statements
 * Named parameter parsing/merging
 * commitRequired option at the statement level
+* Wrap collection parameter objects in a map automatically

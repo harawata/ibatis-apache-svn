@@ -110,7 +110,13 @@ public class BaseJdbcLogger {
   }
 
   protected String removeBreakingWhitespace(String original) {
-    return original.replace('\n', ' ').replace('\r', ' ').replace('\t', ' ').trim();
+    StringTokenizer whitespaceStripper = new StringTokenizer(original);
+    StringBuilder builder = new StringBuilder();
+    while (whitespaceStripper.hasMoreTokens()) {
+      builder.append(whitespaceStripper.nextToken());
+      builder.append(" ");
+    }
+    return builder.toString();
   }
 
 }

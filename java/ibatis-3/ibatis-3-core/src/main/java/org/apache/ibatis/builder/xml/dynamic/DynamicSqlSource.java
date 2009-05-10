@@ -18,9 +18,7 @@ public class DynamicSqlSource implements SqlSource {
     rootSqlNode.apply(context);
     SqlSourceParser sqlSourceParser = new SqlSourceParser(configuration);
     SqlSource sqlSource = sqlSourceParser.parse(context.getSql());
-    BoundSql boundSql = sqlSource.getBoundSql(parameterObject);
-    System.out.println(boundSql.getSql());
-    return boundSql;
+    return sqlSource.getBoundSql(parameterObject);
   }
 
 }
