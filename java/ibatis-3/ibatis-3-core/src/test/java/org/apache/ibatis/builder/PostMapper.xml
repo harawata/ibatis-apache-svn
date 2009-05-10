@@ -6,7 +6,23 @@
 
 <mapper namespace="domain.blog.mappers.PostMapper">
 
-  <select id="findPostIn" >
+  <select id="findPost" resultType="domain.blog.Post">
+    SELECT *
+    FROM POST P
+    <where>
+      <choose>
+        <when test="id != null">id = #{id}</when>
+      </choose>
+    </where>
   </select>
-
+  <!--
+    P.id as post_id,
+    P.blog_id as post_blog_id,
+    P.author_id as post_author_id,
+    P.created_on as post_created_on,
+    P.section as post_section,
+    P.subject as post_subject,
+    P.draft as draft,
+    P.body as post_body
+  -->
 </mapper>

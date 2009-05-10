@@ -32,12 +32,12 @@ public class PrefixSqlNode implements SqlNode {
 
   private class FilteredDynamicContext extends DynamicContext {
     private DynamicContext delegate;
-    private boolean filtered;
+    private boolean prefixApplied;
 
     public FilteredDynamicContext(DynamicContext delegate) {
       super(null);
       this.delegate = delegate;
-      this.filtered = false;
+      this.prefixApplied = false;
     }
 
     public Map<String, Object> getBindings() {
@@ -49,8 +49,7 @@ public class PrefixSqlNode implements SqlNode {
     }
 
     public void appendSql(String sql) {
-      if (!filtered) {
-        filtered = true;
+      if (!prefixApplied) {
         String filteredSql = sql.trim().toUpperCase();
         for (String toRemove : stringsToOverride) {
           if (filteredSql.startsWith(toRemove)) {
@@ -58,10 +57,13 @@ public class PrefixSqlNode implements SqlNode {
             break;
           }
         }
-        if (stringToPrefixWith != null) {
-          delegate.appendSql(stringToPrefixWith);
+        if (filteredSql.length() > 0) {
+          prefixApplied = true;
+          if (stringToPrefixWith != null) {
+            delegate.appendSql(stringToPrefixWith);
+          }
+          delegate.appendSql(sql);
         }
-        delegate.appendSql(sql);
       } else {
         delegate.appendSql(sql);
       }

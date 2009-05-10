@@ -405,4 +405,36 @@ public class SqlSessionTest extends BaseDataTest {
     }
   }
 
+  @Test
+  public void shouldFindPostsAllPostsWithDynamicSql() throws Exception {
+    SqlSession session = sqlMapper.openSession();
+    try {
+      List<Post> posts = session.selectList("domain.blog.mappers.PostMapper.findPost");
+      printPosts(posts);
+      assertEquals(5,posts.size());
+    } finally {
+      session.close();
+    }
+  }
+
+  @Test
+  public void shouldFindPostByIDWithDynamicSql() throws Exception {
+    SqlSession session = sqlMapper.openSession();
+    try {
+      List<Post> posts = session.selectList("domain.blog.mappers.PostMapper.findPost",
+          new HashMap() {{
+            put("id",1);
+          }});
+      printPosts(posts);
+    } finally {
+      session.close();
+    }
+  }
+
+  private void printPosts(List<Post> posts) {
+    for(Post p : posts) {
+      System.out.println(p);
+    }
+  }
+
 }

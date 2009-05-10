@@ -183,8 +183,8 @@ public class XMLStatementParser extends BaseParser {
       List<SqlNode> otherwiseSqlNodes = new ArrayList<SqlNode>();
       handleWhenOtherwiseNodes(nodeToHandle, whenSqlNodes, otherwiseSqlNodes);
       SqlNode defaultSqlNode = getDefaultSqlNode(otherwiseSqlNodes);
-      ChooseSqlNode forEachSqlNode = new ChooseSqlNode((List<IfSqlNode>) whenSqlNodes, defaultSqlNode);
-      targetContents.add(forEachSqlNode);
+      ChooseSqlNode chooseSqlNode = new ChooseSqlNode((List<IfSqlNode>) whenSqlNodes, defaultSqlNode);
+      targetContents.add(chooseSqlNode);
     }
     private void handleWhenOtherwiseNodes(NodeletContext chooseSqlNode, List ifSqlNodes, List<SqlNode> defaultSqlNodes) {
       List<NodeletContext> children = chooseSqlNode.getChildren();
