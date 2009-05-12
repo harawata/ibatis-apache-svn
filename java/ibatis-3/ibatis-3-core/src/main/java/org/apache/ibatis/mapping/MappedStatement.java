@@ -19,6 +19,9 @@ public class MappedStatement {
   private List<ResultMap> resultMaps;
   private boolean flushCacheRequired;
   private boolean useCache;
+  private SqlCommandType sqlCommandType;
+  private boolean useGeneratedKeys;
+  private String keyProperty;
 
   private MappedStatement() {
   }
@@ -26,7 +29,7 @@ public class MappedStatement {
   public static class Builder {
     private MappedStatement mappedStatement = new MappedStatement();
 
-    public Builder(Configuration configuration, String id, SqlSource sqlSource) {
+    public Builder(Configuration configuration, String id, SqlSource sqlSource, SqlCommandType sqlCommandType) {
       mappedStatement.configuration = configuration;
       mappedStatement.id = id;
       mappedStatement.sqlSource = sqlSource;
@@ -34,6 +37,9 @@ public class MappedStatement {
       mappedStatement.parameterMap = new ParameterMap.Builder(configuration, "defaultParameterMap", Object.class, new ArrayList<ParameterMapping>()).build();
       mappedStatement.resultMaps = new ArrayList<ResultMap>();
       mappedStatement.timeout = configuration.getDefaultStatementTimeout();
+      mappedStatement.sqlCommandType = sqlCommandType;
+      mappedStatement.useGeneratedKeys = configuration.isUseGeneratedKeys()
+          && SqlCommandType.INSERT.equals(sqlCommandType);
     }
 
     public Builder resource(String resource) {
@@ -90,6 +96,16 @@ public class MappedStatement {
       return this;
     }
 
+    public Builder useGeneratedKeys(boolean useGeneratedKeys) {
+      mappedStatement.useGeneratedKeys = useGeneratedKeys;
+      return this;
+    }
+
+    public Builder keyProperty(String keyProperty) {
+      mappedStatement.keyProperty = keyProperty;
+      return this;
+    }
+
     public MappedStatement build() {
       assert mappedStatement.configuration != null;
       assert mappedStatement.id != null;
@@ -98,6 +114,18 @@ public class MappedStatement {
       return mappedStatement;
     }
 
+  }
+
+  public String getKeyProperty() {
+    return keyProperty;
+  }
+
+  public boolean isUseGeneratedKeys() {
+    return useGeneratedKeys;
+  }
+
+  public SqlCommandType getSqlCommandType() {
+    return sqlCommandType;
   }
 
   public String getResource() {

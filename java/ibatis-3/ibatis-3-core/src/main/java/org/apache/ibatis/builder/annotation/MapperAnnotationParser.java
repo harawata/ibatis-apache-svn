@@ -164,6 +164,7 @@ public class MapperAnnotationParser {
   }
 
   private void parseStatement(Method method) {
+    Configuration configuration = sequentialBuilder.getConfiguration();
     SqlSource sqlSource = getSqlSourceFromAnnotations(method);
     if (sqlSource != null) {
       Options options = method.getAnnotation(Options.class);
@@ -175,6 +176,9 @@ public class MapperAnnotationParser {
       Integer timeout = null;
       StatementType statementType = StatementType.PREPARED;
       ResultSetType resultSetType = ResultSetType.FORWARD_ONLY;
+      SqlCommandType sqlCommandType = getSqlCommandType(method);
+      boolean useGeneratedKeys = configuration.isUseGeneratedKeys() && SqlCommandType.INSERT.equals(sqlCommandType);
+      String keyProperty = "id";
       if (options != null) {
         flushCache = options.flushCache();
         useCache = options.useCache();
@@ -182,6 +186,8 @@ public class MapperAnnotationParser {
         timeout = options.timeout() > -1 ? options.timeout() : null;
         statementType = options.statementType();
         resultSetType = options.resultSetType();
+        useGeneratedKeys = options.useGeneratedKeys();
+        keyProperty = options.keyProperty();
       }
       sequentialBuilder.statement(
           mappedStatementId,
@@ -196,7 +202,10 @@ public class MapperAnnotationParser {
           isSelect,                  // IsSelectStatement
           flushCache,
           useCache,
-          statementType);
+          statementType,
+          sqlCommandType,
+          useGeneratedKeys,
+          keyProperty);
     }
   }
 
@@ -253,6 +262,15 @@ public class MapperAnnotationParser {
     } catch (Exception e) {
       throw new RuntimeException("Could not find value method on SQL annotation.  Cause: " + e, e);
     }
+  }
+
+  private SqlCommandType getSqlCommandType(Method method) {
+    Class[] types = {Select.class, Insert.class, Update.class, Delete.class};
+    Class type = chooseAnnotationType(method, types);
+    if (type != null) {
+      return SqlCommandType.valueOf(type.getSimpleName().toUpperCase());
+    }
+    return SqlCommandType.UNKNOWN;
   }
 
   private Class getSqlAnnotationType(Method method) {

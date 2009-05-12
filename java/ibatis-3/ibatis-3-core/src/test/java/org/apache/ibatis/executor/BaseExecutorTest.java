@@ -19,7 +19,7 @@ public abstract class BaseExecutorTest extends BaseDataTest {
     config = new Configuration();
     config.setEnhancementEnabled(true);
     config.setLazyLoadingEnabled(true);
-    config.setGeneratedKeysEnabled(false);
+    config.setUseGeneratedKeys(false);
     config.setMultipleResultSetsEnabled(true);
     config.setUseColumnLabel(true);
     config.setDefaultStatementTimeout(5000);
@@ -64,24 +64,22 @@ public abstract class BaseExecutorTest extends BaseDataTest {
   public void shouldInsertNewAuthorWithAutoKey() throws Exception {
     DataSource ds = createBlogDataSource();
     Connection connection = ds.getConnection();
-    config.setGeneratedKeysEnabled(true);
-    try {
-      Executor executor = createExecutor(new JdbcTransaction(connection, false));
-      Author author = new Author(-1, "someone", "******", "someone@apache.org", null, Section.NEWS);
-      MappedStatement insertStatement = ExecutorTestHelper.prepareInsertAuthorMappedStatementWithAutoKey(config);
-      MappedStatement selectStatement = ExecutorTestHelper.prepareSelectOneAuthorMappedStatement(config);
-      int id = executor.update(insertStatement, author);
-      if (id != BatchExecutor.BATCH_UPDATE_RETURN_VALUE) {
-        author.setId(id);
-        List<Author> authors = executor.query(selectStatement, id, Executor.NO_ROW_OFFSET, Executor.NO_ROW_LIMIT, Executor.NO_RESULT_HANDLER);
-        executor.flushStatements();
-        executor.rollback(true);
-        assertEquals(1, authors.size());
-        assertEquals(author.toString(), authors.get(0).toString());
-        assertTrue(id >= 10000);
-      }
-    } finally {
-      config.setGeneratedKeysEnabled(false);
+    Executor executor = createExecutor(new JdbcTransaction(connection, false));
+    Author author = new Author(-1, "someone", "******", "someone@apache.org", null, Section.NEWS);
+    MappedStatement insertStatement = ExecutorTestHelper.prepareInsertAuthorMappedStatementWithAutoKey(config);
+    MappedStatement selectStatement = ExecutorTestHelper.prepareSelectOneAuthorMappedStatement(config);
+    int rows = executor.update(insertStatement, author);
+    assertTrue(rows > 0 || rows == BatchExecutor.BATCH_UPDATE_RETURN_VALUE);
+    if (rows == BatchExecutor.BATCH_UPDATE_RETURN_VALUE) {
+      executor.flushStatements();
+    }
+    assertTrue(-1 != author.getId());
+    if (author.getId() != BatchExecutor.BATCH_UPDATE_RETURN_VALUE) {
+      List<Author> authors = executor.query(selectStatement, author.getId(), Executor.NO_ROW_OFFSET, Executor.NO_ROW_LIMIT, Executor.NO_RESULT_HANDLER);
+      executor.rollback(true);
+      assertEquals(1, authors.size());
+      assertEquals(author.toString(), authors.get(0).toString());
+      assertTrue(author.getId() >= 10000);
     }
   }
 

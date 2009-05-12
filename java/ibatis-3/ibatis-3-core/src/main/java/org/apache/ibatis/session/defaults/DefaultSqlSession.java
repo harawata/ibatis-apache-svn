@@ -65,12 +65,11 @@ public class DefaultSqlSession implements SqlSession {
     }
   }
 
-  public Object insert(String statement) {
+  public int insert(String statement) {
     return insert(statement, null);
   }
 
-  public Object insert(String statement, Object parameter) {
-    //TODO: Return selectKey or autogen key.
+  public int insert(String statement, Object parameter) {
     return update(statement, parameter);
   }
 

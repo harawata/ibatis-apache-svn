@@ -167,6 +167,10 @@ public class Annotations {
     int fetchSize() default -1;
 
     int timeout() default -1;
+
+    boolean useGeneratedKeys() default false;
+
+    String keyProperty() default "id";
   }
 
   @Retention(RetentionPolicy.RUNTIME)

@@ -1,7 +1,7 @@
 package org.apache.ibatis.binding;
 
 import org.apache.ibatis.executor.Executor;
-import org.apache.ibatis.mapping.Configuration;
+import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.session.SqlSession;
 
 import java.lang.reflect.Method;
@@ -13,7 +13,7 @@ public class MapperMethod {
   private SqlSession sqlSession;
   private Configuration config;
 
-  private MapperMethodType type;
+  private SqlCommandType type;
   private String commandName;
 
   private Method method;
@@ -36,16 +36,16 @@ public class MapperMethod {
 
   public Object execute(Object[] args) throws SQLException {
     Object result;
-    if (MapperMethodType.INSERT == type) {
+    if (SqlCommandType.INSERT == type) {
       Object param = getParam(args);
       result = sqlSession.insert(commandName, param);
-    } else if (MapperMethodType.UPDATE == type) {
+    } else if (SqlCommandType.UPDATE == type) {
       Object param = getParam(args);
       result = sqlSession.update(commandName, param);
-    } else if (MapperMethodType.DELETE == type) {
+    } else if (SqlCommandType.DELETE == type) {
       Object param = getParam(args);
       result = sqlSession.delete(commandName, param);
-    } else if (MapperMethodType.SELECT == type) {
+    } else if (SqlCommandType.SELECT == type) {
       if (returnsList) {
         result = executeForList(args);
       } else {
@@ -78,13 +78,13 @@ public class MapperMethod {
   private void determineCommandType() {
     String methodName = method.getName();
     if (methodName.startsWith("insert") || methodName.startsWith("create")) {
-      type = MapperMethodType.INSERT;
+      type = SqlCommandType.INSERT;
     } else if (methodName.startsWith("update") || methodName.startsWith("save")) {
-      type = MapperMethodType.UPDATE;
+      type = SqlCommandType.UPDATE;
     } else if (methodName.startsWith("delete") || methodName.startsWith("remove")) {
-      type = MapperMethodType.DELETE;
+      type = SqlCommandType.DELETE;
     } else if (methodName.startsWith("select") || methodName.startsWith("find")) {
-      type = MapperMethodType.SELECT;
+      type = SqlCommandType.SELECT;
     } else {
       throw new BindingException("Unkown execution method for: " + commandName);
     }

@@ -210,13 +210,18 @@ public class SequentialMapperBuilder extends BaseParser {
       boolean isSelect,
       boolean flushCache,
       boolean useCache,
-      StatementType statementType) {
+      StatementType statementType,
+      SqlCommandType sqlCommandType,
+      boolean useGeneratedKeys,
+      String keyProperty) {
     id = applyNamespace(id);
 
-    MappedStatement.Builder statementBuilder = new MappedStatement.Builder(configuration, id, sqlSource);
+    MappedStatement.Builder statementBuilder = new MappedStatement.Builder(configuration, id, sqlSource, sqlCommandType);
     statementBuilder.resource(resource);
     statementBuilder.fetchSize(fetchSize);
     statementBuilder.statementType(statementType);
+    statementBuilder.useGeneratedKeys(useGeneratedKeys);
+    statementBuilder.keyProperty(keyProperty);
     setStatementTimeout(timeout, statementBuilder);
 
     setStatementParameterMap(parameterMap, parameterType, statementBuilder);

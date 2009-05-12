@@ -28,7 +28,7 @@ public class Ibatis2Configuration extends Configuration {
   private Map<String, Boolean> postSelectKeyMap;
 
   public Ibatis2Configuration() {
-    setGeneratedKeysEnabled(false);
+    setUseGeneratedKeys(false);
     this.flushCachePlugin = new FlushCacheInterceptor();
     this.addInterceptor(flushCachePlugin);
     this.postSelectKeyMap = new HashMap<String, Boolean>();

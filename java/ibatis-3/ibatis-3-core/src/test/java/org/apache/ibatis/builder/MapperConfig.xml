@@ -15,8 +15,8 @@
     <setting name="lazyLoadingEnabled" value="true"/>
     <setting name="multipleResultSetsEnabled" value="true"/>
     <setting name="useColumnLabel" value="true"/>
+    <setting name="useGeneratedKeys" value="false"/>
     <setting name="enhancementEnabled" value="false"/>
-    <setting name="generatedKeysEnabled" value="false"/>
     <setting name="defaultExecutorType" value="SIMPLE"/>
     <setting name="defaultStatementTimeout" value="25000"/>
   </settings>

@@ -134,7 +134,7 @@ public class XMLMapperConfigParser extends BaseParser {
     configuration.setMultipleResultSetsEnabled(booleanValueOf(props.getProperty("multipleResultSetsEnabled"), true));
     configuration.setUseColumnLabel(booleanValueOf(props.getProperty("useColumnLabel"), true));
     configuration.setEnhancementEnabled(booleanValueOf(props.getProperty("enhancementEnabled"), false));
-    configuration.setGeneratedKeysEnabled(booleanValueOf(props.getProperty("generatedKeysEnabled"), false));
+    configuration.setUseGeneratedKeys(booleanValueOf(props.getProperty("useGeneratedKeys"), false));
     configuration.setDefaultExecutorType(ExecutorType.valueOf(stringValueOf(props.getProperty("defaultExecutorType"), "SIMPLE")));
     configuration.setDefaultStatementTimeout(integerValueOf(props.getProperty("defaultStatementTimeout"), null));
   }

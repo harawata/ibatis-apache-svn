@@ -4,6 +4,8 @@ import org.apache.ibatis.executor.result.ResultHandler;
 import org.apache.ibatis.executor.statement.StatementHandler;
 import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.transaction.Transaction;
+import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.type.*;
 
 import java.sql.*;
 import java.util.*;
@@ -61,6 +63,7 @@ public class BatchExecutor extends BaseExecutor {
         BatchResult batchResult = batchResultList.get(i);
         try {
           batchResult.setUpdateCounts(stmt.executeBatch());
+          processBatchGeneratedKeys(batchResult, stmt);
         } catch (BatchUpdateException e) {
           StringBuffer message = new StringBuffer();
           message.append(batchResult.getMappedStatement().getId())
@@ -87,6 +90,42 @@ public class BatchExecutor extends BaseExecutor {
       batchResultList.clear();
     }
   }
+
+  protected void processBatchGeneratedKeys(BatchResult batchResult, Statement stmt) throws SQLException {
+    MappedStatement ms = batchResult.getMappedStatement();
+    Configuration configuration = ms.getConfiguration();
+    TypeHandlerRegistry typeHandlerRegistry = configuration.getTypeHandlerRegistry();
+    Object parameter = batchResult.getParameterObject();
+    if (parameter != null && ms.isUseGeneratedKeys()) {
+      String keyProperty = ms.getKeyProperty();
+      final MetaObject metaParam = MetaObject.forObject(parameter);
+      if (keyProperty != null && metaParam.hasSetter(keyProperty)) {
+        Class keyPropertyType = metaParam.getSetterType(keyProperty);
+        TypeHandler th =  typeHandlerRegistry.getTypeHandler(keyPropertyType);
+        if (th != null) {
+          ResultSet rs = stmt.getGeneratedKeys();
+          try {
+            ResultSetMetaData rsmd = rs.getMetaData();
+            int colCount = rsmd.getColumnCount();
+            if (colCount > 0) {
+              String colName = rsmd.getColumnName(1);
+              while (rs.next()) {
+                Object value = th.getResult(rs,colName);
+                metaParam.setValue(keyProperty,value);
+              }
+            }
+          } finally {
+            try {
+              if (rs != null) rs.close();
+            } catch (Exception e) {
+              //ignore
+            }
+          }
+        }
+      }
+    }
+  }
+
 
 }
 

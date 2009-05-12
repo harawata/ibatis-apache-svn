@@ -5,8 +5,8 @@ import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.executor.result.ResultHandler;
 import org.apache.ibatis.executor.resultset.ResultSetHandler;
 import org.apache.ibatis.mapping.*;
-import org.apache.ibatis.reflection.ObjectFactory;
-import org.apache.ibatis.type.TypeHandlerRegistry;
+import org.apache.ibatis.reflection.*;
+import org.apache.ibatis.type.*;
 
 import java.sql.*;
 
@@ -70,25 +70,35 @@ public abstract class BaseStatementHandler implements StatementHandler {
       throws SQLException;
 
 
-  protected Integer processGeneratedKeys(MappedStatement ms, Statement stmt, Object parameter) throws SQLException {
-    if (ms.getConfiguration().isGeneratedKeysEnabled()) {
-      ResultSet rs = stmt.getGeneratedKeys();
-      try {
-        while (rs.next()) {
-          Object object = rs.getObject(1);
-          if (object != null) {
-            return Integer.parseInt(object.toString());
+  protected void processGeneratedKeys(MappedStatement ms, Statement stmt, Object parameter) throws SQLException {
+    if (parameter != null && ms.isUseGeneratedKeys()) {
+      String keyProperty = ms.getKeyProperty();
+      final MetaObject metaParam = MetaObject.forObject(parameter);
+      if (keyProperty != null && metaParam.hasSetter(keyProperty)) {
+        Class keyPropertyType = metaParam.getSetterType(keyProperty);
+        TypeHandler th = typeHandlerRegistry.getTypeHandler(keyPropertyType);
+        if (th != null) {
+          ResultSet rs = stmt.getGeneratedKeys();
+          try {
+            ResultSetMetaData rsmd = rs.getMetaData();
+            int colCount = rsmd.getColumnCount();
+            if (colCount > 0) {
+              String colName = rsmd.getColumnName(1);
+              while (rs.next()) {
+                Object value = th.getResult(rs,colName);
+                metaParam.setValue(keyProperty,value);
+              }
+            }
+          } finally {
+            try {
+              if (rs != null) rs.close();
+            } catch (Exception e) {
+              //ignore
+            }
           }
-        }
-      } finally {
-        try {
-          if (rs != null) rs.close();
-        } catch (Exception e) {
-          //ignore
         }
       }
     }
-    return null;
   }
 
   protected void setStatementTimeout(Statement stmt)

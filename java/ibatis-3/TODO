@@ -4,12 +4,13 @@
 
 Required:
 
-* Return selectKey or autogen key from session.insert()
+* Apply selectKey to parameterObject
 
 Nice to Have:
-
+* Commit required option at statement level
 * Add resultType automapping option for collections so a resultMap isn' t required
 * Auto result/param types detected for bound XML statements
 * Named parameter parsing/merging
 * commitRequired option at the statement level
 * Wrap collection parameter objects in a map automatically
+* Allow lazy loading across connection boundaries

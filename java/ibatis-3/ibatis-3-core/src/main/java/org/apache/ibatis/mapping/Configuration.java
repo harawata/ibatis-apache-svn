@@ -29,7 +29,7 @@ public class Configuration {
   private boolean lazyLoadingEnabled = true;
   private boolean enhancementEnabled = false;
   private boolean multipleResultSetsEnabled = true;
-  private boolean generatedKeysEnabled = false;
+  private boolean useGeneratedKeys = false;
   private boolean useColumnLabel = true;
   private boolean cacheEnabled = true;
   private Integer defaultStatementTimeout;
@@ -98,12 +98,12 @@ public class Configuration {
     this.multipleResultSetsEnabled = multipleResultSetsEnabled;
   }
 
-  public boolean isGeneratedKeysEnabled() {
-    return generatedKeysEnabled;
+  public boolean isUseGeneratedKeys() {
+    return useGeneratedKeys;
   }
 
-  public void setGeneratedKeysEnabled(boolean generatedKeysEnabled) {
-    this.generatedKeysEnabled = generatedKeysEnabled;
+  public void setUseGeneratedKeys(boolean useGeneratedKeys) {
+    this.useGeneratedKeys = useGeneratedKeys;
   }
 
   public ExecutorType getDefaultExecutorType() {

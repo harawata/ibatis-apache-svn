@@ -21,9 +21,9 @@ public interface SqlSession {
 
   void select(String statement, Object parameter, int offset, int limit, ResultHandler handler);
 
-  Object insert(String statement);
+  int insert(String statement);
 
-  Object insert(String statement, Object parameter);
+  int insert(String statement, Object parameter);
 
   int update(String statement);
 

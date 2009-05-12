@@ -77,8 +77,16 @@ public class XmlSqlStatementParser {
 
     SqlSource sqlSource = new SqlSourceFactory(mapParser).newSqlSourceIntance(mapParser, context);
 
+    String nodeName = context.getNode().getNodeName();
+    SqlCommandType sqlCommandType;
+    try {
+      sqlCommandType = SqlCommandType.valueOf(nodeName.toUpperCase());
+    } catch (Exception e) {
+      sqlCommandType = SqlCommandType.UNKNOWN; 
+    }
 
-    MappedStatement.Builder builder = new MappedStatement.Builder(configuration, id, sqlSource);
+
+    MappedStatement.Builder builder = new MappedStatement.Builder(configuration, id, sqlSource,sqlCommandType);
 
     builder.useCache(true);
     if (!"select".equals(context.getNode().getNodeName())) {
@@ -213,7 +221,7 @@ public class XmlSqlStatementParser {
     ArrayList<ResultMap> resultMapList = new ArrayList<ResultMap>();
     resultMapList.add(resultMapBuilder.build());
 
-    MappedStatement.Builder builder = new MappedStatement.Builder(configuration, keyStatementId, source);
+    MappedStatement.Builder builder = new MappedStatement.Builder(configuration, keyStatementId, source, SqlCommandType.SELECT);
     builder.resultMaps(resultMapList);
 
     configuration.setPostSelectKey(keyStatementId, runStatementFirst);

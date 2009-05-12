@@ -18,10 +18,8 @@ public class PreparedStatementHandler extends BaseStatementHandler {
     PreparedStatement ps = (PreparedStatement) statement;
     ps.execute();
     int result = ps.getUpdateCount();
-    if (mappedStatement.getConfiguration().isGeneratedKeysEnabled()) {
-      Object parameterObject = boundSql.getParameterObject();
-      result = processGeneratedKeys(mappedStatement, ps, parameterObject);
-    }
+    Object parameterObject = boundSql.getParameterObject();
+    processGeneratedKeys(mappedStatement, ps, parameterObject);
     return result;
   }
 
@@ -40,7 +38,7 @@ public class PreparedStatementHandler extends BaseStatementHandler {
 
   protected Statement instantiateStatement(Connection connection) throws SQLException {
     String sql = boundSql.getSql();
-    if (mappedStatement.getConfiguration().isGeneratedKeysEnabled()) {
+    if (mappedStatement.isUseGeneratedKeys()) {
       return connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
     } else if (mappedStatement.getResultSetType() != null) {
       return connection.prepareStatement(sql, mappedStatement.getResultSetType().getValue(), ResultSet.CONCUR_READ_ONLY);

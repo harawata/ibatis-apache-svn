@@ -1,9 +1,6 @@
 package org.apache.ibatis.builder.xml;
 
-import org.apache.ibatis.mapping.Configuration;
-import org.apache.ibatis.mapping.ResultSetType;
-import org.apache.ibatis.mapping.SqlSource;
-import org.apache.ibatis.mapping.StatementType;
+import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.builder.BaseParser;
 import org.apache.ibatis.builder.ParserException;
 import org.apache.ibatis.builder.SequentialMapperBuilder;
@@ -41,6 +38,7 @@ public class XMLStatementParser extends BaseParser {
     Class parameterTypeClass = resolveClass(parameterType);
     String resultMap = context.getStringAttribute("resultMap");
     String resultType = context.getStringAttribute("resultType");
+
     Class resultTypeClass = resolveClass(resultType);
     String resultSetType = context.getStringAttribute("resultSetType");
     StatementType statementType = StatementType.valueOf(context.getStringAttribute("statementType", StatementType.PREPARED.toString()));
@@ -49,9 +47,15 @@ public class XMLStatementParser extends BaseParser {
     List<SqlNode> contents = parseDynamicTags(context);
     MixedSqlNode rootSqlNode = new MixedSqlNode(contents);
     SqlSource sqlSource = new DynamicSqlSource(configuration, rootSqlNode);
+    String nodeName = context.getNode().getNodeName();
+    SqlCommandType sqlCommandType = SqlCommandType.valueOf(nodeName.toUpperCase());
+
+    String keyProperty = context.getStringAttribute("keyProperty");
+    boolean useGeneratedKeys = context.getBooleanAttribute("useGeneratedKeys",
+        configuration.isUseGeneratedKeys() && SqlCommandType.INSERT.equals(sqlCommandType));
 
     sequentialBuilder.statement(id, sqlSource, fetchSize, timeout, parameterMap, parameterTypeClass,
-        resultMap, resultTypeClass, resultSetTypeEnum, isSelect, flushCache, useCache, statementType);
+        resultMap, resultTypeClass, resultSetTypeEnum, isSelect, flushCache, useCache, statementType, sqlCommandType,useGeneratedKeys,keyProperty);
   }
 
 

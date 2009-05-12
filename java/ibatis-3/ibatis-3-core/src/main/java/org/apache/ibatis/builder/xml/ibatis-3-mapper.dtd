@@ -151,6 +151,8 @@ parameterType CDATA #IMPLIED
 timeout CDATA #IMPLIED
 flushCache (true|false) #IMPLIED
 statementType (STATEMENT|PREPARED|CALLABLE) #IMPLIED
+keyProperty CDATA #IMPLIED
+useGeneratedKeys (true|false) #IMPLIED
 >
 
 <!ELEMENT selectKey (#PCDATA | include | prefix | where | set | foreach | choose | if)*>
