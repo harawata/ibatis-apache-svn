@@ -36,7 +36,7 @@ public class BooleanTypeHandler extends BaseTypeHandler implements TypeHandler {
     if (rs.wasNull()) {
       return null;
     } else {
-      return new Boolean(b);
+      return Boolean.valueOf(b);
     }
   }
 
@@ -46,7 +46,7 @@ public class BooleanTypeHandler extends BaseTypeHandler implements TypeHandler {
     if (rs.wasNull()) {
       return null;
     } else {
-      return new Boolean(b);
+      return Boolean.valueOf(b);
     }
   }
 
@@ -56,7 +56,7 @@ public class BooleanTypeHandler extends BaseTypeHandler implements TypeHandler {
     if (cs.wasNull()) {
       return null;
     } else {
-      return new Boolean(b);
+      return Boolean.valueOf(b);
     }
   }
 
