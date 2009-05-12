@@ -6,7 +6,11 @@ Next Version
 ------------------------------
 
  o iBATIS-540 - cleanup result object factory after use to avoid leaks
-
+ o iBATIS-436 - Defaults for <settings/> element aren't applied if it doesn't exist: changed default values of lazyLoadingEnabled, cacheModelsEnabled and statementCacheEnabled to true if no <settings /> element present
+ o IBATIS-508 - Lock occurs when heavy traffic: removed double synchronization
+ o IBATIS-389 - Unbalanced # in SQL causes unclear/misleading error message: changed to throw more meaningful exception message
+ o IBATIS-536 - Errors when using PreparedStatement.setNull(i,Types.OTHER) on some RDBMS: applied patch inspired by SpringSource
+ 
 ------------------------------
  2.3.4
 ------------------------------
