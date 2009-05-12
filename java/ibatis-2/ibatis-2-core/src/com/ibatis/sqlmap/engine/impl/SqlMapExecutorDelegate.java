@@ -15,6 +15,15 @@
  */
 package com.ibatis.sqlmap.engine.impl;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import javax.sql.DataSource;
+
 import com.ibatis.common.beans.Probe;
 import com.ibatis.common.beans.ProbeFactory;
 import com.ibatis.common.jdbc.exception.NestedSQLException;
@@ -25,8 +34,8 @@ import com.ibatis.sqlmap.engine.cache.CacheKey;
 import com.ibatis.sqlmap.engine.cache.CacheModel;
 import com.ibatis.sqlmap.engine.exchange.DataExchangeFactory;
 import com.ibatis.sqlmap.engine.execution.BatchException;
-import com.ibatis.sqlmap.engine.execution.SqlExecutor;
 import com.ibatis.sqlmap.engine.execution.DefaultSqlExecutor;
+import com.ibatis.sqlmap.engine.execution.SqlExecutor;
 import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMap;
 import com.ibatis.sqlmap.engine.mapping.result.ResultMap;
 import com.ibatis.sqlmap.engine.mapping.result.ResultObjectFactory;
@@ -34,22 +43,14 @@ import com.ibatis.sqlmap.engine.mapping.statement.InsertStatement;
 import com.ibatis.sqlmap.engine.mapping.statement.MappedStatement;
 import com.ibatis.sqlmap.engine.mapping.statement.PaginatedDataList;
 import com.ibatis.sqlmap.engine.mapping.statement.SelectKeyStatement;
-import com.ibatis.sqlmap.engine.scope.StatementScope;
 import com.ibatis.sqlmap.engine.scope.SessionScope;
+import com.ibatis.sqlmap.engine.scope.StatementScope;
 import com.ibatis.sqlmap.engine.transaction.Transaction;
 import com.ibatis.sqlmap.engine.transaction.TransactionException;
 import com.ibatis.sqlmap.engine.transaction.TransactionManager;
 import com.ibatis.sqlmap.engine.transaction.TransactionState;
 import com.ibatis.sqlmap.engine.transaction.user.UserProvidedTransaction;
 import com.ibatis.sqlmap.engine.type.TypeHandlerFactory;
-
-import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 /**
  * The workhorse that really runs the SQL
@@ -58,9 +59,9 @@ public class SqlMapExecutorDelegate {
 
   private static final Probe PROBE = ProbeFactory.getProbe();
 
-  private boolean lazyLoadingEnabled;
-  private boolean cacheModelsEnabled;
-  private boolean enhancementEnabled;
+  private boolean lazyLoadingEnabled=true;
+  private boolean cacheModelsEnabled=true;
+  private boolean enhancementEnabled=false;
   private boolean useColumnLabel = true;
   private boolean forceMultipleResultSetSupport;
 
@@ -76,7 +77,7 @@ public class SqlMapExecutorDelegate {
   private DataExchangeFactory dataExchangeFactory;
   
   private ResultObjectFactory resultObjectFactory;
-  private boolean statementCacheEnabled;
+  private boolean statementCacheEnabled=true;
 
   /**
    * Default constructor
