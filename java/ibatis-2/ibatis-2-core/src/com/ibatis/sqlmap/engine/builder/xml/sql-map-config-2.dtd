@@ -46,7 +46,9 @@ url CDATA #IMPLIED
 
 <!-- The <settings> element allows you to configure various options and optimizations for the SqlMapClient
 instance that will be built using this XML file. The settings element and all of its attributes are completely
-optional. -->
+optional. <br>
+Since 2.3.1 maxSessions, maxTransactions and maxRequests are no longer supported. They are kept for backward compatibility reasons.
+-->
 <!ELEMENT settings EMPTY>
 <!ATTLIST settings
 classInfoCacheEnabled (true | false) #IMPLIED
