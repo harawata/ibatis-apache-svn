@@ -18,7 +18,7 @@
 
 <!--The root element of an iBATIS SQL Map configuration file.
 This file provides configuration details for DataSources, Data Mapper and other options like thread management.-->
-<!ELEMENT sqlMapConfig (properties?, settings?, resultObjectFactory?, typeAlias*, typeHandler*, transactionManager?, sqlMap+)+>
+<!ELEMENT sqlMapConfig (properties?, settings?, resultObjectFactory?, typeAlias*, typeHandler*, transactionManager?, sqlMap*)+>
 <!ATTLIST sqlMapConfig
 xmlns:fo CDATA #IMPLIED
 >
