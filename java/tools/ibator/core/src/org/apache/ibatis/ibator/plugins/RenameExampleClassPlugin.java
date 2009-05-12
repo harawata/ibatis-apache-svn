@@ -93,14 +93,12 @@ public class RenameExampleClassPlugin extends IbatorPluginAdapter {
 
     @Override
     public void initialized(IntrospectedTable introspectedTable) {
-        FullyQualifiedJavaType oldType = (FullyQualifiedJavaType)
-            introspectedTable.getAttribute(IntrospectedTable.ATTR_EXAMPLE_TYPE);
+        FullyQualifiedJavaType oldType = introspectedTable.getExampleType();
         
         String typeName = oldType.getFullyQualifiedName();
         Matcher matcher = pattern.matcher(typeName);
         typeName = matcher.replaceAll(replaceString);
         
-        introspectedTable.setAttribute(IntrospectedTable.ATTR_EXAMPLE_TYPE,
-                new FullyQualifiedJavaType(typeName));
+        introspectedTable.setExampleType(new FullyQualifiedJavaType(typeName));
     }
 }

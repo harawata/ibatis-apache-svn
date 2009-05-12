@@ -22,18 +22,18 @@ import java.util.List;
  */
 public class InvalidConfigurationException extends Exception {
     static final long serialVersionUID = 4902307610148543411L;
-    
-	private List<String> errors;
 
-	/**
-	 *  
-	 */
-	public InvalidConfigurationException(List<String> errors) {
-		super();
-		this.errors = errors;
-	}
+    private List<String> errors;
 
-	public List<String> getErrors() {
-		return errors;
-	}
+    /**
+     *  
+     */
+    public InvalidConfigurationException(List<String> errors) {
+        super();
+        this.errors = errors;
+    }
+
+    public List<String> getErrors() {
+        return errors;
+    }
 }

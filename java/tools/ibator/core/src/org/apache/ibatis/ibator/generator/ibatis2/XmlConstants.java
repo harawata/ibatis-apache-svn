@@ -30,6 +30,7 @@ public class XmlConstants {
     }
     
     static {
+        // TODO - move these to attributes of introspected table.
         StringBuilder sb = new StringBuilder();
 
         sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);

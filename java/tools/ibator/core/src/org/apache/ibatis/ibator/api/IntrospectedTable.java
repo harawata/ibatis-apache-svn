@@ -48,22 +48,6 @@ import org.apache.ibatis.ibator.internal.util.StringUtility;
  */
 public abstract class IntrospectedTable {
     /**
-     * This attribute must be a class of type java.lang.String.
-     * <p/>
-     * Note: this attribute will not be set if DAOs
-     * are not being generated for this table.
-     */
-    public static final String ATTR_DAO_IMPLEMENTATION_PACKAGE = "org.apache.ibatis.ibator.api.IntrospectedTable.ATTR_DAO_IMPLEMENTATION_PACKAGE"; //$NON-NLS-1$
-    
-    /**
-     * This attribute must be a class of type java.lang.String
-     * <p/>
-     * Note: this attribute will not be set if DAOs
-     * are not being generated for this table.
-     */
-    public static final String ATTR_DAO_INTERFACE_PACKAGE = "org.apache.ibatis.ibator.api.IntrospectedTable.ATTR_DAO_INTERFACE_PACKAGE"; //$NON-NLS-1$
-    
-    /**
      * This attribute must be a class of type
      *   org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType
      * <p/>
@@ -81,11 +65,6 @@ public abstract class IntrospectedTable {
      */
     public static final String ATTR_DAO_INTERFACE_TYPE = "org.apache.ibatis.ibator.api.IntrospectedTable.ATTR_DAO_INTERFACE_TYPE"; //$NON-NLS-1$
     
-    /**
-     * This attribute must be a class of type java.lang.String
-     */
-    public static final String ATTR_JAVA_MODEL_PACKAGE = "org.apache.ibatis.ibator.api.IntrospectedTable.ATTR_JAVA_MODEL_PACKAGE"; //$NON-NLS-1$
-
     /**
      * This attribute must be a class of type
      *   org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType
@@ -431,18 +410,6 @@ public abstract class IntrospectedTable {
             || blobColumns.size() > 0;
     }
     
-    public String getDAOInterfacePackage() {
-        return (String) getAttribute(ATTR_DAO_INTERFACE_PACKAGE);
-    }
-    
-    public String getDAOImplementationPackage() {
-        return (String) getAttribute(ATTR_DAO_IMPLEMENTATION_PACKAGE);
-    }
-    
-    public String getJavaModelPackage() {
-        return (String) getAttribute(ATTR_JAVA_MODEL_PACKAGE);
-    }
-    
     public void setTableConfiguration(TableConfiguration tableConfiguration) {
         this.tableConfiguration = tableConfiguration;
     }
@@ -507,16 +474,8 @@ public abstract class IntrospectedTable {
     }
     
     public void initialize() {
-        setDAOImplementationPackage(calculateDAOImplementationPackage());
-        setDAOInterfacePackage(calculateDAOInterfacePackage());
-        setDAOImplementationType(calculateDAOImplementationType());
-        setDAOInterfaceType(calculateDAOInterfaceType());
-        
-        setJavaModelPackage(calculateJavaModelPackage());
-        setPrimaryKeyType(calculatePrimaryKeyType());
-        setBaseRecordType(calculateBaseRecordType());
-        setRecordWithBLOBsType(calculateRecordWithBLOBsType());
-        setExampleType(calculateExampleType());
+        calculateDAOAttributes();
+        calculateModelAttributes();
         
         setSqlMapPackage(calculateSqlMapPackage());
         setSqlMapFileName(calculateSqlMapFileName());
@@ -569,36 +528,28 @@ public abstract class IntrospectedTable {
         return sb.toString();
     }
 
-    protected FullyQualifiedJavaType calculateDAOImplementationType() {
+    protected void calculateDAOAttributes() {
         if (ibatorContext.getDaoGeneratorConfiguration() == null) {
-            return null;
+            return;
         }
         
         StringBuilder sb = new StringBuilder();
-        sb.append(getDAOImplementationPackage());
+        sb.append(calculateDAOImplementationPackage());
         sb.append('.');
         sb.append(fullyQualifiedTable.getDomainObjectName());
         sb.append("DAOImpl"); //$NON-NLS-1$
-
         FullyQualifiedJavaType fqjt = new FullyQualifiedJavaType(sb.toString());
-        return fqjt;
-    }
-
-    protected FullyQualifiedJavaType calculateDAOInterfaceType() {
-        if (ibatorContext.getDaoGeneratorConfiguration() == null) {
-            return null;
-        }
+        setDAOImplementationType(fqjt);
         
-        StringBuilder sb = new StringBuilder();
-        sb.append(getDAOInterfacePackage());
+        sb.setLength(0);
+        sb.append(calculateDAOInterfacePackage());
         sb.append('.');
         sb.append(fullyQualifiedTable.getDomainObjectName());
         sb.append("DAO"); //$NON-NLS-1$
-
-        FullyQualifiedJavaType fqjt = new FullyQualifiedJavaType(sb.toString());
-        return fqjt;
+        fqjt = new FullyQualifiedJavaType(sb.toString());
+        setDAOInterfaceType(fqjt);
     }
-
+    
     protected String calculateJavaModelPackage() {
         JavaModelGeneratorConfiguration config = ibatorContext.getJavaModelGeneratorConfiguration();
 
@@ -611,47 +562,39 @@ public abstract class IntrospectedTable {
         return sb.toString();
     }
     
-    protected FullyQualifiedJavaType calculatePrimaryKeyType() {
+    protected void calculateModelAttributes() {
+        String pakkage = calculateJavaModelPackage();
+        
         StringBuilder sb = new StringBuilder();
-        sb.append(getJavaModelPackage());
+        sb.append(pakkage);
         sb.append('.');
         sb.append(fullyQualifiedTable.getDomainObjectName());
         sb.append("Key"); //$NON-NLS-1$
-
         FullyQualifiedJavaType fqjt = new FullyQualifiedJavaType(sb.toString());
-        return fqjt;
-    }
-    
-    protected FullyQualifiedJavaType calculateBaseRecordType() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getJavaModelPackage());
+        setPrimaryKeyType(fqjt);
+
+        sb.setLength(0);
+        sb.append(pakkage);
         sb.append('.');
         sb.append(fullyQualifiedTable.getDomainObjectName());
+        fqjt = new FullyQualifiedJavaType(sb.toString());
+        setBaseRecordType(fqjt);
 
-        FullyQualifiedJavaType fqjt = new FullyQualifiedJavaType(sb.toString());
-        return fqjt;
-    }
-    
-    protected FullyQualifiedJavaType calculateRecordWithBLOBsType() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getJavaModelPackage());
+        sb.setLength(0);
+        sb.append(pakkage);
         sb.append('.');
         sb.append(fullyQualifiedTable.getDomainObjectName());
         sb.append("WithBLOBs"); //$NON-NLS-1$
+        fqjt = new FullyQualifiedJavaType(sb.toString());
+        setRecordWithBLOBsType(fqjt);
 
-        FullyQualifiedJavaType fqjt = new FullyQualifiedJavaType(sb.toString());
-        return fqjt;
-    }
-
-    protected FullyQualifiedJavaType calculateExampleType() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getJavaModelPackage());
+        sb.setLength(0);
+        sb.append(pakkage);
         sb.append('.');
         sb.append(fullyQualifiedTable.getDomainObjectName());
         sb.append("Example"); //$NON-NLS-1$
-
-        FullyQualifiedJavaType fqjt = new FullyQualifiedJavaType(sb.toString());
-        return fqjt;
+        fqjt = new FullyQualifiedJavaType(sb.toString());
+        setExampleType(fqjt);
     }
     
     protected String calculateSqlMapPackage() {
@@ -752,14 +695,6 @@ public abstract class IntrospectedTable {
         return tableConfiguration;
     }
     
-    public void setDAOImplementationPackage(String DAOImplementationPackage) {
-        setAttribute(ATTR_DAO_IMPLEMENTATION_PACKAGE, DAOImplementationPackage);
-    }
-    
-    public void setDAOInterfacePackage(String DAOInterfacePackage) {
-        setAttribute(ATTR_DAO_INTERFACE_PACKAGE, DAOInterfacePackage);
-    }
-
     public void setDAOImplementationType(FullyQualifiedJavaType DAOImplementationType) {
         setAttribute(ATTR_DAO_IMPLEMENTATION_TYPE, DAOImplementationType);
     }
@@ -768,10 +703,6 @@ public abstract class IntrospectedTable {
         setAttribute(ATTR_DAO_INTERFACE_TYPE, DAOInterfaceType);
     }
 
-    public void setJavaModelPackage(String javaModelPackage) {
-        setAttribute(ATTR_JAVA_MODEL_PACKAGE, javaModelPackage);
-    }
-    
     public void setPrimaryKeyType(FullyQualifiedJavaType primaryKeyType) {
         setAttribute(ATTR_PRIMARY_KEY_TYPE, primaryKeyType);
     }

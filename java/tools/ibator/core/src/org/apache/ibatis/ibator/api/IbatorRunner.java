@@ -121,7 +121,10 @@ public class IbatorRunner {
             e.printStackTrace();
             return;
         } catch (InvalidConfigurationException e) {
-            e.printStackTrace();
+            writeLine(Messages.getString("Progress.16")); //$NON-NLS-1$
+            for (String error : e.getErrors()) {
+                writeLine(error);
+            }
             return;
         } catch (InterruptedException e) {
             // ignore (will never happen with the DefaultShellCallback)

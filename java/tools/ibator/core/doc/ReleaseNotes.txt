@@ -26,6 +26,7 @@ Enhancements:
 10. Gather column comments during introspection
 11. IBATIS-592 - Additional attributes for SqlMaps
 12. Fixed addCriterionfor JDBC* methods so that they all do a null check
+13. Fixed IbatorRunner so that configuration errors are shown (thanks to Karel Rank)
 
 -------------------------------------------------------------------------------
 Version 1.2.1:
