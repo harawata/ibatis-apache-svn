@@ -23,6 +23,7 @@ import org.apache.ibatis.ibator.api.dom.xml.Document;
 import org.apache.ibatis.ibator.api.dom.xml.XmlElement;
 import org.apache.ibatis.ibator.exception.InvalidConfigurationException;
 import org.apache.ibatis.ibator.generator.ibatis2.XmlConstants;
+import org.apache.ibatis.ibator.internal.util.StringUtility;
 import org.apache.ibatis.ibator.internal.util.messages.Messages;
 
 /**
@@ -61,6 +62,14 @@ public class IbatorConfiguration {
 	 */
 	public void validate() throws InvalidConfigurationException {
 		List<String> errors = new ArrayList<String>();
+		
+		for (String classPathEntry : classPathEntries) {
+		    if (!StringUtility.stringHasValue(classPathEntry)) {
+	            errors.add(Messages.getString("ValidationError.19")); //$NON-NLS-1$
+	            // only need to state this error once
+		        break;
+		    }
+		}
         
         if (ibatorContexts.size() == 0) {
             errors.add(Messages.getString("ValidationError.11")); //$NON-NLS-1$

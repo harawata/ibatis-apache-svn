@@ -15,8 +15,12 @@
  */
 package org.apache.ibatis.ibator.config;
 
+import java.util.List;
+
 import org.apache.ibatis.ibator.api.dom.xml.Attribute;
 import org.apache.ibatis.ibator.api.dom.xml.XmlElement;
+import org.apache.ibatis.ibator.internal.util.StringUtility;
+import org.apache.ibatis.ibator.internal.util.messages.Messages;
 
 
 /**
@@ -65,5 +69,16 @@ public class JavaModelGeneratorConfiguration extends PropertyHolder {
         addPropertyXmlElements(answer);
         
         return answer;
+    }
+
+    public void validate(List<String> errors, String contextId) {
+        if (!StringUtility.stringHasValue(targetProject)) {
+            errors.add(Messages.getString("ValidationError.0", contextId)); //$NON-NLS-1$
+        }
+
+        if (!StringUtility.stringHasValue(targetPackage)) {
+            errors.add(Messages.getString("ValidationError.12", //$NON-NLS-1$
+                    "JavaModelGenerator", contextId)); //$NON-NLS-1$
+        }
     }
 }

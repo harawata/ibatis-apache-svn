@@ -16,9 +16,12 @@
 
 package org.apache.ibatis.ibator.config;
 
+import java.util.List;
+
 import org.apache.ibatis.ibator.api.dom.xml.Attribute;
 import org.apache.ibatis.ibator.api.dom.xml.XmlElement;
 import org.apache.ibatis.ibator.internal.util.StringUtility;
+import org.apache.ibatis.ibator.internal.util.messages.Messages;
 
 /**
  * @author Jeff Butler
@@ -77,4 +80,11 @@ public class IgnoredColumn {
         return xmlElement;
     }
 
+    public void validate(List<String> errors, String tableName) {
+        if (!StringUtility.stringHasValue(columnName)) {
+            errors
+            .add(Messages.getString("ValidationError.21",  //$NON-NLS-1$
+                tableName));
+        }
+    }
 }

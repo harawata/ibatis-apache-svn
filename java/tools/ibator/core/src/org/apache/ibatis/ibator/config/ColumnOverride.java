@@ -15,9 +15,12 @@
  */
 package org.apache.ibatis.ibator.config;
 
+import java.util.List;
+
 import org.apache.ibatis.ibator.api.dom.xml.Attribute;
 import org.apache.ibatis.ibator.api.dom.xml.XmlElement;
 import org.apache.ibatis.ibator.internal.util.StringUtility;
+import org.apache.ibatis.ibator.internal.util.messages.Messages;
 
 /**
  * @author Jeff Butler
@@ -121,5 +124,12 @@ public class ColumnOverride extends PropertyHolder {
         this.isColumnNameDelimited = isColumnNameDelimited;
         
         configuredDelimitedColumnName = isColumnNameDelimited ? "true" : "false"; //$NON-NLS-1$ //$NON-NLS-2$
+    }
+    
+    public void validate(List<String> errors, String tableName) {
+        if (!StringUtility.stringHasValue(columnName)) {
+            errors.add(Messages.getString("ValidationError.22",  //$NON-NLS-1$
+                tableName));
+        }
     }
 }

@@ -15,10 +15,13 @@
  */
 package org.apache.ibatis.ibator.config;
 
+import java.util.List;
+
 import org.apache.ibatis.ibator.api.dom.xml.Attribute;
 import org.apache.ibatis.ibator.api.dom.xml.XmlElement;
 import org.apache.ibatis.ibator.internal.db.DatabaseDialects;
 import org.apache.ibatis.ibator.internal.util.StringUtility;
+import org.apache.ibatis.ibator.internal.util.messages.Messages;
 
 /**
  * This class specifies that a key is auto-generated, either as an identity
@@ -95,5 +98,19 @@ public class GeneratedKey {
                 isIdentity ? "true" : "false")); //$NON-NLS-1$ //$NON-NLS-2$
         
         return xmlElement;
+    }
+    
+    public void validate(List<String> errors, String tableName) {
+        if (!StringUtility.stringHasValue(runtimeSqlStatement)) {
+            errors.add(Messages.getString("ValidationError.7",  //$NON-NLS-1$
+                        tableName));
+        }
+            
+        if (StringUtility.stringHasValue(type)) {
+            if (!"pre".equals(type) && !"post".equals(type)) { //$NON-NLS-1$ //$NON-NLS-2$
+                errors.add(Messages.getString("ValidationError.15",  //$NON-NLS-1$
+                    tableName));
+            }
+        }
     }
 }

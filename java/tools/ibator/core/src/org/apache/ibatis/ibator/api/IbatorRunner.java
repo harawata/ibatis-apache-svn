@@ -46,6 +46,8 @@ public class IbatorRunner {
     private static final String TABLES = "-tables"; //$NON-NLS-1$
     private static final String VERBOSE = "-verbose"; //$NON-NLS-1$
     private static final String FORCE_JAVA_LOGGING = "-forceJavaLogging"; //$NON-NLS-1$
+    private static final String HELP_1 = "-?"; //$NON-NLS-1$
+    private static final String HELP_2 = "-h"; //$NON-NLS-1$
 
 	public static void main(String[] args) {
         if (args.length == 0) {
@@ -55,6 +57,12 @@ public class IbatorRunner {
         }
 		
         Map<String, String> arguments = parseCommandLine(args);
+        
+        if (arguments.containsKey(HELP_1)) {
+            usage();
+            System.exit(0);
+            return;  // only to satisfy compiler, never returns
+        }
         
         if (!arguments.containsKey(CONFIG_FILE)) {
             writeLine(Messages.getString("RuntimeError.0")); //$NON-NLS-1$
@@ -176,6 +184,12 @@ public class IbatorRunner {
                 arguments.put(OVERWRITE, "Y"); //$NON-NLS-1$
             } else if (VERBOSE.equalsIgnoreCase(args[i])) {
                 arguments.put(VERBOSE, "Y"); //$NON-NLS-1$
+            } else if (HELP_1.equalsIgnoreCase(args[i])) {
+                arguments.put(HELP_1, "Y"); //$NON-NLS-1$
+            } else if (HELP_2.equalsIgnoreCase(args[i])) {
+                // put HELP_1 in the map here too - so we only
+                // have to check for one entry in the mainline
+                arguments.put(HELP_1, "Y"); //$NON-NLS-1$
             } else if (FORCE_JAVA_LOGGING.equalsIgnoreCase(args[i])) {
                 LogFactory.forceJavaLogging();
             } else if (CONTEXT_IDS.equalsIgnoreCase(args[i])) {

@@ -15,8 +15,12 @@
  */
 package org.apache.ibatis.ibator.config;
 
+import java.util.List;
+
 import org.apache.ibatis.ibator.api.dom.xml.Attribute;
 import org.apache.ibatis.ibator.api.dom.xml.XmlElement;
+import org.apache.ibatis.ibator.internal.util.StringUtility;
+import org.apache.ibatis.ibator.internal.util.messages.Messages;
 
 
 /**
@@ -79,5 +83,21 @@ public class DAOGeneratorConfiguration extends TypedPropertyHolder {
 
     public void setImplementationPackage(String implementationPackage) {
         this.implementationPackage = implementationPackage;
+    }
+
+    public void validate(List<String> errors, String contextId) {
+        if (!StringUtility.stringHasValue(targetProject)) {
+            errors.add(Messages.getString("ValidationError.2", contextId)); //$NON-NLS-1$
+        }
+
+        if (!StringUtility.stringHasValue(targetPackage)) {
+            errors.add(Messages.getString("ValidationError.12", //$NON-NLS-1$
+                    "DAOGenerator", contextId)); //$NON-NLS-1$
+        }
+        
+        if (!StringUtility.stringHasValue(getConfigurationType())) {
+            errors.add(Messages.getString("ValidationError.20", //$NON-NLS-1$
+                    contextId));
+        }
     }
 }

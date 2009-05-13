@@ -474,20 +474,8 @@ public class TableConfiguration extends PropertyHolder {
         String fqTableName = StringUtility.composeFullyQualifiedTableName(
                 catalog, schema, tableName, '.');
         
-        if (generatedKey != null
-                && !StringUtility.stringHasValue(generatedKey.getRuntimeSqlStatement())) {
-            errors
-                .add(Messages.getString("ValidationError.7",  //$NON-NLS-1$
-                        fqTableName));
-            
-            String type = generatedKey.getType();
-            if (StringUtility.stringHasValue(type)) {
-                if (!"pre".equals(type) && !"post".equals(type)) { //$NON-NLS-1$ //$NON-NLS-2$
-                    errors
-                    .add(Messages.getString("ValidationError.15",  //$NON-NLS-1$
-                            fqTableName));
-                }
-            }
+        if (generatedKey != null) {
+            generatedKey.validate(errors, fqTableName);
         }
         
         if (StringUtility.isTrue(getProperty(PropertyRegistry.TABLE_USE_COLUMN_INDEXES))) {
@@ -505,7 +493,15 @@ public class TableConfiguration extends PropertyHolder {
         }
         
         if (columnRenamingRule != null) {
-            columnRenamingRule.validate(errors);
+            columnRenamingRule.validate(errors, fqTableName);
+        }
+        
+        for (ColumnOverride columnOverride : columnOverrides) {
+            columnOverride.validate(errors, fqTableName);
+        }
+        
+        for (IgnoredColumn ignoredColumn : ignoredColumns.keySet()) {
+            ignoredColumn.validate(errors, fqTableName);
         }
     }
 

@@ -73,9 +73,9 @@ public class ColumnRenamingRule {
         this.searchString = searchString;
     }
     
-    public void validate(List<String> errors) {
+    public void validate(List<String> errors, String tableName) {
         if (!StringUtility.stringHasValue(searchString)) {
-            errors.add(Messages.getString("ValidationError.14")); //$NON-NLS-1$
+            errors.add(Messages.getString("ValidationError.14", tableName)); //$NON-NLS-1$
         }
     }
     

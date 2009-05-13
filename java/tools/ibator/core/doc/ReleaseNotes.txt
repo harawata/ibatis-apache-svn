@@ -10,6 +10,7 @@ Bugs:
    across lines
 3. Fixed NPE and incorrect calculation in generated equals when certain
    fields are null - thanks to Benjamin Klatt for finding this bug
+4. Fixed IBATIS-601 - improper validation of <generatedKey>
 
 Enhancements:
 1. IBATIS-569 - Make it easier to override IbatorRules in plugins

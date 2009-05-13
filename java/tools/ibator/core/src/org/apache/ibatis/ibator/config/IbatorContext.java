@@ -137,50 +137,29 @@ public class IbatorContext extends PropertyHolder {
         }
 
         if (jdbcConnectionConfiguration == null) {
-            errors.add(Messages.getString("ValidationError.10")); //$NON-NLS-1$
+            errors.add(Messages.getString("ValidationError.10", id)); //$NON-NLS-1$
         } else {
             jdbcConnectionConfiguration.validate(errors);
         }
 
         if (javaModelGeneratorConfiguration == null) {
-            errors.add(Messages.getString("ValidationError.8")); //$NON-NLS-1$
+            errors.add(Messages.getString("ValidationError.8", id)); //$NON-NLS-1$
         } else {
-            if (!StringUtility.stringHasValue(javaModelGeneratorConfiguration.getTargetProject())) {
-                errors.add(Messages.getString("ValidationError.0", id)); //$NON-NLS-1$
-            }
-
-            if (!StringUtility.stringHasValue(javaModelGeneratorConfiguration.getTargetPackage())) {
-                errors.add(Messages.getString("ValidationError.12", //$NON-NLS-1$
-                        "JavaModelGenerator", id)); //$NON-NLS-1$
-            }
+            javaModelGeneratorConfiguration.validate(errors, id);
         }
 
         if (sqlMapGeneratorConfiguration == null) {
-            errors.add(Messages.getString("ValidationError.9")); //$NON-NLS-1$
+            errors.add(Messages.getString("ValidationError.9", id)); //$NON-NLS-1$
         } else {
-            if (!StringUtility.stringHasValue(sqlMapGeneratorConfiguration.getTargetProject())) {
-                errors.add(Messages.getString("ValidationError.1", id)); //$NON-NLS-1$
-            }
-
-            if (!StringUtility.stringHasValue(sqlMapGeneratorConfiguration.getTargetPackage())) {
-                errors.add(Messages.getString("ValidationError.12", //$NON-NLS-1$
-                        "SQLMapGenerator", id)); //$NON-NLS-1$
-            }
+            sqlMapGeneratorConfiguration.validate(errors, id);
         }
 
         if (daoGeneratorConfiguration != null) {
-            if (!StringUtility.stringHasValue(daoGeneratorConfiguration.getTargetProject())) {
-                errors.add(Messages.getString("ValidationError.2", id)); //$NON-NLS-1$
-            }
-
-            if (!StringUtility.stringHasValue(daoGeneratorConfiguration.getTargetPackage())) {
-                errors.add(Messages.getString("ValidationError.12", //$NON-NLS-1$
-                        "DAOGenerator", id)); //$NON-NLS-1$
-            }
+            daoGeneratorConfiguration.validate(errors, id);
         }
 
         if (tableConfigurations.size() == 0) {
-            errors.add(Messages.getString("ValidationError.3")); //$NON-NLS-1$
+            errors.add(Messages.getString("ValidationError.3", id)); //$NON-NLS-1$
         } else {
             for (int i = 0; i < tableConfigurations.size(); i++) {
                 TableConfiguration tc = tableConfigurations.get(i);
