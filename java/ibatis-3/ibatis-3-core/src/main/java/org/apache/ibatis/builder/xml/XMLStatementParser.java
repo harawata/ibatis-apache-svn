@@ -92,11 +92,47 @@ public class XMLStatementParser extends BaseParser {
       put("choose", new ChooseHandler());
       put("when", new IfHandler());
       put("otherwise", new OtherwiseHandler());
+      put("selectKey", new SelectKeyHandler());
     }
   };
 
   private interface NodeHandler {
     void handleNode(NodeletContext nodeToHandle, List<SqlNode> targetContents);
+  }
+
+  private class SelectKeyHandler implements NodeHandler {
+    public void handleNode(NodeletContext nodeToHandle, List<SqlNode> targetContents) {
+      String id = nodeToHandle.getStringAttribute("id");
+      Integer fetchSize = nodeToHandle.getIntAttribute("fetchSize", null);
+      Integer timeout = nodeToHandle.getIntAttribute("timeout", null);
+      boolean isSelect = "select".equals(nodeToHandle.getNode().getNodeName());
+      boolean flushCache = nodeToHandle.getBooleanAttribute("flushCache", !isSelect);
+      boolean useCache = nodeToHandle.getBooleanAttribute("useCache", isSelect);
+      String parameterMap = nodeToHandle.getStringAttribute("parameterMap");
+      String parameterType = nodeToHandle.getStringAttribute("parameterType");
+      Class parameterTypeClass = resolveClass(parameterType);
+      String resultMap = nodeToHandle.getStringAttribute("resultMap");
+      String resultType = nodeToHandle.getStringAttribute("resultType");
+
+      Class resultTypeClass = resolveClass(resultType);
+      String resultSetType = nodeToHandle.getStringAttribute("resultSetType");
+      StatementType statementType = StatementType.valueOf(nodeToHandle.getStringAttribute("statementType", StatementType.PREPARED.toString()));
+      ResultSetType resultSetTypeEnum = resolveResultSetType(resultSetType);
+
+      List<SqlNode> contents = parseDynamicTags(nodeToHandle);
+      MixedSqlNode rootSqlNode = new MixedSqlNode(contents);
+      SqlSource sqlSource = new DynamicSqlSource(configuration, rootSqlNode);
+      String nodeName = nodeToHandle.getNode().getNodeName();
+      SqlCommandType sqlCommandType = SqlCommandType.valueOf(nodeName.toUpperCase());
+
+      String keyProperty = nodeToHandle.getStringAttribute("keyProperty");
+      boolean useGeneratedKeys = nodeToHandle.getBooleanAttribute("useGeneratedKeys",
+          configuration.isUseGeneratedKeys() && SqlCommandType.INSERT.equals(sqlCommandType));
+
+      sequentialBuilder.statement(id, sqlSource, fetchSize, timeout, parameterMap, parameterTypeClass,
+          resultMap, resultTypeClass, resultSetTypeEnum, isSelect, flushCache, useCache, statementType, sqlCommandType,useGeneratedKeys,keyProperty);
+
+    }
   }
 
   private class IncludeNodeHandler implements NodeHandler {

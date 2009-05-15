@@ -1,6 +1,7 @@
 package org.apache.ibatis.executor.statement;
 
 import org.apache.ibatis.executor.Executor;
+import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
 import org.apache.ibatis.executor.result.ResultHandler;
 import org.apache.ibatis.mapping.MappedStatement;
 
@@ -19,7 +20,7 @@ public class PreparedStatementHandler extends BaseStatementHandler {
     ps.execute();
     int result = ps.getUpdateCount();
     Object parameterObject = boundSql.getParameterObject();
-    processGeneratedKeys(mappedStatement, ps, parameterObject);
+    new Jdbc3KeyGenerator().processGeneratedKeys(mappedStatement, ps, parameterObject);
     return result;
   }
 

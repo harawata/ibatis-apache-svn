@@ -69,38 +69,6 @@ public abstract class BaseStatementHandler implements StatementHandler {
   protected abstract Statement instantiateStatement(Connection connection)
       throws SQLException;
 
-
-  protected void processGeneratedKeys(MappedStatement ms, Statement stmt, Object parameter) throws SQLException {
-    if (parameter != null && ms.isUseGeneratedKeys()) {
-      String keyProperty = ms.getKeyProperty();
-      final MetaObject metaParam = MetaObject.forObject(parameter);
-      if (keyProperty != null && metaParam.hasSetter(keyProperty)) {
-        Class keyPropertyType = metaParam.getSetterType(keyProperty);
-        TypeHandler th = typeHandlerRegistry.getTypeHandler(keyPropertyType);
-        if (th != null) {
-          ResultSet rs = stmt.getGeneratedKeys();
-          try {
-            ResultSetMetaData rsmd = rs.getMetaData();
-            int colCount = rsmd.getColumnCount();
-            if (colCount > 0) {
-              String colName = rsmd.getColumnName(1);
-              while (rs.next()) {
-                Object value = th.getResult(rs,colName);
-                metaParam.setValue(keyProperty,value);
-              }
-            }
-          } finally {
-            try {
-              if (rs != null) rs.close();
-            } catch (Exception e) {
-              //ignore
-            }
-          }
-        }
-      }
-    }
-  }
-
   protected void setStatementTimeout(Statement stmt)
       throws SQLException {
     Integer timeout = mappedStatement.getTimeout();

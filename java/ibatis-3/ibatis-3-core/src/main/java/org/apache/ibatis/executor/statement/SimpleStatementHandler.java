@@ -1,6 +1,7 @@
 package org.apache.ibatis.executor.statement;
 
 import org.apache.ibatis.executor.Executor;
+import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
 import org.apache.ibatis.executor.result.ResultHandler;
 import org.apache.ibatis.mapping.*;
 
@@ -23,7 +24,7 @@ public class SimpleStatementHandler extends BaseStatementHandler {
       statement.execute(sql);
     }
     int result = statement.getUpdateCount();
-    processGeneratedKeys(mappedStatement, statement, parameterObject);
+    new Jdbc3KeyGenerator().processGeneratedKeys(mappedStatement, statement, parameterObject);
     return result;
   }
 
