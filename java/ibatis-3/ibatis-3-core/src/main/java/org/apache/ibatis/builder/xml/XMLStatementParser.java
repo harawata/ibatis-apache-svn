@@ -4,9 +4,9 @@ import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.builder.BaseParser;
 import org.apache.ibatis.builder.ParserException;
 import org.apache.ibatis.builder.SequentialMapperBuilder;
-import org.apache.ibatis.builder.SqlSourceParser;
 import org.apache.ibatis.builder.xml.dynamic.*;
 import org.apache.ibatis.parsing.NodeletContext;
+import org.apache.ibatis.executor.keygen.*;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -30,9 +30,6 @@ public class XMLStatementParser extends BaseParser {
     String id = context.getStringAttribute("id");
     Integer fetchSize = context.getIntAttribute("fetchSize", null);
     Integer timeout = context.getIntAttribute("timeout", null);
-    boolean isSelect = "select".equals(context.getNode().getNodeName());
-    boolean flushCache = context.getBooleanAttribute("flushCache", !isSelect);
-    boolean useCache = context.getBooleanAttribute("useCache", isSelect);
     String parameterMap = context.getStringAttribute("parameterMap");
     String parameterType = context.getStringAttribute("parameterType");
     Class parameterTypeClass = resolveClass(parameterType);
@@ -49,13 +46,17 @@ public class XMLStatementParser extends BaseParser {
     SqlSource sqlSource = new DynamicSqlSource(configuration, rootSqlNode);
     String nodeName = context.getNode().getNodeName();
     SqlCommandType sqlCommandType = SqlCommandType.valueOf(nodeName.toUpperCase());
+    boolean isSelect = sqlCommandType == SqlCommandType.SELECT;
+    boolean flushCache = context.getBooleanAttribute("flushCache", !isSelect);
+    boolean useCache = context.getBooleanAttribute("useCache", isSelect);
 
     String keyProperty = context.getStringAttribute("keyProperty");
-    boolean useGeneratedKeys = context.getBooleanAttribute("useGeneratedKeys",
-        configuration.isUseGeneratedKeys() && SqlCommandType.INSERT.equals(sqlCommandType));
+    KeyGenerator keyGenerator = context.getBooleanAttribute("useGeneratedKeys",
+        configuration.isUseGeneratedKeys() && SqlCommandType.INSERT.equals(sqlCommandType))
+        ? new Jdbc3KeyGenerator() : null;
 
-    sequentialBuilder.statement(id, sqlSource, fetchSize, timeout, parameterMap, parameterTypeClass,
-        resultMap, resultTypeClass, resultSetTypeEnum, isSelect, flushCache, useCache, statementType, sqlCommandType,useGeneratedKeys,keyProperty);
+    sequentialBuilder.statement(id, sqlSource, statementType, sqlCommandType, fetchSize, timeout, parameterMap, parameterTypeClass,
+        resultMap, resultTypeClass, resultSetTypeEnum, flushCache, useCache, keyGenerator,keyProperty);
   }
 
 
@@ -102,36 +103,33 @@ public class XMLStatementParser extends BaseParser {
 
   private class SelectKeyHandler implements NodeHandler {
     public void handleNode(NodeletContext nodeToHandle, List<SqlNode> targetContents) {
-      String id = nodeToHandle.getStringAttribute("id");
-      Integer fetchSize = nodeToHandle.getIntAttribute("fetchSize", null);
-      Integer timeout = nodeToHandle.getIntAttribute("timeout", null);
-      boolean isSelect = "select".equals(nodeToHandle.getNode().getNodeName());
-      boolean flushCache = nodeToHandle.getBooleanAttribute("flushCache", !isSelect);
-      boolean useCache = nodeToHandle.getBooleanAttribute("useCache", isSelect);
-      String parameterMap = nodeToHandle.getStringAttribute("parameterMap");
-      String parameterType = nodeToHandle.getStringAttribute("parameterType");
-      Class parameterTypeClass = resolveClass(parameterType);
-      String resultMap = nodeToHandle.getStringAttribute("resultMap");
+      NodeletContext parent = nodeToHandle.getParent();
+      String id = parent.getStringAttribute("id") + SelectKeyGenerator.SELECT_KEY_SUFFIX;
       String resultType = nodeToHandle.getStringAttribute("resultType");
-
       Class resultTypeClass = resolveClass(resultType);
-      String resultSetType = nodeToHandle.getStringAttribute("resultSetType");
       StatementType statementType = StatementType.valueOf(nodeToHandle.getStringAttribute("statementType", StatementType.PREPARED.toString()));
-      ResultSetType resultSetTypeEnum = resolveResultSetType(resultSetType);
+      String keyProperty = nodeToHandle.getStringAttribute("keyProperty");
+      String parameterType = parent.getStringAttribute("parameterType");
+      Class parameterTypeClass = resolveClass(parameterType);
+
+      //defaults
+      boolean useCache = false;
+      KeyGenerator keyGenerator = null;
+      Integer fetchSize = null;
+      Integer timeout = null;
+      boolean flushCache = false;
+      String parameterMap = null;
+      String resultMap = null;
+      ResultSetType resultSetTypeEnum = null;
 
       List<SqlNode> contents = parseDynamicTags(nodeToHandle);
       MixedSqlNode rootSqlNode = new MixedSqlNode(contents);
       SqlSource sqlSource = new DynamicSqlSource(configuration, rootSqlNode);
-      String nodeName = nodeToHandle.getNode().getNodeName();
-      SqlCommandType sqlCommandType = SqlCommandType.valueOf(nodeName.toUpperCase());
+      SqlCommandType sqlCommandType = SqlCommandType.SELECT;
 
-      String keyProperty = nodeToHandle.getStringAttribute("keyProperty");
-      boolean useGeneratedKeys = nodeToHandle.getBooleanAttribute("useGeneratedKeys",
-          configuration.isUseGeneratedKeys() && SqlCommandType.INSERT.equals(sqlCommandType));
-
-      sequentialBuilder.statement(id, sqlSource, fetchSize, timeout, parameterMap, parameterTypeClass,
-          resultMap, resultTypeClass, resultSetTypeEnum, isSelect, flushCache, useCache, statementType, sqlCommandType,useGeneratedKeys,keyProperty);
-
+      sequentialBuilder.statement(id, sqlSource, statementType, sqlCommandType, fetchSize, timeout, parameterMap, parameterTypeClass,
+          resultMap, resultTypeClass, resultSetTypeEnum, flushCache, useCache,
+          keyGenerator,keyProperty);
     }
   }
 

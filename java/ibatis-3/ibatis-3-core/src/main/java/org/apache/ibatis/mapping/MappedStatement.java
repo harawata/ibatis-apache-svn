@@ -1,6 +1,7 @@
 package org.apache.ibatis.mapping;
 
 import org.apache.ibatis.cache.Cache;
+import org.apache.ibatis.executor.keygen.*;
 
 import java.util.*;
 
@@ -20,7 +21,7 @@ public class MappedStatement {
   private boolean flushCacheRequired;
   private boolean useCache;
   private SqlCommandType sqlCommandType;
-  private boolean useGeneratedKeys;
+  private KeyGenerator keyGenerator;
   private String keyProperty;
 
   private MappedStatement() {
@@ -38,8 +39,8 @@ public class MappedStatement {
       mappedStatement.resultMaps = new ArrayList<ResultMap>();
       mappedStatement.timeout = configuration.getDefaultStatementTimeout();
       mappedStatement.sqlCommandType = sqlCommandType;
-      mappedStatement.useGeneratedKeys = configuration.isUseGeneratedKeys()
-          && SqlCommandType.INSERT.equals(sqlCommandType);
+      mappedStatement.keyGenerator = configuration.isUseGeneratedKeys()
+          && SqlCommandType.INSERT.equals(sqlCommandType) ? new Jdbc3KeyGenerator() : null;
     }
 
     public Builder resource(String resource) {
@@ -96,8 +97,8 @@ public class MappedStatement {
       return this;
     }
 
-    public Builder useGeneratedKeys(boolean useGeneratedKeys) {
-      mappedStatement.useGeneratedKeys = useGeneratedKeys;
+    public Builder keyGenerator (KeyGenerator keyGenerator) {
+      mappedStatement.keyGenerator = keyGenerator;
       return this;
     }
 
@@ -120,8 +121,8 @@ public class MappedStatement {
     return keyProperty;
   }
 
-  public boolean isUseGeneratedKeys() {
-    return useGeneratedKeys;
+  public KeyGenerator getKeyGenerator() {
+    return keyGenerator;
   }
 
   public SqlCommandType getSqlCommandType() {

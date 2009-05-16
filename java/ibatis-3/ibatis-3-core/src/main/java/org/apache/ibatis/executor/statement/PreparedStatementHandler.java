@@ -1,7 +1,7 @@
 package org.apache.ibatis.executor.statement;
 
 import org.apache.ibatis.executor.Executor;
-import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
+import org.apache.ibatis.executor.keygen.*;
 import org.apache.ibatis.executor.result.ResultHandler;
 import org.apache.ibatis.mapping.MappedStatement;
 
@@ -20,7 +20,10 @@ public class PreparedStatementHandler extends BaseStatementHandler {
     ps.execute();
     int result = ps.getUpdateCount();
     Object parameterObject = boundSql.getParameterObject();
-    new Jdbc3KeyGenerator().processGeneratedKeys(mappedStatement, ps, parameterObject);
+    KeyGenerator keyGenerator = mappedStatement.getKeyGenerator();
+    if (keyGenerator != null) {
+      keyGenerator.processGeneratedKeys(executor, mappedStatement, ps, parameterObject);
+    }
     return result;
   }
 
@@ -39,7 +42,7 @@ public class PreparedStatementHandler extends BaseStatementHandler {
 
   protected Statement instantiateStatement(Connection connection) throws SQLException {
     String sql = boundSql.getSql();
-    if (mappedStatement.isUseGeneratedKeys()) {
+    if (mappedStatement.getKeyGenerator() instanceof Jdbc3KeyGenerator) {
       return connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
     } else if (mappedStatement.getResultSetType() != null) {
       return connection.prepareStatement(sql, mappedStatement.getResultSetType().getValue(), ResultSet.CONCUR_READ_ONLY);

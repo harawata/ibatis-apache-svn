@@ -2,11 +2,9 @@ package org.apache.ibatis.executor;
 
 import org.apache.ibatis.executor.result.ResultHandler;
 import org.apache.ibatis.executor.statement.StatementHandler;
-import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
+import org.apache.ibatis.executor.keygen.*;
 import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.transaction.Transaction;
-import org.apache.ibatis.reflection.MetaObject;
-import org.apache.ibatis.type.*;
 
 import java.sql.*;
 import java.util.*;
@@ -66,7 +64,8 @@ public class BatchExecutor extends BaseExecutor {
           batchResult.setUpdateCounts(stmt.executeBatch());
           MappedStatement ms = batchResult.getMappedStatement();
           Object parameter = batchResult.getParameterObject();
-          new Jdbc3KeyGenerator().processGeneratedKeys(ms, stmt, parameter);
+          KeyGenerator keyGenerator = new Jdbc3KeyGenerator();
+          keyGenerator.processGeneratedKeys(this, ms, stmt, parameter);
         } catch (BatchUpdateException e) {
           StringBuffer message = new StringBuffer();
           message.append(batchResult.getMappedStatement().getId())

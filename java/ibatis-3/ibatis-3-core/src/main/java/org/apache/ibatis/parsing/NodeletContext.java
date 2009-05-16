@@ -196,6 +196,15 @@ public class NodeletContext {
     return properties;
   }
 
+  public NodeletContext getParent() {
+    final Node parent = node.getParentNode();
+    if (parent == null) {
+      return null;
+    } else {
+      return new NodeletContext(parent, variables);
+    }
+  }
+
   private Properties parseAttributes(Node n) {
     Properties attributes = new Properties();
     NamedNodeMap attributeNodes = n.getAttributes();

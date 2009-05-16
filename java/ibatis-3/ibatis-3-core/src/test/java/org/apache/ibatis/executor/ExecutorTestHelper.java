@@ -7,6 +7,7 @@ import org.apache.ibatis.cache.impl.PerpetualCache;
 import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.builder.StaticSqlSource;
 import org.apache.ibatis.type.*;
+import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
 
 import java.util.*;
 
@@ -58,7 +59,7 @@ public class ExecutorTestHelper {
               }
             }).build())
         .cache(authorCache)
-        .useGeneratedKeys(true)
+        .keyGenerator(new Jdbc3KeyGenerator())
         .keyProperty("id")
         .build();
     return ms;

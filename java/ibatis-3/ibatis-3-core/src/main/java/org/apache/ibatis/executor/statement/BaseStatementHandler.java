@@ -12,6 +12,7 @@ import java.sql.*;
 
 public abstract class BaseStatementHandler implements StatementHandler {
 
+  protected final Configuration configuration;
   protected final ObjectFactory objectFactory;
   protected final TypeHandlerRegistry typeHandlerRegistry;
   protected final ResultSetHandler resultSetHandler;
@@ -25,12 +26,12 @@ public abstract class BaseStatementHandler implements StatementHandler {
   protected final BoundSql boundSql;
 
   protected BaseStatementHandler(Executor executor, MappedStatement mappedStatement, Object parameterObject, int rowOffset, int rowLimit, ResultHandler resultHandler) {
+    this.configuration = mappedStatement.getConfiguration();
     this.executor = executor;
     this.mappedStatement = mappedStatement;
     this.rowOffset = rowOffset;
     this.rowLimit = rowLimit;
 
-    Configuration configuration = mappedStatement.getConfiguration();
     this.typeHandlerRegistry = configuration.getTypeHandlerRegistry();
     this.objectFactory = configuration.getObjectFactory();
 
@@ -72,7 +73,7 @@ public abstract class BaseStatementHandler implements StatementHandler {
   protected void setStatementTimeout(Statement stmt)
       throws SQLException {
     Integer timeout = mappedStatement.getTimeout();
-    Integer defaultTimeout = mappedStatement.getConfiguration().getDefaultStatementTimeout();
+    Integer defaultTimeout = configuration.getDefaultStatementTimeout();
     if (timeout != null) {
       stmt.setQueryTimeout(timeout);
     } else if (defaultTimeout != null) {

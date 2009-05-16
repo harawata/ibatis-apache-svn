@@ -8,6 +8,7 @@ import org.apache.ibatis.datasource.jndi.JndiDataSourceFactory;
 import org.apache.ibatis.datasource.pooled.PooledDataSourceFactory;
 import org.apache.ibatis.datasource.unpooled.UnpooledDataSourceFactory;
 import org.apache.ibatis.executor.*;
+import org.apache.ibatis.executor.keygen.*;
 import org.apache.ibatis.executor.parameter.*;
 import org.apache.ibatis.executor.result.ResultHandler;
 import org.apache.ibatis.executor.resultset.*;
@@ -279,6 +280,10 @@ public class Configuration {
 
   public boolean hasMapper(Class type) {
     return mapperRegistry.hasMapper(type);
+  }
+
+  public boolean hasStatement(String statementName) {
+    return mappedStatements.containsKey(statementName);
   }
 
   private static class StrictMap<J, K> extends HashMap<J, K> {

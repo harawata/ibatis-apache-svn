@@ -4,6 +4,7 @@ import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.decorators.LruCache;
 import org.apache.ibatis.cache.impl.PerpetualCache;
 import org.apache.ibatis.executor.ErrorContext;
+import org.apache.ibatis.executor.keygen.KeyGenerator;
 import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.reflection.MetaClass;
 import org.apache.ibatis.type.*;
@@ -200,27 +201,25 @@ public class SequentialMapperBuilder extends BaseParser {
   public void statement(
       String id,
       SqlSource sqlSource,
-      Integer fetchSize,
+      StatementType statementType, SqlCommandType sqlCommandType, Integer fetchSize,
       Integer timeout,
       String parameterMap,
       Class parameterType,
       String resultMap,
       Class resultType,
       ResultSetType resultSetType,
-      boolean isSelect,
       boolean flushCache,
       boolean useCache,
-      StatementType statementType,
-      SqlCommandType sqlCommandType,
-      boolean useGeneratedKeys,
+      KeyGenerator keyGenerator,
       String keyProperty) {
     id = applyNamespace(id);
+    boolean isSelect = sqlCommandType == SqlCommandType.SELECT;
 
     MappedStatement.Builder statementBuilder = new MappedStatement.Builder(configuration, id, sqlSource, sqlCommandType);
     statementBuilder.resource(resource);
     statementBuilder.fetchSize(fetchSize);
     statementBuilder.statementType(statementType);
-    statementBuilder.useGeneratedKeys(useGeneratedKeys);
+    statementBuilder.keyGenerator(keyGenerator);
     statementBuilder.keyProperty(keyProperty);
     setStatementTimeout(timeout, statementBuilder);
 

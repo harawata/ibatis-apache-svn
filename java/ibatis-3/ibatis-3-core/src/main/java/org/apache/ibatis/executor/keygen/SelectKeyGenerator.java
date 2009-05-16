@@ -1,49 +1,36 @@
 package org.apache.ibatis.executor.keygen;
 
+import org.apache.ibatis.executor.*;
 import org.apache.ibatis.mapping.*;
-import org.apache.ibatis.type.*;
 import org.apache.ibatis.reflection.MetaObject;
-import org.apache.ibatis.executor.ExecutorException;
 
-import java.sql.*;
+import java.sql.Statement;
 
 public class SelectKeyGenerator implements KeyGenerator {
+  public static final String SELECT_KEY_SUFFIX = "!selectKey";
 
-  public void processGeneratedKeys(MappedStatement ms, Statement stmt, Object parameter) {
+  public void processGeneratedKeys(Executor executor, MappedStatement ms, Statement stmt, Object parameter) {
     try {
       final Configuration configuration = ms.getConfiguration();
-      final TypeHandlerRegistry typeHandlerRegistry = configuration.getTypeHandlerRegistry();
-      
-      if (parameter != null && ms.isUseGeneratedKeys()) {
-        String keyProperty = ms.getKeyProperty();
-        final MetaObject metaParam = MetaObject.forObject(parameter);
-        if (keyProperty != null && metaParam.hasSetter(keyProperty)) {
-          Class keyPropertyType = metaParam.getSetterType(keyProperty);
-          TypeHandler th =  typeHandlerRegistry.getTypeHandler(keyPropertyType);
-          if (th != null) {
-            ResultSet rs = stmt.getGeneratedKeys();
-            try {
-              ResultSetMetaData rsmd = rs.getMetaData();
-              int colCount = rsmd.getColumnCount();
-              if (colCount > 0) {
-                String colName = rsmd.getColumnName(1);
-                while (rs.next()) {
-                  Object value = th.getResult(rs,colName);
-                  metaParam.setValue(keyProperty,value);
-                }
-              }
-            } finally {
-              try {
-                if (rs != null) rs.close();
-              } catch (Exception e) {
-                //ignore
-              }
+      if (parameter != null) {
+        String keyStatementName = ms.getId() + SELECT_KEY_SUFFIX;
+        if (configuration.hasStatement(keyStatementName)) {
+          MappedStatement keyStatement = configuration.getMappedStatement(keyStatementName);
+          if (keyStatement != null) {
+            String keyProperty = keyStatement.getKeyProperty();
+            final MetaObject metaParam = MetaObject.forObject(parameter);
+            if (keyProperty != null && metaParam.hasSetter(keyProperty)) {
+              // Do not close keyExecutor.
+              // The transaction will be closed by parent executor.
+              Executor keyExecutor = configuration.newExecutor(executor.getTransaction(), ExecutorType.SIMPLE);
+              Object value = keyExecutor.query(ms, parameter, Executor.NO_ROW_OFFSET, Executor.NO_ROW_LIMIT, Executor.NO_RESULT_HANDLER);
+              metaParam.setValue(keyProperty, value);
             }
           }
         }
       }
     } catch (Exception e) {
-      throw new ExecutorException("Error getting generated key or setting result to parameter object. Cause: " + e, e);
+      throw new ExecutorException("Error selecting key or setting result to parameter object. Cause: " + e, e);
     }
   }
 

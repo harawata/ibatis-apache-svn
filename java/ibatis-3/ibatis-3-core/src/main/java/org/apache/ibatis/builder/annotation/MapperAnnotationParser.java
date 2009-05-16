@@ -8,6 +8,7 @@ import org.apache.ibatis.builder.*;
 import org.apache.ibatis.builder.xml.XMLMapperParser;
 import org.apache.ibatis.reflection.MetaClass;
 import org.apache.ibatis.type.JdbcType;
+import org.apache.ibatis.executor.keygen.*;
 
 import java.io.*;
 import java.lang.annotation.Annotation;
@@ -169,7 +170,6 @@ public class MapperAnnotationParser {
     if (sqlSource != null) {
       Options options = method.getAnnotation(Options.class);
       final String mappedStatementId = method.getDeclaringClass().getName() + "." + method.getName();
-      boolean isSelect = method.getAnnotation(Select.class) != null;
       boolean flushCache = false;
       boolean useCache = true;
       Integer fetchSize = null;
@@ -177,7 +177,8 @@ public class MapperAnnotationParser {
       StatementType statementType = StatementType.PREPARED;
       ResultSetType resultSetType = ResultSetType.FORWARD_ONLY;
       SqlCommandType sqlCommandType = getSqlCommandType(method);
-      boolean useGeneratedKeys = configuration.isUseGeneratedKeys() && SqlCommandType.INSERT.equals(sqlCommandType);
+      KeyGenerator keyGenerator = configuration.isUseGeneratedKeys()
+          && SqlCommandType.INSERT.equals(sqlCommandType) ? new Jdbc3KeyGenerator() : null;
       String keyProperty = "id";
       if (options != null) {
         flushCache = options.flushCache();
@@ -186,25 +187,22 @@ public class MapperAnnotationParser {
         timeout = options.timeout() > -1 ? options.timeout() : null;
         statementType = options.statementType();
         resultSetType = options.resultSetType();
-        useGeneratedKeys = options.useGeneratedKeys();
+        keyGenerator = options.useGeneratedKeys() ? new Jdbc3KeyGenerator() : null;
         keyProperty = options.keyProperty();
       }
       sequentialBuilder.statement(
           mappedStatementId,
           sqlSource,
-          fetchSize,
+          statementType, sqlCommandType, fetchSize,
           timeout,
-          null,         // ParameterMapID
+          null,                             // ParameterMapID
           getParameterType(method),
-          generateResultMapName(method),         // ResultMapID
+          generateResultMapName(method),    // ResultMapID
           getReturnType(method),
           resultSetType,
-          isSelect,                  // IsSelectStatement
           flushCache,
           useCache,
-          statementType,
-          sqlCommandType,
-          useGeneratedKeys,
+          keyGenerator,
           keyProperty);
     }
   }
