@@ -3,6 +3,7 @@ package org.apache.ibatis.builder;
 import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.parsing.GenericTokenParser;
+import org.apache.ibatis.reflection.MetaClass;
 
 import java.util.*;
 
@@ -12,8 +13,8 @@ public class SqlSourceParser extends BaseParser {
     super(configuration);
   }
 
-  public SqlSource parse(String originalSql) {
-    ParameterMappingTokenHandler handler = new ParameterMappingTokenHandler(configuration);
+  public SqlSource parse(String originalSql, Class parameterType) {
+    ParameterMappingTokenHandler handler = new ParameterMappingTokenHandler(configuration, parameterType);
     GenericTokenParser parser = new GenericTokenParser("#{", "}", handler);
     String sql = parser.parse(originalSql);
     return new StaticSqlSource(sql, handler.getParameterMappings());
@@ -22,9 +23,11 @@ public class SqlSourceParser extends BaseParser {
   private static class ParameterMappingTokenHandler extends BaseParser implements GenericTokenParser.TokenHandler {
 
     private List<ParameterMapping> parameterMappings = new ArrayList<ParameterMapping>();
+    private Class parameterType;
 
-    public ParameterMappingTokenHandler(Configuration configuration) {
+    public ParameterMappingTokenHandler(Configuration configuration,Class parameterType) {
       super(configuration);
+      this.parameterType = parameterType;
     }
 
     public List<ParameterMapping> getParameterMappings() {
@@ -39,7 +42,15 @@ public class SqlSourceParser extends BaseParser {
     private ParameterMapping buildParameterMapping(String content) {
       StringTokenizer parameterMappingParts = new StringTokenizer(content, ", ");
       String property = parameterMappingParts.nextToken();
-      ParameterMapping.Builder builder = new ParameterMapping.Builder(configuration, property, Object.class);
+      Class propertyType;
+      if (typeHandlerRegistry.hasTypeHandler(parameterType)) {
+        propertyType = parameterType;
+      } else if (Map.class.isAssignableFrom(parameterType)) {
+        propertyType = Object.class;
+      } else {
+        propertyType = MetaClass.forClass(parameterType).getGetterType(property);
+      }
+      ParameterMapping.Builder builder = new ParameterMapping.Builder(configuration, property, propertyType);
       while (parameterMappingParts.hasMoreTokens()) {
         String attribute = parameterMappingParts.nextToken();
         StringTokenizer attributeParts = new StringTokenizer(attribute, "=");

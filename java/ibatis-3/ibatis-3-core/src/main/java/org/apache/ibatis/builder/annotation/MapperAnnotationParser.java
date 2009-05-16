@@ -251,7 +251,7 @@ public class MapperAnnotationParser {
           sql.append(" ");
         }
         SqlSourceParser parser = new SqlSourceParser(sequentialBuilder.getConfiguration());
-        return parser.parse(sql.toString());
+        return parser.parse(sql.toString(), getParameterType(method));
       } else if (sqlProviderAnnotationType != null) {
         Annotation sqlProviderAnnotation = method.getAnnotation(sqlProviderAnnotationType);
         return new ProviderSqlSource(sequentialBuilder.getConfiguration(), sqlProviderAnnotation);

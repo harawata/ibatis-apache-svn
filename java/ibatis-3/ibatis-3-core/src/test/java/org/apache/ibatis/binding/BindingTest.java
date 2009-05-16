@@ -16,6 +16,20 @@ public class BindingTest {
   }
 
   @Test
+  public void shouldInsertAuthorWithSelectKey() {
+    SqlSession session = sqlSessionFactory.openSession();
+    try {
+      BoundAuthorMapper mapper = session.getMapper(BoundAuthorMapper.class);
+      Author author = new Author(-1,"cbegin","******","cbegin@nowhere.com","N/A",Section.NEWS);
+      int rows = mapper.insertAuthor(author);
+      assertEquals(1,rows);
+      session.rollback();
+    } finally {
+      session.close();
+    }
+  }
+
+  @Test
   public void shouldSelectRandom() {
     SqlSession session = sqlSessionFactory.openSession();
     try {

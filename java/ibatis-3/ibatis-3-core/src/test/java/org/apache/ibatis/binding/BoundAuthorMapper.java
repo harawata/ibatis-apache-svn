@@ -7,6 +7,10 @@ public interface BoundAuthorMapper {
 
   //======================================================
 
+  int insertAuthor(Author author);
+
+  //======================================================
+
   @ConstructorArgs({
     @Arg(column = "AUTHOR_ID", javaType = Integer.class)
       })

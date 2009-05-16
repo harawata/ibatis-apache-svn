@@ -45,7 +45,8 @@ public class ProviderSqlSource implements SqlSource {
       } else {
         sql = (String) providerMethod.invoke(providerType.newInstance());
       }
-      return sqlSourceParser.parse(sql);
+      Class parameterType = parameterObject == null ? Object.class : parameterObject.getClass();
+      return sqlSourceParser.parse(sql, parameterType);
     } catch (Exception e) {
       throw new RuntimeException("Error invoking SqlProvider method ("
           + providerType.getName() + "." + providerMethod.getName()
