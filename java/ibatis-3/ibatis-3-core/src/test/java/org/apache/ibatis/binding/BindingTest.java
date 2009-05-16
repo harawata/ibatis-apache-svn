@@ -2,7 +2,7 @@ package org.apache.ibatis.binding;
 
 import domain.blog.*;
 import org.apache.ibatis.session.*;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import org.junit.*;
 
 import java.util.*;
@@ -13,6 +13,18 @@ public class BindingTest {
   @BeforeClass
   public static void setup() throws Exception {
     sqlSessionFactory = new IbatisConfig().getSqlSessionFactory();
+  }
+
+  @Test
+  public void shouldSelectRandom() {
+    SqlSession session = sqlSessionFactory.openSession();
+    try {
+      BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
+      Integer x = mapper.selectRandom();
+      assertNotNull(x);
+    } finally {
+      session.close();
+    }
   }
 
   @Test

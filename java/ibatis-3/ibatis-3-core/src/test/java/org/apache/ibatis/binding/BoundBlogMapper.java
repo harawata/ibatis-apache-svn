@@ -10,6 +10,10 @@ public interface BoundBlogMapper {
 
   //======================================================
 
+  int selectRandom();
+
+  //======================================================
+
   @Select({
       "SELECT *",
       "FROM blog"
