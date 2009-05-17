@@ -7,7 +7,10 @@ import java.sql.*;
 
 public interface KeyGenerator {
 
-  void processGeneratedKeys(Executor executor, MappedStatement ms, Statement stmt, Object parameter);
+  boolean executeBefore();
 
+  boolean executeAfter();
+
+  void processGeneratedKeys(Executor executor, MappedStatement ms, Statement stmt, Object parameter);
 
 }

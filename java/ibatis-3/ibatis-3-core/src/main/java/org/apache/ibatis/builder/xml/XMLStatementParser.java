@@ -51,9 +51,15 @@ public class XMLStatementParser extends BaseParser {
     boolean useCache = context.getBooleanAttribute("useCache", isSelect);
 
     String keyProperty = context.getStringAttribute("keyProperty");
-    KeyGenerator keyGenerator = context.getBooleanAttribute("useGeneratedKeys",
+    KeyGenerator keyGenerator;
+    String keyStatementId = id + SelectKeyGenerator.SELECT_KEY_SUFFIX;
+    if (configuration.hasKeyGenerator(keyStatementId)) {
+      keyGenerator = configuration.getKeyGenerator(keyStatementId);
+    } else {
+      keyGenerator = context.getBooleanAttribute("useGeneratedKeys",
         configuration.isUseGeneratedKeys() && SqlCommandType.INSERT.equals(sqlCommandType))
         ? new Jdbc3KeyGenerator() : null;
+    }
 
     sequentialBuilder.statement(id, sqlSource, statementType, sqlCommandType, fetchSize, timeout, parameterMap, parameterTypeClass,
         resultMap, resultTypeClass, resultSetTypeEnum, flushCache, useCache, keyGenerator,keyProperty);
@@ -110,6 +116,7 @@ public class XMLStatementParser extends BaseParser {
       StatementType statementType = StatementType.valueOf(nodeToHandle.getStringAttribute("statementType", StatementType.PREPARED.toString()));
       String keyProperty = nodeToHandle.getStringAttribute("keyProperty");
       String parameterType = parent.getStringAttribute("parameterType");
+      boolean executeBefore = "BEFORE".equals(nodeToHandle.getStringAttribute("order","AFTER"));
       Class parameterTypeClass = resolveClass(parameterType);
 
       //defaults
@@ -130,6 +137,10 @@ public class XMLStatementParser extends BaseParser {
       sequentialBuilder.statement(id, sqlSource, statementType, sqlCommandType, fetchSize, timeout, parameterMap, parameterTypeClass,
           resultMap, resultTypeClass, resultSetTypeEnum, flushCache, useCache,
           keyGenerator,keyProperty);
+
+      MappedStatement keyStatement = configuration.getMappedStatement(sequentialBuilder.applyNamespace(id));
+
+      configuration.addKeyGenerator(id, new SelectKeyGenerator(keyStatement,executeBefore));
     }
   }
 

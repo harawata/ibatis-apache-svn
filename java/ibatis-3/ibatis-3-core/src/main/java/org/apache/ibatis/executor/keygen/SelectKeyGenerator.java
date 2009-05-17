@@ -5,9 +5,25 @@ import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.reflection.MetaObject;
 
 import java.sql.Statement;
+import java.util.List;
 
 public class SelectKeyGenerator implements KeyGenerator {
   public static final String SELECT_KEY_SUFFIX = "!selectKey";
+  private boolean executeBefore;
+  private MappedStatement keyStatement;
+
+  public SelectKeyGenerator(MappedStatement keyStatement, boolean executeBefore) {
+    this.executeBefore = executeBefore;
+    this.keyStatement = keyStatement;
+  }
+
+  public boolean executeBefore() {
+    return executeBefore;
+  }
+
+  public boolean executeAfter() {
+    return !executeBefore;
+  }
 
   public void processGeneratedKeys(Executor executor, MappedStatement ms, Statement stmt, Object parameter) {
     try {
@@ -15,7 +31,7 @@ public class SelectKeyGenerator implements KeyGenerator {
       if (parameter != null) {
         String keyStatementName = ms.getId() + SELECT_KEY_SUFFIX;
         if (configuration.hasStatement(keyStatementName)) {
-          MappedStatement keyStatement = configuration.getMappedStatement(keyStatementName);
+
           if (keyStatement != null) {
             String keyProperty = keyStatement.getKeyProperty();
             final MetaObject metaParam = MetaObject.forObject(parameter);
@@ -23,8 +39,11 @@ public class SelectKeyGenerator implements KeyGenerator {
               // Do not close keyExecutor.
               // The transaction will be closed by parent executor.
               Executor keyExecutor = configuration.newExecutor(executor.getTransaction(), ExecutorType.SIMPLE);
-              Object value = keyExecutor.query(ms, parameter, Executor.NO_ROW_OFFSET, Executor.NO_ROW_LIMIT, Executor.NO_RESULT_HANDLER);
-              metaParam.setValue(keyProperty, value);
+              List values = keyExecutor.query(keyStatement, parameter, Executor.NO_ROW_OFFSET, Executor.NO_ROW_LIMIT, Executor.NO_RESULT_HANDLER);
+              if (values.size() > 1) {
+                throw new ExecutorException("Select statement for SelectKeyGenerator returned more than one value.");
+              }
+              metaParam.setValue(keyProperty, values.get(0));
             }
           }
         }

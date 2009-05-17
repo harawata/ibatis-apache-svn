@@ -160,7 +160,7 @@ useGeneratedKeys (true|false) #IMPLIED
 resultType CDATA #IMPLIED
 statementType (STATEMENT|PREPARED|CALLABLE) #IMPLIED
 keyProperty CDATA #IMPLIED
-order (before|after) #IMPLIED
+order (BEFORE|AFTER) #IMPLIED
 >
 
 <!ELEMENT update (#PCDATA | include | prefix | where | set | foreach | choose | if)*>

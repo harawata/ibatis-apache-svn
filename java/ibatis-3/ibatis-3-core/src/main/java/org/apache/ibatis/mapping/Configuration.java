@@ -47,6 +47,7 @@ public class Configuration {
   private final Map<String, Cache> caches = new StrictMap<String, Cache>("Caches collection");
   private final Map<String, ResultMap> resultMaps = new StrictMap<String, ResultMap>("Result Maps collection");
   private final Map<String, ParameterMap> parameterMaps = new StrictMap<String, ParameterMap>("Parameter Maps collection");
+  private final Map<String, KeyGenerator> keyGenerators = new StrictMap<String, KeyGenerator>("Key Generators collection");
 
   public Configuration(Environment environment) {
     this();
@@ -200,6 +201,26 @@ public class Configuration {
     }
     executor = (Executor) interceptorChain.pluginAll(executor);
     return executor;
+  }
+
+  public void addKeyGenerator(String id, KeyGenerator keyGenerator) {
+    keyGenerators.put(id, keyGenerator);
+  }
+
+  public Collection<String> getKeyGeneratorNames() {
+    return keyGenerators.keySet();
+  }
+
+  public Collection<KeyGenerator> getKeyGenerators() {
+    return keyGenerators.values();
+  }
+
+  public KeyGenerator getKeyGenerator(String id) {
+    return keyGenerators.get(id);
+  }
+
+  public boolean hasKeyGenerator(String id) {
+    return keyGenerators.containsKey(id);
   }
 
   public void addCache(Cache cache) {

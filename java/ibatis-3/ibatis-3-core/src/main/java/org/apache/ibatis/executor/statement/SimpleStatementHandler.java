@@ -18,15 +18,23 @@ public class SimpleStatementHandler extends BaseStatementHandler {
       throws SQLException {
     String sql = boundSql.getSql();
     Object parameterObject = boundSql.getParameterObject();
-    if (mappedStatement.getKeyGenerator() instanceof Jdbc3KeyGenerator) {
+    KeyGenerator keyGenerator = mappedStatement.getKeyGenerator();
+    int rows;
+    if (keyGenerator instanceof Jdbc3KeyGenerator) {
       statement.execute(sql, Statement.RETURN_GENERATED_KEYS);
+      rows = statement.getUpdateCount();
+      keyGenerator.processGeneratedKeys(executor, mappedStatement, statement, parameterObject);
+    } else if (keyGenerator instanceof SelectKeyGenerator) {
+      statement.execute(sql);
+      rows = statement.getUpdateCount();
+      if (keyGenerator.executeAfter()) {
+        keyGenerator.processGeneratedKeys(executor, mappedStatement, statement, parameterObject);
+      }
     } else {
       statement.execute(sql);
+      rows = statement.getUpdateCount();
     }
-    int result = statement.getUpdateCount();
-    KeyGenerator keyGenerator = new Jdbc3KeyGenerator();
-    keyGenerator.processGeneratedKeys(executor, mappedStatement, statement, parameterObject);
-    return result;
+    return rows;
   }
 
   public void batch(Statement statement)
