@@ -490,4 +490,11 @@ public class PooledDataSource implements DataSource {
     forceCloseAll();
   }
 
+  public <T> T unwrap(Class<T> iface) throws SQLException {
+    throw new UnsupportedOperationException();
+  }
+
+  public boolean isWrapperFor(Class<?> iface) throws SQLException {
+    throw new UnsupportedOperationException();
+  }
 }
