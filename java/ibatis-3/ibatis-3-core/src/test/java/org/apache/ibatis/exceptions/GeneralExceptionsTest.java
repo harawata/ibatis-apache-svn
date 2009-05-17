@@ -1,19 +1,19 @@
 package org.apache.ibatis.exceptions;
 
 import org.apache.ibatis.binding.BindingException;
+import org.apache.ibatis.builder.ParserException;
 import org.apache.ibatis.cache.CacheException;
 import org.apache.ibatis.datasource.DataSourceException;
 import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.logging.LogException;
 import org.apache.ibatis.mapping.SqlMapperException;
 import org.apache.ibatis.migration.MigrationException;
-import org.apache.ibatis.builder.ParserException;
+import org.apache.ibatis.parsing.NodeletException;
 import org.apache.ibatis.plugin.PluginException;
 import org.apache.ibatis.reflection.ReflectionException;
 import org.apache.ibatis.session.SessionException;
 import org.apache.ibatis.transaction.TransactionException;
 import org.apache.ibatis.type.TypeException;
-import org.apache.ibatis.parsing.NodeletException;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
@@ -27,7 +27,7 @@ public class GeneralExceptionsTest {
   @Test
   public void should() {
     RuntimeException thrown = ExceptionFactory.wrapException(EXPECTED_MESSAGE, EXPECTED_CAUSE);
-    assertTrue("Exception should be wrapped in RuntimeSqlException.", thrown instanceof RuntimeSqlException);
+    assertTrue("Exception should be wrapped in RuntimeSqlException.", thrown instanceof IbatisException);
     testThrowException(thrown);
   }
 
@@ -44,7 +44,7 @@ public class GeneralExceptionsTest {
         ParserException.class,
         PluginException.class,
         ReflectionException.class,
-        RuntimeSqlException.class,
+        IbatisException.class,
         SessionException.class,
         SqlMapperException.class,
         TransactionException.class,

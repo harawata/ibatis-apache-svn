@@ -1,6 +1,8 @@
 package org.apache.ibatis.logging;
 
-public class LogException extends RuntimeException {
+import org.apache.ibatis.exceptions.IbatisException;
+
+public class LogException extends IbatisException {
 
   public LogException() {
     super();

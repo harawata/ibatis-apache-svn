@@ -1,21 +1,14 @@
 package org.apache.ibatis.parsing;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.apache.ibatis.builder.ParserException;
+import org.w3c.dom.*;
 import org.xml.sax.*;
-import org.apache.ibatis.parsing.PropertyParser;
 
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathFactory;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.DocumentBuilder;
 import javax.xml.namespace.QName;
+import javax.xml.parsers.*;
+import javax.xml.xpath.*;
 import java.io.Reader;
-import java.util.Properties;
-import java.util.List;
-import java.util.ArrayList;
+import java.util.*;
 
 public class XPathParser {
 
@@ -90,7 +83,7 @@ public class XPathParser {
     try {
       return xpath.evaluate(expression, root, returnType);
     } catch (Exception e) {
-      throw new RuntimeException("Error evaluating XPath.  Cause: " + e, e);
+      throw new ParserException("Error evaluating XPath.  Cause: " + e, e);
     }
   }
 
@@ -121,7 +114,7 @@ public class XPathParser {
       });
       return builder.parse(new InputSource(reader));
     } catch (Exception e) {
-      throw new RuntimeException("Error creating document instance.  Cause: " + e, e);
+      throw new ParserException("Error creating document instance.  Cause: " + e, e);
     }
   }
 

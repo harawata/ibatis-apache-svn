@@ -1,9 +1,9 @@
 package org.apache.ibatis.executor.keygen;
 
-import org.apache.ibatis.mapping.*;
-import org.apache.ibatis.type.*;
-import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.executor.*;
+import org.apache.ibatis.mapping.*;
+import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.type.*;
 
 import java.sql.*;
 

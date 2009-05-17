@@ -1,7 +1,6 @@
 package org.apache.ibatis.parsing;
 
 import org.w3c.dom.*;
-import org.apache.ibatis.parsing.PropertyParser;
 
 import java.util.*;
 

@@ -2,7 +2,6 @@ package org.apache.ibatis.parsing;
 
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
-import org.apache.ibatis.parsing.GenericTokenParser;
 
 import java.util.*;
 

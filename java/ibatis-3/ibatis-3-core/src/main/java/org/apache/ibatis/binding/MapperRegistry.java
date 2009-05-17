@@ -1,7 +1,7 @@
 package org.apache.ibatis.binding;
 
-import org.apache.ibatis.mapping.Configuration;
 import org.apache.ibatis.builder.annotation.MapperAnnotationParser;
+import org.apache.ibatis.mapping.Configuration;
 import org.apache.ibatis.session.SqlSession;
 
 import java.util.*;
@@ -21,7 +21,7 @@ public class MapperRegistry {
     try {
       return MapperProxy.newMapperProxy(type, sqlSession);
     } catch (Exception e) {
-      throw new RuntimeException("Error getting mapper instance. Cause: " + e, e);
+      throw new BindingException("Error getting mapper instance. Cause: " + e, e);
     }
   }
 

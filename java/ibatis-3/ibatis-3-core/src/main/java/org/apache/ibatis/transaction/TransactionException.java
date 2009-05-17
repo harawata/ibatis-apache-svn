@@ -1,6 +1,8 @@
 package org.apache.ibatis.transaction;
 
-public class TransactionException extends RuntimeException {
+import org.apache.ibatis.exceptions.IbatisException;
+
+public class TransactionException extends IbatisException {
 
   public TransactionException() {
     super();

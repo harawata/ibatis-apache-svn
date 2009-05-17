@@ -1,15 +1,15 @@
 package org.apache.ibatis.builder.xml.dynamic;
 
-import static org.junit.Assert.*;
-import org.junit.Test;
 import org.apache.ibatis.BaseDataTest;
+import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.session.*;
-import org.apache.ibatis.io.Resources;
+import static org.junit.Assert.assertEquals;
+import org.junit.Test;
 
-import java.util.*;
 import java.io.*;
 import java.sql.SQLException;
+import java.util.*;
 
 public class DynamicSqlSourceTest extends BaseDataTest {
 

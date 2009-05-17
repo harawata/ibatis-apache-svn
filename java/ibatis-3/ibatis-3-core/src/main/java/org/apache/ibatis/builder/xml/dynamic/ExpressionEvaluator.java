@@ -1,7 +1,7 @@
 package org.apache.ibatis.builder.xml.dynamic;
 
-import org.apache.ibatis.ognl.*;
 import org.apache.ibatis.builder.ParserException;
+import org.apache.ibatis.ognl.*;
 
 import java.math.BigDecimal;
 import java.util.Arrays;

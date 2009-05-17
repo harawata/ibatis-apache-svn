@@ -1,6 +1,8 @@
 package org.apache.ibatis.reflection;
 
-public class ReflectionException extends RuntimeException {
+import org.apache.ibatis.exceptions.IbatisException;
+
+public class ReflectionException extends IbatisException {
 
   public ReflectionException() {
     super();

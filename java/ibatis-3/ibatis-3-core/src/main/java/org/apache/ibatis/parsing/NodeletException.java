@@ -1,6 +1,8 @@
 package org.apache.ibatis.parsing;
 
-public class NodeletException extends RuntimeException {
+import org.apache.ibatis.exceptions.IbatisException;
+
+public class NodeletException extends IbatisException {
   public NodeletException() {
     super();
   }

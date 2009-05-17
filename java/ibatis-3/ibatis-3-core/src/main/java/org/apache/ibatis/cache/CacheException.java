@@ -1,8 +1,8 @@
 package org.apache.ibatis.cache;
 
-import org.apache.ibatis.mapping.SqlMapperException;
+import org.apache.ibatis.exceptions.IbatisException;
 
-public class CacheException extends SqlMapperException {
+public class CacheException extends IbatisException {
 
   public CacheException() {
     super();

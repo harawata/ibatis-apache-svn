@@ -1,8 +1,8 @@
 package org.apache.ibatis.builder.xml.dynamic;
 
-import static org.junit.Assert.*;
-import org.junit.Test;
 import domain.blog.*;
+import static org.junit.Assert.assertEquals;
+import org.junit.Test;
 
 import java.util.HashMap;
 

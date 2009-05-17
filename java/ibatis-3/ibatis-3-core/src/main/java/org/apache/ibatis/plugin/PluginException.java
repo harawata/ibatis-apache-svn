@@ -1,8 +1,8 @@
 package org.apache.ibatis.plugin;
 
-import org.apache.ibatis.mapping.SqlMapperException;
+import org.apache.ibatis.exceptions.IbatisException;
 
-public class PluginException extends SqlMapperException {
+public class PluginException extends IbatisException {
 
   public PluginException() {
     super();

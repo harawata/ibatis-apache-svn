@@ -6,7 +6,7 @@ import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.transaction.Transaction;
 import org.apache.ibatis.transaction.jdbc.JdbcTransaction;
 import static org.junit.Assert.*;
-import org.junit.*;
+import org.junit.Test;
 
 import javax.sql.DataSource;
 import java.sql.Connection;

@@ -1,8 +1,8 @@
 package org.apache.ibatis.type;
 
-import org.apache.ibatis.mapping.SqlMapperException;
+import org.apache.ibatis.exceptions.IbatisException;
 
-public class TypeException extends SqlMapperException {
+public class TypeException extends IbatisException {
 
   public TypeException() {
     super();

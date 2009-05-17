@@ -1,19 +1,13 @@
 package org.apache.ibatis.builder.xml;
 
-import org.apache.ibatis.mapping.*;
-import org.apache.ibatis.builder.BaseParser;
-import org.apache.ibatis.builder.ParserException;
-import org.apache.ibatis.builder.SequentialMapperBuilder;
+import org.apache.ibatis.builder.*;
 import org.apache.ibatis.builder.xml.dynamic.*;
-import org.apache.ibatis.parsing.NodeletContext;
 import org.apache.ibatis.executor.keygen.*;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.apache.ibatis.mapping.*;
+import org.apache.ibatis.parsing.NodeletContext;
+import org.w3c.dom.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class XMLStatementParser extends BaseParser {
 
@@ -152,7 +146,7 @@ public class XMLStatementParser extends BaseParser {
         String nsrefid = sequentialBuilder.applyNamespace(refid);
         includeNode = xmlMapperParser.getSqlFragment(nsrefid);
         if (includeNode == null) {
-          throw new RuntimeException("Could not find SQL statement to include with refid '" + refid + "'");
+          throw new ParserException("Could not find SQL statement to include with refid '" + refid + "'");
         }
       }
       MixedSqlNode mixedSqlNode = new MixedSqlNode(contents(includeNode));

@@ -1,6 +1,8 @@
 package org.apache.ibatis.datasource;
 
-public class DataSourceException extends RuntimeException {
+import org.apache.ibatis.exceptions.IbatisException;
+
+public class DataSourceException extends IbatisException {
 
   public DataSourceException() {
     super();

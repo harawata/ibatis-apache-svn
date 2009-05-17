@@ -1,7 +1,7 @@
 package org.apache.ibatis.builder.annotation;
 
+import org.apache.ibatis.builder.*;
 import org.apache.ibatis.mapping.*;
-import org.apache.ibatis.builder.SqlSourceParser;
 
 import java.lang.reflect.Method;
 
@@ -28,7 +28,7 @@ public class ProviderSqlSource implements SqlSource {
         }
       }
     } catch (Exception e) {
-      throw new RuntimeException("Error creating SqlSource for SqlProvider.  Cause: " + e, e);
+      throw new ParserException("Error creating SqlSource for SqlProvider.  Cause: " + e, e);
     }
   }
 
@@ -48,7 +48,7 @@ public class ProviderSqlSource implements SqlSource {
       Class parameterType = parameterObject == null ? Object.class : parameterObject.getClass();
       return sqlSourceParser.parse(sql, parameterType);
     } catch (Exception e) {
-      throw new RuntimeException("Error invoking SqlProvider method ("
+      throw new ParserException("Error invoking SqlProvider method ("
           + providerType.getName() + "." + providerMethod.getName()
           + ").  Cause: " + e, e);
     }

@@ -1,8 +1,8 @@
 package org.apache.ibatis.builder;
 
-import org.apache.ibatis.mapping.SqlMapperException;
+import org.apache.ibatis.exceptions.IbatisException;
 
-public class ParserException extends SqlMapperException {
+public class ParserException extends IbatisException {
 
   public ParserException() {
     super();

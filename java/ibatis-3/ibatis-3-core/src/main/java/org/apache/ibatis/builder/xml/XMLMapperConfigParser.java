@@ -1,15 +1,15 @@
 package org.apache.ibatis.builder.xml;
 
+import org.apache.ibatis.builder.*;
 import org.apache.ibatis.datasource.DataSourceFactory;
 import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.*;
-import org.apache.ibatis.builder.*;
+import org.apache.ibatis.parsing.*;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.reflection.*;
 import org.apache.ibatis.transaction.TransactionFactory;
 import org.apache.ibatis.type.TypeHandler;
-import org.apache.ibatis.parsing.*;
 
 import java.io.Reader;
 import java.util.*;

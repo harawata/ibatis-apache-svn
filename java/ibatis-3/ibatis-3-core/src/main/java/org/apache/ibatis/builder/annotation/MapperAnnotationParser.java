@@ -2,13 +2,13 @@ package org.apache.ibatis.builder.annotation;
 
 import static org.apache.ibatis.annotations.Annotations.*;
 import org.apache.ibatis.binding.BindingException;
-import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.builder.*;
 import org.apache.ibatis.builder.xml.XMLMapperParser;
+import org.apache.ibatis.executor.keygen.*;
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.reflection.MetaClass;
 import org.apache.ibatis.type.JdbcType;
-import org.apache.ibatis.executor.keygen.*;
 
 import java.io.*;
 import java.lang.annotation.Annotation;
@@ -258,7 +258,7 @@ public class MapperAnnotationParser {
       }
       return null;
     } catch (Exception e) {
-      throw new RuntimeException("Could not find value method on SQL annotation.  Cause: " + e, e);
+      throw new ParserException("Could not find value method on SQL annotation.  Cause: " + e, e);
     }
   }
 

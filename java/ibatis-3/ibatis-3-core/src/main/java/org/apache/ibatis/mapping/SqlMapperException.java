@@ -1,6 +1,8 @@
 package org.apache.ibatis.mapping;
 
-public class SqlMapperException extends RuntimeException {
+import org.apache.ibatis.exceptions.IbatisException;
+
+public class SqlMapperException extends IbatisException {
 
   public SqlMapperException() {
     super();

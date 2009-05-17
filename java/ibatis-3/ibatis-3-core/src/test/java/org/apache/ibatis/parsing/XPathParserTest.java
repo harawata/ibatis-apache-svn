@@ -1,9 +1,8 @@
 package org.apache.ibatis.parsing;
 
-import static org.junit.Assert.*;
-import org.junit.Test;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.parsing.XPathParser;
+import static org.junit.Assert.assertEquals;
+import org.junit.Test;
 
 import java.io.Reader;
 

@@ -1,9 +1,9 @@
 package org.apache.ibatis.builder.xml;
 
-import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.builder.*;
-import org.apache.ibatis.type.JdbcType;
+import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.parsing.*;
+import org.apache.ibatis.type.JdbcType;
 
 import java.io.Reader;
 import java.util.*;

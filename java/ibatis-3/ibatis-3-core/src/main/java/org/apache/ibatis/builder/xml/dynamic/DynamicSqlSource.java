@@ -1,7 +1,7 @@
 package org.apache.ibatis.builder.xml.dynamic;
 
-import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.builder.SqlSourceParser;
+import org.apache.ibatis.mapping.*;
 
 public class DynamicSqlSource implements SqlSource {
 

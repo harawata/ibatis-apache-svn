@@ -1,8 +1,8 @@
 package org.apache.ibatis.binding;
 
-import org.apache.ibatis.mapping.SqlMapperException;
+import org.apache.ibatis.exceptions.IbatisException;
 
-public class BindingException extends SqlMapperException {
+public class BindingException extends IbatisException {
 
   public BindingException() {
     super();

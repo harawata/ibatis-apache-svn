@@ -1,9 +1,9 @@
 package org.apache.ibatis.executor.keygen;
 
-import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.executor.Executor;
+import org.apache.ibatis.mapping.MappedStatement;
 
-import java.sql.*;
+import java.sql.Statement;
 
 public interface KeyGenerator {
 
