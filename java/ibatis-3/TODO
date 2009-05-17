@@ -4,7 +4,6 @@
 
 Required:
 
-* Replace foreach ${item} with ${collection[1]} etc.
 * Wrap collection parameter objects in a map automatically
 * Allow lazy loading across connection boundaries
 

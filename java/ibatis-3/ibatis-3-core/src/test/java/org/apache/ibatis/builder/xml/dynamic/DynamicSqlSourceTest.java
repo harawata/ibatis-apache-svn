@@ -197,10 +197,13 @@ public class DynamicSqlSourceTest extends BaseDataTest {
     final String expected = "SELECT * FROM BLOG WHERE ID in ( one = ? AND two = ? AND three = ? )";
     DynamicSqlSource source = createDynamicSqlSource(
         new TextSqlNode("SELECT * FROM BLOG WHERE ID in"),
-        new ForEachSqlNode(mixedContents(new TextSqlNode("${item} = #{id[${index}]}")),"array","index","item","(",")","AND"));
+        new ForEachSqlNode(mixedContents(new TextSqlNode("${item} = #{item}")),"array","index","item","(",")","AND"));
     BoundSql boundSql = source.getBoundSql(parameterObject);
     assertEquals(expected, boundSql.getSql());
     assertEquals(3, boundSql.getParameterMappings().size());
+    assertEquals("__item_0", boundSql.getParameterMappings().get(0).getProperty());
+    assertEquals("__item_1", boundSql.getParameterMappings().get(1).getProperty());
+    assertEquals("__item_2", boundSql.getParameterMappings().get(2).getProperty());
   }
 
   private DynamicSqlSource createDynamicSqlSource(SqlNode... contents) throws IOException, SQLException {

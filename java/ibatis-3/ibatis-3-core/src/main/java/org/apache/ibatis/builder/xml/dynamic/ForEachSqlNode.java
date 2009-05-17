@@ -1,5 +1,9 @@
 package org.apache.ibatis.builder.xml.dynamic;
 
+import org.apache.ibatis.parsing.GenericTokenParser;
+
+import java.util.Map;
+
 public class ForEachSqlNode implements SqlNode {
   private ExpressionEvaluator evaluator;
   private String collectionExpression;
@@ -22,30 +26,31 @@ public class ForEachSqlNode implements SqlNode {
   }
 
   public boolean apply(DynamicContext context) {
-    final Iterable iterable = evaluator.evaluateIterable(collectionExpression, context.getBindings());
+    final Iterable iterable = evaluator.evaluateIterable(collectionExpression, context.getBindings());    
     boolean first = true;
     applyOpen(context);
     int i = 0;
     for (Object o : iterable) {
       first = applySeparator(context, first);
-      i = applyIndex(context, i);
-      applyItem(context, o);
-      contents.apply(context);
+      applyItem(context, o, i);
+      applyIndex(context, i);
+      contents.apply(new FilteredDynamicContext(context, item, i));
+      i++;
     }
     applyClose(context);
     return true;
   }
 
-  private int applyIndex(DynamicContext context, int i) {
+  private void applyIndex(DynamicContext context, int i) {
     if (index != null) {
-      context.bind(index, i++);
+      context.bind(index, i);
     }
-    return i;
   }
 
-  private void applyItem(DynamicContext context, Object o) {
+  private void applyItem(DynamicContext context, Object o, int i) {
     if (item != null) {
       context.bind(item, o);
+      context.bind(itemizeItem(item,i), o);
     }
   }
 
@@ -70,6 +75,49 @@ public class ForEachSqlNode implements SqlNode {
     if (close != null) {
       context.appendSql(close);
     }
+  }
+
+  private static String itemizeItem(String item, int i) {
+    return new StringBuilder("__").append(item).append("_").append(i).toString();
+  }
+
+
+  
+  private static class FilteredDynamicContext extends DynamicContext {
+    private DynamicContext delegate;
+    private int index;
+    private String item;
+
+    public FilteredDynamicContext(DynamicContext delegate, String item, int i) {
+      super(null);
+      this.delegate = delegate;
+      this.index = i;
+      this.item = item;
+    }
+
+    public Map<String, Object> getBindings() {
+      return delegate.getBindings();
+    }
+
+    public void bind(String name, Object value) {
+      delegate.bind(name, value);
+    }
+
+    public String getSql() {
+      return delegate.getSql();
+    }
+
+    public void appendSql(String sql) {
+      GenericTokenParser parser = new GenericTokenParser("#{", "}", new GenericTokenParser.TokenHandler() {
+        public String handleToken(String content) {
+          String newContent = content.replaceFirst(item, itemizeItem(item,index));
+          return new StringBuilder("#{").append(newContent).append("}").toString();
+        }
+      });
+
+      delegate.appendSql(parser.parse(sql));
+    }
+
   }
 
 }
