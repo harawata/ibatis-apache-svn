@@ -16,6 +16,37 @@ public class BindingTest {
   }
 
   @Test
+  public void shouldFindPostsInList() throws Exception {
+    SqlSession session = sqlSessionFactory.openSession();
+    try {
+      BoundAuthorMapper mapper = session.getMapper(BoundAuthorMapper.class);
+      List<Post> posts = mapper.findPostsInList(new ArrayList<Integer>(){{
+        add(1);
+        add(3);
+        add(5);
+      }});
+      assertEquals(3,posts.size());
+      session.rollback();
+    } finally {
+      session.close();
+    }
+  }
+
+  @Test
+  public void shouldFindPostsInArray() throws Exception {
+    SqlSession session = sqlSessionFactory.openSession();
+    try {
+      BoundAuthorMapper mapper = session.getMapper(BoundAuthorMapper.class);
+      Integer[] params = new Integer[] {1,3,5};
+      List<Post> posts = mapper.findPostsInArray(params);
+      assertEquals(3,posts.size());
+      session.rollback();
+    } finally {
+      session.close();
+    }
+  }
+
+  @Test
   public void shouldInsertAuthorWithSelectKey() {
     SqlSession session = sqlSessionFactory.openSession();
     try {

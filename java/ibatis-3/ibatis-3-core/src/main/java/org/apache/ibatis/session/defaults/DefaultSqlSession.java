@@ -7,6 +7,7 @@ import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.session.*;
 
 import java.util.List;
+import java.util.HashMap;
 
 public class DefaultSqlSession implements SqlSession {
 
@@ -46,7 +47,7 @@ public class DefaultSqlSession implements SqlSession {
   public List selectList(String statement, Object parameter, int offset, int limit) {
     try {
       MappedStatement ms = configuration.getMappedStatement(statement);
-      return executor.query(ms, parameter, offset, limit, Executor.NO_RESULT_HANDLER);
+      return executor.query(ms, wrapCollection(parameter), offset, limit, Executor.NO_RESULT_HANDLER);
     } catch (Exception e) {
       throw ExceptionFactory.wrapException("Error querying database.  Cause: " + e, e);
     }
@@ -59,7 +60,7 @@ public class DefaultSqlSession implements SqlSession {
   public void select(String statement, Object parameter, int offset, int limit, ResultHandler handler) {
     try {
       MappedStatement ms = configuration.getMappedStatement(statement);
-      executor.query(ms, parameter, offset, limit, handler);
+      executor.query(ms, wrapCollection(parameter), offset, limit, handler);
     } catch (Exception e) {
       throw ExceptionFactory.wrapException("Error querying database.  Cause: " + e, e);
     }
@@ -82,7 +83,7 @@ public class DefaultSqlSession implements SqlSession {
       //TODO: Need commitRequired option at the statement level
       dirty = true;
       MappedStatement ms = configuration.getMappedStatement(statement);
-      return executor.update(ms, parameter);
+      return executor.update(ms, wrapCollection(parameter));
     } catch (Exception e) {
       throw ExceptionFactory.wrapException("Error updating database.  Cause: " + e, e);
     }
@@ -93,7 +94,7 @@ public class DefaultSqlSession implements SqlSession {
   }
 
   public int delete(String statement, Object parameter) {
-    return update(statement, parameter);
+    return update(statement, wrapCollection(parameter));
   }
 
   public void commit() {
@@ -144,6 +145,19 @@ public class DefaultSqlSession implements SqlSession {
 
   private boolean isCommitOrRollbackRequired(boolean force) {
     return (!autoCommit && dirty) || force;
+  }
+
+  private Object wrapCollection(final Object object) {
+    if (object instanceof List) {
+      return new HashMap() {{
+        put("list", object);
+      }};
+    } else if (object != null && object.getClass().isArray()) {
+      return new HashMap() {{
+        put("array", object);
+      }};
+    }
+    return object;
   }
 
 }

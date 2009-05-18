@@ -3,7 +3,17 @@ package org.apache.ibatis.binding;
 import domain.blog.*;
 import static org.apache.ibatis.annotations.Annotations.*;
 
+import java.util.List;
+
 public interface BoundAuthorMapper {
+  
+  //======================================================
+
+  List<Post> findPostsInArray(Integer[] ids);
+
+  //======================================================
+
+  List<Post> findPostsInList(List<Integer> ids);
 
   //======================================================
 

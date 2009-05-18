@@ -4,7 +4,6 @@
 
 Required:
 
-* Wrap collection parameter objects in a map automatically
 * Allow lazy loading across connection boundaries
 
 Nice to Have:
