@@ -10,6 +10,10 @@ public interface BoundBlogMapper {
 
   //======================================================
 
+  Blog selectBlogWithPostsUsingSubSelect(int id);
+
+  //======================================================
+
   int selectRandom();
 
   //======================================================

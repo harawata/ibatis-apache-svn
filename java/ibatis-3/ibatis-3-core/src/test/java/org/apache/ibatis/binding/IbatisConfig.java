@@ -9,6 +9,8 @@ import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 
 import javax.sql.DataSource;
 
+import domain.blog.*;
+
 public class IbatisConfig {
 
   public static SqlSessionFactory getSqlSessionFactory() {
@@ -19,6 +21,11 @@ public class IbatisConfig {
       TransactionFactory transactionFactory = new JdbcTransactionFactory();
       Environment environment = new Environment("Production", transactionFactory, dataSource);
       Configuration configuration = new Configuration(environment);
+      configuration.setLazyLoadingEnabled(true);
+      configuration.setEnhancementEnabled(true);
+      configuration.getTypeAliasRegistry().registerAlias(Blog.class);
+      configuration.getTypeAliasRegistry().registerAlias(Post.class);
+      configuration.getTypeAliasRegistry().registerAlias(Author.class);
       configuration.addMapper(BoundBlogMapper.class);
       configuration.addMapper(BoundAuthorMapper.class);
       return new DefaultSqlSessionFactory(configuration);

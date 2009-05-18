@@ -38,7 +38,7 @@ public abstract class BaseExecutor implements Executor {
 
   public void close() {
     try {
-      transaction.close();
+      if (transaction != null) transaction.close();
     } catch (SQLException e) {
       // Ignore.  There's nothing that can be done at this point.
     } finally {
@@ -123,6 +123,9 @@ public abstract class BaseExecutor implements Executor {
   }
 
   public void commit(boolean required) throws SQLException {
+    if (closed) {
+      throw new ExecutorException("Cannot commit, transaction is already closed");
+    }
     localCache.clear();
     flushStatements();
     if (required) {
@@ -131,9 +134,11 @@ public abstract class BaseExecutor implements Executor {
   }
 
   public void rollback(boolean required) throws SQLException {
-    localCache.clear();
-    if (required) {
-      transaction.rollback();
+    if (!closed) {
+      localCache.clear();
+      if (required) {
+        transaction.rollback();
+      }
     }
   }
 

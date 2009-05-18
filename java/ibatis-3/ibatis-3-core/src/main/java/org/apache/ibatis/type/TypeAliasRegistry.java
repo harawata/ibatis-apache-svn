@@ -39,6 +39,14 @@ public class TypeAliasRegistry {
     return value;
   }
 
+  public void registerAlias(Class type) {
+    registerAlias(type.getSimpleName(), type.getName());
+  }
+
+  public void registerAlias(String alias, Class type) {
+    registerAlias(alias, type.getName());
+  }
+
   public void registerAlias(String alias, String value) {
     assert alias != null;
     String key = alias.toLowerCase();

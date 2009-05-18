@@ -16,6 +16,24 @@ public class BindingTest {
   }
 
   @Test
+  public void shouldSelectBlogWithPostsUsingSubSelect() throws Exception {
+    SqlSession session = sqlSessionFactory.openSession();
+    try {
+      BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
+      Blog b = mapper.selectBlogWithPostsUsingSubSelect(1);
+      assertEquals(1, b.getId());
+      session.close();
+      assertNotNull(b.getAuthor());
+      assertEquals(101, b.getAuthor().getId());
+      assertEquals("jim", b.getAuthor().getUsername());
+      assertEquals("********", b.getAuthor().getPassword());
+      assertEquals(2, b.getPosts().size());
+    } finally {
+      session.close();
+    }
+  }
+
+  @Test
   public void shouldFindPostsInList() throws Exception {
     SqlSession session = sqlSessionFactory.openSession();
     try {

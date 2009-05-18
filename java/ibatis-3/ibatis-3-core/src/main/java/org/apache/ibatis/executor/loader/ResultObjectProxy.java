@@ -31,7 +31,7 @@ public class ResultObjectProxy {
         Object value = method.invoke(target, args);
         if (value == null) {
           String methodName = method.getName();
-          if (PropertyNamer.isProperty(methodName)) {
+          if (PropertyNamer.isGetter(methodName)) {
             if (lazyLoader.loadByMethod(methodName)) {
               value = method.invoke(target, args);
             }

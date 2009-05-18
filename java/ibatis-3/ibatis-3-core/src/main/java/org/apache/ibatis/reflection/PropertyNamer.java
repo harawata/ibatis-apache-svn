@@ -24,4 +24,12 @@ public class PropertyNamer {
     return name.startsWith("get") || name.startsWith("set") || name.startsWith("is");
   }
 
+  public static boolean isGetter(String name) {
+    return name.startsWith("get") || name.startsWith("is");
+  }
+
+  public static boolean isSetter(String name) {
+    return name.startsWith("set");
+  }
+
 }

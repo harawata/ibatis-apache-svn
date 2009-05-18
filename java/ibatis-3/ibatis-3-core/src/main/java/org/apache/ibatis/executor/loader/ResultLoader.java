@@ -7,6 +7,8 @@ import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.mapping.ExecutorType;
 import org.apache.ibatis.transaction.TransactionFactory;
 import org.apache.ibatis.transaction.Transaction;
+import org.apache.ibatis.logging.jdbc.ConnectionLogger;
+import org.apache.ibatis.logging.*;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
@@ -14,6 +16,8 @@ import java.sql.Connection;
 import java.util.*;
 
 public class ResultLoader {
+
+  private static final Log log = LogFactory.getLog(Connection.class);
 
   protected static final Class[] LIST_INTERFACES = new Class[]{List.class};
   protected static final Class[] SET_INTERFACES = new Class[]{Set.class};
@@ -36,7 +40,7 @@ public class ResultLoader {
   }
 
   public Object loadResult() throws SQLException {
-    List list = selectListFromNewExecutor();
+    List list = selectList();
     if (targetType != null && Set.class.isAssignableFrom(targetType)) {
       resultObject = new HashSet(list);
     } else if (targetType != null && Collection.class.isAssignableFrom(targetType)) {
@@ -53,7 +57,7 @@ public class ResultLoader {
     return resultObject;
   }
 
-  private List selectListFromNewExecutor() throws SQLException {
+  private List selectList() throws SQLException {
     Executor localExecutor = executor;
     if (localExecutor.isClosed()) {
       localExecutor = newExecutor();
@@ -75,12 +79,21 @@ public class ResultLoader {
     DataSource ds = environment.getDataSource();
     if (ds == null) throw new ExecutorException("ResultLoader could not load lazily.  DataSource was not configured.");
     Connection conn = ds.getConnection();
+    conn = wrapConnection(conn);
     Transaction tx = txFactory.newTransaction(conn, false);
     return configuration.newExecutor(tx, ExecutorType.SIMPLE);
   }
 
   public boolean wasNull() {
     return resultObject == null;
+  }
+
+  private Connection wrapConnection(Connection connection) {
+    if (log.isDebugEnabled()) {
+      return ConnectionLogger.newInstance(connection);
+    } else {
+      return connection;
+    }
   }
 
   private Object[] listToArray(List list, Class type) {
