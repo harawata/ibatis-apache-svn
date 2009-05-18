@@ -5,8 +5,8 @@
 Nice to Have:
 
   * Preserve select key id on failed statement (refactor keygenerator interface)
+
   * Commit required option at statement level
   * Add resultType automapping option for collections so a resultMap isn't required
   * Auto result/param types detected for bound XML statements
-  * Named parameter parsing/merging
   * http://issues.apache.org/jira/browse/IBATIS-357
