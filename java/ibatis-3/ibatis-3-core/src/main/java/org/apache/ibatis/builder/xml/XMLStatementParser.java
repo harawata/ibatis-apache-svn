@@ -52,7 +52,7 @@ public class XMLStatementParser extends BaseParser {
     } else {
       keyGenerator = context.getBooleanAttribute("useGeneratedKeys",
         configuration.isUseGeneratedKeys() && SqlCommandType.INSERT.equals(sqlCommandType))
-        ? new Jdbc3KeyGenerator() : null;
+        ? new Jdbc3KeyGenerator() : new NoKeyGenerator();
     }
 
     sequentialBuilder.statement(id, sqlSource, statementType, sqlCommandType, fetchSize, timeout, parameterMap, parameterTypeClass,
@@ -115,7 +115,7 @@ public class XMLStatementParser extends BaseParser {
 
       //defaults
       boolean useCache = false;
-      KeyGenerator keyGenerator = null;
+      KeyGenerator keyGenerator = new NoKeyGenerator();
       Integer fetchSize = null;
       Integer timeout = null;
       boolean flushCache = false;

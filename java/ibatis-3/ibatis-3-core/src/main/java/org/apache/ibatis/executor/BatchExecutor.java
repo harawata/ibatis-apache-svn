@@ -66,7 +66,7 @@ public class BatchExecutor extends BaseExecutor {
           Object parameter = batchResult.getParameterObject();
           KeyGenerator keyGenerator = ms.getKeyGenerator();
           if (keyGenerator instanceof Jdbc3KeyGenerator) {
-            keyGenerator.processGeneratedKeys(this, ms, stmt, parameter);
+            keyGenerator.processAfter(this, ms, stmt, parameter);
           }
         } catch (BatchUpdateException e) {
           StringBuffer message = new StringBuffer();

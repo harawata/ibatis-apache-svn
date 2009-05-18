@@ -23,13 +23,11 @@ public class SimpleStatementHandler extends BaseStatementHandler {
     if (keyGenerator instanceof Jdbc3KeyGenerator) {
       statement.execute(sql, Statement.RETURN_GENERATED_KEYS);
       rows = statement.getUpdateCount();
-      keyGenerator.processGeneratedKeys(executor, mappedStatement, statement, parameterObject);
+      keyGenerator.processAfter(executor, mappedStatement, statement, parameterObject);
     } else if (keyGenerator instanceof SelectKeyGenerator) {
       statement.execute(sql);
       rows = statement.getUpdateCount();
-      if (keyGenerator.executeAfter()) {
-        keyGenerator.processGeneratedKeys(executor, mappedStatement, statement, parameterObject);
-      }
+      keyGenerator.processAfter(executor, mappedStatement, statement, parameterObject);
     } else {
       statement.execute(sql);
       rows = statement.getUpdateCount();

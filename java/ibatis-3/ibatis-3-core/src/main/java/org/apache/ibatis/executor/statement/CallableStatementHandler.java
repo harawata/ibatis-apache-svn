@@ -22,9 +22,7 @@ public class CallableStatementHandler extends BaseStatementHandler {
     int rows = cs.getUpdateCount();
     Object parameterObject = boundSql.getParameterObject();
     KeyGenerator keyGenerator = mappedStatement.getKeyGenerator();
-    if (keyGenerator != null && keyGenerator.executeAfter()) {
-      keyGenerator.processGeneratedKeys(executor, mappedStatement, cs, parameterObject);
-    }
+    keyGenerator.processAfter(executor, mappedStatement, cs, parameterObject);
     resultSetHandler.handleOutputParameters(cs);
     return rows;
   }
@@ -54,9 +52,7 @@ public class CallableStatementHandler extends BaseStatementHandler {
 
   public void parameterize(Statement statement) throws SQLException {
     KeyGenerator keyGenerator = mappedStatement.getKeyGenerator();
-    if (keyGenerator != null && keyGenerator.executeBefore()) {
-      keyGenerator.processGeneratedKeys(executor, mappedStatement, statement, boundSql.getParameterObject());
-    }
+    keyGenerator.processBefore(executor, mappedStatement, statement, boundSql.getParameterObject());
     registerOutputParameters((CallableStatement) statement);
     parameterHandler.setParameters((CallableStatement) statement);
   }

@@ -9,15 +9,10 @@ import java.sql.*;
 
 public class Jdbc3KeyGenerator implements KeyGenerator {
 
-  public boolean executeAfter() {
-    return true;
+  public void processBefore(Executor executor, MappedStatement ms, Statement stmt, Object parameter) {
   }
 
-  public boolean executeBefore() {
-    return false;
-  }
-
-  public void processGeneratedKeys(Executor executor, MappedStatement ms, Statement stmt, Object parameter) {
+  public void processAfter(Executor executor, MappedStatement ms, Statement stmt, Object parameter) {
     try {
       final Configuration configuration = ms.getConfiguration();
       final TypeHandlerRegistry typeHandlerRegistry = configuration.getTypeHandlerRegistry();

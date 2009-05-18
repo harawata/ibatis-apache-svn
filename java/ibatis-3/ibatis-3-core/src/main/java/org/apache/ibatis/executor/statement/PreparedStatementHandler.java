@@ -21,9 +21,7 @@ public class PreparedStatementHandler extends BaseStatementHandler {
     int rows = ps.getUpdateCount();
     Object parameterObject = boundSql.getParameterObject();
     KeyGenerator keyGenerator = mappedStatement.getKeyGenerator();
-    if (keyGenerator != null && keyGenerator.executeAfter()) {
-      keyGenerator.processGeneratedKeys(executor, mappedStatement, ps, parameterObject);
-    }
+    keyGenerator.processAfter(executor, mappedStatement, ps, parameterObject);
     return rows;
   }
 
@@ -53,10 +51,8 @@ public class PreparedStatementHandler extends BaseStatementHandler {
 
   public void parameterize(Statement statement)
       throws SQLException {
-    KeyGenerator keyGenerator = mappedStatement.getKeyGenerator();
-    if (keyGenerator != null && keyGenerator.executeBefore()) {
-      keyGenerator.processGeneratedKeys(executor, mappedStatement, statement, boundSql.getParameterObject());
-    }
+    KeyGenerator keyGenerator = mappedStatement.getKeyGenerator();    
+    keyGenerator.processBefore(executor, mappedStatement, statement, boundSql.getParameterObject());
     parameterHandler.setParameters((PreparedStatement) statement);
   }
 

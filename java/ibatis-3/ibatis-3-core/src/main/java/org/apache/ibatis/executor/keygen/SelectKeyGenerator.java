@@ -17,15 +17,19 @@ public class SelectKeyGenerator implements KeyGenerator {
     this.keyStatement = keyStatement;
   }
 
-  public boolean executeBefore() {
-    return executeBefore;
+  public void processBefore(Executor executor, MappedStatement ms, Statement stmt, Object parameter) {
+    if (executeBefore) {
+      processGeneratedKeys(executor, ms, stmt, parameter);
+    }
   }
 
-  public boolean executeAfter() {
-    return !executeBefore;
+  public void processAfter(Executor executor, MappedStatement ms, Statement stmt, Object parameter) {
+    if (!executeBefore) {
+      processGeneratedKeys(executor, ms, stmt, parameter);
+    }
   }
 
-  public void processGeneratedKeys(Executor executor, MappedStatement ms, Statement stmt, Object parameter) {
+  private void processGeneratedKeys(Executor executor, MappedStatement ms, Statement stmt, Object parameter) {
     try {
       final Configuration configuration = ms.getConfiguration();
       if (parameter != null) {
