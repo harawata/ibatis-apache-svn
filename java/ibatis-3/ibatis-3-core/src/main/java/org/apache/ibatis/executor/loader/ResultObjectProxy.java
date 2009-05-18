@@ -2,11 +2,15 @@ package org.apache.ibatis.executor.loader;
 
 import net.sf.cglib.proxy.*;
 import org.apache.ibatis.reflection.*;
+import org.apache.ibatis.mapping.Configuration;
+import org.apache.ibatis.type.TypeHandlerRegistry;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
 
 public class ResultObjectProxy {
+
+  private static final TypeHandlerRegistry registry = new TypeHandlerRegistry();
 
   public static Object createProxy(Class type, Object target, ResultLoaderRegistry lazyLoader) {
     return EnhancedResultObjectProxyImpl.createProxy(type, target, lazyLoader);
@@ -23,7 +27,11 @@ public class ResultObjectProxy {
     }
 
     public static Object createProxy(Class type, Object target, ResultLoaderRegistry lazyLoader) {
-      return Enhancer.create(type, new EnhancedResultObjectProxyImpl(target, lazyLoader));
+      if (registry.hasTypeHandler(type)) {
+        return target;
+      } else {
+        return Enhancer.create(type, new EnhancedResultObjectProxyImpl(target, lazyLoader));
+      }
     }
 
     public Object invoke(Object o, Method method, Object[] args) throws Throwable {

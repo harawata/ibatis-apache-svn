@@ -14,7 +14,7 @@ import com.ibatis.sqlmap.engine.transaction.TransactionScope;
 import org.apache.ibatis.executor.BatchExecutorException;
 import org.apache.ibatis.executor.BatchResult;
 import org.apache.ibatis.executor.Executor;
-import org.apache.ibatis.executor.result.ResultHandler;
+import org.apache.ibatis.executor.result.*;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.ResultMap;
 import org.apache.ibatis.mapping.ResultMapping;
@@ -169,8 +169,8 @@ public class SqlMapSessionImpl implements SqlMapSession {
         MappedStatement ms = configuration.getMappedStatement(id);
         Executor executor = transaction.getExecutor();
         return executor.query(ms, wrapCollection(parameterObject), Executor.NO_ROW_OFFSET, Executor.NO_ROW_LIMIT, new ResultHandler() {
-          public void handleResult(Object resultObject) {
-            rowHandler.handleRow(resultObject);
+          public void handleResult(ResultContext context) {
+            rowHandler.handleRow(context.getResultObject());
           }
         });
       }

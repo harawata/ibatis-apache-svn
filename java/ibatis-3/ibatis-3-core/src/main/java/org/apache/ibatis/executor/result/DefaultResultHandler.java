@@ -6,8 +6,8 @@ public class DefaultResultHandler implements ResultHandler {
 
   private final List list = new ArrayList();
 
-  public void handleResult(Object resultObject) {
-    list.add(resultObject);
+  public void handleResult(ResultContext context) {
+    list.add(context.getResultObject());
   }
 
   public List getResultList() {

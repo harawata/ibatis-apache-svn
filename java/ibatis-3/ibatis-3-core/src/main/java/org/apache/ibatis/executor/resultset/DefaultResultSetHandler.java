@@ -110,8 +110,9 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   private void handleResults(ResultSet rs, ResultMap resultMap, ResultHandler resultHandler, int skipResults, int maxResults) throws SQLException {
     if (resultMap != null) {
       skipResults(rs, skipResults);
-      int resultsFetched = 0;
-      while ((maxResults == Executor.NO_ROW_LIMIT || resultsFetched < maxResults) && rs.next()) {
+      ResultContext context = new ResultContext();
+      while ((maxResults == Executor.NO_ROW_LIMIT || context.getResultCount() < maxResults)
+          && !context.isStopped() && rs.next()) {
         currentNestedKey = null;
         ResultMap rm = resolveSubMap(rs, resultMap);
         Object resultObject = loadResultObject(rs, rm, new Reference(false));
@@ -119,9 +120,9 @@ public class DefaultResultSetHandler implements ResultSetHandler {
           if (resultObject instanceof PlatformTypeHolder) {
             resultObject = ((PlatformTypeHolder) resultObject).get(null);
           }
-          resultHandler.handleResult(resultObject);
+          context.nextResultObject(resultObject);
+          resultHandler.handleResult(context);
         }
-        resultsFetched++;
       }
     }
   }

@@ -227,11 +227,14 @@ public class BindingTest {
       BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
       List<Post> posts = mapper.selectPosts();
       assertEquals(5, posts.size());
-      assertEquals(DraftPost.class, posts.get(0).getClass());
-      assertEquals(Post.class, posts.get(1).getClass());
-      assertEquals(DraftPost.class, posts.get(2).getClass());
-      assertEquals(Post.class, posts.get(3).getClass());
-      assertEquals(Post.class, posts.get(4).getClass());
+      assertTrue(posts.get(0) instanceof DraftPost);
+      assertTrue(posts.get(1) instanceof Post);
+      assertFalse(posts.get(1) instanceof DraftPost);
+      assertTrue(posts.get(2) instanceof DraftPost);
+      assertTrue(posts.get(3) instanceof Post);
+      assertFalse(posts.get(3) instanceof DraftPost);
+      assertTrue(posts.get(4) instanceof Post);
+      assertFalse(posts.get(4) instanceof DraftPost);
     } finally {
       session.close();
     }
@@ -244,11 +247,14 @@ public class BindingTest {
       BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
       List<Post> posts = mapper.selectPostsWithResultMap();
       assertEquals(5, posts.size());
-      assertEquals(DraftPost.class, posts.get(0).getClass());
-      assertEquals(Post.class, posts.get(1).getClass());
-      assertEquals(DraftPost.class, posts.get(2).getClass());
-      assertEquals(Post.class, posts.get(3).getClass());
-      assertEquals(Post.class, posts.get(4).getClass());
+      assertTrue(posts.get(0) instanceof DraftPost);
+      assertTrue(posts.get(1) instanceof Post);
+      assertFalse(posts.get(1) instanceof DraftPost);
+      assertTrue(posts.get(2) instanceof DraftPost);
+      assertTrue(posts.get(3) instanceof Post);
+      assertFalse(posts.get(3) instanceof DraftPost);
+      assertTrue(posts.get(4) instanceof Post);
+      assertFalse(posts.get(4) instanceof DraftPost);
     } finally {
       session.close();
     }

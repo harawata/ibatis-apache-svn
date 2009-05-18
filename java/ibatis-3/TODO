@@ -2,15 +2,11 @@
 #          TO-DO List             #
 ###################################
 
-Required:
-
-* Allow lazy loading across connection boundaries
-
 Nice to Have:
-* Commit required option at statement level
-* Add resultType automapping option for collections so a resultMap isn' t required
-* Auto result/param types detected for bound XML statements
-* Named parameter parsing/merging
-* Break out of ResultHandler
-* Preserve select key id on failed statement (refactor keygenerator interface)
-* http://issues.apache.org/jira/browse/IBATIS-357
+
+  * Commit required option at statement level
+  * Add resultType automapping option for collections so a resultMap isn't required
+  * Auto result/param types detected for bound XML statements
+  * Named parameter parsing/merging
+  * Preserve select key id on failed statement (refactor keygenerator interface)
+  * http://issues.apache.org/jira/browse/IBATIS-357
