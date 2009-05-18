@@ -215,7 +215,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         if (executor.isCached(nestedQuery, key)) {
           executor.deferLoad(nestedQuery, metaResultObject, resultMapping.getProperty(), key);
         } else {
-          ResultLoader resultLoader = new ResultLoader(executor, nestedQuery, parameterObject, resultMapping.getJavaType());
+          ResultLoader resultLoader = new ResultLoader(configuration, executor, nestedQuery, parameterObject, resultMapping.getJavaType());
           if (lazyLoader == null) {
             value = resultLoader.loadResult();
           } else {

@@ -15,19 +15,21 @@ public abstract class BaseExecutor implements Executor {
 
   private static final Object EXECUTION_PLACEHOLDER = new Object();
 
-  protected final Transaction transaction;
+  protected Transaction transaction;
 
-  protected final List<DeferredLoad> deferredLoads;
-  protected final PerpetualCache localCache;
+  protected List<DeferredLoad> deferredLoads;
+  protected PerpetualCache localCache;
 
   protected int queryStack = 0;
 
   protected List<BatchResult> batchResults = new ArrayList<BatchResult>();
+  private boolean closed;
 
   protected BaseExecutor(Transaction transaction) {
     this.transaction = transaction;
     this.deferredLoads = new ArrayList<DeferredLoad>();
     this.localCache = new PerpetualCache("LocalCache");
+    this.closed = false;
   }
 
   public Transaction getTransaction() {
@@ -39,7 +41,17 @@ public abstract class BaseExecutor implements Executor {
       transaction.close();
     } catch (SQLException e) {
       // Ignore.  There's nothing that can be done at this point.
+    } finally {
+      transaction = null;
+      deferredLoads = null;
+      localCache = null;
+      batchResults = null;
+      closed = true;
     }
+  }
+
+  public boolean isClosed() {
+    return closed;
   }
 
   public int update(MappedStatement ms, Object parameter) throws SQLException {

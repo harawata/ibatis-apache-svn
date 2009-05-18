@@ -2,8 +2,15 @@ package org.apache.ibatis.executor.loader;
 
 import org.apache.ibatis.executor.*;
 import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.mapping.Configuration;
+import org.apache.ibatis.mapping.Environment;
+import org.apache.ibatis.mapping.ExecutorType;
+import org.apache.ibatis.transaction.TransactionFactory;
+import org.apache.ibatis.transaction.Transaction;
 
+import javax.sql.DataSource;
 import java.sql.SQLException;
+import java.sql.Connection;
 import java.util.*;
 
 public class ResultLoader {
@@ -11,6 +18,7 @@ public class ResultLoader {
   protected static final Class[] LIST_INTERFACES = new Class[]{List.class};
   protected static final Class[] SET_INTERFACES = new Class[]{Set.class};
 
+  protected final Configuration configuration;
   protected final Executor executor;
   protected final MappedStatement mappedStatement;
   protected final Object parameterObject;
@@ -19,7 +27,8 @@ public class ResultLoader {
   protected boolean loaded;
   protected Object resultObject;
 
-  public ResultLoader(Executor executor, MappedStatement mappedStatement, Object parameterObject, Class targetType) {
+  public ResultLoader(Configuration config, Executor executor, MappedStatement mappedStatement, Object parameterObject, Class targetType) {
+    this.configuration = config;
     this.executor = executor;
     this.mappedStatement = mappedStatement;
     this.parameterObject = parameterObject;
@@ -27,7 +36,7 @@ public class ResultLoader {
   }
 
   public Object loadResult() throws SQLException {
-    List list = executor.query(mappedStatement, parameterObject, Executor.NO_ROW_OFFSET, Executor.NO_ROW_LIMIT, Executor.NO_RESULT_HANDLER);
+    List list = selectListFromNewExecutor();
     if (targetType != null && Set.class.isAssignableFrom(targetType)) {
       resultObject = new HashSet(list);
     } else if (targetType != null && Collection.class.isAssignableFrom(targetType)) {
@@ -42,6 +51,32 @@ public class ResultLoader {
       }
     }
     return resultObject;
+  }
+
+  private List selectListFromNewExecutor() throws SQLException {
+    Executor localExecutor = executor;
+    if (localExecutor.isClosed()) {
+      localExecutor = newExecutor();
+    }
+    try {
+      return localExecutor.query(mappedStatement, parameterObject, Executor.NO_ROW_OFFSET, Executor.NO_ROW_LIMIT, Executor.NO_RESULT_HANDLER);
+    } finally {
+      if (executor.isClosed()) {
+        localExecutor.close();
+      }
+    }
+  }
+
+  private Executor newExecutor() throws SQLException {
+    Environment environment = configuration.getEnvironment();
+    if (environment == null) throw new ExecutorException("ResultLoader could not load lazily.  Environment was not configured.");
+    TransactionFactory txFactory = environment.getTransactionFactory();
+    if (txFactory == null) throw new ExecutorException("ResultLoader could not load lazily.  Transaction Factory was not configured.");
+    DataSource ds = environment.getDataSource();
+    if (ds == null) throw new ExecutorException("ResultLoader could not load lazily.  DataSource was not configured.");
+    Connection conn = ds.getConnection();
+    Transaction tx = txFactory.newTransaction(conn, false);
+    return configuration.newExecutor(tx, ExecutorType.SIMPLE);
   }
 
   public boolean wasNull() {

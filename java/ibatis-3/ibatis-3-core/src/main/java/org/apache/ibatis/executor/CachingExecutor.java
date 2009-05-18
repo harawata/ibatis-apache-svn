@@ -26,6 +26,10 @@ public class CachingExecutor implements Executor {
     delegate.close();
   }
 
+  public boolean isClosed() {
+    return delegate.isClosed();
+  }
+
   public int update(MappedStatement ms, Object parameterObject) throws SQLException {
     flushCacheIfRequired(ms);
     return delegate.update(ms, parameterObject);
