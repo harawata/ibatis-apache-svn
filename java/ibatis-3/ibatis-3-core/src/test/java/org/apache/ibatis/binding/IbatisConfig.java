@@ -13,7 +13,7 @@ import domain.blog.*;
 
 public class IbatisConfig {
 
-  public static SqlSessionFactory getSqlSessionFactory() {
+  public SqlSessionFactory getSqlSessionFactory() {
     try {
       DataSource dataSource = BaseDataTest.createBlogDataSource();
       BaseDataTest.runScript(dataSource, BaseDataTest.BLOG_DDL);

@@ -1,6 +1,6 @@
 package org.apache.ibatis.builder.annotation;
 
-import static org.apache.ibatis.annotations.Annotations.*;
+import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.binding.BindingException;
 import org.apache.ibatis.builder.*;
 import org.apache.ibatis.builder.xml.XMLMapperParser;
@@ -149,16 +149,16 @@ public class MapperAnnotationParser {
       for (Result result : results) {
         ensureHasOnlyCollectionOrResultNotBoth(result);
         if (hasCollection(result)) {
-          Class propertyType = result.many().javaType();
-          Arg[] nestedArgs = result.many().constructor().value();
-          Result[] nestedResults = result.many().results().value();
-          applyResultMap(nestedResultMapId(resultMapId, result), propertyType, nestedArgs, nestedResults, null);
+//          Class propertyType = result.many().javaType();
+//          Arg[] nestedArgs = result.many().constructor().value();
+//          Result[] nestedResults = result.many().results().value();
+//          applyResultMap(nestedResultMapId(resultMapId, result), propertyType, nestedArgs, nestedResults, null);
         }
         if (hasAssociation(result)) {
-          Class propertyType = MetaClass.forClass(returnType).getSetterType(result.property());
-          Arg[] nestedArgs = result.one().constructor().value();
-          Result[] nestedResults = result.one().results().value();
-          applyResultMap(nestedResultMapId(resultMapId, result), propertyType, nestedArgs, nestedResults, null);
+//          Class propertyType = MetaClass.forClass(returnType).getSetterType(result.property());
+//          Arg[] nestedArgs = result.one().constructor().value();
+//          Result[] nestedResults = result.one().results().value();
+//          applyResultMap(nestedResultMapId(resultMapId, result), propertyType, nestedArgs, nestedResults, null);
         }
       }
     }
@@ -359,13 +359,13 @@ public class MapperAnnotationParser {
   }
 
   private boolean hasAssociation(Result result) {
-    return result.one().constructor().value().length > 1
-        || result.one().results().value().length > 1;
+    return result.one().constructor().value().length > 1;
+//        || result.one().results().value().length > 1;
   }
 
   private boolean hasCollection(Result result) {
-    return result.many().constructor().value().length > 1
-        || result.many().results().value().length > 1;
+    return result.many().constructor().value().length > 1;
+//        || result.many().results().value().length > 1;
   }
 
   private Result[] resultsIf(Results results) {
