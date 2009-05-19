@@ -7,7 +7,6 @@ import org.apache.ibatis.builder.xml.XMLMapperParser;
 import org.apache.ibatis.executor.keygen.*;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.*;
-import org.apache.ibatis.reflection.MetaClass;
 import org.apache.ibatis.type.JdbcType;
 
 import java.io.*;
@@ -90,10 +89,9 @@ public class MapperAnnotationParser {
   }
 
   private void applyResultMap(String resultMapId, Class returnType, Arg[] args, Result[] results, TypeDiscriminator discriminator) {
-    applyNestedResultMaps(resultMapId, returnType, results);
     sequentialBuilder.resultMapStart(resultMapId, returnType, null);
     applyConstructorArgs(args);
-    applyResults(resultMapId, results);
+    applyResults(results);
     applyDiscriminator(resultMapId, discriminator);
     sequentialBuilder.resultMapEnd();
     createDiscriminatorResultMaps(resultMapId, discriminator);
@@ -117,7 +115,7 @@ public class MapperAnnotationParser {
               result.javaType() == void.class ? null : result.javaType(),
               result.jdbcType() == JdbcType.UNDEFINED ? null : result.jdbcType(),
               hasNestedSelect(result) ? nestedSelectId(result) : null,
-              hasCollectionOrAssociation(result) ? nestedResultMapId(resultMapId, result) : null,
+              null,
               result.typeHandler() == void.class ? null : result.typeHandler(),
               flags);
         }
@@ -141,26 +139,6 @@ public class MapperAnnotationParser {
         sequentialBuilder.resultMapDiscriminatorCase(value, caseResultMapId);
       }
       sequentialBuilder.resultMapDiscriminatorEnd();
-    }
-  }
-
-  private void applyNestedResultMaps(String resultMapId, Class returnType, Result[] results) {
-    if (results != null) {
-      for (Result result : results) {
-        ensureHasOnlyCollectionOrResultNotBoth(result);
-        if (hasCollection(result)) {
-//          Class propertyType = result.many().javaType();
-//          Arg[] nestedArgs = result.many().constructor().value();
-//          Result[] nestedResults = result.many().results().value();
-//          applyResultMap(nestedResultMapId(resultMapId, result), propertyType, nestedArgs, nestedResults, null);
-        }
-        if (hasAssociation(result)) {
-//          Class propertyType = MetaClass.forClass(returnType).getSetterType(result.property());
-//          Arg[] nestedArgs = result.one().constructor().value();
-//          Result[] nestedResults = result.one().results().value();
-//          applyResultMap(nestedResultMapId(resultMapId, result), propertyType, nestedArgs, nestedResults, null);
-        }
-      }
     }
   }
 
@@ -291,7 +269,7 @@ public class MapperAnnotationParser {
     return null;
   }
 
-  private void applyResults(String resultMapId, Result[] results) {
+  private void applyResults(Result[] results) {
     if (results.length > 0) {
       for (Result result : results) {
         ArrayList<ResultFlag> flags = new ArrayList<ResultFlag>();
@@ -302,7 +280,7 @@ public class MapperAnnotationParser {
             result.javaType() == void.class ? null : result.javaType(),
             result.jdbcType() == JdbcType.UNDEFINED ? null : result.jdbcType(),
             hasNestedSelect(result) ? nestedSelectId(result) : null,
-            hasCollectionOrAssociation(result) ? nestedResultMapId(resultMapId, result) : null,
+            null,
             result.typeHandler() == void.class ? null : result.typeHandler(),
             flags);
       }
@@ -342,30 +320,6 @@ public class MapperAnnotationParser {
             flags);
       }
     }
-  }
-
-  private String nestedResultMapId(String resultMapId, Result result) {
-    return resultMapId + "." + result.property();
-  }
-
-  private void ensureHasOnlyCollectionOrResultNotBoth(Result result) {
-    if (hasCollection(result) && hasAssociation(result)) {
-      throw new BindingException("On each result you can only use an association or a collection, not both!");
-    }
-  }
-
-  private boolean hasCollectionOrAssociation(Result result) {
-    return hasCollection(result) || hasAssociation(result);
-  }
-
-  private boolean hasAssociation(Result result) {
-    return result.one().constructor().value().length > 1;
-//        || result.one().results().value().length > 1;
-  }
-
-  private boolean hasCollection(Result result) {
-    return result.many().constructor().value().length > 1;
-//        || result.many().results().value().length > 1;
   }
 
   private Result[] resultsIf(Results results) {

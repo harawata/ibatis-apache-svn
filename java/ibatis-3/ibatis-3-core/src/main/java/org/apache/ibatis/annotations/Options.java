@@ -9,8 +9,8 @@ import java.lang.annotation.Target;
 import java.lang.annotation.ElementType;
 
 @Retention(RetentionPolicy.RUNTIME)
-  @Target(ElementType.METHOD)
-  public @interface Options {
+@Target(ElementType.METHOD)
+public @interface Options {
   public abstract boolean useCache() default true;
 
   public abstract boolean flushCache() default false;

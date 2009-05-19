@@ -8,8 +8,8 @@ import java.lang.annotation.Target;
 import java.lang.annotation.ElementType;
 
 @Retention(RetentionPolicy.RUNTIME)
-  @Target(ElementType.METHOD)
-  public @interface Arg {
+@Target(ElementType.METHOD)
+public @interface Arg {
   public abstract boolean id() default false;
 
   public abstract String column() default "";

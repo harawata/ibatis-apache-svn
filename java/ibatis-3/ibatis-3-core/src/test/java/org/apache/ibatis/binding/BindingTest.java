@@ -138,26 +138,6 @@ public class BindingTest {
     }
   }
 
-//  @Test
-//  public void shouldSelectBlogWithAssociations() {
-//    SqlSession session = sqlSessionFactory.openSession();
-//    try {
-//      BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
-//      List<Blog> blogs = mapper.selectBlogWithAssociations(1);
-//      assertEquals(1, blogs.size());
-//      Blog blog = blogs.get(0);
-//      assertEquals(2, blog.getPosts().size());
-//      Post firstPost = blog.getPosts().get(0);
-//      assertEquals(3, firstPost.getTags().size());
-//      assertEquals(2, firstPost.getComments().size());
-//      Post secondPost = blog.getPosts().get(1);
-//      assertEquals(1, secondPost.getTags().size());
-//      assertEquals(0, secondPost.getComments().size());
-//    } finally {
-//      session.close();
-//    }
-//  }
-
   @Test
   public void shouldExecuteBoundSelectOneBlogStatement() {
     SqlSession session = sqlSessionFactory.openSession();

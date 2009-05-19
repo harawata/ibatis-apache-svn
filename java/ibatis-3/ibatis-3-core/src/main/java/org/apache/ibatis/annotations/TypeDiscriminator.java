@@ -8,8 +8,8 @@ import java.lang.annotation.Target;
 import java.lang.annotation.ElementType;
 
 @Retention(RetentionPolicy.RUNTIME)
-  @Target(ElementType.METHOD)
-  public @interface TypeDiscriminator {
+@Target(ElementType.METHOD)
+public @interface TypeDiscriminator {
   public abstract String column();
 
   public abstract Class javaType() default void.class;

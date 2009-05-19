@@ -6,7 +6,7 @@ import java.lang.annotation.Target;
 import java.lang.annotation.ElementType;
 
 @Retention(RetentionPolicy.RUNTIME)
-  @Target(ElementType.METHOD)
-  public @interface Select {
+@Target(ElementType.METHOD)
+public @interface Select {
   public abstract String[] value();
 }

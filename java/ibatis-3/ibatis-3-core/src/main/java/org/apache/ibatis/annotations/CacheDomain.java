@@ -9,8 +9,8 @@ import java.lang.annotation.Target;
 import java.lang.annotation.ElementType;
 
 @Retention(RetentionPolicy.RUNTIME)
-  @Target(ElementType.TYPE)
-  public @interface CacheDomain {
+@Target(ElementType.TYPE)
+public @interface CacheDomain {
   public abstract Class<? extends org.apache.ibatis.cache.Cache> implementation() default PerpetualCache.class;
 
   public abstract Class<? extends org.apache.ibatis.cache.Cache> eviction() default LruCache.class;

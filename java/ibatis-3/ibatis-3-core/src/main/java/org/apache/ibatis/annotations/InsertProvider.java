@@ -6,8 +6,8 @@ import java.lang.annotation.Target;
 import java.lang.annotation.ElementType;
 
 @Retention(RetentionPolicy.RUNTIME)
-  @Target(ElementType.METHOD)
-  public @interface InsertProvider {
+@Target(ElementType.METHOD)
+public @interface InsertProvider {
   public abstract Class type();
 
   public abstract String method();

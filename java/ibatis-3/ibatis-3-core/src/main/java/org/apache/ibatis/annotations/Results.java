@@ -6,7 +6,7 @@ import java.lang.annotation.Target;
 import java.lang.annotation.ElementType;
 
 @Retention(RetentionPolicy.RUNTIME)
-  @Target(ElementType.METHOD)
-  public @interface Results {
+@Target(ElementType.METHOD)
+public @interface Results {
   public abstract Result[] value() default {};
 }

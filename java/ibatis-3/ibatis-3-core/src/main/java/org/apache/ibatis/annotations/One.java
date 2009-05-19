@@ -6,11 +6,10 @@ import java.lang.annotation.Target;
 import java.lang.annotation.ElementType;
 
 @Retention(RetentionPolicy.RUNTIME)
-  @Target(ElementType.METHOD)
-  public @interface One {
+@Target(ElementType.METHOD)
+public @interface One {
   public abstract String select() default "";
 
   public abstract ConstructorArgs constructor() default @ConstructorArgs;
 
-//  public abstract Results results() default @Results;
 }
