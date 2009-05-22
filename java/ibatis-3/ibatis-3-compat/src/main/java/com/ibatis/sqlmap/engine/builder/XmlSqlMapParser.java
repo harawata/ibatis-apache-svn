@@ -8,9 +8,9 @@ import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.reflection.MetaClass;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
-import org.apache.ibatis.parsing.Nodelet;
-import org.apache.ibatis.parsing.NodeletContext;
-import org.apache.ibatis.parsing.NodeletParser;
+import org.apache.ibatis.parsing.NodeEvent;
+import org.apache.ibatis.parsing.XNode;
+import org.apache.ibatis.parsing.NodeEventParser;
 
 import java.io.Reader;
 import java.util.*;
@@ -20,7 +20,7 @@ public class XmlSqlMapParser {
   private XmlSqlMapConfigParser configParser;
   private Ibatis2Configuration config;
   private Reader reader;
-  private NodeletParser parser;
+  private NodeEventParser parser;
 
   private CacheBuilder cacheBuilder;
   private List<String> flushCacheStatements;
@@ -41,7 +41,7 @@ public class XmlSqlMapParser {
     this.configParser = configParser;
     this.config = (Ibatis2Configuration) configParser.getConfiguration();
     this.reader = reader;
-    this.parser = new NodeletParser();
+    this.parser = new NodeEventParser();
     this.parser.addNodeletHandler(this);
     this.parser.setVariables(config.getVariables());
     this.flushCacheStatements = new ArrayList<String>();
@@ -65,20 +65,20 @@ public class XmlSqlMapParser {
     return id == null ? null : namespace == null ? id : namespace + "." + id;
   }
 
-  @Nodelet("/sqlMap")
-  public void sqlMap(NodeletContext context) throws Exception {
+  @NodeEvent("/sqlMap")
+  public void sqlMap(XNode context) throws Exception {
     this.namespace = context.getStringAttribute("namespace");
   }
 
-  @Nodelet("/sqlMap/typeAlias")
-  public void sqlMaptypeAlias(NodeletContext context) throws Exception {
+  @NodeEvent("/sqlMap/typeAlias")
+  public void sqlMaptypeAlias(XNode context) throws Exception {
     String alias = context.getStringAttribute("alias");
     String type = context.getStringAttribute("type");
     config.getTypeAliasRegistry().registerAlias(alias, type);
   }
 
-  @Nodelet("/sqlMap/cacheModel")
-  public void sqlMapcacheModel(NodeletContext context) throws Exception {
+  @NodeEvent("/sqlMap/cacheModel")
+  public void sqlMapcacheModel(XNode context) throws Exception {
     String id = applyNamespace(context.getStringAttribute("id"));
     String type = context.getStringAttribute("type");
     Boolean readOnly = context.getBooleanAttribute("readOnly", true);
@@ -106,8 +106,8 @@ public class XmlSqlMapParser {
     }
   }
 
-  @Nodelet("/sqlMap/cacheModel/property")
-  public void sqlMapcacheModelproperty(NodeletContext context) throws Exception {
+  @NodeEvent("/sqlMap/cacheModel/property")
+  public void sqlMapcacheModelproperty(XNode context) throws Exception {
     if (cacheBuilder != null) {
       String name = context.getStringAttribute("name");
       String value = context.getStringAttribute("value");
@@ -117,8 +117,8 @@ public class XmlSqlMapParser {
     }
   }
 
-  @Nodelet("/sqlMap/cacheModel/flushInterval")
-  public void sqlMapcacheModelflushInterval(NodeletContext context) throws Exception {
+  @NodeEvent("/sqlMap/cacheModel/flushInterval")
+  public void sqlMapcacheModelflushInterval(XNode context) throws Exception {
     if (cacheBuilder != null) {
       long clearInterval = 0L;
       clearInterval += context.getIntAttribute("milliseconds", 0);
@@ -132,16 +132,16 @@ public class XmlSqlMapParser {
     }
   }
 
-  @Nodelet("/sqlMap/cacheModel/flushOnExecute")
-  public void sqlMapcacheModelflushOnExecute(NodeletContext context) throws Exception {
+  @NodeEvent("/sqlMap/cacheModel/flushOnExecute")
+  public void sqlMapcacheModelflushOnExecute(XNode context) throws Exception {
     if (cacheBuilder != null) {
       String statement = context.getStringAttribute("statement");
       flushCacheStatements.add(statement);
     }
   }
 
-  @Nodelet("/sqlMap/cacheModel/end()")
-  public void sqlMapcacheModelEnd(NodeletContext context) throws Exception {
+  @NodeEvent("/sqlMap/cacheModel/end()")
+  public void sqlMapcacheModelEnd(XNode context) throws Exception {
     if (cacheBuilder != null) {
       Cache cache = cacheBuilder.build();
       for (String sid : flushCacheStatements) {
@@ -152,8 +152,8 @@ public class XmlSqlMapParser {
     }
   }
 
-  @Nodelet("/sqlMap/resultMap")
-  public void sqlMapresultMap(NodeletContext context) throws Exception {
+  @NodeEvent("/sqlMap/resultMap")
+  public void sqlMapresultMap(XNode context) throws Exception {
     String xmlName = context.getStringAttribute("xmlName");
     if (xmlName != null) {
       throw new UnsupportedOperationException("xmlName is not supported by iBATIS 3");
@@ -189,8 +189,8 @@ public class XmlSqlMapParser {
 
   }
 
-  @Nodelet("/sqlMap/resultMap/discriminator")
-  public void sqlMapresultMapdiscriminator(NodeletContext context) throws Exception {
+  @NodeEvent("/sqlMap/resultMap/discriminator")
+  public void sqlMapresultMapdiscriminator(XNode context) throws Exception {
     String nullValue = context.getStringAttribute("nullValue");
     if (nullValue != null) {
       throw new UnsupportedOperationException("Null value subsitution is not supported by iBATIS 3.");
@@ -244,22 +244,22 @@ public class XmlSqlMapParser {
 
   }
 
-  @Nodelet("/sqlMap/resultMap/discriminator/subMap")
-  public void sqlMapresultMapdiscriminatorsubMap(NodeletContext context) throws Exception {
+  @NodeEvent("/sqlMap/resultMap/discriminator/subMap")
+  public void sqlMapresultMapdiscriminatorsubMap(XNode context) throws Exception {
     String value = context.getStringAttribute("value");
     String resultMap = context.getStringAttribute("resultMap");
     resultMap = applyNamespace(resultMap);
     discriminatorSubMap.put(value, resultMap);
   }
 
-  @Nodelet("/sqlMap/resultMap/discriminator/end()")
-  public void sqlMapresultMapdiscriminatorEnd(NodeletContext context) throws Exception {
+  @NodeEvent("/sqlMap/resultMap/discriminator/end()")
+  public void sqlMapresultMapdiscriminatorEnd(XNode context) throws Exception {
     resultMapBuilder.discriminator(discriminatorBuilder.build());
   }
 
 
-  @Nodelet("/sqlMap/resultMap/result")
-  public void sqlMapresultMapresult(NodeletContext context) throws Exception {
+  @NodeEvent("/sqlMap/resultMap/result")
+  public void sqlMapresultMapresult(XNode context) throws Exception {
     String nullValue = context.getStringAttribute("nullValue");
     if (nullValue != null) {
       throw new UnsupportedOperationException("Null value subsitution is not supported by iBATIS 3.");
@@ -374,13 +374,13 @@ public class XmlSqlMapParser {
     return composites;
   }
 
-  @Nodelet("/sqlMap/resultMap/end()")
-  public void sqlMapresultMapend(NodeletContext context) throws Exception {
+  @NodeEvent("/sqlMap/resultMap/end()")
+  public void sqlMapresultMapend(XNode context) throws Exception {
     config.addResultMap(resultMapBuilder.build());
   }
 
-  @Nodelet("/sqlMap/parameterMap")
-  public void sqlMapparameterMap(NodeletContext context) throws Exception {
+  @NodeEvent("/sqlMap/parameterMap")
+  public void sqlMapparameterMap(XNode context) throws Exception {
     String id = applyNamespace(context.getStringAttribute("id"));
     String parameterClassName = context.getStringAttribute("class");
     parameterClassName = config.getTypeAliasRegistry().resolveAlias(parameterClassName);
@@ -389,8 +389,8 @@ public class XmlSqlMapParser {
     parameterMapBuilder = new ParameterMap.Builder(config, id, parameterClass, parameterMappingList);
   }
 
-  @Nodelet("/sqlMap/parameterMap/parameter")
-  public void sqlMapparameterMapparameter(NodeletContext context) throws Exception {
+  @NodeEvent("/sqlMap/parameterMap/parameter")
+  public void sqlMapparameterMapparameter(XNode context) throws Exception {
     String nullValue = context.getStringAttribute("nullValue");
     if (nullValue != null) {
       throw new UnsupportedOperationException("Null value subsitution is not supported by iBATIS 3.");
@@ -472,13 +472,13 @@ public class XmlSqlMapParser {
   }
 
 
-  @Nodelet("/sqlMap/parameterMap/end()")
-  public void sqlMapparameterMapend(NodeletContext context) throws Exception {
+  @NodeEvent("/sqlMap/parameterMap/end()")
+  public void sqlMapparameterMapend(XNode context) throws Exception {
     config.addParameterMap(parameterMapBuilder.build());
   }
 
-  @Nodelet("/sqlMap/sql")
-  public void sqlMapsql(NodeletContext context) throws Exception {
+  @NodeEvent("/sqlMap/sql")
+  public void sqlMapsql(XNode context) throws Exception {
     String id = context.getStringAttribute("id");
     if (configParser.isUseStatementNamespaces()) {
       id = applyNamespace(id);
@@ -490,33 +490,33 @@ public class XmlSqlMapParser {
     }
   }
 
-  @Nodelet("/sqlMap/statement")
-  public void sqlMapstatement(NodeletContext context) throws Exception {
+  @NodeEvent("/sqlMap/statement")
+  public void sqlMapstatement(XNode context) throws Exception {
     new XmlSqlStatementParser(this).parseGeneralStatement(context);
   }
 
-  @Nodelet("/sqlMap/select")
-  public void sqlMapselect(NodeletContext context) throws Exception {
+  @NodeEvent("/sqlMap/select")
+  public void sqlMapselect(XNode context) throws Exception {
     new XmlSqlStatementParser(this).parseGeneralStatement(context);
   }
 
-  @Nodelet("/sqlMap/insert")
-  public void sqlMapinsert(NodeletContext context) throws Exception {
+  @NodeEvent("/sqlMap/insert")
+  public void sqlMapinsert(XNode context) throws Exception {
     new XmlSqlStatementParser(this).parseGeneralStatement(context);
   }
 
-  @Nodelet("/sqlMap/update")
-  public void sqlMapupdate(NodeletContext context) throws Exception {
+  @NodeEvent("/sqlMap/update")
+  public void sqlMapupdate(XNode context) throws Exception {
     new XmlSqlStatementParser(this).parseGeneralStatement(context);
   }
 
-  @Nodelet("/sqlMap/delete")
-  public void sqlMapdelete(NodeletContext context) throws Exception {
+  @NodeEvent("/sqlMap/delete")
+  public void sqlMapdelete(XNode context) throws Exception {
     new XmlSqlStatementParser(this).parseGeneralStatement(context);
   }
 
-  @Nodelet("/sqlMap/procedure")
-  public void sqlMapprocedure(NodeletContext context) throws Exception {
+  @NodeEvent("/sqlMap/procedure")
+  public void sqlMapprocedure(XNode context) throws Exception {
     new XmlSqlStatementParser(this).parseGeneralStatement(context);
   }
 

@@ -4,6 +4,6 @@ import java.lang.annotation.*;
 
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Nodelet {
+public @interface NodeEvent {
   String value();
 }

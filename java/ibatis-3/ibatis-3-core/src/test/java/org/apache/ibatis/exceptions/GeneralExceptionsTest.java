@@ -8,7 +8,7 @@ import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.logging.LogException;
 import org.apache.ibatis.mapping.SqlMapperException;
 import org.apache.ibatis.migration.MigrationException;
-import org.apache.ibatis.parsing.NodeletException;
+import org.apache.ibatis.parsing.ParsingException;
 import org.apache.ibatis.plugin.PluginException;
 import org.apache.ibatis.reflection.ReflectionException;
 import org.apache.ibatis.session.SessionException;
@@ -40,7 +40,7 @@ public class GeneralExceptionsTest {
         ExecutorException.class,
         LogException.class,
         MigrationException.class,
-        NodeletException.class,
+        ParsingException.class,
         ParserException.class,
         PluginException.class,
         ReflectionException.class,

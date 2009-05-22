@@ -27,6 +27,15 @@ public class XPathParser {
     this.xpath = factory.newXPath();
   }
 
+  public XPathParser(Document document, boolean validation, EntityResolver entityResolver, Properties variables) {
+    this.validation = validation;
+    this.entityResolver = entityResolver;
+    this.variables = variables;
+    this.document = document;
+    XPathFactory factory = XPathFactory.newInstance();
+    this.xpath = factory.newXPath();
+  }
+
   public void setVariables(Properties variables) {
     this.variables = variables;
   }

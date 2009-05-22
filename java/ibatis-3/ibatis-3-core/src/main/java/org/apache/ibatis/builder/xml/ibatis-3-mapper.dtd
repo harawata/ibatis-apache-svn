@@ -80,7 +80,7 @@ jdbcType CDATA #IMPLIED
 typeHandler CDATA #IMPLIED
 >
 
-<!ELEMENT collection EMPTY>
+<!ELEMENT collection (constructor?,id*,result*,association*,collection*, discriminator?)>
 <!ATTLIST collection
 property CDATA #REQUIRED
 column CDATA #IMPLIED
@@ -91,7 +91,7 @@ resultMap CDATA #IMPLIED
 typeHandler CDATA #IMPLIED
 >
 
-<!ELEMENT association EMPTY>
+<!ELEMENT association (constructor?,id*,result*,association*,collection*, discriminator?)>
 <!ATTLIST association
 property CDATA #REQUIRED
 column CDATA #IMPLIED
@@ -110,10 +110,11 @@ jdbcType CDATA #IMPLIED
 typeHandler CDATA #IMPLIED
 >
 
-<!ELEMENT case EMPTY>
+<!ELEMENT case (constructor?,id*,result*,association*,collection*, discriminator?)>
 <!ATTLIST case
 value CDATA #REQUIRED
-resultMap CDATA #REQUIRED
+resultMap CDATA #IMPLIED 
+javaType CDATA #IMPLIED
 >
 
 <!ELEMENT property EMPTY>

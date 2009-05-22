@@ -22,6 +22,23 @@ public class XNode {
     this.body = parseBody(node);
   }
 
+  public XNode newXNode(Node node) {
+    return new XNode(xpathParser,node,variables);
+  }
+
+  public String getNodeName() {
+    return node.getNodeName();
+  }
+
+  public XNode getParent() {
+    Node parent = node.getParentNode();
+    if (parent == null) {
+      return null;
+    } else {
+      return new XNode(xpathParser, parent,variables);
+    }
+  }
+
   public String evalString(String expression) {
     return xpathParser.evalString(node, expression);
   }

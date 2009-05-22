@@ -19,7 +19,7 @@ public class XMLMapperConfigParser extends BaseParser {
   private boolean parsed;
 
   private Reader reader;
-  private NodeletParser parser;
+  private NodeEventParser parser;
 
   private String environment;
   private Environment.Builder environmentBuilder;
@@ -43,7 +43,7 @@ public class XMLMapperConfigParser extends BaseParser {
     this.reader = reader;
     this.environment = environment;
 
-    this.parser = new NodeletParser();
+    this.parser = new NodeEventParser();
     this.parser.addNodeletHandler(this);
     this.parser.setValidation(true);
     this.parser.setVariables(props);
@@ -65,8 +65,8 @@ public class XMLMapperConfigParser extends BaseParser {
   }
 
   //  <typeAlias alias="" type=""/>
-  @Nodelet("/configuration/typeAliases/typeAlias")
-  public void typeAliasElement(NodeletContext context) throws Exception {
+  @NodeEvent("/configuration/typeAliases/typeAlias")
+  public void typeAliasElement(XNode context) throws Exception {
     String alias = context.getStringAttribute("alias");
     String type = context.getStringAttribute("type");
     typeAliasRegistry.registerAlias(alias, type);
@@ -74,8 +74,8 @@ public class XMLMapperConfigParser extends BaseParser {
 
   //  <plugin interceptor="">
   //    <property name="" value=""/>
-  @Nodelet("/configuration/plugins/plugin")
-  public void pluginElement(NodeletContext context) throws Exception {
+  @NodeEvent("/configuration/plugins/plugin")
+  public void pluginElement(XNode context) throws Exception {
     String interceptor = context.getStringAttribute("interceptor");
     Properties properties = context.getChildrenAsProperties();
     Interceptor interceptorInstance = (Interceptor) resolveClass(interceptor).newInstance();
@@ -85,8 +85,8 @@ public class XMLMapperConfigParser extends BaseParser {
 
   //  <objectFactory type="">
   //    <property name="" value=""/>
-  @Nodelet("/configuration/objectFactory")
-  public void objectFactoryElement(NodeletContext context) throws Exception {
+  @NodeEvent("/configuration/objectFactory")
+  public void objectFactoryElement(XNode context) throws Exception {
     String type = context.getStringAttribute("type");
     Properties properties = context.getChildrenAsProperties();
     ObjectFactory factory = (ObjectFactory) resolveClass(type).newInstance();
@@ -96,8 +96,8 @@ public class XMLMapperConfigParser extends BaseParser {
 
   //  <settings url="" resource="">
   //    <setting name="" value=""/>
-  @Nodelet("/configuration/properties")
-  public void propertiesElement(NodeletContext context) throws Exception {
+  @NodeEvent("/configuration/properties")
+  public void propertiesElement(XNode context) throws Exception {
     Properties defaults = context.getChildrenAsProperties();
     String resource = context.getStringAttribute("resource");
     String url = context.getStringAttribute("url");
@@ -119,8 +119,8 @@ public class XMLMapperConfigParser extends BaseParser {
 
   //  <settings>
   //    <setting name="" value=""/>
-  @Nodelet("/configuration/settings")
-  public void settingsElement(NodeletContext context) throws Exception {
+  @NodeEvent("/configuration/settings")
+  public void settingsElement(XNode context) throws Exception {
     Properties props = context.getChildrenAsProperties();
     // Check that all settings are known to the configuration class
     for (Map.Entry entry : props.entrySet()) {
@@ -140,24 +140,24 @@ public class XMLMapperConfigParser extends BaseParser {
   }
 
   //  <environments default="development">
-  @Nodelet("/configuration/environments")
-  public void environmentsElement(NodeletContext context) throws Exception {
+  @NodeEvent("/configuration/environments")
+  public void environmentsElement(XNode context) throws Exception {
     if (environment == null) {
       environment = context.getStringAttribute("default");
     }
   }
 
   //  <environment id="development">
-  @Nodelet("/configuration/environments/environment")
-  public void environmentElement(NodeletContext context) throws Exception {
+  @NodeEvent("/configuration/environments/environment")
+  public void environmentElement(XNode context) throws Exception {
     String id = context.getStringAttribute("id");
     environmentBuilder = new Environment.Builder(id, null, null);
   }
 
   //  <transactionManager type="JDBC|JTA|EXTERNAL">
   //    <property name="" value=""/>
-  @Nodelet("/configuration/environments/environment/transactionManager")
-  public void transactionManagerElement(NodeletContext context) throws Exception {
+  @NodeEvent("/configuration/environments/environment/transactionManager")
+  public void transactionManagerElement(XNode context) throws Exception {
     if (isSpecifiedEnvironment()) {
       String type = context.getStringAttribute("type");
       Properties props = context.getChildrenAsProperties();
@@ -171,8 +171,8 @@ public class XMLMapperConfigParser extends BaseParser {
 
   //  <dataSource type="POOLED|UNPOOLED|JNDI">
   //    <property name="" value=""/>
-  @Nodelet("/configuration/environments/environment/dataSource")
-  public void dataSourceElement(NodeletContext context) throws Exception {
+  @NodeEvent("/configuration/environments/environment/dataSource")
+  public void dataSourceElement(XNode context) throws Exception {
     if (isSpecifiedEnvironment()) {
       String type = context.getStringAttribute("type");
       Properties props = context.getChildrenAsProperties();
@@ -185,16 +185,16 @@ public class XMLMapperConfigParser extends BaseParser {
   }
 
   //  </environment>
-  @Nodelet("/configuration/environments/environment/end()")
-  public void environmentElementEnd(NodeletContext context) throws Exception {
+  @NodeEvent("/configuration/environments/environment/end()")
+  public void environmentElementEnd(XNode context) throws Exception {
     if (isSpecifiedEnvironment()) {
       configuration.setEnvironment(environmentBuilder.build());
     }
   }
 
   //  <typeHandler javaType="" jdbcType="" handler=""/>
-  @Nodelet("/configuration/typeHandlers/typeHandler")
-  public void typeHandlerElement(NodeletContext context) throws Exception {
+  @NodeEvent("/configuration/typeHandlers/typeHandler")
+  public void typeHandlerElement(XNode context) throws Exception {
     String javaType = context.getStringAttribute("javaType");
     String jdbcType = context.getStringAttribute("jdbcType");
     String handler = context.getStringAttribute("handler");
@@ -210,8 +210,8 @@ public class XMLMapperConfigParser extends BaseParser {
   }
 
   //  <mapper url="" resource="resources/AnotherMapper.xml"/>
-  @Nodelet("/configuration/mappers/mapper")
-  public void mapperElement(NodeletContext context) throws Exception {
+  @NodeEvent("/configuration/mappers/mapper")
+  public void mapperElement(XNode context) throws Exception {
     String resource = context.getStringAttribute("resource");
     String url = context.getStringAttribute("url");
     Reader reader;

@@ -2,21 +2,21 @@ package org.apache.ibatis.parsing;
 
 import java.lang.reflect.Method;
 
-public class NodeletWrapper {
+public class NodeEventWrapper {
 
   private Object nodeletTarget;
   private Method method;
 
-  public NodeletWrapper(Object nodeletTarget, Method method) {
+  public NodeEventWrapper(Object nodeletTarget, Method method) {
     this.nodeletTarget = nodeletTarget;
     this.method = method;
   }
 
-  public void process(NodeletContext context) {
+  public void process(XNode context) {
     try {
       method.invoke(nodeletTarget, new Object[]{context});
     } catch (Exception e) {
-      throw new NodeletException("Error processing node " + context.getNode().getNodeName() + ". Cause: " + e, e);
+      throw new ParsingException("Error processing node " + context.getNode().getNodeName() + ". Cause: " + e, e);
     }
   }
 

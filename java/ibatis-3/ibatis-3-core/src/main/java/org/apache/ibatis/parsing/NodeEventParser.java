@@ -8,15 +8,16 @@ import java.io.*;
 import java.lang.reflect.Method;
 import java.util.*;
 
-public class NodeletParser {
+public class NodeEventParser {
 
   private Map nodeletMap = new HashMap();
 
+  private XPathParser xpathParser;
   private boolean validation;
   private EntityResolver entityResolver;
   private Properties variables;
 
-  public NodeletParser() {
+  public NodeEventParser() {
     setValidation(false);
     setVariables(new Properties());
     setEntityResolver(null);
@@ -35,10 +36,10 @@ public class NodeletParser {
     Class type = handler.getClass();
     Method[] methods = type.getMethods();
     for (Method m : methods) {
-      Nodelet n = m.getAnnotation(Nodelet.class);
+      NodeEvent n = m.getAnnotation(NodeEvent.class);
       if (n != null) {
         checkMethodApplicable(n, type, m);
-        nodeletMap.put(n.value(), new NodeletWrapper(handler, m));
+        nodeletMap.put(n.value(), new NodeEventWrapper(handler, m));
       }
     }
   }
@@ -46,12 +47,13 @@ public class NodeletParser {
   /**
    * Begins parsing from the provided Reader.
    */
-  public void parse(Reader reader) throws NodeletException {
+  public void parse(Reader reader) throws ParsingException {
     try {
       Document doc = createDocument(reader);
+      xpathParser = new XPathParser(doc,validation,entityResolver,variables);
       parse(doc.getLastChild());
     } catch (Exception e) {
-      throw new NodeletException("Error parsing XML.  Cause: " + e, e);
+      throw new ParsingException("Error parsing XML.  Cause: " + e, e);
     }
   }
 
@@ -67,13 +69,13 @@ public class NodeletParser {
     this.entityResolver = resolver;
   }
 
-  private void checkMethodApplicable(Nodelet n, Class type, Method m) {
+  private void checkMethodApplicable(NodeEvent n, Class type, Method m) {
     if (nodeletMap.containsKey(n.value())) {
-      throw new NodeletException("This nodelet parser already has a handler for path " + n.value());
+      throw new ParsingException("This nodelet parser already has a handler for path " + n.value());
     }
     Class<?>[] params = m.getParameterTypes();
-    if (params.length != 1 || params[0] != NodeletContext.class) {
-      throw new NodeletException("The method " + m.getName() + " on " + type + " does not take a single parameter of type NodeletContext.");
+    if (params.length != 1 || params[0] != XNode.class) {
+      throw new ParsingException("The method " + m.getName() + " on " + type + " does not take a single parameter of type XNode.");
     }
   }
 
@@ -111,12 +113,12 @@ public class NodeletParser {
   }
 
   private void processNodelet(Node node, String pathString) {
-    NodeletWrapper nodelet = (NodeletWrapper) nodeletMap.get(pathString);
+    NodeEventWrapper nodelet = (NodeEventWrapper) nodeletMap.get(pathString);
     if (nodelet != null) {
       try {
-        nodelet.process(new NodeletContext(node, variables));
+        nodelet.process(new XNode(xpathParser,node, variables));
       } catch (Exception e) {
-        throw new NodeletException("Error parsing XPath '" + pathString + "'.  Cause: " + e, e);
+        throw new ParsingException("Error parsing XPath '" + pathString + "'.  Cause: " + e, e);
       }
     }
   }

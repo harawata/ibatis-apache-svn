@@ -6,7 +6,7 @@ import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.type.TypeHandler;
-import org.apache.ibatis.parsing.NodeletContext;
+import org.apache.ibatis.parsing.XNode;
 import org.w3c.dom.CharacterData;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -26,7 +26,7 @@ public class XmlSqlStatementParser {
     this.configuration = mapParser.getConfigParser().getConfiguration();
   }
 
-  public void parseGeneralStatement(NodeletContext context) {
+  public void parseGeneralStatement(XNode context) {
     // get attributes
     String id = context.getStringAttribute("id");
     String parameterMapName = context.getStringAttribute("parameterMap");
@@ -161,7 +161,7 @@ public class XmlSqlStatementParser {
     }
   }
 
-  private void findAndParseSelectKey(String parentId, NodeletContext context) {
+  private void findAndParseSelectKey(String parentId, XNode context) {
     try {
       boolean runStatementFirst = false;
       NodeList children = context.getNode().getChildNodes();
@@ -175,7 +175,7 @@ public class XmlSqlStatementParser {
           }
         } else if (child.getNodeType() == Node.ELEMENT_NODE
             && "selectKey".equals(child.getNodeName())) {
-          buildSelectKeyStatement(parentId, new NodeletContext(child, configuration.getVariables()), runStatementFirst);
+          buildSelectKeyStatement(parentId, context.newXNode(child), runStatementFirst);
 
           break;
         }
@@ -199,7 +199,7 @@ public class XmlSqlStatementParser {
     return (String[]) strings.toArray(new String[strings.size()]);
   }
 
-  private void buildSelectKeyStatement(String parentId, NodeletContext context, boolean runStatementFirstParam) throws ClassNotFoundException {
+  private void buildSelectKeyStatement(String parentId, XNode context, boolean runStatementFirstParam) throws ClassNotFoundException {
     final String keyPropName = context.getStringAttribute("keyProperty");
     String resultClassName = context.getStringAttribute("resultClass");
     final SimpleSqlSource source = new SimpleSqlSource(mapParser, context);

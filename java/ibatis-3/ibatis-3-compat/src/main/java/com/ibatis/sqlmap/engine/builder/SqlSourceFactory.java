@@ -3,7 +3,7 @@ package com.ibatis.sqlmap.engine.builder;
 import com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements.SqlTagHandler;
 import com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements.SqlTagHandlerFactory;
 import org.apache.ibatis.mapping.SqlSource;
-import org.apache.ibatis.parsing.NodeletContext;
+import org.apache.ibatis.parsing.XNode;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -19,7 +19,7 @@ public class SqlSourceFactory {
     this.configuration = mapParser.getConfigParser().getConfiguration();
   }
 
-  public SqlSource newSqlSourceIntance(XmlSqlMapParser mapParser, NodeletContext context) {
+  public SqlSource newSqlSourceIntance(XmlSqlMapParser mapParser, XNode context) {
     if (isDynamic(context, false)) {
       return new DynamicSqlSource(mapParser, context);
     } else {
@@ -27,16 +27,16 @@ public class SqlSourceFactory {
     }
   }
 
-  private boolean isDynamic(NodeletContext node, boolean isDynamic) {
+  private boolean isDynamic(XNode node, boolean isDynamic) {
     NodeList children = node.getNode().getChildNodes();
     for (int i = 0; i < children.getLength(); i++) {
-      NodeletContext child = new NodeletContext(children.item(i), configuration.getVariables());
+      XNode child = node.newXNode(children.item(i));
       String nodeName = child.getNode().getNodeName();
       if (child.getNode().getNodeType() == Node.CDATA_SECTION_NODE
           || child.getNode().getNodeType() == Node.TEXT_NODE) {
       } else if ("include".equals(nodeName)) {
         String refid = child.getStringAttribute("refid");
-        NodeletContext includeNode = configParser.getSqlFragment(refid);
+        XNode includeNode = configParser.getSqlFragment(refid);
         if (includeNode == null) {
           String nsrefid = mapParser.applyNamespace(refid);
           includeNode = configParser.getSqlFragment(nsrefid);

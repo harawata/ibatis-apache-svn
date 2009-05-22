@@ -7,7 +7,7 @@ import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.Configuration;
 import org.apache.ibatis.mapping.ParameterMapping;
 import org.apache.ibatis.mapping.SqlSource;
-import org.apache.ibatis.parsing.NodeletContext;
+import org.apache.ibatis.parsing.XNode;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -23,7 +23,7 @@ public class SimpleSqlSource implements SqlSource {
   private String sql = "";
   private List<ParameterMapping> parameterMappings = new ArrayList<ParameterMapping>();
 
-  public SimpleSqlSource(XmlSqlMapParser mapParser, NodeletContext context) {
+  public SimpleSqlSource(XmlSqlMapParser mapParser, XNode context) {
     this.configuration = mapParser.getConfigParser().getConfiguration();
     this.configParser = mapParser.getConfigParser();
     this.mapParser = mapParser;
@@ -41,11 +41,11 @@ public class SimpleSqlSource implements SqlSource {
     return new StaticSql(sql).getSql(parameterObject);
   }
 
-  private void parseNodes(NodeletContext node) {
+  private void parseNodes(XNode node) {
     StringBuilder sqlBuffer = new StringBuilder(sql);
     NodeList children = node.getNode().getChildNodes();
     for (int i = 0; i < children.getLength(); i++) {
-      NodeletContext child = new NodeletContext(children.item(i), configuration.getVariables());
+      XNode child = node.newXNode(children.item(i));
       String nodeName = child.getNode().getNodeName();
       if (child.getNode().getNodeType() == Node.CDATA_SECTION_NODE
           || child.getNode().getNodeType() == Node.TEXT_NODE) {
@@ -59,7 +59,7 @@ public class SimpleSqlSource implements SqlSource {
 
       } else if ("include".equals(nodeName)) {
         String refid = child.getStringAttribute("refid");
-        NodeletContext includeNode = configParser.getSqlFragment(refid);
+        XNode includeNode = configParser.getSqlFragment(refid);
         if (includeNode == null) {
           String nsrefid = mapParser.applyNamespace(refid);
           includeNode = configParser.getSqlFragment(nsrefid);

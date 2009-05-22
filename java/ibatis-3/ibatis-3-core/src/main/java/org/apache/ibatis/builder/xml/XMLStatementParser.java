@@ -4,7 +4,7 @@ import org.apache.ibatis.builder.*;
 import org.apache.ibatis.builder.xml.dynamic.*;
 import org.apache.ibatis.executor.keygen.*;
 import org.apache.ibatis.mapping.*;
-import org.apache.ibatis.parsing.NodeletContext;
+import org.apache.ibatis.parsing.XNode;
 import org.w3c.dom.*;
 
 import java.util.*;
@@ -20,7 +20,7 @@ public class XMLStatementParser extends BaseParser {
     this.xmlMapperParser = xmlMapperParser;
   }
 
-  public void parseStatementNode(NodeletContext context) {
+  public void parseStatementNode(XNode context) {
     String id = context.getStringAttribute("id");
     Integer fetchSize = context.getIntAttribute("fetchSize", null);
     Integer timeout = context.getIntAttribute("timeout", null);
@@ -60,11 +60,11 @@ public class XMLStatementParser extends BaseParser {
   }
 
 
-  private List<SqlNode> parseDynamicTags(NodeletContext node) {
+  private List<SqlNode> parseDynamicTags(XNode node) {
     List<SqlNode> contents = new ArrayList<SqlNode>();
     NodeList children = node.getNode().getChildNodes();
     for (int i = 0; i < children.getLength(); i++) {
-      NodeletContext child = new NodeletContext(children.item(i), configuration.getVariables());
+      XNode child = node.newXNode(children.item(i));
       String nodeName = child.getNode().getNodeName();
       if (child.getNode().getNodeType() == Node.CDATA_SECTION_NODE
           || child.getNode().getNodeType() == Node.TEXT_NODE) {
@@ -98,12 +98,12 @@ public class XMLStatementParser extends BaseParser {
   };
 
   private interface NodeHandler {
-    void handleNode(NodeletContext nodeToHandle, List<SqlNode> targetContents);
+    void handleNode(XNode nodeToHandle, List<SqlNode> targetContents);
   }
 
   private class SelectKeyHandler implements NodeHandler {
-    public void handleNode(NodeletContext nodeToHandle, List<SqlNode> targetContents) {
-      NodeletContext parent = nodeToHandle.getParent();
+    public void handleNode(XNode nodeToHandle, List<SqlNode> targetContents) {
+      XNode parent = nodeToHandle.getParent();
       String id = parent.getStringAttribute("id") + SelectKeyGenerator.SELECT_KEY_SUFFIX;
       String resultType = nodeToHandle.getStringAttribute("resultType");
       Class resultTypeClass = resolveClass(resultType);
@@ -139,9 +139,9 @@ public class XMLStatementParser extends BaseParser {
   }
 
   private class IncludeNodeHandler implements NodeHandler {
-    public void handleNode(NodeletContext nodeToHandle, List<SqlNode> targetContents) {
+    public void handleNode(XNode nodeToHandle, List<SqlNode> targetContents) {
       String refid = nodeToHandle.getStringAttribute("refid");
-      NodeletContext includeNode = xmlMapperParser.getSqlFragment(refid);
+      XNode includeNode = xmlMapperParser.getSqlFragment(refid);
       if (includeNode == null) {
         String nsrefid = sequentialBuilder.applyNamespace(refid);
         includeNode = xmlMapperParser.getSqlFragment(nsrefid);
@@ -153,13 +153,13 @@ public class XMLStatementParser extends BaseParser {
       targetContents.add(mixedSqlNode);
     }
 
-    private List<SqlNode> contents(NodeletContext includeNode) {
+    private List<SqlNode> contents(XNode includeNode) {
       return parseDynamicTags(includeNode);
     }
   }
 
   private class PrefixHandler implements NodeHandler {
-    public void handleNode(NodeletContext nodeToHandle, List<SqlNode> targetContents) {
+    public void handleNode(XNode nodeToHandle, List<SqlNode> targetContents) {
       List<SqlNode> contents = parseDynamicTags(nodeToHandle);
       MixedSqlNode mixedSqlNode = new MixedSqlNode(contents);
       String with = nodeToHandle.getStringAttribute("with");
@@ -170,7 +170,7 @@ public class XMLStatementParser extends BaseParser {
   }
 
   private class WhereHandler implements NodeHandler {
-    public void handleNode(NodeletContext nodeToHandle, List<SqlNode> targetContents) {
+    public void handleNode(XNode nodeToHandle, List<SqlNode> targetContents) {
       List<SqlNode> contents = parseDynamicTags(nodeToHandle);
       MixedSqlNode mixedSqlNode = new MixedSqlNode(contents);
       WhereSqlNode where = new WhereSqlNode(mixedSqlNode);
@@ -179,7 +179,7 @@ public class XMLStatementParser extends BaseParser {
   }
 
   private class SetHandler implements NodeHandler {
-    public void handleNode(NodeletContext nodeToHandle, List<SqlNode> targetContents) {
+    public void handleNode(XNode nodeToHandle, List<SqlNode> targetContents) {
       List<SqlNode> contents = parseDynamicTags(nodeToHandle);
       MixedSqlNode mixedSqlNode = new MixedSqlNode(contents);
       SetSqlNode set = new SetSqlNode(mixedSqlNode);
@@ -188,7 +188,7 @@ public class XMLStatementParser extends BaseParser {
   }
 
   private class ForEachHandler implements NodeHandler {
-    public void handleNode(NodeletContext nodeToHandle, List<SqlNode> targetContents) {
+    public void handleNode(XNode nodeToHandle, List<SqlNode> targetContents) {
       List<SqlNode> contents = parseDynamicTags(nodeToHandle);
       MixedSqlNode mixedSqlNode = new MixedSqlNode(contents);
       String collection = nodeToHandle.getStringAttribute("collection");
@@ -203,7 +203,7 @@ public class XMLStatementParser extends BaseParser {
   }
 
   private class IfHandler implements NodeHandler {
-    public void handleNode(NodeletContext nodeToHandle, List<SqlNode> targetContents) {
+    public void handleNode(XNode nodeToHandle, List<SqlNode> targetContents) {
       List<SqlNode> contents = parseDynamicTags(nodeToHandle);
       MixedSqlNode mixedSqlNode = new MixedSqlNode(contents);
       String test = nodeToHandle.getStringAttribute("test");
@@ -213,7 +213,7 @@ public class XMLStatementParser extends BaseParser {
   }
 
   private class OtherwiseHandler implements NodeHandler {
-    public void handleNode(NodeletContext nodeToHandle, List<SqlNode> targetContents) {
+    public void handleNode(XNode nodeToHandle, List<SqlNode> targetContents) {
       List<SqlNode> contents = parseDynamicTags(nodeToHandle);
       MixedSqlNode mixedSqlNode = new MixedSqlNode(contents);
       targetContents.add(mixedSqlNode);
@@ -221,7 +221,7 @@ public class XMLStatementParser extends BaseParser {
   }
 
   private class ChooseHandler implements NodeHandler {
-    public void handleNode(NodeletContext nodeToHandle, List<SqlNode> targetContents) {
+    public void handleNode(XNode nodeToHandle, List<SqlNode> targetContents) {
       List whenSqlNodes = new ArrayList<SqlNode>();
       List<SqlNode> otherwiseSqlNodes = new ArrayList<SqlNode>();
       handleWhenOtherwiseNodes(nodeToHandle, whenSqlNodes, otherwiseSqlNodes);
@@ -229,9 +229,9 @@ public class XMLStatementParser extends BaseParser {
       ChooseSqlNode chooseSqlNode = new ChooseSqlNode((List<IfSqlNode>) whenSqlNodes, defaultSqlNode);
       targetContents.add(chooseSqlNode);
     }
-    private void handleWhenOtherwiseNodes(NodeletContext chooseSqlNode, List ifSqlNodes, List<SqlNode> defaultSqlNodes) {
-      List<NodeletContext> children = chooseSqlNode.getChildren();
-      for (NodeletContext child : children) {
+    private void handleWhenOtherwiseNodes(XNode chooseSqlNode, List ifSqlNodes, List<SqlNode> defaultSqlNodes) {
+      List<XNode> children = chooseSqlNode.getChildren();
+      for (XNode child : children) {
         String nodeName = child.getNode().getNodeName();
         NodeHandler handler = nodeHandlers.get(nodeName);
         if (handler instanceof IfHandler) {

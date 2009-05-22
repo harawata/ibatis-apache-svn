@@ -1,8 +1,13 @@
 package org.apache.ibatis.builder.xml;
 
-import org.apache.ibatis.builder.*;
-import org.apache.ibatis.mapping.*;
-import org.apache.ibatis.parsing.*;
+import org.apache.ibatis.builder.BaseParser;
+import org.apache.ibatis.builder.SequentialMapperBuilder;
+import org.apache.ibatis.mapping.Configuration;
+import org.apache.ibatis.mapping.ParameterMode;
+import org.apache.ibatis.mapping.ResultFlag;
+import org.apache.ibatis.parsing.NodeEvent;
+import org.apache.ibatis.parsing.NodeEventParser;
+import org.apache.ibatis.parsing.XNode;
 import org.apache.ibatis.type.JdbcType;
 
 import java.io.Reader;
@@ -11,10 +16,10 @@ import java.util.*;
 public class XMLMapperParser extends BaseParser {
 
   private Reader reader;
-  private NodeletParser parser;
+  private NodeEventParser parser;
   private SequentialMapperBuilder sequentialBuilder;
 
-  private Map<String,NodeletContext> sqlFragments = new HashMap<String,NodeletContext>();
+  private Map<String, XNode> sqlFragments = new HashMap<String, XNode>();
 
   public XMLMapperParser(Reader reader, Configuration configuration, String resource, String namespace) {
     this(reader, configuration, resource);
@@ -25,7 +30,7 @@ public class XMLMapperParser extends BaseParser {
     super(configuration);
     this.sequentialBuilder = new SequentialMapperBuilder(configuration, resource);
     this.reader = reader;
-    this.parser = new NodeletParser();
+    this.parser = new NodeEventParser();
     this.parser.addNodeletHandler(this);
     this.parser.setValidation(true);
     this.parser.setVariables(configuration.getVariables());
@@ -43,21 +48,21 @@ public class XMLMapperParser extends BaseParser {
   }
 
   //  <configuration namespace="com.domain.MapperClass" />
-  @Nodelet("/mapper")
-  public void configurationElement(NodeletContext context) throws Exception {
+  @NodeEvent("/mapper")
+  public void configurationElement(XNode context) throws Exception {
     String namespace = context.getStringAttribute("namespace");
     sequentialBuilder.namespace(namespace);
   }
 
   //  <cache type="LRU" flushInterval="3600000" size="1000" readOnly="false" />
-  @Nodelet("/mapper/cache-ref")
-  public void cacheRefElement(NodeletContext context) throws Exception {
+  @NodeEvent("/mapper/cache-ref")
+  public void cacheRefElement(XNode context) throws Exception {
     sequentialBuilder.cacheRef(context.getStringAttribute("namespace"));
   }
 
   //  <cache type="LRU" flushInterval="3600000" size="1000" readOnly="false" />
-  @Nodelet("/mapper/cache")
-  public void cacheElement(NodeletContext context) throws Exception {
+  @NodeEvent("/mapper/cache")
+  public void cacheElement(XNode context) throws Exception {
     String type = context.getStringAttribute("type", "PERPETUAL");
     type = typeAliasRegistry.resolveAlias(type);
     Class typeClass = Class.forName(type);
@@ -72,8 +77,8 @@ public class XMLMapperParser extends BaseParser {
   }
 
   //  <parameterMap id="" type="">
-  @Nodelet("/mapper/parameterMap")
-  public void parameterMapElement(NodeletContext context) throws Exception {
+  @NodeEvent("/mapper/parameterMap")
+  public void parameterMapElement(XNode context) throws Exception {
     String id = context.getStringAttribute("id");
     String type = context.getStringAttribute("type");
     Class parameterClass = resolveClass(type);
@@ -82,8 +87,8 @@ public class XMLMapperParser extends BaseParser {
 
   //  <parameterMap id="" type="">
   //    <param property="id" javaType="" jdbcType="" typeHandler="" mode="" scale="" resultMap=""/>
-  @Nodelet("/mapper/parameterMap/parameter")
-  public void parameterMapParameterElement(NodeletContext context) throws Exception {
+  @NodeEvent("/mapper/parameterMap/parameter")
+  public void parameterMapParameterElement(XNode context) throws Exception {
     String property = context.getStringAttribute("property");
     String javaType = context.getStringAttribute("javaType");
     String jdbcType = context.getStringAttribute("jdbcType");
@@ -99,76 +104,49 @@ public class XMLMapperParser extends BaseParser {
   }
 
   //  </parameterMap>
-  @Nodelet("/mapper/parameterMap/end()")
-  public void parameterMapClosingElement(NodeletContext context) throws Exception {
+  @NodeEvent("/mapper/parameterMap/end()")
+  public void parameterMapClosingElement(XNode context) throws Exception {
     sequentialBuilder.parameterMapEnd();
   }
 
   //  <resultMap id="" type="" extends="">
-  @Nodelet("/mapper/resultMap")
-  public void resultMapElement(NodeletContext context) throws Exception {
+  @NodeEvent("/mapper/resultMap")
+  public void resultMapElement(XNode context) throws Exception {
     String id = context.getStringAttribute("id");
     String type = context.getStringAttribute("type");
     String extend = context.getStringAttribute("extends");
     Class typeClass = resolveClass(type);
     sequentialBuilder.resultMapStart(id, typeClass, extend);
-  }
-
-  //  <constructor>
-  //    <id column="" javaType="" jdbcType="" typeHandler=""/>
-  @Nodelet("/mapper/resultMap/constructor/idArg")
-  public void resultMapConstructorIdElement(NodeletContext context) throws Exception {
-    buildResultMappingFromContext(context,
-        new ArrayList<ResultFlag>() {
-          {
-            add(ResultFlag.CONSTRUCTOR);
-            add(ResultFlag.ID);
-          }
-        });
-  }
-
-  //  <constructor>
-  //    <result column="" javaType="" jdbcType="" typeHandler=""/>
-  @Nodelet("/mapper/resultMap/constructor/arg")
-  public void resultMapConstructorResultElement(NodeletContext context) throws Exception {
-    buildResultMappingFromContext(context, new ArrayList<ResultFlag>() {
-      {
-        add(ResultFlag.CONSTRUCTOR);
+    List<XNode> resultChildren = context.getChildren();
+    for (XNode resultChild : resultChildren) {
+      if ("constructor".equals(resultChild.getNodeName())) {
+        processConstructorChildren(resultChild);
+      } else if ("discriminator".equals(resultChild.getNodeName())) {
+        processDiscriminatorElement(resultChild);
+      } else {
+        ArrayList<ResultFlag> flags = new ArrayList<ResultFlag>();
+        if ("id".equals(resultChild.getNodeName())) {
+          flags.add(ResultFlag.ID);
+        }
+        buildResultMappingFromContext(resultChild,flags);
       }
-    });
+    }
+    sequentialBuilder.resultMapEnd();
   }
 
-  //  <id property="" column="" javaType="" jdbcType="" typeHandler=""/>
-  @Nodelet("/mapper/resultMap/id")
-  public void resultMapIdElement(NodeletContext context) throws Exception {
-    buildResultMappingFromContext(context, new ArrayList<ResultFlag>() {
-      {
-        add(ResultFlag.ID);
+  private void processConstructorChildren(XNode resultChild) throws Exception {
+    List<XNode> argChildren = resultChild.getChildren();
+    for (XNode argChild : argChildren) {
+      ArrayList<ResultFlag> flags = new ArrayList<ResultFlag>();
+      flags.add(ResultFlag.CONSTRUCTOR);
+      if ("idArg".equals(argChild.getNodeName())) {
+        flags.add(ResultFlag.ID);
       }
-    });
+      buildResultMappingFromContext(argChild, flags);
+    }
   }
 
-  //  <result property="" column="" javaType="" jdbcType="" typeHandler=""/>
-  @Nodelet("/mapper/resultMap/result")
-  public void resultMapResultElement(NodeletContext context) throws Exception {
-    buildResultMappingFromContext(context, new ArrayList<ResultFlag>());
-  }
-
-  //  <collection property="" column="" javaType="" select="" resultMap=""/>
-  @Nodelet("/mapper/resultMap/collection")
-  public void resultMapCollectionElement(NodeletContext context) throws Exception {
-    buildResultMappingFromContext(context, new ArrayList<ResultFlag>());
-  }
-
-  //  <association property="" column="" javaType="" select="" resultMap=""/>
-  @Nodelet("/mapper/resultMap/association")
-  public void resultMapAssociationElement(NodeletContext context) throws Exception {
-    buildResultMappingFromContext(context, new ArrayList<ResultFlag>());
-  }
-
-  //  <discriminator column="" javaType="" jdbcType="">
-  @Nodelet("/mapper/resultMap/discriminator")
-  public void resultMapDiscriminatorElement(NodeletContext context) throws Exception {
+  public void processDiscriminatorElement(XNode context) throws Exception {
     String column = context.getStringAttribute("column");
     String javaType = context.getStringAttribute("javaType");
     String jdbcType = context.getStringAttribute("jdbcType");
@@ -177,71 +155,56 @@ public class XMLMapperParser extends BaseParser {
     Class typeHandlerClass = resolveClass(typeHandler);
     JdbcType jdbcTypeEnum = resolveJdbcType(jdbcType);
     sequentialBuilder.resultMapDiscriminatorStart(column, javaTypeClass, jdbcTypeEnum, typeHandlerClass);
-  }
-
-  //  <discriminator column="" javaType="" jdbcType="">
-  //    <case value="" resultMap=""/>
-  @Nodelet("/mapper/resultMap/discriminator/case")
-  public void resultMapDiscriminatorCaseElement(NodeletContext context) throws Exception {
-    String value = context.getStringAttribute("value");
-    String resultMap = context.getStringAttribute("resultMap");
-    sequentialBuilder.resultMapDiscriminatorCase(value, resultMap);
-  }
-
-  //  </discriminator>
-  @Nodelet("/mapper/resultMap/discriminator/end()")
-  public void resultMapDiscriminatorClosingElement(NodeletContext context) throws Exception {
+    for (XNode caseChild : context.getChildren()) {
+      String value = caseChild.getStringAttribute("value");
+      String resultMap = caseChild.getStringAttribute("resultMap");
+      sequentialBuilder.resultMapDiscriminatorCase(value, resultMap);
+    }
     sequentialBuilder.resultMapDiscriminatorEnd();
   }
 
-  //  </resultMap>
-  @Nodelet("/mapper/resultMap/end()")
-  public void resultMapClosingElement(NodeletContext context) throws Exception {
-    sequentialBuilder.resultMapEnd();
-  }
-
   //  <sql id="">
-  @Nodelet("/mapper/sql")
-  public void sqlElement(NodeletContext context) throws Exception {
+  @NodeEvent("/mapper/sql")
+  public void sqlElement(XNode context) throws Exception {
     String id = context.getStringAttribute("id");
 
     sqlFragments.put(id, context);
   }
 
   //  <select ...>
-  @Nodelet("/mapper/select")
-  public void selectElement(NodeletContext context) throws Exception {
+  @NodeEvent("/mapper/select")
+  public void selectElement(XNode context) throws Exception {
     buildStatementFromContext(context);
   }
 
   //  <insert ...>
-  @Nodelet("/mapper/insert")
-  public void insertElement(NodeletContext context) throws Exception {
+  @NodeEvent("/mapper/insert")
+  public void insertElement(XNode context) throws Exception {
     buildStatementFromContext(context);
   }
 
   //  <update ...>
-  @Nodelet("/mapper/update")
-  public void updateElement(NodeletContext context) throws Exception {
+  @NodeEvent("/mapper/update")
+  public void updateElement(XNode context) throws Exception {
     buildStatementFromContext(context);
   }
 
   //  <delete ...>
-  @Nodelet("/mapper/delete")
-  public void deleteElement(NodeletContext context) throws Exception {
+  @NodeEvent("/mapper/delete")
+  public void deleteElement(XNode context) throws Exception {
     buildStatementFromContext(context);
   }
 
-  public NodeletContext getSqlFragment(String refid) {
+  public XNode getSqlFragment(String refid) {
     return sqlFragments.get(refid);
   }
 
-  private void buildStatementFromContext(NodeletContext context) {
+  private void buildStatementFromContext(XNode context) {
     final XMLStatementParser statementParser = new XMLStatementParser(configuration, sequentialBuilder, this);
     statementParser.parseStatementNode(context);
   }
 
-  private void buildResultMappingFromContext(NodeletContext context, ArrayList<ResultFlag> flags) {
+  private void buildResultMappingFromContext(XNode context, ArrayList<ResultFlag> flags) {
     String property = context.getStringAttribute("property");
     String column = context.getStringAttribute("column");
     String javaType = context.getStringAttribute("javaType");

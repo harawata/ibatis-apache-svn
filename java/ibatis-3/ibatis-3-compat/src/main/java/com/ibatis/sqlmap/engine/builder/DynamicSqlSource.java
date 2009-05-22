@@ -7,19 +7,19 @@ import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.Configuration;
 import org.apache.ibatis.mapping.ParameterMapping;
 import org.apache.ibatis.mapping.SqlSource;
-import org.apache.ibatis.parsing.NodeletContext;
+import org.apache.ibatis.parsing.XNode;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import java.util.List;
 
 public class DynamicSqlSource implements SqlSource {
-  private NodeletContext context;
+  private XNode context;
   private Configuration configuration;
   private XmlSqlMapConfigParser configParser;
   private XmlSqlMapParser mapParser;
 
-  public DynamicSqlSource(XmlSqlMapParser mapParser, NodeletContext context) {
+  public DynamicSqlSource(XmlSqlMapParser mapParser, XNode context) {
     this.context = context;
     this.configuration = mapParser.getConfigParser().getConfiguration();
     this.configParser = mapParser.getConfigParser();
@@ -42,10 +42,10 @@ public class DynamicSqlSource implements SqlSource {
     return dynamic.getSql(parameterObject);
   }
 
-  private void parseDynamicTags(NodeletContext node, DynamicParent dynamic, boolean postParseRequired) {
+  private void parseDynamicTags(XNode node, DynamicParent dynamic, boolean postParseRequired) {
     NodeList children = node.getNode().getChildNodes();
     for (int i = 0; i < children.getLength(); i++) {
-      NodeletContext child = new NodeletContext(children.item(i), configuration.getVariables());
+      XNode child = node.newXNode(children.item(i));
       String nodeName = child.getNode().getNodeName();
       if (child.getNode().getNodeType() == Node.CDATA_SECTION_NODE
           || child.getNode().getNodeType() == Node.TEXT_NODE) {
@@ -63,7 +63,7 @@ public class DynamicSqlSource implements SqlSource {
         dynamic.addChild(sqlText);
       } else if ("include".equals(nodeName)) {
         String refid = child.getStringAttribute("refid");
-        NodeletContext includeNode = configParser.getSqlFragment(refid);
+        XNode includeNode = configParser.getSqlFragment(refid);
         if (includeNode == null) {
           String nsrefid = mapParser.applyNamespace(refid);
           includeNode = configParser.getSqlFragment(nsrefid);

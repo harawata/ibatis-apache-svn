@@ -11,9 +11,9 @@ import org.apache.ibatis.reflection.MetaClass;
 import org.apache.ibatis.reflection.ObjectFactory;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
-import org.apache.ibatis.parsing.Nodelet;
-import org.apache.ibatis.parsing.NodeletContext;
-import org.apache.ibatis.parsing.NodeletParser;
+import org.apache.ibatis.parsing.NodeEvent;
+import org.apache.ibatis.parsing.XNode;
+import org.apache.ibatis.parsing.NodeEventParser;
 
 import java.io.Reader;
 import java.util.HashMap;
@@ -23,14 +23,14 @@ import java.util.Properties;
 public class XmlSqlMapConfigParser {
 
   private Reader reader;
-  private NodeletParser parser = new NodeletParser();
+  private NodeEventParser parser = new NodeEventParser();
 
   private Ibatis2Configuration config = new Ibatis2Configuration();
   private Properties dataSourceProps = new Properties();
   private Properties transactionManagerProps = new Properties();
   private boolean useStatementNamespaces;
 
-  private Map<String, NodeletContext> sqlFragments = new HashMap<String, NodeletContext>();
+  private Map<String, XNode> sqlFragments = new HashMap<String, XNode>();
 
   public XmlSqlMapConfigParser(Reader reader) {
     this.reader = reader;
@@ -53,11 +53,11 @@ public class XmlSqlMapConfigParser {
     return sqlFragments.containsKey(id);
   }
 
-  public NodeletContext getSqlFragment(String id) {
+  public XNode getSqlFragment(String id) {
     return sqlFragments.get(id);
   }
 
-  public void addSqlFragment(String id, NodeletContext context) {
+  public void addSqlFragment(String id, XNode context) {
     sqlFragments.put(id, context);
   }
 
@@ -69,8 +69,8 @@ public class XmlSqlMapConfigParser {
     return useStatementNamespaces;
   }
 
-  @Nodelet("/sqlMapConfig/properties")
-  public void sqlMapConfigproperties(NodeletContext context) throws Exception {
+  @NodeEvent("/sqlMapConfig/properties")
+  public void sqlMapConfigproperties(XNode context) throws Exception {
     String resource = context.getStringAttribute("resource");
     String url = context.getStringAttribute("url");
     Properties fileVariables;
@@ -90,8 +90,8 @@ public class XmlSqlMapConfigParser {
     parser.setVariables(fileVariables);
   }
 
-  @Nodelet("/sqlMapConfig/settings")
-  public void sqlMapConfigsettings(NodeletContext context) throws Exception {
+  @NodeEvent("/sqlMapConfig/settings")
+  public void sqlMapConfigsettings(XNode context) throws Exception {
     boolean classInfoCacheEnabled = context.getBooleanAttribute("classInfoCacheEnabled", true);
     MetaClass.setClassCacheEnabled(classInfoCacheEnabled);
 
@@ -126,15 +126,15 @@ public class XmlSqlMapConfigParser {
     config.setDefaultStatementTimeout(defaultTimeout);
   }
 
-  @Nodelet("/sqlMapConfig/typeAlias")
-  public void sqlMapConfigtypeAlias(NodeletContext context) throws Exception {
+  @NodeEvent("/sqlMapConfig/typeAlias")
+  public void sqlMapConfigtypeAlias(XNode context) throws Exception {
     String alias = context.getStringAttribute("alias");
     String type = context.getStringAttribute("type");
     config.getTypeAliasRegistry().registerAlias(alias, type);
   }
 
-  @Nodelet("/sqlMapConfig/typeHandler")
-  public void sqlMapConfigtypeHandler(NodeletContext context) throws Exception {
+  @NodeEvent("/sqlMapConfig/typeHandler")
+  public void sqlMapConfigtypeHandler(XNode context) throws Exception {
     String jdbcType = context.getStringAttribute("jdbcType");
     String javaType = context.getStringAttribute("javaType");
     String callback = context.getStringAttribute("callback");
@@ -154,8 +154,8 @@ public class XmlSqlMapConfigParser {
     }
   }
 
-  @Nodelet("/sqlMapConfig/transactionManager/end()")
-  public void sqlMapConfigtransactionManagerend(NodeletContext context) throws Exception {
+  @NodeEvent("/sqlMapConfig/transactionManager/end()")
+  public void sqlMapConfigtransactionManagerend(XNode context) throws Exception {
     String type = context.getStringAttribute("type");
     type = config.getTypeAliasRegistry().resolveAlias(type);
     Class txClass = Class.forName(type);
@@ -168,22 +168,22 @@ public class XmlSqlMapConfigParser {
     config.setTransactionManager(new TransactionManager(config, txConfig));
   }
 
-  @Nodelet("/sqlMapConfig/transactionManager/property")
-  public void sqlMapConfigtransactionManagerproperty(NodeletContext context) throws Exception {
+  @NodeEvent("/sqlMapConfig/transactionManager/property")
+  public void sqlMapConfigtransactionManagerproperty(XNode context) throws Exception {
     String name = context.getStringAttribute("name");
     String value = context.getStringAttribute("value");
     transactionManagerProps.setProperty(name, value);
   }
 
-  @Nodelet("/sqlMapConfig/transactionManager/dataSource/property")
-  public void sqlMapConfigtransactionManagerdataSourceproperty(NodeletContext context) throws Exception {
+  @NodeEvent("/sqlMapConfig/transactionManager/dataSource/property")
+  public void sqlMapConfigtransactionManagerdataSourceproperty(XNode context) throws Exception {
     String name = context.getStringAttribute("name");
     String value = context.getStringAttribute("value");
     dataSourceProps.setProperty(name, value);
   }
 
-  @Nodelet("/sqlMapConfig/transactionManager/dataSource/end()")
-  public void sqlMapConfigtransactionManagerdataSourceend(NodeletContext context) throws Exception {
+  @NodeEvent("/sqlMapConfig/transactionManager/dataSource/end()")
+  public void sqlMapConfigtransactionManagerdataSourceend(XNode context) throws Exception {
     String type = context.getStringAttribute("type");
     type = config.getTypeAliasRegistry().resolveAlias(type);
     Class dataSourceClass = Class.forName(type);
@@ -192,8 +192,8 @@ public class XmlSqlMapConfigParser {
     config.setDataSource(dsFactory.getDataSource());
   }
 
-  @Nodelet("/sqlMapConfig/resultObjectFactory")
-  public void sqlMapConfigresultObjectFactory(NodeletContext context) throws Exception {
+  @NodeEvent("/sqlMapConfig/resultObjectFactory")
+  public void sqlMapConfigresultObjectFactory(XNode context) throws Exception {
     String type = context.getStringAttribute("type");
     Class factoryClass = Class.forName(type);
     ObjectFactory factory = (ObjectFactory) factoryClass.newInstance();
@@ -202,8 +202,8 @@ public class XmlSqlMapConfigParser {
     config.setObjectFactory(factory);
   }
 
-  @Nodelet("/sqlMapConfig/sqlMap")
-  public void sqlMapConfigsqlMap(NodeletContext context) throws Exception {
+  @NodeEvent("/sqlMapConfig/sqlMap")
+  public void sqlMapConfigsqlMap(XNode context) throws Exception {
     String resource = context.getStringAttribute("resource");
     String url = context.getStringAttribute("url");
 
