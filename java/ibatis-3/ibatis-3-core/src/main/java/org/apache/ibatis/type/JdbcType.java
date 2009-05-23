@@ -29,17 +29,10 @@ public enum JdbcType {
   CLOB(Types.CLOB),
   BOOLEAN(Types.BOOLEAN),
   CURSOR(-10), // Oracle
-  UNDEFINED(Integer.MIN_VALUE + 1000);
-
-  // ----------------
-  // -- Unsupported--
-  // ----------------
-  //JAVA_OBJECT(Types.JAVA_OBJECT),
-  //DISTINCT(Types.DISTINCT),
-  //STRUCT(Types.STRUCT),
-  //ARRAY(Types.ARRAY),
-  //REF(Types.REF),
-  //DATALINK(Types.DATALINK),
+  UNDEFINED(Integer.MIN_VALUE + 1000),
+  NVARCHAR(-9),
+  NCHAR(-15),
+  NCLOB(2011);
 
   public final int TYPE_CODE;
 
