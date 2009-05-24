@@ -221,6 +221,38 @@ public class SqlSessionTest extends BaseDataTest {
   }
 
   @Test
+  public void shouldSelectNestedBlogWithPostsAndAuthorUsingJoin() throws Exception {
+    SqlSession session = sqlMapper.openSession();
+    try {
+      Blog blog = (Blog) session.selectOne("domain.blog.mappers.NestedBlogMapper.selectBlogJoinedWithPostsAndAuthor", 1);
+      assertEquals("Jim Business", blog.getTitle());
+
+      final Author author = blog.getAuthor();
+      assertEquals(101, author.getId());
+      assertEquals("jim", author.getUsername());
+
+      final List<Post> posts = blog.getPosts();
+      assertEquals(2, posts.size());
+
+      final Post post = blog.getPosts().get(0);
+      assertEquals(1, post.getId());
+      assertEquals("Corn nuts", post.getSubject());
+
+      final List<Comment> comments = post.getComments();
+      assertEquals(1, comments.size());
+
+      final Comment comment = comments.get(0);
+      assertEquals(1, comment.getId());
+
+      assertEquals(DraftPost.class, blog.getPosts().get(0).getClass());
+      assertEquals(Post.class, blog.getPosts().get(1).getClass());
+
+    } finally {
+      session.close();
+    }
+  }
+
+  @Test
   public void shouldThrowExceptionIfMappedStatementDoesNotExist() throws Exception {
     SqlSession session = sqlMapper.openSession();
     try {

@@ -239,6 +239,10 @@ public class Configuration {
     return caches.get(id);
   }
 
+  public boolean hasCache(String id) {
+    return caches.containsKey(id);
+  }
+
   public void addResultMap(ResultMap rm) {
     resultMaps.put(rm.getId(), rm);
   }
@@ -255,6 +259,10 @@ public class Configuration {
     return resultMaps.get(id);
   }
 
+  public boolean hasResultMap(String id) {
+    return resultMaps.containsKey(id);
+  }
+
   public void addParameterMap(ParameterMap pm) {
     parameterMaps.put(pm.getId(), pm);
   }
@@ -269,6 +277,10 @@ public class Configuration {
 
   public ParameterMap getParameterMap(String id) {
     return parameterMaps.get(id);
+  }
+
+  public boolean hasParameterMap(String id) {
+    return parameterMaps.containsKey(id);
   }
 
   public void addMappedStatement(MappedStatement ms) {
