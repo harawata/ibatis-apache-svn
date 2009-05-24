@@ -26,17 +26,48 @@ public class XNode {
     return new XNode(xpathParser,node,variables);
   }
 
-  public String getNodeName() {
-    return node.getNodeName();
-  }
-
   public XNode getParent() {
     Node parent = node.getParentNode();
-    if (parent == null) {
+    if (parent == null || !(parent instanceof Element)) {
       return null;
     } else {
       return new XNode(xpathParser, parent,variables);
     }
+  }
+
+  public String getPath() {
+    StringBuilder builder = new StringBuilder();
+    Node current = node;
+    while (current != null && current instanceof Element) {
+      if (current != node) {
+        builder.insert(0,"/");
+      }
+      builder.insert(0,current.getNodeName());
+      current = current.getParentNode();
+    }
+    return builder.toString();
+  }
+
+  public String getValueBasedIdentifier() {
+    StringBuilder builder = new StringBuilder();
+    XNode current = this;
+    while (current != null) {
+      if (current != this) {
+        builder.insert(0,"_");
+      }
+      String value = current.getStringAttribute("id",
+          current.getStringAttribute("value",
+              current.getStringAttribute("property", null)));
+      if (value != null) {
+        builder.insert(0, "]");
+        builder.insert(0,
+            value);
+        builder.insert(0, "[");
+      }
+      builder.insert(0, current.getName());
+      current = current.getParent();
+    }
+    return builder.toString();
   }
 
   public String evalString(String expression) {

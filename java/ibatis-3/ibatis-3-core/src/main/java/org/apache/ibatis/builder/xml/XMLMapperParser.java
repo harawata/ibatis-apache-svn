@@ -1,13 +1,9 @@
 package org.apache.ibatis.builder.xml;
 
-import org.apache.ibatis.builder.BaseParser;
-import org.apache.ibatis.builder.SequentialMapperBuilder;
-import org.apache.ibatis.mapping.Configuration;
-import org.apache.ibatis.mapping.ParameterMode;
-import org.apache.ibatis.mapping.ResultFlag;
-import org.apache.ibatis.parsing.NodeEvent;
-import org.apache.ibatis.parsing.NodeEventParser;
-import org.apache.ibatis.parsing.XNode;
+import org.apache.ibatis.builder.*;
+import org.apache.ibatis.executor.ErrorContext;
+import org.apache.ibatis.mapping.*;
+import org.apache.ibatis.parsing.*;
 import org.apache.ibatis.type.JdbcType;
 
 import java.io.Reader;
@@ -112,34 +108,48 @@ public class XMLMapperParser extends BaseParser {
   //  <resultMap id="" type="" extends="">
   @NodeEvent("/mapper/resultMap")
   public void resultMapElement(XNode context) throws Exception {
+    ErrorContext.instance().activity("processing " + context.getValueBasedIdentifier());
     String id = context.getStringAttribute("id");
     String type = context.getStringAttribute("type");
     String extend = context.getStringAttribute("extends");
+    if (id == null) {
+      id = context.getValueBasedIdentifier();
+    }
     Class typeClass = resolveClass(type);
+    processChildrenAsResultMap(context);
     sequentialBuilder.resultMapStart(id, typeClass, extend);
     List<XNode> resultChildren = context.getChildren();
     for (XNode resultChild : resultChildren) {
-      if ("constructor".equals(resultChild.getNodeName())) {
-        processConstructorChildren(resultChild);
-      } else if ("discriminator".equals(resultChild.getNodeName())) {
+      if ("constructor".equals(resultChild.getName())) {
+        processConstructorElement(resultChild);
+      } else if ("discriminator".equals(resultChild.getName())) {
         processDiscriminatorElement(resultChild);
       } else {
         ArrayList<ResultFlag> flags = new ArrayList<ResultFlag>();
-        if ("id".equals(resultChild.getNodeName())) {
+        if ("id".equals(resultChild.getName())) {
           flags.add(ResultFlag.ID);
         }
-        buildResultMappingFromContext(resultChild,flags);
+        buildResultMappingFromContext(resultChild, flags);
       }
     }
     sequentialBuilder.resultMapEnd();
   }
 
-  private void processConstructorChildren(XNode resultChild) throws Exception {
+  private void processChildrenAsResultMap(XNode resultChild) throws Exception {
+    List<String> acceptedResultMapElements = Arrays.asList(new String[]{"association","collection","case"});
+    for (XNode arg : resultChild.getChildren()) {
+      if (acceptedResultMapElements.contains(resultChild.getName()) && arg.getChildren().size() > 0) {
+        resultMapElement(arg);
+      }
+    }
+  }
+
+  private void processConstructorElement(XNode resultChild) throws Exception {
     List<XNode> argChildren = resultChild.getChildren();
     for (XNode argChild : argChildren) {
       ArrayList<ResultFlag> flags = new ArrayList<ResultFlag>();
       flags.add(ResultFlag.CONSTRUCTOR);
-      if ("idArg".equals(argChild.getNodeName())) {
+      if ("idArg".equals(argChild.getName())) {
         flags.add(ResultFlag.ID);
       }
       buildResultMappingFromContext(argChild, flags);
@@ -156,6 +166,7 @@ public class XMLMapperParser extends BaseParser {
     JdbcType jdbcTypeEnum = resolveJdbcType(jdbcType);
     sequentialBuilder.resultMapDiscriminatorStart(column, javaTypeClass, jdbcTypeEnum, typeHandlerClass);
     for (XNode caseChild : context.getChildren()) {
+      processChildrenAsResultMap(caseChild);
       String value = caseChild.getStringAttribute("value");
       String resultMap = caseChild.getStringAttribute("resultMap");
       sequentialBuilder.resultMapDiscriminatorCase(value, resultMap);

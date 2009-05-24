@@ -18,6 +18,9 @@ public class XPathParserTest {
     assertEquals(Boolean.TRUE,parser.evalBoolean("/employee/active"));
     assertEquals("<id>${id_var}</id>", parser.evalNode("/employee/@id").toString().trim());
     assertEquals(7, parser.evalNodes("/employee/*").size());
+    XNode node = parser.evalNode("/employee/height");
+    assertEquals("employee/height", node.getPath());
+    assertEquals("employee[${id_var}]_height", node.getValueBasedIdentifier());
   }
 
 }
