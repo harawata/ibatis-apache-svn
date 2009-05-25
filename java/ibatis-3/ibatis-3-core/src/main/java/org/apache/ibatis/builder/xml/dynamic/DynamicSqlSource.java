@@ -1,6 +1,6 @@
 package org.apache.ibatis.builder.xml.dynamic;
 
-import org.apache.ibatis.builder.SqlSourceParser;
+import org.apache.ibatis.builder.SqlSourceBuilder;
 import org.apache.ibatis.mapping.*;
 
 public class DynamicSqlSource implements SqlSource {
@@ -16,7 +16,7 @@ public class DynamicSqlSource implements SqlSource {
   public BoundSql getBoundSql(Object parameterObject) {
     DynamicContext context = new DynamicContext(parameterObject);
     rootSqlNode.apply(context);
-    SqlSourceParser sqlSourceParser = new SqlSourceParser(configuration);
+    SqlSourceBuilder sqlSourceParser = new SqlSourceBuilder(configuration);
     Class parameterType = parameterObject == null ? Object.class : parameterObject.getClass();
     SqlSource sqlSource = sqlSourceParser.parse(context.getSql(), parameterType);
     return sqlSource.getBoundSql(parameterObject);

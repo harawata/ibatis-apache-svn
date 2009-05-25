@@ -1,6 +1,6 @@
 package org.apache.ibatis.binding;
 
-import org.apache.ibatis.builder.annotation.MapperAnnotationParser;
+import org.apache.ibatis.builder.annotation.MapperAnnotationBuilder;
 import org.apache.ibatis.mapping.Configuration;
 import org.apache.ibatis.session.SqlSession;
 
@@ -38,7 +38,7 @@ public class MapperRegistry {
     // It's important that the type is added before the parser is run
     // otherwise the binding may automatically be attempted by the
     // mapper parser.  If the type is already known, it won't try.
-    MapperAnnotationParser parser = new MapperAnnotationParser(config, type);
+    MapperAnnotationBuilder parser = new MapperAnnotationBuilder(config, type);
     parser.parse();
   }
 }

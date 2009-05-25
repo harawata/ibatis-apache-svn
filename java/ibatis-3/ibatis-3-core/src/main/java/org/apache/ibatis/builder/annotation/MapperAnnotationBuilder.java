@@ -3,7 +3,7 @@ package org.apache.ibatis.builder.annotation;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.binding.BindingException;
 import org.apache.ibatis.builder.*;
-import org.apache.ibatis.builder.xml.XMLMapperParser;
+import org.apache.ibatis.builder.xml.XMLMapperBuilder;
 import org.apache.ibatis.executor.keygen.*;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.*;
@@ -14,12 +14,12 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 import java.util.*;
 
-public class MapperAnnotationParser {
+public class MapperAnnotationBuilder {
 
   private SequentialMapperBuilder sequentialBuilder;
   private Class type;
 
-  public MapperAnnotationParser(Configuration config, Class type) {
+  public MapperAnnotationBuilder(Configuration config, Class type) {
     String resource = type.getName().replace('.', '/') + ".java (best guess)";
     this.sequentialBuilder = new SequentialMapperBuilder(config, resource);
     this.type = type;
@@ -46,7 +46,7 @@ public class MapperAnnotationParser {
       // ignore, resource is not required
     }
     if (xmlReader != null) {
-      XMLMapperParser xmlParser = new XMLMapperParser(xmlReader, sequentialBuilder.getConfiguration(), xmlResource, type.getName());
+      XMLMapperBuilder xmlParser = new XMLMapperBuilder(xmlReader, sequentialBuilder.getConfiguration(), xmlResource, type.getName());
       xmlParser.parse();
     }
   }
@@ -228,7 +228,7 @@ public class MapperAnnotationParser {
           sql.append(fragment);
           sql.append(" ");
         }
-        SqlSourceParser parser = new SqlSourceParser(sequentialBuilder.getConfiguration());
+        SqlSourceBuilder parser = new SqlSourceBuilder(sequentialBuilder.getConfiguration());
         return parser.parse(sql.toString(), getParameterType(method));
       } else if (sqlProviderAnnotationType != null) {
         Annotation sqlProviderAnnotation = method.getAnnotation(sqlProviderAnnotationType);
@@ -236,7 +236,7 @@ public class MapperAnnotationParser {
       }
       return null;
     } catch (Exception e) {
-      throw new ParserException("Could not find value method on SQL annotation.  Cause: " + e, e);
+      throw new BulderException("Could not find value method on SQL annotation.  Cause: " + e, e);
     }
   }
 

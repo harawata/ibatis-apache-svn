@@ -7,14 +7,14 @@ import java.lang.reflect.Method;
 
 public class ProviderSqlSource implements SqlSource {
 
-  private SqlSourceParser sqlSourceParser;
+  private SqlSourceBuilder sqlSourceParser;
   private Class providerType;
   private Method providerMethod;
   private boolean providerTakesParameterObject;
 
   public ProviderSqlSource(Configuration config, Object provider) {
     try {
-      this.sqlSourceParser = new SqlSourceParser(config);
+      this.sqlSourceParser = new SqlSourceBuilder(config);
       this.providerType = (Class) provider.getClass().getMethod("type").invoke(provider);
       String providerMethod = (String) provider.getClass().getMethod("method").invoke(provider);
 
@@ -28,7 +28,7 @@ public class ProviderSqlSource implements SqlSource {
         }
       }
     } catch (Exception e) {
-      throw new ParserException("Error creating SqlSource for SqlProvider.  Cause: " + e, e);
+      throw new BulderException("Error creating SqlSource for SqlProvider.  Cause: " + e, e);
     }
   }
 
@@ -48,7 +48,7 @@ public class ProviderSqlSource implements SqlSource {
       Class parameterType = parameterObject == null ? Object.class : parameterObject.getClass();
       return sqlSourceParser.parse(sql, parameterType);
     } catch (Exception e) {
-      throw new ParserException("Error invoking SqlProvider method ("
+      throw new BulderException("Error invoking SqlProvider method ("
           + providerType.getName() + "." + providerMethod.getName()
           + ").  Cause: " + e, e);
     }

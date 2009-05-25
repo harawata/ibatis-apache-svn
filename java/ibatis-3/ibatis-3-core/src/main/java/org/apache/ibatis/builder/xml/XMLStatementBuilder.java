@@ -9,12 +9,12 @@ import org.w3c.dom.*;
 
 import java.util.*;
 
-public class XMLStatementParser extends BaseParser {
+public class XMLStatementBuilder extends BaseBuilder {
 
   private SequentialMapperBuilder sequentialBuilder;
-  private XMLMapperParser xmlMapperParser;
+  private XMLMapperBuilder xmlMapperParser;
 
-  public XMLStatementParser(Configuration configuration, SequentialMapperBuilder sequentialBuilder, XMLMapperParser xmlMapperParser) {
+  public XMLStatementBuilder(Configuration configuration, SequentialMapperBuilder sequentialBuilder, XMLMapperBuilder xmlMapperParser) {
     super(configuration);
     this.sequentialBuilder = sequentialBuilder;
     this.xmlMapperParser = xmlMapperParser;
@@ -73,7 +73,7 @@ public class XMLStatementParser extends BaseParser {
       } else {
         NodeHandler handler = nodeHandlers.get(nodeName);
         if (handler == null) {
-          throw new ParserException("Unknown element <" + nodeName + "> in SQL statement.");
+          throw new BulderException("Unknown element <" + nodeName + "> in SQL statement.");
         }
         handler.handleNode(child, contents);
 
@@ -146,7 +146,7 @@ public class XMLStatementParser extends BaseParser {
         String nsrefid = sequentialBuilder.applyNamespace(refid);
         includeNode = xmlMapperParser.getSqlFragment(nsrefid);
         if (includeNode == null) {
-          throw new ParserException("Could not find SQL statement to include with refid '" + refid + "'");
+          throw new BulderException("Could not find SQL statement to include with refid '" + refid + "'");
         }
       }
       MixedSqlNode mixedSqlNode = new MixedSqlNode(contents(includeNode));
@@ -246,7 +246,7 @@ public class XMLStatementParser extends BaseParser {
       if (defaultSqlNodes.size() == 1) {
         defaultSqlNode = defaultSqlNodes.get(0);
       } else if (defaultSqlNodes.size() > 1) {
-        throw new ParserException("Too many default (otherwise) elements in choose statement.");
+        throw new BulderException("Too many default (otherwise) elements in choose statement.");
       }
       return defaultSqlNode;
     }

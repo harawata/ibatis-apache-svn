@@ -1,7 +1,7 @@
 package org.apache.ibatis.exceptions;
 
 import org.apache.ibatis.binding.BindingException;
-import org.apache.ibatis.builder.ParserException;
+import org.apache.ibatis.builder.BulderException;
 import org.apache.ibatis.cache.CacheException;
 import org.apache.ibatis.datasource.DataSourceException;
 import org.apache.ibatis.executor.ExecutorException;
@@ -41,7 +41,7 @@ public class GeneralExceptionsTest {
         LogException.class,
         MigrationException.class,
         ParsingException.class,
-        ParserException.class,
+        BulderException.class,
         PluginException.class,
         ReflectionException.class,
         IbatisException.class,

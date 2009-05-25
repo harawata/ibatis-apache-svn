@@ -7,9 +7,9 @@ import org.apache.ibatis.type.TypeHandler;
 
 import java.util.*;
 
-public class SqlSourceParser extends BaseParser {
+public class SqlSourceBuilder extends BaseBuilder {
 
-  public SqlSourceParser(Configuration configuration) {
+  public SqlSourceBuilder(Configuration configuration) {
     super(configuration);
   }
 
@@ -20,7 +20,7 @@ public class SqlSourceParser extends BaseParser {
     return new StaticSqlSource(sql, handler.getParameterMappings());
   }
 
-  private static class ParameterMappingTokenHandler extends BaseParser implements GenericTokenParser.TokenHandler {
+  private static class ParameterMappingTokenHandler extends BaseBuilder implements GenericTokenParser.TokenHandler {
 
     private List<ParameterMapping> parameterMappings = new ArrayList<ParameterMapping>();
     private Class parameterType;
@@ -71,7 +71,7 @@ public class SqlSourceParser extends BaseParser {
             builder.typeHandler((TypeHandler) resolveInstance(value));
           }
         } else {
-          throw new ParserException("Improper inline parameter map format.  Should be: #{propName,attr1=val1,attr2=val2}");
+          throw new BulderException("Improper inline parameter map format.  Should be: #{propName,attr1=val1,attr2=val2}");
         }
       }
       return builder.build();

@@ -14,23 +14,21 @@ import org.apache.ibatis.type.TypeHandler;
 import java.io.Reader;
 import java.util.*;
 
-public class XMLMapperConfigParser extends BaseParser {
+public class XMLConfigBuilder extends BaseBuilder {
 
   private boolean parsed;
-
   private XPathParser parser;
-
   private String environment;
 
-  public XMLMapperConfigParser(Reader reader) {
+  public XMLConfigBuilder(Reader reader) {
     this(reader, null, null);
   }
 
-  public XMLMapperConfigParser(Reader reader, String environment) {
+  public XMLConfigBuilder(Reader reader, String environment) {
     this(reader, environment, null);
   }
 
-  public XMLMapperConfigParser(Reader reader, String environment, Properties props) {
+  public XMLConfigBuilder(Reader reader, String environment, Properties props) {
     super(new Configuration());
     ErrorContext.instance().resource("SQL Mapper Configuration");
     this.configuration.setVariables(props);
@@ -41,23 +39,26 @@ public class XMLMapperConfigParser extends BaseParser {
 
   public Configuration parse() {
     if (parsed) {
-      throw new ParserException("Each MapperConfigParser can only be used once.");
+      throw new BulderException("Each MapperConfigParser can only be used once.");
     }
     parsed = true;
-    try {
-      typeAliasesElement(parser.evalNode("/configuration/typeAliases"));
-      pluginElement(parser.evalNode("/configuration/plugins"));
-      objectFactoryElement(parser.evalNode("/configuration/objectFactory"));
-      propertiesElement(parser.evalNode("/configuration/properties"));
-      settingsElement(parser.evalNode("/configuration/settings"));
-      environmentsElement(parser.evalNode("/configuration/environments"));
-      typeHandlerElement(parser.evalNode("/configuration/typeHandlers"));
-      mapperElement(parser.evalNode("/configuration/mappers"));
-    } catch (Exception e) {
-      throw new RuntimeException("Description. Cause: " + e, e);
-    }
-
+    parseConfiguration(parser.evalNode("/configuration"));
     return configuration;
+  }
+
+  private void parseConfiguration(XNode root) {
+    try {
+      typeAliasesElement(root.evalNode("typeAliases"));
+      pluginElement(root.evalNode("plugins"));
+      objectFactoryElement(root.evalNode("objectFactory"));
+      propertiesElement(root.evalNode("properties"));
+      settingsElement(root.evalNode("settings"));
+      environmentsElement(root.evalNode("environments"));
+      typeHandlerElement(root.evalNode("typeHandlers"));
+      mapperElement(root.evalNode("mappers"));
+    } catch (Exception e) {
+      throw new BulderException("Error parsing SQL Mapper Configuration. Cause: " + e, e);
+    }
   }
 
   private void typeAliasesElement(XNode parent) {
@@ -92,7 +93,7 @@ public class XMLMapperConfigParser extends BaseParser {
     String resource = context.getStringAttribute("resource");
     String url = context.getStringAttribute("url");
     if (resource != null && url != null) {
-      throw new ParserException("The properties element cannot specify both a URL and a resource based property file reference.  Please specify one or the other.");
+      throw new BulderException("The properties element cannot specify both a URL and a resource based property file reference.  Please specify one or the other.");
     }
     if (resource != null) {
       defaults.putAll(Resources.getResourceAsProperties(resource));
@@ -113,7 +114,7 @@ public class XMLMapperConfigParser extends BaseParser {
     for (Map.Entry entry : props.entrySet()) {
       MetaClass metaConfig = MetaClass.forClass(Configuration.class);
       if (!metaConfig.hasSetter((String) entry.getKey())) {
-        throw new ParserException("The setting " + entry.getKey() + " is not known.  Make sure you spelled it correctly (case sensitive).");
+        throw new BulderException("The setting " + entry.getKey() + " is not known.  Make sure you spelled it correctly (case sensitive).");
       }
     }
     configuration.setCacheEnabled(booleanValueOf(props.getProperty("cacheEnabled"), true));
@@ -184,24 +185,24 @@ public class XMLMapperConfigParser extends BaseParser {
       if (resource != null && url == null) {
         ErrorContext.instance().resource(resource);
         reader = Resources.getResourceAsReader(resource);
-        XMLMapperParser mapperParser = new XMLMapperParser(reader, configuration, resource);
+        XMLMapperBuilder mapperParser = new XMLMapperBuilder(reader, configuration, resource);
         mapperParser.parse();
       } else if (url != null && resource == null) {
         ErrorContext.instance().resource(url);
         reader = Resources.getUrlAsReader(url);
-        XMLMapperParser mapperParser = new XMLMapperParser(reader, configuration, url);
+        XMLMapperBuilder mapperParser = new XMLMapperBuilder(reader, configuration, url);
         mapperParser.parse();
       } else {
-        throw new ParserException("A mapper element may only specify a url or resource, but not both.");
+        throw new BulderException("A mapper element may only specify a url or resource, but not both.");
       }
     }
   }
 
   private boolean isSpecifiedEnvironment(String id) {
     if (environment == null) {
-      throw new ParserException("No environment specified.");
+      throw new BulderException("No environment specified.");
     } else if (id == null) {
-      throw new ParserException("Environment requires an id attribute.");
+      throw new BulderException("Environment requires an id attribute.");
     } else if (environment.equals(id)) {
       return true;
     }

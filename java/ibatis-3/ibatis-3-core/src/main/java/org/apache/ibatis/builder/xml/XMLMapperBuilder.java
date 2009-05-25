@@ -9,7 +9,7 @@ import org.apache.ibatis.type.JdbcType;
 import java.io.Reader;
 import java.util.*;
 
-public class XMLMapperParser extends BaseParser {
+public class XMLMapperBuilder extends BaseBuilder {
 
   private Reader reader;
   private NodeEventParser parser;
@@ -17,12 +17,12 @@ public class XMLMapperParser extends BaseParser {
 
   private Map<String, XNode> sqlFragments = new HashMap<String, XNode>();
 
-  public XMLMapperParser(Reader reader, Configuration configuration, String resource, String namespace) {
+  public XMLMapperBuilder(Reader reader, Configuration configuration, String resource, String namespace) {
     this(reader, configuration, resource);
     this.sequentialBuilder.namespace(namespace);
   }
 
-  public XMLMapperParser(Reader reader, Configuration configuration, String resource) {
+  public XMLMapperBuilder(Reader reader, Configuration configuration, String resource) {
     super(configuration);
     this.sequentialBuilder = new SequentialMapperBuilder(configuration, resource);
     this.reader = reader;
@@ -211,7 +211,7 @@ public class XMLMapperParser extends BaseParser {
   }
 
   private void buildStatementFromContext(XNode context) {
-    final XMLStatementParser statementParser = new XMLStatementParser(configuration, sequentialBuilder, this);
+    final XMLStatementBuilder statementParser = new XMLStatementBuilder(configuration, sequentialBuilder, this);
     statementParser.parseStatementNode(context);
   }
 

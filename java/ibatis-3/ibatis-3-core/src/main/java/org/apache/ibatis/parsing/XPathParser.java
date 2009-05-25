@@ -1,6 +1,6 @@
 package org.apache.ibatis.parsing;
 
-import org.apache.ibatis.builder.ParserException;
+import org.apache.ibatis.builder.BulderException;
 import org.w3c.dom.*;
 import org.xml.sax.*;
 
@@ -92,7 +92,7 @@ public class XPathParser {
     try {
       return xpath.evaluate(expression, root, returnType);
     } catch (Exception e) {
-      throw new ParserException("Error evaluating XPath.  Cause: " + e, e);
+      throw new BulderException("Error evaluating XPath.  Cause: " + e, e);
     }
   }
 
@@ -123,7 +123,7 @@ public class XPathParser {
       });
       return builder.parse(new InputSource(reader));
     } catch (Exception e) {
-      throw new ParserException("Error creating document instance.  Cause: " + e, e);
+      throw new BulderException("Error creating document instance.  Cause: " + e, e);
     }
   }
 

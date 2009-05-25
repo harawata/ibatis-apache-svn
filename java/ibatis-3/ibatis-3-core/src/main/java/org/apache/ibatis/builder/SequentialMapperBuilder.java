@@ -11,7 +11,7 @@ import org.apache.ibatis.type.*;
 
 import java.util.*;
 
-public class SequentialMapperBuilder extends BaseParser {
+public class SequentialMapperBuilder extends BaseBuilder {
 
   private String namespace;
   private String resource;
@@ -42,17 +42,17 @@ public class SequentialMapperBuilder extends BaseParser {
       this.namespace = namespace;
     }
     if (this.namespace == null) {
-      throw new ParserException("The mapper element requires a namespace attribute to be specified.");
+      throw new BulderException("The mapper element requires a namespace attribute to be specified.");
     }
   }
 
   public void cacheRef(String namespace) {
     if (namespace == null) {
-      throw new ParserException("cache-ref element requires a namespace attribute.");
+      throw new BulderException("cache-ref element requires a namespace attribute.");
     }
     cache = configuration.getCache(namespace);
     if (cache == null) {
-      throw new ParserException("No cache for namespace '" + namespace + "' could be found.");
+      throw new BulderException("No cache for namespace '" + namespace + "' could be found.");
     }
   }
 
@@ -336,7 +336,7 @@ public class SequentialMapperBuilder extends BaseParser {
       javaType = metaResultType.getSetterType(property);
     }
     if (javaType == null) {
-      throw new ParserException("Could not determine javaType for result.  Specify property or javaType attribute.");
+      throw new BulderException("Could not determine javaType for result.  Specify property or javaType attribute.");
     }
     return javaType;
   }
@@ -347,7 +347,7 @@ public class SequentialMapperBuilder extends BaseParser {
       javaType = metaResultType.getGetterType(property);
     }
     if (javaType == null) {
-      throw new ParserException("Could not determine javaType for result.  Specify property or javaType attribute.");
+      throw new BulderException("Could not determine javaType for result.  Specify property or javaType attribute.");
     }
     return javaType;
   }
