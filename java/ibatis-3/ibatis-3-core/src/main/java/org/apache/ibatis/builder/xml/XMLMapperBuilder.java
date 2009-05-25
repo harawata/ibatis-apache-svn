@@ -11,10 +11,8 @@ import java.util.*;
 
 public class XMLMapperBuilder extends BaseBuilder {
 
-  private Reader reader;
-  private NodeEventParser parser;
+  private XPathParser parser;
   private SequentialMapperBuilder sequentialBuilder;
-
   private Map<String, XNode> sqlFragments = new HashMap<String, XNode>();
 
   public XMLMapperBuilder(Reader reader, Configuration configuration, String resource, String namespace) {
@@ -25,114 +23,113 @@ public class XMLMapperBuilder extends BaseBuilder {
   public XMLMapperBuilder(Reader reader, Configuration configuration, String resource) {
     super(configuration);
     this.sequentialBuilder = new SequentialMapperBuilder(configuration, resource);
-    this.reader = reader;
-    this.parser = new NodeEventParser();
-    this.parser.addNodeletHandler(this);
-    this.parser.setValidation(true);
-    this.parser.setVariables(configuration.getVariables());
-    this.parser.setEntityResolver(new XMLMapperEntityResolver());
+    this.parser = new XPathParser(reader,true,new XMLMapperEntityResolver(),configuration.getVariables());
   }
 
   public void parse() {
-    assert reader != null;
-    assert parser != null;
-    assert configuration != null;
-    assert typeAliasRegistry != null;
-    assert typeHandlerRegistry != null;
-    parser.parse(reader);
+    configurationElement(parser.evalNode("/mapper"));
     bindMapperForNamespace();
   }
 
-  //  <configuration namespace="com.domain.MapperClass" />
-  @NodeEvent("/mapper")
-  public void configurationElement(XNode context) throws Exception {
-    String namespace = context.getStringAttribute("namespace");
-    sequentialBuilder.namespace(namespace);
+  public XNode getSqlFragment(String refid) {
+    return sqlFragments.get(refid);
   }
 
-  //  <cache type="LRU" flushInterval="3600000" size="1000" readOnly="false" />
-  @NodeEvent("/mapper/cache-ref")
-  public void cacheRefElement(XNode context) throws Exception {
-    sequentialBuilder.cacheRef(context.getStringAttribute("namespace"));
-  }
-
-  //  <cache type="LRU" flushInterval="3600000" size="1000" readOnly="false" />
-  @NodeEvent("/mapper/cache")
-  public void cacheElement(XNode context) throws Exception {
-    String type = context.getStringAttribute("type", "PERPETUAL");
-    type = typeAliasRegistry.resolveAlias(type);
-    Class typeClass = Class.forName(type);
-    String eviction = context.getStringAttribute("eviction", "LRU");
-    eviction = typeAliasRegistry.resolveAlias(eviction);
-    Class evictionClass = Class.forName(eviction);
-    Long flushInterval = context.getLongAttribute("flushInterval");
-    Integer size = context.getIntAttribute("size");
-    boolean readOnly = context.getBooleanAttribute("readOnly", false);
-    Properties props = context.getChildrenAsProperties();
-    sequentialBuilder.cache(typeClass, evictionClass, flushInterval, size, readOnly, props);
-  }
-
-  //  <parameterMap id="" type="">
-  @NodeEvent("/mapper/parameterMap")
-  public void parameterMapElement(XNode context) throws Exception {
-    String id = context.getStringAttribute("id");
-    String type = context.getStringAttribute("type");
-    Class parameterClass = resolveClass(type);
-    sequentialBuilder.parameterMapStart(id, parameterClass);
-  }
-
-  //  <parameterMap id="" type="">
-  //    <param property="id" javaType="" jdbcType="" typeHandler="" mode="" scale="" resultMap=""/>
-  @NodeEvent("/mapper/parameterMap/parameter")
-  public void parameterMapParameterElement(XNode context) throws Exception {
-    String property = context.getStringAttribute("property");
-    String javaType = context.getStringAttribute("javaType");
-    String jdbcType = context.getStringAttribute("jdbcType");
-    String resultMap = context.getStringAttribute("resultMap");
-    String mode = context.getStringAttribute("mode");
-    String typeHandler = context.getStringAttribute("typeHandler");
-    Integer numericScale = context.getIntAttribute("numericScale", null);
-    ParameterMode modeEnum = resolveParameterMode(mode);
-    Class javaTypeClass = resolveClass(javaType);
-    JdbcType jdbcTypeEnum = resolveJdbcType(jdbcType);
-    Class typeHandlerClass = resolveClass(typeHandler);
-    sequentialBuilder.parameterMapping(property, javaTypeClass, jdbcTypeEnum, resultMap, modeEnum, typeHandlerClass, numericScale);
-  }
-
-  //  </parameterMap>
-  @NodeEvent("/mapper/parameterMap/end()")
-  public void parameterMapClosingElement(XNode context) throws Exception {
-    sequentialBuilder.parameterMapEnd();
-  }
-
-  //  <resultMap id="" type="" extends="">
-  @NodeEvent("/mapper/resultMap")
-  public void resultMapElement(XNode context) throws Exception {
-    ErrorContext.instance().activity("processing " + context.getValueBasedIdentifier());
-    String id = context.getStringAttribute("id");
-    String type = context.getStringAttribute("type");
-    String extend = context.getStringAttribute("extends");
-    if (id == null) {
-      id = context.getValueBasedIdentifier();
+  private void configurationElement(XNode context) {
+    try {
+      String namespace = context.getStringAttribute("namespace");
+      sequentialBuilder.namespace(namespace);
+      cacheRefElement(context.evalNode("cache-ref"));
+      cacheElement(context.evalNode("cache"));
+      parameterMapElement(context.evalNodes("/mapper/parameterMap"));
+      resultMapElements(context.evalNodes("/mapper/resultMap"));
+      sqlElement(context.evalNodes("/mapper/sql"));
+      buildStatementFromContext(context.evalNodes("select|insert|update|delete"));
+    } catch (Exception e) {
+      throw new RuntimeException("Error parsing Mapper XML. Cause: " + e, e);
     }
-    Class typeClass = resolveClass(type);
-    processChildrenAsResultMap(context);
-    sequentialBuilder.resultMapStart(id, typeClass, extend);
-    List<XNode> resultChildren = context.getChildren();
-    for (XNode resultChild : resultChildren) {
-      if ("constructor".equals(resultChild.getName())) {
-        processConstructorElement(resultChild);
-      } else if ("discriminator".equals(resultChild.getName())) {
-        processDiscriminatorElement(resultChild);
-      } else {
-        ArrayList<ResultFlag> flags = new ArrayList<ResultFlag>();
-        if ("id".equals(resultChild.getName())) {
-          flags.add(ResultFlag.ID);
-        }
-        buildResultMappingFromContext(resultChild, flags);
+
+  }
+
+  private void cacheRefElement(XNode context) {
+    if (context != null) {
+      sequentialBuilder.cacheRef(context.getStringAttribute("namespace"));
+    }
+  }
+
+  private void cacheElement(XNode context) throws Exception {
+    if (context != null) {
+      String type = context.getStringAttribute("type", "PERPETUAL");
+      type = typeAliasRegistry.resolveAlias(type);
+      Class typeClass = Class.forName(type);
+      String eviction = context.getStringAttribute("eviction", "LRU");
+      eviction = typeAliasRegistry.resolveAlias(eviction);
+      Class evictionClass = Class.forName(eviction);
+      Long flushInterval = context.getLongAttribute("flushInterval");
+      Integer size = context.getIntAttribute("size");
+      boolean readOnly = context.getBooleanAttribute("readOnly", false);
+      Properties props = context.getChildrenAsProperties();
+      sequentialBuilder.cache(typeClass, evictionClass, flushInterval, size, readOnly, props);
+    }
+  }
+
+  private void parameterMapElement(List<XNode> list) throws Exception {
+    for (XNode parameterMapNode : list) {
+      String id = parameterMapNode.getStringAttribute("id");
+      String type = parameterMapNode.getStringAttribute("type");
+      Class parameterClass = resolveClass(type);
+      sequentialBuilder.parameterMapStart(id, parameterClass);
+      List<XNode> parameterNodes = parameterMapNode.evalNodes("parameter");
+      for (XNode parameterNode : parameterNodes) {
+        String property = parameterNode.getStringAttribute("property");
+        String javaType = parameterNode.getStringAttribute("javaType");
+        String jdbcType = parameterNode.getStringAttribute("jdbcType");
+        String resultMap = parameterNode.getStringAttribute("resultMap");
+        String mode = parameterNode.getStringAttribute("mode");
+        String typeHandler = parameterNode.getStringAttribute("typeHandler");
+        Integer numericScale = parameterNode.getIntAttribute("numericScale", null);
+        ParameterMode modeEnum = resolveParameterMode(mode);
+        Class javaTypeClass = resolveClass(javaType);
+        JdbcType jdbcTypeEnum = resolveJdbcType(jdbcType);
+        Class typeHandlerClass = resolveClass(typeHandler);
+        sequentialBuilder.parameterMapping(property, javaTypeClass, jdbcTypeEnum, resultMap, modeEnum, typeHandlerClass, numericScale);
       }
+      sequentialBuilder.parameterMapEnd();
     }
-    sequentialBuilder.resultMapEnd();
+  }
+
+
+  private void resultMapElements(List<XNode> list) throws Exception {
+    for (XNode resultMapNode : list) {
+      resultMapElement(resultMapNode);
+    }
+  }
+  private void resultMapElement(XNode resultMapNode) throws Exception {
+      ErrorContext.instance().activity("processing " + resultMapNode.getValueBasedIdentifier());
+      String id = resultMapNode.getStringAttribute("id");
+      String type = resultMapNode.getStringAttribute("type");
+      String extend = resultMapNode.getStringAttribute("extends");
+      if (id == null) {
+        id = resultMapNode.getValueBasedIdentifier();
+      }
+      Class typeClass = resolveClass(type);
+      processChildrenAsResultMap(resultMapNode);
+      sequentialBuilder.resultMapStart(id, typeClass, extend);
+      List<XNode> resultChildren = resultMapNode.getChildren();
+      for (XNode resultChild : resultChildren) {
+        if ("constructor".equals(resultChild.getName())) {
+          processConstructorElement(resultChild);
+        } else if ("discriminator".equals(resultChild.getName())) {
+          processDiscriminatorElement(resultChild);
+        } else {
+          ArrayList<ResultFlag> flags = new ArrayList<ResultFlag>();
+          if ("id".equals(resultChild.getName())) {
+            flags.add(ResultFlag.ID);
+          }
+          buildResultMappingFromContext(resultChild, flags);
+        }
+      }
+      sequentialBuilder.resultMapEnd();
   }
 
   private void processChildrenAsResultMap(XNode resultChild) throws Exception {
@@ -156,7 +153,7 @@ public class XMLMapperBuilder extends BaseBuilder {
     }
   }
 
-  public void processDiscriminatorElement(XNode context) throws Exception {
+  private void processDiscriminatorElement(XNode context) throws Exception {
     String column = context.getStringAttribute("column");
     String javaType = context.getStringAttribute("javaType");
     String jdbcType = context.getStringAttribute("jdbcType");
@@ -174,45 +171,18 @@ public class XMLMapperBuilder extends BaseBuilder {
     sequentialBuilder.resultMapDiscriminatorEnd();
   }
 
-  //  <sql id="">
-  @NodeEvent("/mapper/sql")
-  public void sqlElement(XNode context) throws Exception {
-    String id = context.getStringAttribute("id");
-
-    sqlFragments.put(id, context);
+  private void sqlElement(List<XNode> list) throws Exception {
+    for (XNode context : list) {
+      String id = context.getStringAttribute("id");
+      sqlFragments.put(id, context);
+    }
   }
 
-  //  <select ...>
-  @NodeEvent("/mapper/select")
-  public void selectElement(XNode context) throws Exception {
-    buildStatementFromContext(context);
-  }
-
-  //  <insert ...>
-  @NodeEvent("/mapper/insert")
-  public void insertElement(XNode context) throws Exception {
-    buildStatementFromContext(context);
-  }
-
-  //  <update ...>
-  @NodeEvent("/mapper/update")
-  public void updateElement(XNode context) throws Exception {
-    buildStatementFromContext(context);
-  }
-
-  //  <delete ...>
-  @NodeEvent("/mapper/delete")
-  public void deleteElement(XNode context) throws Exception {
-    buildStatementFromContext(context);
-  }
-
-  public XNode getSqlFragment(String refid) {
-    return sqlFragments.get(refid);
-  }
-
-  private void buildStatementFromContext(XNode context) {
-    final XMLStatementBuilder statementParser = new XMLStatementBuilder(configuration, sequentialBuilder, this);
-    statementParser.parseStatementNode(context);
+  private void buildStatementFromContext(List<XNode> list) {
+    for (XNode context : list) {
+      final XMLStatementBuilder statementParser = new XMLStatementBuilder(configuration, sequentialBuilder, this);
+      statementParser.parseStatementNode(context);
+    }
   }
 
   private void buildResultMappingFromContext(XNode context, ArrayList<ResultFlag> flags) {

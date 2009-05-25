@@ -85,6 +85,9 @@ public class XPathParser {
 
   public XNode evalNode(Object root, String expression) {
     Node node = (Node) evaluate(expression, root, XPathConstants.NODE);
+    if (node == null) {
+      return null;
+    } 
     return new XNode(this,node,variables);
   }
 
