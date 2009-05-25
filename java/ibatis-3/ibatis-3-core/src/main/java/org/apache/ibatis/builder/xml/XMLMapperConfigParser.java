@@ -18,11 +18,9 @@ public class XMLMapperConfigParser extends BaseParser {
 
   private boolean parsed;
 
-  private Reader reader;
-  private NodeEventParser parser;
+  private XPathParser parser;
 
   private String environment;
-  private Environment.Builder environmentBuilder;
 
   public XMLMapperConfigParser(Reader reader) {
     this(reader, null, null);
@@ -34,59 +32,54 @@ public class XMLMapperConfigParser extends BaseParser {
 
   public XMLMapperConfigParser(Reader reader, String environment, Properties props) {
     super(new Configuration());
-
     ErrorContext.instance().resource("SQL Mapper Configuration");
-
     this.configuration.setVariables(props);
-
     this.parsed = false;
-    this.reader = reader;
     this.environment = environment;
-
-    this.parser = new NodeEventParser();
-    this.parser.addNodeletHandler(this);
-    this.parser.setValidation(true);
-    this.parser.setVariables(props);
-    this.parser.setEntityResolver(new XMLMapperEntityResolver());
+    this.parser = new XPathParser(reader,true, new XMLMapperEntityResolver(),props);
   }
 
   public Configuration parse() {
-    assert reader != null;
-    assert parser != null;
-    assert configuration != null;
-    assert typeAliasRegistry != null;
-    assert typeHandlerRegistry != null;
     if (parsed) {
       throw new ParserException("Each MapperConfigParser can only be used once.");
     }
     parsed = true;
-    parser.parse(reader);
+    try {
+      typeAliasesElement(parser.evalNode("/configuration/typeAliases"));
+      pluginElement(parser.evalNode("/configuration/plugins"));
+      objectFactoryElement(parser.evalNode("/configuration/objectFactory"));
+      propertiesElement(parser.evalNode("/configuration/properties"));
+      settingsElement(parser.evalNode("/configuration/settings"));
+      environmentsElement(parser.evalNode("/configuration/environments"));
+      typeHandlerElement(parser.evalNode("/configuration/typeHandlers"));
+      mapperElement(parser.evalNode("/configuration/mappers"));
+    } catch (Exception e) {
+      throw new RuntimeException("Description. Cause: " + e, e);
+    }
+
     return configuration;
   }
 
-  //  <typeAlias alias="" type=""/>
-  @NodeEvent("/configuration/typeAliases/typeAlias")
-  public void typeAliasElement(XNode context) throws Exception {
-    String alias = context.getStringAttribute("alias");
-    String type = context.getStringAttribute("type");
-    typeAliasRegistry.registerAlias(alias, type);
+  private void typeAliasesElement(XNode parent) {
+    for (XNode child : parent.getChildren()) {
+      String alias = child.getStringAttribute("alias");
+      String type = child.getStringAttribute("type");
+      typeAliasRegistry.registerAlias(alias, type);
+    }
   }
 
-  //  <plugin interceptor="">
-  //    <property name="" value=""/>
-  @NodeEvent("/configuration/plugins/plugin")
-  public void pluginElement(XNode context) throws Exception {
-    String interceptor = context.getStringAttribute("interceptor");
-    Properties properties = context.getChildrenAsProperties();
-    Interceptor interceptorInstance = (Interceptor) resolveClass(interceptor).newInstance();
-    interceptorInstance.setProperties(properties);
-    configuration.addInterceptor(interceptorInstance);
+  private void pluginElement(XNode parent) throws Exception {
+    for (XNode child : parent.getChildren()) {
+      String interceptor = child.getStringAttribute("interceptor");
+      Properties properties = child.getChildrenAsProperties();
+      Interceptor interceptorInstance = (Interceptor) resolveClass(interceptor).newInstance();
+      interceptorInstance.setProperties(properties);
+      configuration.addInterceptor(interceptorInstance);
+    }
   }
 
-  //  <objectFactory type="">
-  //    <property name="" value=""/>
-  @NodeEvent("/configuration/objectFactory")
-  public void objectFactoryElement(XNode context) throws Exception {
+
+  private void objectFactoryElement(XNode context) throws Exception {
     String type = context.getStringAttribute("type");
     Properties properties = context.getChildrenAsProperties();
     ObjectFactory factory = (ObjectFactory) resolveClass(type).newInstance();
@@ -94,10 +87,7 @@ public class XMLMapperConfigParser extends BaseParser {
     configuration.setObjectFactory(factory);
   }
 
-  //  <settings url="" resource="">
-  //    <setting name="" value=""/>
-  @NodeEvent("/configuration/properties")
-  public void propertiesElement(XNode context) throws Exception {
+  private void propertiesElement(XNode context) throws Exception {
     Properties defaults = context.getChildrenAsProperties();
     String resource = context.getStringAttribute("resource");
     String url = context.getStringAttribute("url");
@@ -117,10 +107,7 @@ public class XMLMapperConfigParser extends BaseParser {
     configuration.setVariables(defaults);
   }
 
-  //  <settings>
-  //    <setting name="" value=""/>
-  @NodeEvent("/configuration/settings")
-  public void settingsElement(XNode context) throws Exception {
+  private void settingsElement(XNode context) throws Exception {
     Properties props = context.getChildrenAsProperties();
     // Check that all settings are known to the configuration class
     for (Map.Entry entry : props.entrySet()) {
@@ -139,103 +126,83 @@ public class XMLMapperConfigParser extends BaseParser {
     configuration.setDefaultStatementTimeout(integerValueOf(props.getProperty("defaultStatementTimeout"), null));
   }
 
-  //  <environments default="development">
-  @NodeEvent("/configuration/environments")
-  public void environmentsElement(XNode context) throws Exception {
+  private void environmentsElement(XNode context) throws Exception {
     if (environment == null) {
       environment = context.getStringAttribute("default");
     }
-  }
-
-  //  <environment id="development">
-  @NodeEvent("/configuration/environments/environment")
-  public void environmentElement(XNode context) throws Exception {
-    String id = context.getStringAttribute("id");
-    environmentBuilder = new Environment.Builder(id, null, null);
-  }
-
-  //  <transactionManager type="JDBC|JTA|EXTERNAL">
-  //    <property name="" value=""/>
-  @NodeEvent("/configuration/environments/environment/transactionManager")
-  public void transactionManagerElement(XNode context) throws Exception {
-    if (isSpecifiedEnvironment()) {
-      String type = context.getStringAttribute("type");
-      Properties props = context.getChildrenAsProperties();
-
-      TransactionFactory factory = (TransactionFactory) resolveClass(type).newInstance();
-      factory.setProperties(props);
-
-      environmentBuilder.transactionFactory(factory);
+    for (XNode child : context.getChildren()) {
+      String id = child.getStringAttribute("id");
+      if (isSpecifiedEnvironment(id)) {
+        TransactionFactory txFactory = transactionManagerElement(child.evalNode("transactionManager"));
+        DataSourceFactory dsFactory = dataSourceElement(child.evalNode("dataSource"));
+        Environment.Builder environmentBuilder = new Environment.Builder(id, txFactory, dsFactory.getDataSource());
+        configuration.setEnvironment(environmentBuilder.build());
+      }
     }
   }
 
-  //  <dataSource type="POOLED|UNPOOLED|JNDI">
-  //    <property name="" value=""/>
-  @NodeEvent("/configuration/environments/environment/dataSource")
-  public void dataSourceElement(XNode context) throws Exception {
-    if (isSpecifiedEnvironment()) {
-      String type = context.getStringAttribute("type");
-      Properties props = context.getChildrenAsProperties();
+  private TransactionFactory transactionManagerElement(XNode context) throws Exception {
+    String type = context.getStringAttribute("type");
+    Properties props = context.getChildrenAsProperties();
+    TransactionFactory factory = (TransactionFactory) resolveClass(type).newInstance();
+    factory.setProperties(props);
+    return factory;
+  }
 
-      DataSourceFactory factory = (DataSourceFactory) resolveClass(type).newInstance();
-      factory.setProperties(props);
+  private DataSourceFactory dataSourceElement(XNode context) throws Exception {
+    String type = context.getStringAttribute("type");
+    Properties props = context.getChildrenAsProperties();
+    DataSourceFactory factory = (DataSourceFactory) resolveClass(type).newInstance();
+    factory.setProperties(props);
+    return factory;
+  }
 
-      environmentBuilder.dataSource(factory.getDataSource());
+
+  private void typeHandlerElement(XNode parent) throws Exception {
+    for (XNode child : parent.getChildren()) {
+      String javaType = child.getStringAttribute("javaType");
+      String jdbcType = child.getStringAttribute("jdbcType");
+      String handler = child.getStringAttribute("handler");
+
+      Class javaTypeClass = resolveClass(javaType);
+      TypeHandler typeHandlerInstance = (TypeHandler) resolveClass(handler).newInstance();
+
+      if (jdbcType == null) {
+        typeHandlerRegistry.register(javaTypeClass, typeHandlerInstance);
+      } else {
+        typeHandlerRegistry.register(javaTypeClass, resolveJdbcType(jdbcType), typeHandlerInstance);
+      }
     }
   }
 
-  //  </environment>
-  @NodeEvent("/configuration/environments/environment/end()")
-  public void environmentElementEnd(XNode context) throws Exception {
-    if (isSpecifiedEnvironment()) {
-      configuration.setEnvironment(environmentBuilder.build());
+
+  private void mapperElement(XNode parent) throws Exception {
+    for (XNode child : parent.getChildren()) {
+      String resource = child.getStringAttribute("resource");
+      String url = child.getStringAttribute("url");
+      Reader reader;
+      if (resource != null && url == null) {
+        ErrorContext.instance().resource(resource);
+        reader = Resources.getResourceAsReader(resource);
+        XMLMapperParser mapperParser = new XMLMapperParser(reader, configuration, resource);
+        mapperParser.parse();
+      } else if (url != null && resource == null) {
+        ErrorContext.instance().resource(url);
+        reader = Resources.getUrlAsReader(url);
+        XMLMapperParser mapperParser = new XMLMapperParser(reader, configuration, url);
+        mapperParser.parse();
+      } else {
+        throw new ParserException("A mapper element may only specify a url or resource, but not both.");
+      }
     }
   }
 
-  //  <typeHandler javaType="" jdbcType="" handler=""/>
-  @NodeEvent("/configuration/typeHandlers/typeHandler")
-  public void typeHandlerElement(XNode context) throws Exception {
-    String javaType = context.getStringAttribute("javaType");
-    String jdbcType = context.getStringAttribute("jdbcType");
-    String handler = context.getStringAttribute("handler");
-
-    Class javaTypeClass = resolveClass(javaType);
-    TypeHandler typeHandlerInstance = (TypeHandler) resolveClass(handler).newInstance();
-
-    if (jdbcType == null) {
-      typeHandlerRegistry.register(javaTypeClass, typeHandlerInstance);
-    } else {
-      typeHandlerRegistry.register(javaTypeClass, resolveJdbcType(jdbcType), typeHandlerInstance);
-    }
-  }
-
-  //  <mapper url="" resource="resources/AnotherMapper.xml"/>
-  @NodeEvent("/configuration/mappers/mapper")
-  public void mapperElement(XNode context) throws Exception {
-    String resource = context.getStringAttribute("resource");
-    String url = context.getStringAttribute("url");
-    Reader reader;
-    if (resource != null && url == null) {
-      ErrorContext.instance().resource(resource);
-      reader = Resources.getResourceAsReader(resource);
-      XMLMapperParser mapperParser = new XMLMapperParser(reader, configuration, resource);
-      mapperParser.parse();
-    } else if (url != null && resource == null) {
-      ErrorContext.instance().resource(url);
-      reader = Resources.getUrlAsReader(url);
-      XMLMapperParser mapperParser = new XMLMapperParser(reader, configuration, url);
-      mapperParser.parse();
-    } else {
-      throw new ParserException("A mapper element may only specify a url or resource, but not both.");
-    }
-  }
-
-  private boolean isSpecifiedEnvironment() {
+  private boolean isSpecifiedEnvironment(String id) {
     if (environment == null) {
       throw new ParserException("No environment specified.");
-    } else if (environmentBuilder.id() == null) {
+    } else if (id == null) {
       throw new ParserException("Environment requires an id attribute.");
-    } else if (environment.equals(environmentBuilder.id())) {
+    } else if (environment.equals(id)) {
       return true;
     }
     return false;
