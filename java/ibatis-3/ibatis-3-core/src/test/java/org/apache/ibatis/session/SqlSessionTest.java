@@ -220,7 +220,7 @@ public class SqlSessionTest extends BaseDataTest {
     }
   }
 
-  @Test
+  @Test @Ignore
   public void shouldSelectNestedBlogWithPostsAndAuthorUsingJoin() throws Exception {
     SqlSession session = sqlMapper.openSession();
     try {
