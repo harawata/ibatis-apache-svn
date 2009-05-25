@@ -1,4 +1,6 @@
-package org.apache.ibatis.parsing;
+package com.ibatis.common.util;
+
+import org.apache.ibatis.parsing.*;
 
 import java.lang.reflect.Method;
 

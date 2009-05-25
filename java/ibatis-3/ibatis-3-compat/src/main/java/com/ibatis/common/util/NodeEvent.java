@@ -1,4 +1,4 @@
-package org.apache.ibatis.parsing;
+package com.ibatis.common.util;
 
 import java.lang.annotation.*;
 

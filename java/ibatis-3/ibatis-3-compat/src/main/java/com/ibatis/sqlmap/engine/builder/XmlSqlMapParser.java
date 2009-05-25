@@ -8,9 +8,9 @@ import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.reflection.MetaClass;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
-import org.apache.ibatis.parsing.NodeEvent;
+import com.ibatis.common.util.NodeEvent;
 import org.apache.ibatis.parsing.XNode;
-import org.apache.ibatis.parsing.NodeEventParser;
+import com.ibatis.common.util.NodeEventParser;
 
 import java.io.Reader;
 import java.util.*;

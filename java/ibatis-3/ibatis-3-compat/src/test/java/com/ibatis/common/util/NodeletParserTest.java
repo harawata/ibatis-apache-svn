@@ -1,7 +1,8 @@
-package org.apache.ibatis.parsing;
+package com.ibatis.common.util;
 
 import domain.misc.Employee;
 import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.parsing.XNode;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 

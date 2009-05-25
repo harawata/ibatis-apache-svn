@@ -1,7 +1,8 @@
-package org.apache.ibatis.parsing;
+package com.ibatis.common.util;
 
 import org.w3c.dom.*;
 import org.xml.sax.*;
+import org.apache.ibatis.parsing.*;
 
 import javax.xml.parsers.*;
 import java.io.*;
