@@ -33,6 +33,7 @@ import org.apache.ibatis.ibator.api.dom.java.JavaWildcardType;
 import org.apache.ibatis.ibator.api.dom.java.Method;
 import org.apache.ibatis.ibator.api.dom.java.Parameter;
 import org.apache.ibatis.ibator.api.dom.java.TopLevelClass;
+import org.apache.ibatis.ibator.generator.ibatis2.Ibatis2FormattingUtilities;
 import org.apache.ibatis.ibator.internal.rules.IbatorRules;
 import org.apache.ibatis.ibator.internal.util.JavaBeansUtil;
 import org.apache.ibatis.ibator.internal.util.StringUtility;
@@ -944,7 +945,7 @@ public class ExampleGenerator extends BaseModelClassGenerator {
             sb.append("addCriterion(\""); //$NON-NLS-1$
         }
 
-        sb.append(introspectedColumn.getAliasedActualColumnName());
+        sb.append(Ibatis2FormattingUtilities.getAliasedActualColumnName(introspectedColumn));
         sb.append(' ');
         sb.append(operator);
         sb.append("\", "); //$NON-NLS-1$
@@ -1009,7 +1010,7 @@ public class ExampleGenerator extends BaseModelClassGenerator {
             sb.append("addCriterion(\""); //$NON-NLS-1$
         }
 
-        sb.append(introspectedColumn.getAliasedActualColumnName());
+        sb.append(Ibatis2FormattingUtilities.getAliasedActualColumnName(introspectedColumn));
         if (betweenMethod) {
             sb.append(" between"); //$NON-NLS-1$
         } else {
@@ -1088,7 +1089,7 @@ public class ExampleGenerator extends BaseModelClassGenerator {
             sb.append("addCriterion(\""); //$NON-NLS-1$
         }
 
-        sb.append(introspectedColumn.getAliasedActualColumnName());
+        sb.append(Ibatis2FormattingUtilities.getAliasedActualColumnName(introspectedColumn));
         if (inMethod) {
             sb.append(" in"); //$NON-NLS-1$
         } else {
@@ -1116,7 +1117,7 @@ public class ExampleGenerator extends BaseModelClassGenerator {
         method.setReturnType(FullyQualifiedJavaType.getCriteriaInstance());
         sb.setLength(0);
         sb.append("addCriterion(\""); //$NON-NLS-1$
-        sb.append(introspectedColumn.getAliasedActualColumnName());
+        sb.append(Ibatis2FormattingUtilities.getAliasedActualColumnName(introspectedColumn));
         sb.append(' ');
         sb.append(operator);
         sb.append("\");"); //$NON-NLS-1$

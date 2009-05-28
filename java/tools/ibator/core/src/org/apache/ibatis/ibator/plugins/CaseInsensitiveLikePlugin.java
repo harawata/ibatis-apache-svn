@@ -27,6 +27,7 @@ import org.apache.ibatis.ibator.api.dom.java.JavaVisibility;
 import org.apache.ibatis.ibator.api.dom.java.Method;
 import org.apache.ibatis.ibator.api.dom.java.Parameter;
 import org.apache.ibatis.ibator.api.dom.java.TopLevelClass;
+import org.apache.ibatis.ibator.generator.ibatis2.Ibatis2FormattingUtilities;
 
 /**
  * This plugin demonstrates adding methods to the example class to
@@ -94,7 +95,7 @@ public class CaseInsensitiveLikePlugin extends IbatorPluginAdapter {
 
             sb.setLength(0);
             sb.append("addCriterion(\"upper("); //$NON-NLS-1$
-            sb.append(introspectedColumn.getAliasedActualColumnName());
+            sb.append(Ibatis2FormattingUtilities.getAliasedActualColumnName(introspectedColumn));
             sb.append(") like\", value.toUpperCase(), \""); //$NON-NLS-1$
             sb.append(introspectedColumn.getJavaProperty());
             sb.append("\");"); //$NON-NLS-1$

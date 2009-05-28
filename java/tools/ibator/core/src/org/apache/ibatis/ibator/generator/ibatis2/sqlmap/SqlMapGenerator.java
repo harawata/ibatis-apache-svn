@@ -20,7 +20,7 @@ import org.apache.ibatis.ibator.api.dom.xml.Attribute;
 import org.apache.ibatis.ibator.api.dom.xml.Document;
 import org.apache.ibatis.ibator.api.dom.xml.XmlElement;
 import org.apache.ibatis.ibator.generator.AbstractXmlGenerator;
-import org.apache.ibatis.ibator.generator.ibatis2.XmlConstants;
+import org.apache.ibatis.ibator.generator.XmlConstants;
 import org.apache.ibatis.ibator.generator.ibatis2.sqlmap.elements.AbstractXmlElementGenerator;
 import org.apache.ibatis.ibator.generator.ibatis2.sqlmap.elements.BaseColumnListElementGenerator;
 import org.apache.ibatis.ibator.generator.ibatis2.sqlmap.elements.BlobColumnListElementGenerator;
@@ -230,8 +230,8 @@ public class SqlMapGenerator extends AbstractXmlGenerator {
 
     @Override
     public Document getDocument() {
-        Document document = new Document(XmlConstants.SQL_MAP_PUBLIC_ID,
-                XmlConstants.SQL_MAP_SYSTEM_ID);
+        Document document = new Document(XmlConstants.IBATIS2_SQL_MAP_PUBLIC_ID,
+                XmlConstants.IBATIS2_SQL_MAP_SYSTEM_ID);
         document.setRootElement(getSqlMapElement());
 
         if (!ibatorContext.getPlugins().sqlMapDocumentGenerated(document, introspectedTable)) {

@@ -22,7 +22,8 @@ import org.apache.ibatis.ibator.api.dom.OutputUtilities;
 import org.apache.ibatis.ibator.api.dom.xml.Attribute;
 import org.apache.ibatis.ibator.api.dom.xml.TextElement;
 import org.apache.ibatis.ibator.api.dom.xml.XmlElement;
-import org.apache.ibatis.ibator.generator.ibatis2.XmlConstants;
+import org.apache.ibatis.ibator.generator.XmlConstants;
+import org.apache.ibatis.ibator.generator.ibatis2.Ibatis2FormattingUtilities;
 
 /**
  * 
@@ -58,9 +59,9 @@ public class UpdateByExampleWithBLOBsElementGenerator extends
         while (iter.hasNext()) {
             IntrospectedColumn introspectedColumn = iter.next();
 
-            sb.append(introspectedColumn.getAliasedEscapedColumnName());
+            sb.append(Ibatis2FormattingUtilities.getAliasedEscapedColumnName(introspectedColumn));
             sb.append(" = "); //$NON-NLS-1$
-            sb.append(introspectedColumn.getIbatisFormattedParameterClause("record.")); //$NON-NLS-1$
+            sb.append(Ibatis2FormattingUtilities.getParameterClause(introspectedColumn, "record.")); //$NON-NLS-1$
 
             if (iter.hasNext()) {
                 sb.append(',');

@@ -21,7 +21,8 @@ import org.apache.ibatis.ibator.api.dom.xml.Attribute;
 import org.apache.ibatis.ibator.api.dom.xml.TextElement;
 import org.apache.ibatis.ibator.api.dom.xml.XmlElement;
 import org.apache.ibatis.ibator.config.GeneratedKey;
-import org.apache.ibatis.ibator.generator.ibatis2.XmlConstants;
+import org.apache.ibatis.ibator.generator.XmlConstants;
+import org.apache.ibatis.ibator.generator.ibatis2.Ibatis2FormattingUtilities;
 
 /**
  * 
@@ -85,13 +86,13 @@ public class InsertSelectiveElementGenerator extends AbstractXmlElementGenerator
             XmlElement insertNotNullElement = new XmlElement("isNotNull"); //$NON-NLS-1$
             insertNotNullElement.addAttribute(new Attribute("prepend", ",")); //$NON-NLS-1$ //$NON-NLS-2$
             insertNotNullElement.addAttribute(new Attribute("property", introspectedColumn.getJavaProperty())); //$NON-NLS-1$
-            insertNotNullElement.addElement(new TextElement(introspectedColumn.getEscapedColumnName()));
+            insertNotNullElement.addElement(new TextElement(Ibatis2FormattingUtilities.getEscapedColumnName(introspectedColumn)));
             insertElement.addElement(insertNotNullElement);
             
             XmlElement valuesNotNullElement = new XmlElement("isNotNull"); //$NON-NLS-1$
             valuesNotNullElement.addAttribute(new Attribute("prepend", ",")); //$NON-NLS-1$ //$NON-NLS-2$
             valuesNotNullElement.addAttribute(new Attribute("property", introspectedColumn.getJavaProperty())); //$NON-NLS-1$
-            valuesNotNullElement.addElement(new TextElement(introspectedColumn.getIbatisFormattedParameterClause()));
+            valuesNotNullElement.addElement(new TextElement(Ibatis2FormattingUtilities.getParameterClause(introspectedColumn)));
             valuesElement.addElement(valuesNotNullElement);
         }
         

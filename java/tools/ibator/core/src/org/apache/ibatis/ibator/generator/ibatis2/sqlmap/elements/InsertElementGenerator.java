@@ -26,7 +26,8 @@ import org.apache.ibatis.ibator.api.dom.xml.Attribute;
 import org.apache.ibatis.ibator.api.dom.xml.TextElement;
 import org.apache.ibatis.ibator.api.dom.xml.XmlElement;
 import org.apache.ibatis.ibator.config.GeneratedKey;
-import org.apache.ibatis.ibator.generator.ibatis2.XmlConstants;
+import org.apache.ibatis.ibator.generator.XmlConstants;
+import org.apache.ibatis.ibator.generator.ibatis2.Ibatis2FormattingUtilities;
 
 /**
  * 
@@ -83,8 +84,8 @@ public class InsertElementGenerator extends AbstractXmlElementGenerator {
                 continue;
             }
             
-            insertClause.append(introspectedColumn.getEscapedColumnName());
-            valuesClause.append(introspectedColumn.getIbatisFormattedParameterClause());
+            insertClause.append(Ibatis2FormattingUtilities.getEscapedColumnName(introspectedColumn));
+            valuesClause.append(Ibatis2FormattingUtilities.getParameterClause(introspectedColumn));
             if (iter.hasNext()) {
                 insertClause.append(", "); //$NON-NLS-1$
                 valuesClause.append(", "); //$NON-NLS-1$

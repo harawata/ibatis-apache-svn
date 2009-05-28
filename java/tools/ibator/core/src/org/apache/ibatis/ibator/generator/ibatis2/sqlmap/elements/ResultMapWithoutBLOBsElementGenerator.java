@@ -20,7 +20,8 @@ import org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.ibator.api.dom.xml.Attribute;
 import org.apache.ibatis.ibator.api.dom.xml.XmlElement;
 import org.apache.ibatis.ibator.config.PropertyRegistry;
-import org.apache.ibatis.ibator.generator.ibatis2.XmlConstants;
+import org.apache.ibatis.ibator.generator.XmlConstants;
+import org.apache.ibatis.ibator.generator.ibatis2.Ibatis2FormattingUtilities;
 import org.apache.ibatis.ibator.internal.util.StringUtility;
 
 /**
@@ -68,7 +69,7 @@ public class ResultMapWithoutBLOBsElementGenerator extends AbstractXmlElementGen
                         "columnIndex", Integer.toString(i++))); //$NON-NLS-1$
             } else {
                 resultElement.addAttribute(new Attribute(
-                    "column", introspectedColumn.getRenamedColumnNameForResultMap())); //$NON-NLS-1$
+                    "column", Ibatis2FormattingUtilities.getRenamedColumnNameForResultMap(introspectedColumn))); //$NON-NLS-1$
             }
             
             resultElement.addAttribute(new Attribute(

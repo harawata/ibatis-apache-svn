@@ -68,9 +68,21 @@ public interface JavaTypeResolver {
 	 * 
 	 * @param introspectedColumn the column whose Java type needs to be
 	 *        calculated
-     * @return true the calculated type, or null if an unsupported data type.  If null
+     * @return the calculated type, or null if an unsupported data type.  If null
      * is returned, Ibator will set the type to Object and issue a warning
      * unless the column is ignored or otherwise overridden
 	 */
     FullyQualifiedJavaType calculateJavaType(IntrospectedColumn introspectedColumn);
+
+    /**
+     * Calculates and returns the JDBC type name that should be associated
+     * with this column based on the jdbc type, length, and scale of the column.
+     * 
+     * @param introspectedColumn the column whose Java type needs to be
+     *        calculated
+     * @return the calculated type name, or null if an unsupported data type.  If null
+     * is returned, Ibator will set the type to OTHER and issue a warning
+     * unless the column is ignored or otherwise overridden
+     */
+    String calculateJdbcTypeName(IntrospectedColumn introspectedColumn);
 }

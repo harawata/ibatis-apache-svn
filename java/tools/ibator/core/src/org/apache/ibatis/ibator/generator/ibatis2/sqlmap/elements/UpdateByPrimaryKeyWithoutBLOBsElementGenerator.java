@@ -22,7 +22,8 @@ import org.apache.ibatis.ibator.api.dom.OutputUtilities;
 import org.apache.ibatis.ibator.api.dom.xml.Attribute;
 import org.apache.ibatis.ibator.api.dom.xml.TextElement;
 import org.apache.ibatis.ibator.api.dom.xml.XmlElement;
-import org.apache.ibatis.ibator.generator.ibatis2.XmlConstants;
+import org.apache.ibatis.ibator.generator.XmlConstants;
+import org.apache.ibatis.ibator.generator.ibatis2.Ibatis2FormattingUtilities;
 
 /**
  * 
@@ -60,9 +61,9 @@ public class UpdateByPrimaryKeyWithoutBLOBsElementGenerator extends
         while (iter.hasNext()) {
             IntrospectedColumn introspectedColumn = iter.next();
 
-            sb.append(introspectedColumn.getEscapedColumnName());
+            sb.append(Ibatis2FormattingUtilities.getEscapedColumnName(introspectedColumn));
             sb.append(" = "); //$NON-NLS-1$
-            sb.append(introspectedColumn.getIbatisFormattedParameterClause());
+            sb.append(Ibatis2FormattingUtilities.getParameterClause(introspectedColumn));
 
             if (iter.hasNext()) {
                 sb.append(',');
@@ -87,9 +88,9 @@ public class UpdateByPrimaryKeyWithoutBLOBsElementGenerator extends
                 and = true;
             }
 
-            sb.append(introspectedColumn.getEscapedColumnName());
+            sb.append(Ibatis2FormattingUtilities.getEscapedColumnName(introspectedColumn));
             sb.append(" = "); //$NON-NLS-1$
-            sb.append(introspectedColumn.getIbatisFormattedParameterClause());
+            sb.append(Ibatis2FormattingUtilities.getParameterClause(introspectedColumn));
             answer.addElement(new TextElement(sb.toString()));
         }
         

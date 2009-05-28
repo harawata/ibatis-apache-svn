@@ -54,7 +54,7 @@ public abstract class IntrospectedTable {
      * Note: this attribute will not be set if DAOs
      * are not being generated for this table.
      */
-    public static final String ATTR_DAO_IMPLEMENTATION_TYPE = "org.apache.ibatis.ibator.api.IntrospectedTable.ATTR_DAO_IMPLEMENTATION_TYPE"; //$NON-NLS-1$
+    protected static final String ATTR_DAO_IMPLEMENTATION_TYPE = "ATTR_DAO_IMPLEMENTATION_TYPE"; //$NON-NLS-1$
     
     /**
      * This attribute must be a class of type
@@ -63,56 +63,56 @@ public abstract class IntrospectedTable {
      * Note: this attribute will not be set if DAOs
      * are not being generated for this table.
      */
-    public static final String ATTR_DAO_INTERFACE_TYPE = "org.apache.ibatis.ibator.api.IntrospectedTable.ATTR_DAO_INTERFACE_TYPE"; //$NON-NLS-1$
+    protected static final String ATTR_DAO_INTERFACE_TYPE = "ATTR_DAO_INTERFACE_TYPE"; //$NON-NLS-1$
     
     /**
      * This attribute must be a class of type
      *   org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType
      */
-    public static final String ATTR_PRIMARY_KEY_TYPE = "org.apache.ibatis.ibator.api.IntrospectedTable.ATTR_PRIMARY_KEY_TYPE"; //$NON-NLS-1$
+    protected static final String ATTR_PRIMARY_KEY_TYPE = "ATTR_PRIMARY_KEY_TYPE"; //$NON-NLS-1$
     
     /**
      * This attribute must be a class of type
      *   org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType
      */
-    public static final String ATTR_BASE_RECORD_TYPE = "org.apache.ibatis.ibator.api.IntrospectedTable.ATTR_BASE_RECORD_TYPE"; //$NON-NLS-1$
+    protected static final String ATTR_BASE_RECORD_TYPE = "ATTR_BASE_RECORD_TYPE"; //$NON-NLS-1$
     
     /**
      * This attribute must be a class of type
      *   org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType
      */
-    public static final String ATTR_RECORD_WITH_BLOBS_TYPE = "org.apache.ibatis.ibator.api.IntrospectedTable.ATTR_RECORD_WITH_BLOBS_TYPE"; //$NON-NLS-1$
+    protected static final String ATTR_RECORD_WITH_BLOBS_TYPE = "ATTR_RECORD_WITH_BLOBS_TYPE"; //$NON-NLS-1$
     
     /**
      * This attribute must be a class of type
      *   org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType
      */
-    public static final String ATTR_EXAMPLE_TYPE = "org.apache.ibatis.ibator.api.IntrospectedTable.ATTR_EXAMPLE_TYPE"; //$NON-NLS-1$
+    protected static final String ATTR_EXAMPLE_TYPE = "ATTR_EXAMPLE_TYPE"; //$NON-NLS-1$
     
     /**
      * This attribute must be a class of type java.lang.String
      */
-    public static final String ATTR_SQL_MAP_PACKAGE = "org.apache.ibatis.ibator.api.IntrospectedTable.ATTR_SQL_MAP_PACKAGE"; //$NON-NLS-1$
+    protected static final String ATTR_SQL_MAP_PACKAGE = "ATTR_SQL_MAP_PACKAGE"; //$NON-NLS-1$
     
     /**
      * This attribute must be a class of type java.lang.String
      */
-    public static final String ATTR_SQL_MAP_FILE_NAME = "org.apache.ibatis.ibator.api.IntrospectedTable.ATTR_SQL_MAP_FILE_NAME"; //$NON-NLS-1$
+    protected static final String ATTR_SQL_MAP_FILE_NAME = "ATTR_SQL_MAP_FILE_NAME"; //$NON-NLS-1$
     
     /**
      * This attribute must be a class of type java.lang.String
      */
-    public static final String ATTR_SQL_MAP_NAMESPACE = "org.apache.ibatis.ibator.api.IntrospectedTable.ATTR_SQL_MAP_NAMESPACE"; //$NON-NLS-1$
+    protected static final String ATTR_SQL_MAP_NAMESPACE = "ATTR_SQL_MAP_NAMESPACE"; //$NON-NLS-1$
     
     /**
      * This attribute must be a class of type java.lang.String
      */
-    public static final String ATTR_SQL_MAP_FULLY_QUALIFIED_TABLE_NAME_AT_RUNTIME = "org.apache.ibatis.ibator.api.IntrospectedTable.ATTR_SQL_MAP_FULLY_QUALIFIED_TABLE_NAME_AT_RUNTIME"; //$NON-NLS-1$
+    protected static final String ATTR_SQL_MAP_FULLY_QUALIFIED_TABLE_NAME_AT_RUNTIME = "ATTR_SQL_MAP_FULLY_QUALIFIED_TABLE_NAME_AT_RUNTIME"; //$NON-NLS-1$
     
     /**
      * This attribute must be a class of type java.lang.String
      */
-    public static final String ATTR_SQL_MAP_ALIASED_FULLY_QUALIFIED_TABLE_NAME_AT_RUNTIME = "org.apache.ibatis.ibator.api.IntrospectedTable.ATTR_SQL_MAP_ALIASED_FULLY_QUALIFIED_TABLE_NAME_AT_RUNTIME"; //$NON-NLS-1$
+    protected static final String ATTR_SQL_MAP_ALIASED_FULLY_QUALIFIED_TABLE_NAME_AT_RUNTIME = "ATTR_SQL_MAP_ALIASED_FULLY_QUALIFIED_TABLE_NAME_AT_RUNTIME"; //$NON-NLS-1$
     
     protected TableConfiguration tableConfiguration;
     protected FullyQualifiedTable fullyQualifiedTable;
@@ -124,10 +124,15 @@ public abstract class IntrospectedTable {
     
     /**
      * Attributes may be used by plugins to capture table related state
-     * between the different plugin calls.  Attributes also are used
-     * to store commonly accessed items by all code generators
+     * between the different plugin calls.
      */
     protected Map<String, Object> attributes;
+    
+    /**
+     * Internal attributes are used
+     * to store commonly accessed items by all code generators
+     */
+    protected Map<String, Object> internalAttributes;
     
     public IntrospectedTable() {
         super();
@@ -135,6 +140,7 @@ public abstract class IntrospectedTable {
         baseColumns = new ArrayList<IntrospectedColumn>();
         blobColumns = new ArrayList<IntrospectedColumn>();
         attributes = new HashMap<String, Object>();
+        internalAttributes = new HashMap<String, Object>();
     }
     
     public FullyQualifiedTable getFullyQualifiedTable() {
@@ -342,7 +348,7 @@ public abstract class IntrospectedTable {
     }
 
     public FullyQualifiedJavaType getPrimaryKeyType() {
-        return (FullyQualifiedJavaType) getAttribute(ATTR_PRIMARY_KEY_TYPE);
+        return (FullyQualifiedJavaType) internalAttributes.get(ATTR_PRIMARY_KEY_TYPE);
     }
 
     /**
@@ -352,7 +358,7 @@ public abstract class IntrospectedTable {
      *  the value will be calculated regardless of whether the table has these columns or not.
      */
     public FullyQualifiedJavaType getBaseRecordType() {
-        return (FullyQualifiedJavaType) getAttribute(ATTR_BASE_RECORD_TYPE);
+        return (FullyQualifiedJavaType) internalAttributes.get(ATTR_BASE_RECORD_TYPE);
     }
 
     /**
@@ -360,7 +366,7 @@ public abstract class IntrospectedTable {
      * @return the type for the example class.
      */
     public FullyQualifiedJavaType getExampleType() {
-        return (FullyQualifiedJavaType) getAttribute(ATTR_EXAMPLE_TYPE);
+        return (FullyQualifiedJavaType) internalAttributes.get(ATTR_EXAMPLE_TYPE);
     }
 
     /**
@@ -369,7 +375,7 @@ public abstract class IntrospectedTable {
      *  the value will be calculated regardless of whether the table has BLOB columns or not.
      */
     public FullyQualifiedJavaType getRecordWithBLOBsType() {
-        return (FullyQualifiedJavaType) getAttribute(ATTR_RECORD_WITH_BLOBS_TYPE);
+        return (FullyQualifiedJavaType) internalAttributes.get(ATTR_RECORD_WITH_BLOBS_TYPE);
     }
 
     /**
@@ -380,11 +386,11 @@ public abstract class IntrospectedTable {
      * @return the name of the SqlMap file
      */
     public String getSqlMapFileName() {
-        return (String) getAttribute(ATTR_SQL_MAP_FILE_NAME);
+        return (String) internalAttributes.get(ATTR_SQL_MAP_FILE_NAME);
     }
     
     public String getSqlMapNamespace() {
-        return (String) getAttribute(ATTR_SQL_MAP_NAMESPACE);
+        return (String) internalAttributes.get(ATTR_SQL_MAP_NAMESPACE);
     }
 
     /**
@@ -393,15 +399,15 @@ public abstract class IntrospectedTable {
      * @return the package for the SqlMap for the current table
      */
     public String getSqlMapPackage() {
-        return (String) getAttribute(ATTR_SQL_MAP_PACKAGE);
+        return (String) internalAttributes.get(ATTR_SQL_MAP_PACKAGE);
     }
     
     public FullyQualifiedJavaType getDAOImplementationType() {
-        return (FullyQualifiedJavaType) getAttribute(ATTR_DAO_IMPLEMENTATION_TYPE);
+        return (FullyQualifiedJavaType) internalAttributes.get(ATTR_DAO_IMPLEMENTATION_TYPE);
     }
 
     public FullyQualifiedJavaType getDAOInterfaceType() {
-        return (FullyQualifiedJavaType) getAttribute(ATTR_DAO_INTERFACE_TYPE);
+        return (FullyQualifiedJavaType) internalAttributes.get(ATTR_DAO_INTERFACE_TYPE);
     }
 
     public boolean hasAnyColumns() {
@@ -627,11 +633,11 @@ public abstract class IntrospectedTable {
     }
     
     public String getFullyQualifiedTableNameAtRuntime() {
-        return (String) getAttribute(ATTR_SQL_MAP_FULLY_QUALIFIED_TABLE_NAME_AT_RUNTIME);
+        return (String) internalAttributes.get(ATTR_SQL_MAP_FULLY_QUALIFIED_TABLE_NAME_AT_RUNTIME);
     }
     
     public String getAliasedFullyQualifiedTableNameAtRuntime() {
-        return (String) getAttribute(ATTR_SQL_MAP_ALIASED_FULLY_QUALIFIED_TABLE_NAME_AT_RUNTIME);
+        return (String) internalAttributes.get(ATTR_SQL_MAP_ALIASED_FULLY_QUALIFIED_TABLE_NAME_AT_RUNTIME);
     }
     
     
@@ -696,48 +702,48 @@ public abstract class IntrospectedTable {
     }
     
     public void setDAOImplementationType(FullyQualifiedJavaType DAOImplementationType) {
-        setAttribute(ATTR_DAO_IMPLEMENTATION_TYPE, DAOImplementationType);
+        internalAttributes.put(ATTR_DAO_IMPLEMENTATION_TYPE, DAOImplementationType);
     }
 
     public void setDAOInterfaceType(FullyQualifiedJavaType DAOInterfaceType) {
-        setAttribute(ATTR_DAO_INTERFACE_TYPE, DAOInterfaceType);
+        internalAttributes.put(ATTR_DAO_INTERFACE_TYPE, DAOInterfaceType);
     }
 
     public void setPrimaryKeyType(FullyQualifiedJavaType primaryKeyType) {
-        setAttribute(ATTR_PRIMARY_KEY_TYPE, primaryKeyType);
+        internalAttributes.put(ATTR_PRIMARY_KEY_TYPE, primaryKeyType);
     }
     
     public void setBaseRecordType(FullyQualifiedJavaType baseRecordType) {
-        setAttribute(ATTR_BASE_RECORD_TYPE, baseRecordType);
+        internalAttributes.put(ATTR_BASE_RECORD_TYPE, baseRecordType);
     }
     
     public void setRecordWithBLOBsType(FullyQualifiedJavaType recordWithBLOBsType) {
-        setAttribute(ATTR_RECORD_WITH_BLOBS_TYPE, recordWithBLOBsType);
+        internalAttributes.put(ATTR_RECORD_WITH_BLOBS_TYPE, recordWithBLOBsType);
     }
 
     public void setExampleType(FullyQualifiedJavaType exampleType) {
-        setAttribute(ATTR_EXAMPLE_TYPE, exampleType);
+        internalAttributes.put(ATTR_EXAMPLE_TYPE, exampleType);
     }
     
     public void setSqlMapPackage(String sqlMapPackage) {
-        setAttribute(ATTR_SQL_MAP_PACKAGE, sqlMapPackage);
+        internalAttributes.put(ATTR_SQL_MAP_PACKAGE, sqlMapPackage);
     }
 
     public void setSqlMapFileName(String sqlMapFileName) {
-        setAttribute(ATTR_SQL_MAP_FILE_NAME, sqlMapFileName);
+        internalAttributes.put(ATTR_SQL_MAP_FILE_NAME, sqlMapFileName);
     }
     
     public void setSqlMapNamespace(String sqlMapNamespace) {
-        setAttribute(ATTR_SQL_MAP_NAMESPACE, sqlMapNamespace);
+        internalAttributes.put(ATTR_SQL_MAP_NAMESPACE, sqlMapNamespace);
     }
     
     public void setSqlMapFullyQualifiedRuntimeTableName(String fullyQualifiedRuntimeTableName) {
-        setAttribute(ATTR_SQL_MAP_FULLY_QUALIFIED_TABLE_NAME_AT_RUNTIME,
+        internalAttributes.put(ATTR_SQL_MAP_FULLY_QUALIFIED_TABLE_NAME_AT_RUNTIME,
                 fullyQualifiedRuntimeTableName);
     }
     
     public void setSqlMapAliasedFullyQualifiedRuntimeTableName(String aliasedFullyQualifiedRuntimeTableName) {
-        setAttribute(ATTR_SQL_MAP_ALIASED_FULLY_QUALIFIED_TABLE_NAME_AT_RUNTIME,
+        internalAttributes.put(ATTR_SQL_MAP_ALIASED_FULLY_QUALIFIED_TABLE_NAME_AT_RUNTIME,
                 aliasedFullyQualifiedRuntimeTableName);
     }
 }

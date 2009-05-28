@@ -95,23 +95,6 @@ public class StringUtility {
         return "true".equalsIgnoreCase(s); //$NON-NLS-1$
     }
 
-    public static String escapeStringForIbatis(String s) {
-        StringTokenizer st = new StringTokenizer(s, "$#", true); //$NON-NLS-1$
-        StringBuilder sb = new StringBuilder();
-        while (st.hasMoreTokens()) {
-            String token = st.nextToken();
-            if ("$".equals(token)) { //$NON-NLS-1$
-                sb.append("$$"); //$NON-NLS-1$
-            } else if ("#".equals(token)) { //$NON-NLS-1$
-                sb.append("##"); //$NON-NLS-1$
-            } else {
-                sb.append(token);
-            }
-        }
-        
-        return sb.toString();
-    }
-    
     public static boolean stringContainsSQLWildcard(String s) {
         if (s == null) {
             return false;

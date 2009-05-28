@@ -243,6 +243,7 @@ public class DatabaseIntrospector {
                 
                 if (fullyQualifiedJavaType != null) {
                     introspectedColumn.setFullyQualifiedJavaType(fullyQualifiedJavaType);
+                    introspectedColumn.setJdbcTypeName(javaTypeResolver.calculateJdbcTypeName(introspectedColumn));
                 } else {
                     // type cannot be resolved.  Check for ignored or overridden
                     boolean warn = true;
@@ -261,6 +262,7 @@ public class DatabaseIntrospector {
                     // if the type is not supported, then we'll report a warning
                     if (warn) {
                         introspectedColumn.setFullyQualifiedJavaType(FullyQualifiedJavaType.getObjectInstance());
+                        introspectedColumn.setJdbcTypeName("OTHER"); //$NON-NLS-1$
                         
                         String warning = Messages.getString("Warning.14", //$NON-NLS-1$
                                 entry.getKey().toString(),
@@ -268,7 +270,6 @@ public class DatabaseIntrospector {
                         
                         warnings.add(warning);
                     }
-                    
                 }
                 
                 if (ibatorContext.autoDelimitKeywords()) {
