@@ -19,7 +19,6 @@ import org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.ibator.api.dom.xml.Attribute;
 import org.apache.ibatis.ibator.api.dom.xml.TextElement;
 import org.apache.ibatis.ibator.api.dom.xml.XmlElement;
-import org.apache.ibatis.ibator.generator.XmlConstants;
 import org.apache.ibatis.ibator.internal.util.StringUtility;
 
 /**
@@ -40,9 +39,9 @@ public class SelectByExampleWithBLOBsElementGenerator extends
 
         XmlElement answer = new XmlElement("select"); //$NON-NLS-1$
         answer.addAttribute(new Attribute(
-                "id", XmlConstants.SELECT_BY_EXAMPLE_WITH_BLOBS_STATEMENT_ID)); //$NON-NLS-1$
+                "id", introspectedTable.getSelectByExampleWithBLOBsStatementId())); //$NON-NLS-1$
         answer.addAttribute(new Attribute(
-                "resultMap", XmlConstants.RESULT_MAP_WITH_BLOBS_ID)); //$NON-NLS-1$
+                "resultMap", introspectedTable.getResultMapWithBLOBsId())); //$NON-NLS-1$
         answer.addAttribute(new Attribute(
                 "parameterClass", fqjt.getFullyQualifiedName())); //$NON-NLS-1$
 
@@ -72,7 +71,7 @@ public class SelectByExampleWithBLOBsElementGenerator extends
         
         XmlElement includeElement = new XmlElement("include"); //$NON-NLS-1$
         includeElement.addAttribute(new Attribute("refid", //$NON-NLS-1$
-                introspectedTable.getSqlMapNamespace() + "." + XmlConstants.EXAMPLE_WHERE_CLAUSE_ID)); //$NON-NLS-1$
+                introspectedTable.getSqlMapNamespace() + "." + introspectedTable.getExampleWhereClauseId())); //$NON-NLS-1$
         isParameterPresenteElement.addElement(includeElement);
 
         XmlElement isNotNullElement = new XmlElement("isNotNull"); //$NON-NLS-1$

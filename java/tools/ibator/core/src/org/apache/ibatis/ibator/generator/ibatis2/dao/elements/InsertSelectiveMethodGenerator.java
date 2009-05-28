@@ -26,7 +26,6 @@ import org.apache.ibatis.ibator.api.dom.java.Method;
 import org.apache.ibatis.ibator.api.dom.java.Parameter;
 import org.apache.ibatis.ibator.api.dom.java.PrimitiveTypeWrapper;
 import org.apache.ibatis.ibator.api.dom.java.TopLevelClass;
-import org.apache.ibatis.ibator.generator.XmlConstants;
 
 /**
  * 
@@ -52,7 +51,7 @@ public class InsertSelectiveMethodGenerator extends AbstractDAOElementGenerator 
         }
 
         sb.append(daoTemplate.getInsertMethod(introspectedTable.getSqlMapNamespace(),
-                XmlConstants.INSERT_SELECTIVE_STATEMENT_ID, "record")); //$NON-NLS-1$
+                introspectedTable.getInsertSelectiveStatementId(), "record")); //$NON-NLS-1$
         method.addBodyLine(sb.toString());
 
         if (returnType != null) {

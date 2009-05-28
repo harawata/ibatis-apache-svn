@@ -24,7 +24,6 @@ import org.apache.ibatis.ibator.api.dom.java.JavaVisibility;
 import org.apache.ibatis.ibator.api.dom.java.Method;
 import org.apache.ibatis.ibator.api.dom.java.Parameter;
 import org.apache.ibatis.ibator.api.dom.java.TopLevelClass;
-import org.apache.ibatis.ibator.generator.XmlConstants;
 
 /**
  * 
@@ -54,7 +53,7 @@ public class SelectByExampleWithBLOBsMethodGenerator extends
         sb.append(method.getReturnType().getShortName());
         sb.append(" list = "); //$NON-NLS-1$
         sb.append(daoTemplate.getQueryForListMethod(introspectedTable.getSqlMapNamespace(),
-                XmlConstants.SELECT_BY_EXAMPLE_WITH_BLOBS_STATEMENT_ID,
+                introspectedTable.getSelectByExampleWithBLOBsStatementId(),
                 "example")); //$NON-NLS-1$
         method.addBodyLine(sb.toString());
         method.addBodyLine("return list;"); //$NON-NLS-1$

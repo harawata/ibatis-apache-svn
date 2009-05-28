@@ -24,7 +24,6 @@ import org.apache.ibatis.ibator.api.dom.java.JavaVisibility;
 import org.apache.ibatis.ibator.api.dom.java.Method;
 import org.apache.ibatis.ibator.api.dom.java.Parameter;
 import org.apache.ibatis.ibator.api.dom.java.TopLevelClass;
-import org.apache.ibatis.ibator.generator.XmlConstants;
 
 /**
  * 
@@ -45,7 +44,7 @@ public class DeleteByExampleMethodGenerator extends AbstractDAOElementGenerator 
         StringBuilder sb = new StringBuilder();
         sb.append("int rows = "); //$NON-NLS-1$
         sb.append(daoTemplate.getDeleteMethod(introspectedTable.getSqlMapNamespace(),
-                XmlConstants.DELETE_BY_EXAMPLE_STATEMENT_ID, "example")); //$NON-NLS-1$
+                introspectedTable.getDeleteByExampleStatementId(), "example")); //$NON-NLS-1$
         method.addBodyLine(sb.toString());
         method.addBodyLine("return rows;"); //$NON-NLS-1$
 

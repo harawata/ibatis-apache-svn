@@ -25,7 +25,6 @@ import org.apache.ibatis.ibator.api.dom.java.JavaVisibility;
 import org.apache.ibatis.ibator.api.dom.java.Method;
 import org.apache.ibatis.ibator.api.dom.java.Parameter;
 import org.apache.ibatis.ibator.api.dom.java.TopLevelClass;
-import org.apache.ibatis.ibator.generator.XmlConstants;
 import org.apache.ibatis.ibator.internal.util.JavaBeansUtil;
 
 /**
@@ -82,7 +81,7 @@ public class SelectByPrimaryKeyMethodGenerator extends AbstractDAOElementGenerat
         sb.append(") "); //$NON-NLS-1$
         sb.append(daoTemplate.getQueryForObjectMethod(introspectedTable
                 .getSqlMapNamespace(),
-                XmlConstants.SELECT_BY_PRIMARY_KEY_STATEMENT_ID, "key")); //$NON-NLS-1$
+                introspectedTable.getSelectByPrimaryKeyStatementId(), "key")); //$NON-NLS-1$
         method.addBodyLine(sb.toString());
         method.addBodyLine("return record;"); //$NON-NLS-1$
 

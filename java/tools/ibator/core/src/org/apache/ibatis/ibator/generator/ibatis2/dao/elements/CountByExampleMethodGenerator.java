@@ -24,7 +24,6 @@ import org.apache.ibatis.ibator.api.dom.java.JavaVisibility;
 import org.apache.ibatis.ibator.api.dom.java.Method;
 import org.apache.ibatis.ibator.api.dom.java.Parameter;
 import org.apache.ibatis.ibator.api.dom.java.TopLevelClass;
-import org.apache.ibatis.ibator.generator.XmlConstants;
 
 /**
  * 
@@ -50,7 +49,7 @@ public class CountByExampleMethodGenerator extends AbstractDAOElementGenerator {
 
         sb.append("Integer count = (Integer)  "); //$NON-NLS-1$
         sb.append(daoTemplate.getQueryForObjectMethod(introspectedTable.getSqlMapNamespace(),
-                XmlConstants.COUNT_BY_EXAMPLE_STATEMENT_ID, "example")); //$NON-NLS-1$
+                introspectedTable.getCountByExampleStatementId(), "example")); //$NON-NLS-1$
         method.addBodyLine(sb.toString());
 
         if (generateForJava5) {

@@ -21,7 +21,6 @@ import org.apache.ibatis.ibator.api.dom.xml.Attribute;
 import org.apache.ibatis.ibator.api.dom.xml.TextElement;
 import org.apache.ibatis.ibator.api.dom.xml.XmlElement;
 import org.apache.ibatis.ibator.config.GeneratedKey;
-import org.apache.ibatis.ibator.generator.XmlConstants;
 import org.apache.ibatis.ibator.generator.ibatis2.Ibatis2FormattingUtilities;
 
 /**
@@ -39,7 +38,7 @@ public class InsertSelectiveElementGenerator extends AbstractXmlElementGenerator
     public void addElements(XmlElement parentElement) {
         XmlElement answer = new XmlElement("insert"); //$NON-NLS-1$
 
-        answer.addAttribute(new Attribute("id", XmlConstants.INSERT_SELECTIVE_STATEMENT_ID)); //$NON-NLS-1$
+        answer.addAttribute(new Attribute("id", introspectedTable.getInsertSelectiveStatementId())); //$NON-NLS-1$
         
         FullyQualifiedJavaType parameterType =
             introspectedTable.getRules().calculateAllFieldsClass();

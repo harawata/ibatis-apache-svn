@@ -21,7 +21,6 @@ import org.apache.ibatis.ibator.api.dom.xml.TextElement;
 import org.apache.ibatis.ibator.api.dom.xml.XmlElement;
 import org.apache.ibatis.ibator.config.GeneratedKey;
 import org.apache.ibatis.ibator.generator.AbstractGenerator;
-import org.apache.ibatis.ibator.generator.XmlConstants;
 import org.apache.ibatis.ibator.internal.util.StringUtility;
 
 /**
@@ -65,14 +64,14 @@ public abstract class AbstractXmlElementGenerator extends AbstractGenerator {
     protected XmlElement getBaseColumnListElement() {
         XmlElement answer = new XmlElement("include"); //$NON-NLS-1$
         answer.addAttribute(new Attribute("refid", //$NON-NLS-1$
-                introspectedTable.getSqlMapNamespace() + "." + XmlConstants.BASE_COLUMN_LIST_ID)); //$NON-NLS-1$
+                introspectedTable.getSqlMapNamespace() + "." + introspectedTable.getBaseColumnListId())); //$NON-NLS-1$
         return answer;
     }
 
     protected XmlElement getBlobColumnListElement() {
         XmlElement answer = new XmlElement("include"); //$NON-NLS-1$
         answer.addAttribute(new Attribute("refid", //$NON-NLS-1$
-                introspectedTable.getSqlMapNamespace() + "." + XmlConstants.BLOB_COLUMN_LIST_ID)); //$NON-NLS-1$
+                introspectedTable.getSqlMapNamespace() + "." + introspectedTable.getBlobColumnListId())); //$NON-NLS-1$
         return answer;
     }
 }

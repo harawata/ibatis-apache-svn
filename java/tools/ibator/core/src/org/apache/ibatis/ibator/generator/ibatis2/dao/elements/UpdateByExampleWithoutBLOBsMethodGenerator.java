@@ -24,7 +24,6 @@ import org.apache.ibatis.ibator.api.dom.java.JavaVisibility;
 import org.apache.ibatis.ibator.api.dom.java.Method;
 import org.apache.ibatis.ibator.api.dom.java.Parameter;
 import org.apache.ibatis.ibator.api.dom.java.TopLevelClass;
-import org.apache.ibatis.ibator.generator.XmlConstants;
 
 /**
  * 
@@ -48,7 +47,7 @@ public class UpdateByExampleWithoutBLOBsMethodGenerator extends
         StringBuilder sb = new StringBuilder();
         sb.append("int rows = "); //$NON-NLS-1$
         sb.append(daoTemplate.getUpdateMethod(introspectedTable.getSqlMapNamespace(),
-                XmlConstants.UPDATE_BY_EXAMPLE_STATEMENT_ID,
+                introspectedTable.getUpdateByExampleStatementId(),
                 "parms")); //$NON-NLS-1$
         method.addBodyLine(sb.toString());
 

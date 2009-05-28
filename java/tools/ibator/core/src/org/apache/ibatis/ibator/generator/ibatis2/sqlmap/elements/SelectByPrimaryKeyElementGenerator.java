@@ -20,7 +20,6 @@ import org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.ibator.api.dom.xml.Attribute;
 import org.apache.ibatis.ibator.api.dom.xml.TextElement;
 import org.apache.ibatis.ibator.api.dom.xml.XmlElement;
-import org.apache.ibatis.ibator.generator.XmlConstants;
 import org.apache.ibatis.ibator.generator.ibatis2.Ibatis2FormattingUtilities;
 import org.apache.ibatis.ibator.internal.util.StringUtility;
 
@@ -40,13 +39,13 @@ public class SelectByPrimaryKeyElementGenerator extends AbstractXmlElementGenera
         XmlElement answer = new XmlElement("select"); //$NON-NLS-1$
 
         answer.addAttribute(new Attribute(
-                "id", XmlConstants.SELECT_BY_PRIMARY_KEY_STATEMENT_ID)); //$NON-NLS-1$
+                "id", introspectedTable.getSelectByPrimaryKeyStatementId())); //$NON-NLS-1$
         if (introspectedTable.getRules().generateResultMapWithBLOBs()) {
             answer.addAttribute(new Attribute("resultMap", //$NON-NLS-1$
-                    XmlConstants.RESULT_MAP_WITH_BLOBS_ID));
+                    introspectedTable.getResultMapWithBLOBsId()));
         } else {
             answer.addAttribute(new Attribute("resultMap", //$NON-NLS-1$
-                    XmlConstants.BASE_RESULT_MAP_ID));
+                    introspectedTable.getBaseResultMapId()));
         }
         
         FullyQualifiedJavaType parameterType;

@@ -21,7 +21,6 @@ import org.apache.ibatis.ibator.api.IntrospectedColumn;
 import org.apache.ibatis.ibator.api.dom.xml.Attribute;
 import org.apache.ibatis.ibator.api.dom.xml.TextElement;
 import org.apache.ibatis.ibator.api.dom.xml.XmlElement;
-import org.apache.ibatis.ibator.generator.XmlConstants;
 import org.apache.ibatis.ibator.generator.ibatis2.Ibatis2FormattingUtilities;
 
 /**
@@ -40,7 +39,7 @@ public class BlobColumnListElementGenerator extends AbstractXmlElementGenerator 
         XmlElement answer = new XmlElement("sql"); //$NON-NLS-1$
 
         answer.addAttribute(new Attribute("id", //$NON-NLS-1$
-                XmlConstants.BLOB_COLUMN_LIST_ID));
+                introspectedTable.getBlobColumnListId()));
 
         ibatorContext.getCommentGenerator().addComment(answer);
 

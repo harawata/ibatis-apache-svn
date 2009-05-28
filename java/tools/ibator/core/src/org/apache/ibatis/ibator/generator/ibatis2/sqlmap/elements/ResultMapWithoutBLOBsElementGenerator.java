@@ -20,7 +20,6 @@ import org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.ibator.api.dom.xml.Attribute;
 import org.apache.ibatis.ibator.api.dom.xml.XmlElement;
 import org.apache.ibatis.ibator.config.PropertyRegistry;
-import org.apache.ibatis.ibator.generator.XmlConstants;
 import org.apache.ibatis.ibator.generator.ibatis2.Ibatis2FormattingUtilities;
 import org.apache.ibatis.ibator.internal.util.StringUtility;
 
@@ -41,7 +40,7 @@ public class ResultMapWithoutBLOBsElementGenerator extends AbstractXmlElementGen
             StringUtility.isTrue(introspectedTable.getTableConfigurationProperty(PropertyRegistry.TABLE_USE_COLUMN_INDEXES));
         XmlElement answer = new XmlElement("resultMap"); //$NON-NLS-1$
         answer.addAttribute(new Attribute("id", //$NON-NLS-1$
-                XmlConstants.BASE_RESULT_MAP_ID));
+                introspectedTable.getBaseResultMapId()));
 
         FullyQualifiedJavaType returnType;
         if (introspectedTable.getRules().generateBaseRecordClass()) {

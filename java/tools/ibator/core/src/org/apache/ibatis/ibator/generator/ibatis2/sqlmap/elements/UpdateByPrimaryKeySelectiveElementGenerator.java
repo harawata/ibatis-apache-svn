@@ -20,7 +20,6 @@ import org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.ibator.api.dom.xml.Attribute;
 import org.apache.ibatis.ibator.api.dom.xml.TextElement;
 import org.apache.ibatis.ibator.api.dom.xml.XmlElement;
-import org.apache.ibatis.ibator.generator.XmlConstants;
 import org.apache.ibatis.ibator.generator.ibatis2.Ibatis2FormattingUtilities;
 
 /**
@@ -40,7 +39,7 @@ public class UpdateByPrimaryKeySelectiveElementGenerator extends
         XmlElement answer = new XmlElement("update"); //$NON-NLS-1$
 
         answer.addAttribute(new Attribute(
-                "id", XmlConstants.UPDATE_BY_PRIMARY_KEY_SELECTIVE_STATEMENT_ID)); //$NON-NLS-1$
+                "id", introspectedTable.getUpdateByPrimaryKeySelectiveStatementId())); //$NON-NLS-1$
 
         FullyQualifiedJavaType parameterType;
         

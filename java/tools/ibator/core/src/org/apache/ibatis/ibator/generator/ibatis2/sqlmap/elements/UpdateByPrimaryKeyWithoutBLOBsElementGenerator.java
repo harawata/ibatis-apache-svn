@@ -22,7 +22,6 @@ import org.apache.ibatis.ibator.api.dom.OutputUtilities;
 import org.apache.ibatis.ibator.api.dom.xml.Attribute;
 import org.apache.ibatis.ibator.api.dom.xml.TextElement;
 import org.apache.ibatis.ibator.api.dom.xml.XmlElement;
-import org.apache.ibatis.ibator.generator.XmlConstants;
 import org.apache.ibatis.ibator.generator.ibatis2.Ibatis2FormattingUtilities;
 
 /**
@@ -42,7 +41,7 @@ public class UpdateByPrimaryKeyWithoutBLOBsElementGenerator extends
         XmlElement answer = new XmlElement("update"); //$NON-NLS-1$
 
         answer.addAttribute(new Attribute(
-                "id", XmlConstants.UPDATE_BY_PRIMARY_KEY_STATEMENT_ID)); //$NON-NLS-1$
+                "id", introspectedTable.getUpdateByPrimaryKeyStatementId())); //$NON-NLS-1$
         answer.addAttribute(new Attribute("parameterClass", //$NON-NLS-1$
                 introspectedTable.getBaseRecordType().getFullyQualifiedName()));
 

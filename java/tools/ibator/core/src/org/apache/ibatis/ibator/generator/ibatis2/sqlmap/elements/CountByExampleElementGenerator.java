@@ -19,7 +19,6 @@ import org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.ibator.api.dom.xml.Attribute;
 import org.apache.ibatis.ibator.api.dom.xml.TextElement;
 import org.apache.ibatis.ibator.api.dom.xml.XmlElement;
-import org.apache.ibatis.ibator.generator.XmlConstants;
 
 /**
  * 
@@ -40,7 +39,7 @@ public class CountByExampleElementGenerator extends AbstractXmlElementGenerator 
 
         answer
                 .addAttribute(new Attribute(
-                        "id", XmlConstants.COUNT_BY_EXAMPLE_STATEMENT_ID)); //$NON-NLS-1$
+                        "id", introspectedTable.getCountByExampleStatementId())); //$NON-NLS-1$
         answer.addAttribute(new Attribute(
                 "parameterClass", fqjt.getFullyQualifiedName())); //$NON-NLS-1$
         answer.addAttribute(new Attribute(
@@ -57,7 +56,7 @@ public class CountByExampleElementGenerator extends AbstractXmlElementGenerator 
         sb.setLength(0);
         sb.append(introspectedTable.getSqlMapNamespace());
         sb.append('.');
-        sb.append(XmlConstants.EXAMPLE_WHERE_CLAUSE_ID);
+        sb.append(introspectedTable.getExampleWhereClauseId());
         includeElement.addAttribute(new Attribute("refid", //$NON-NLS-1$
                 sb.toString()));
 

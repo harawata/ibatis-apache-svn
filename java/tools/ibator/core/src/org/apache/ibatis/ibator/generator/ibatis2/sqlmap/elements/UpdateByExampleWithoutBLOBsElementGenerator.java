@@ -22,7 +22,6 @@ import org.apache.ibatis.ibator.api.dom.OutputUtilities;
 import org.apache.ibatis.ibator.api.dom.xml.Attribute;
 import org.apache.ibatis.ibator.api.dom.xml.TextElement;
 import org.apache.ibatis.ibator.api.dom.xml.XmlElement;
-import org.apache.ibatis.ibator.generator.XmlConstants;
 import org.apache.ibatis.ibator.generator.ibatis2.Ibatis2FormattingUtilities;
 
 /**
@@ -42,7 +41,7 @@ public class UpdateByExampleWithoutBLOBsElementGenerator extends
         XmlElement answer = new XmlElement("update"); //$NON-NLS-1$
 
         answer.addAttribute(new Attribute(
-                "id", XmlConstants.UPDATE_BY_EXAMPLE_STATEMENT_ID)); //$NON-NLS-1$
+                "id", introspectedTable.getUpdateByExampleStatementId())); //$NON-NLS-1$
 
         ibatorContext.getCommentGenerator().addComment(answer);
 
@@ -82,7 +81,7 @@ public class UpdateByExampleWithoutBLOBsElementGenerator extends
         
         XmlElement includeElement = new XmlElement("include"); //$NON-NLS-1$
         includeElement.addAttribute(new Attribute("refid", //$NON-NLS-1$
-                introspectedTable.getSqlMapNamespace() + "." + XmlConstants.EXAMPLE_WHERE_CLAUSE_ID)); //$NON-NLS-1$
+                introspectedTable.getSqlMapNamespace() + "." + introspectedTable.getExampleWhereClauseId())); //$NON-NLS-1$
         isParameterPresentElement.addElement(includeElement);
 
         if (ibatorContext.getPlugins().sqlMapUpdateByExampleWithoutBLOBsElementGenerated(answer, introspectedTable)) {
