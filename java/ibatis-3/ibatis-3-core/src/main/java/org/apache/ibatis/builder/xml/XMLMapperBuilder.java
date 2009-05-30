@@ -12,17 +12,17 @@ import java.util.*;
 public class XMLMapperBuilder extends BaseBuilder {
 
   private XPathParser parser;
-  private SequentialMapperBuilder sequentialBuilder;
+  private MapperBuilderAssistant assistant;
   private Map<String, XNode> sqlFragments = new HashMap<String, XNode>();
 
   public XMLMapperBuilder(Reader reader, Configuration configuration, String resource, String namespace) {
     this(reader, configuration, resource);
-    this.sequentialBuilder.namespace(namespace);
+    this.assistant.setCurrentNamespace(namespace);
   }
 
   public XMLMapperBuilder(Reader reader, Configuration configuration, String resource) {
     super(configuration);
-    this.sequentialBuilder = new SequentialMapperBuilder(configuration, resource);
+    this.assistant = new MapperBuilderAssistant(configuration, resource);
     this.parser = new XPathParser(reader,true,new XMLMapperEntityResolver(),configuration.getVariables());
   }
 
@@ -38,7 +38,7 @@ public class XMLMapperBuilder extends BaseBuilder {
   private void configurationElement(XNode context) {
     try {
       String namespace = context.getStringAttribute("namespace");
-      sequentialBuilder.namespace(namespace);
+      assistant.setCurrentNamespace(namespace);
       cacheRefElement(context.evalNode("cache-ref"));
       cacheElement(context.evalNode("cache"));
       parameterMapElement(context.evalNodes("/mapper/parameterMap"));
@@ -53,7 +53,7 @@ public class XMLMapperBuilder extends BaseBuilder {
 
   private void cacheRefElement(XNode context) {
     if (context != null) {
-      sequentialBuilder.cacheRef(context.getStringAttribute("namespace"));
+      assistant.useCacheRef(context.getStringAttribute("namespace"));
     }
   }
 
@@ -69,7 +69,7 @@ public class XMLMapperBuilder extends BaseBuilder {
       Integer size = context.getIntAttribute("size");
       boolean readOnly = context.getBooleanAttribute("readOnly", false);
       Properties props = context.getChildrenAsProperties();
-      sequentialBuilder.cache(typeClass, evictionClass, flushInterval, size, readOnly, props);
+      assistant.useNewCache(typeClass, evictionClass, flushInterval, size, readOnly, props);
     }
   }
 
@@ -78,8 +78,8 @@ public class XMLMapperBuilder extends BaseBuilder {
       String id = parameterMapNode.getStringAttribute("id");
       String type = parameterMapNode.getStringAttribute("type");
       Class parameterClass = resolveClass(type);
-      sequentialBuilder.parameterMapStart(id, parameterClass);
       List<XNode> parameterNodes = parameterMapNode.evalNodes("parameter");
+      List<ParameterMapping> parameterMappings = new ArrayList<ParameterMapping>();
       for (XNode parameterNode : parameterNodes) {
         String property = parameterNode.getStringAttribute("property");
         String javaType = parameterNode.getStringAttribute("javaType");
@@ -92,9 +92,10 @@ public class XMLMapperBuilder extends BaseBuilder {
         Class javaTypeClass = resolveClass(javaType);
         JdbcType jdbcTypeEnum = resolveJdbcType(jdbcType);
         Class typeHandlerClass = resolveClass(typeHandler);
-        sequentialBuilder.parameterMapping(property, javaTypeClass, jdbcTypeEnum, resultMap, modeEnum, typeHandlerClass, numericScale);
+        ParameterMapping parameterMapping = assistant.buildParameterMapping(parameterClass, property, javaTypeClass, jdbcTypeEnum, resultMap, modeEnum, typeHandlerClass, numericScale);
+        parameterMappings.add(parameterMapping);
       }
-      sequentialBuilder.parameterMapEnd();
+      assistant.addParameterMap(id, parameterClass, parameterMappings);
     }
   }
 
@@ -114,22 +115,23 @@ public class XMLMapperBuilder extends BaseBuilder {
       }
       Class typeClass = resolveClass(type);
       processChildrenAsResultMap(resultMapNode);
-      sequentialBuilder.resultMapStart(id, typeClass, extend);
+      Discriminator discriminator = null;
+      List<ResultMapping> resultMappings = new ArrayList<ResultMapping>();
       List<XNode> resultChildren = resultMapNode.getChildren();
       for (XNode resultChild : resultChildren) {
         if ("constructor".equals(resultChild.getName())) {
-          processConstructorElement(resultChild);
+          processConstructorElement(resultChild,typeClass,resultMappings);
         } else if ("discriminator".equals(resultChild.getName())) {
-          processDiscriminatorElement(resultChild);
+          discriminator = processDiscriminatorElement(resultChild,typeClass);
         } else {
           ArrayList<ResultFlag> flags = new ArrayList<ResultFlag>();
           if ("id".equals(resultChild.getName())) {
             flags.add(ResultFlag.ID);
           }
-          buildResultMappingFromContext(resultChild, flags);
+          resultMappings.add(buildResultMappingFromContext(resultChild, typeClass, flags));
         }
       }
-      sequentialBuilder.resultMapEnd();
+    assistant.addResultMap(id, typeClass, extend, discriminator, resultMappings);
   }
 
   private void processChildrenAsResultMap(XNode resultChild) throws Exception {
@@ -141,7 +143,7 @@ public class XMLMapperBuilder extends BaseBuilder {
     }
   }
 
-  private void processConstructorElement(XNode resultChild) throws Exception {
+  private void processConstructorElement(XNode resultChild, Class resultType, List<ResultMapping> resultMappings) throws Exception {
     List<XNode> argChildren = resultChild.getChildren();
     for (XNode argChild : argChildren) {
       ArrayList<ResultFlag> flags = new ArrayList<ResultFlag>();
@@ -149,11 +151,11 @@ public class XMLMapperBuilder extends BaseBuilder {
       if ("idArg".equals(argChild.getName())) {
         flags.add(ResultFlag.ID);
       }
-      buildResultMappingFromContext(argChild, flags);
+      resultMappings.add(buildResultMappingFromContext(argChild, resultType, flags));
     }
   }
 
-  private void processDiscriminatorElement(XNode context) throws Exception {
+  private Discriminator processDiscriminatorElement(XNode context, Class resultType) throws Exception {
     String column = context.getStringAttribute("column");
     String javaType = context.getStringAttribute("javaType");
     String jdbcType = context.getStringAttribute("jdbcType");
@@ -161,14 +163,14 @@ public class XMLMapperBuilder extends BaseBuilder {
     Class javaTypeClass = resolveClass(javaType);
     Class typeHandlerClass = resolveClass(typeHandler);
     JdbcType jdbcTypeEnum = resolveJdbcType(jdbcType);
-    sequentialBuilder.resultMapDiscriminatorStart(column, javaTypeClass, jdbcTypeEnum, typeHandlerClass);
+    Map<String, String> discriminatorMap = new HashMap<String,String>();
     for (XNode caseChild : context.getChildren()) {
       processChildrenAsResultMap(caseChild);
       String value = caseChild.getStringAttribute("value");
       String resultMap = caseChild.getStringAttribute("resultMap");
-      sequentialBuilder.resultMapDiscriminatorCase(value, resultMap);
+      discriminatorMap.put(value, resultMap);
     }
-    sequentialBuilder.resultMapDiscriminatorEnd();
+    return assistant.buildDiscriminator(resultType, column, javaTypeClass, jdbcTypeEnum, typeHandlerClass, discriminatorMap);
   }
 
   private void sqlElement(List<XNode> list) throws Exception {
@@ -180,12 +182,12 @@ public class XMLMapperBuilder extends BaseBuilder {
 
   private void buildStatementFromContext(List<XNode> list) {
     for (XNode context : list) {
-      final XMLStatementBuilder statementParser = new XMLStatementBuilder(configuration, sequentialBuilder, this);
+      final XMLStatementBuilder statementParser = new XMLStatementBuilder(configuration, assistant, this);
       statementParser.parseStatementNode(context);
     }
   }
 
-  private void buildResultMappingFromContext(XNode context, ArrayList<ResultFlag> flags) {
+  private ResultMapping buildResultMappingFromContext(XNode context, Class resultType, ArrayList<ResultFlag> flags) {
     String property = context.getStringAttribute("property");
     String column = context.getStringAttribute("column");
     String javaType = context.getStringAttribute("javaType");
@@ -196,11 +198,11 @@ public class XMLMapperBuilder extends BaseBuilder {
     Class javaTypeClass = resolveClass(javaType);
     Class typeHandlerClass = resolveClass(typeHandler);
     JdbcType jdbcTypeEnum = resolveJdbcType(jdbcType);
-    sequentialBuilder.resultMapping(property, column, javaTypeClass, jdbcTypeEnum, nestedSelect, nestedResultMap, typeHandlerClass, flags);
+    return assistant.buildResultMapping(resultType, property, column, javaTypeClass, jdbcTypeEnum, nestedSelect, nestedResultMap, typeHandlerClass, flags);
   }
 
   private void bindMapperForNamespace() {
-    String namespace = sequentialBuilder.getNamespace();
+    String namespace = assistant.getCurrentNamespace();
     if (namespace != null) {
       Class boundType = null;
       try {

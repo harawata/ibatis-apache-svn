@@ -11,53 +11,50 @@ import org.apache.ibatis.type.*;
 
 import java.util.*;
 
-public class SequentialMapperBuilder extends BaseBuilder {
+public class MapperBuilderAssistant extends BaseBuilder {
 
-  private String namespace;
+  private String currentNamespace;
   private String resource;
+  private Cache currentCache;
 
-  private ParameterMap.Builder parameterMapBuilder;
-  private List<ParameterMapping> parameterMappings;
-
-  private ResultMap.Builder resultMapBuilder;
-  private List<ResultMapping> resultMappings;
-
-  private Discriminator.Builder discriminatorBuilder;
-  private HashMap<String, String> discriminatorMap;
-
-  private Cache cache;
-
-  public SequentialMapperBuilder(Configuration configuration, String resource) {
+  public MapperBuilderAssistant(Configuration configuration, String resource) {
     super(configuration);
     ErrorContext.instance().resource(resource);
     this.resource = resource;
   }
 
-  public String getNamespace() {
-    return namespace;
+  public String getCurrentNamespace() {
+    return currentNamespace;
   }
 
-  public void namespace(String namespace) {
-    if (namespace != null) {
-      this.namespace = namespace;
+  public void setCurrentNamespace(String currentNamespace) {
+    if (currentNamespace != null) {
+      this.currentNamespace = currentNamespace;
     }
-    if (this.namespace == null) {
+    if (this.currentNamespace == null) {
       throw new BulderException("The mapper element requires a namespace attribute to be specified.");
     }
   }
 
-  public void cacheRef(String namespace) {
+  public String applyCurrentNamespace(String base) {
+    if (base == null) return null;
+    if (base.contains(".")) return base;
+    return currentNamespace + "." + base;
+  }
+
+  public Cache useCacheRef(String namespace) {
     if (namespace == null) {
       throw new BulderException("cache-ref element requires a namespace attribute.");
     }
-    cache = configuration.getCache(namespace);
+    Cache cache = configuration.getCache(namespace);
     if (cache == null) {
       throw new BulderException("No cache for namespace '" + namespace + "' could be found.");
     }
+    currentCache = cache;
+    return cache;
   }
 
-  //  <cache type="LRU" flushInterval="3600000" size="1000" readOnly="false" />
-  public void cache(Class typeClass,
+  public Cache useNewCache(Class typeClass,
                     Class evictionClass,
                     Long flushInterval,
                     Integer size,
@@ -65,7 +62,7 @@ public class SequentialMapperBuilder extends BaseBuilder {
                     Properties props) {
     typeClass = valueOrDefault(typeClass, PerpetualCache.class);
     evictionClass = valueOrDefault(evictionClass, LruCache.class);
-    cache = new CacheBuilder(namespace)
+    Cache cache = new CacheBuilder(currentNamespace)
         .implementation(typeClass)
         .addDecorator(evictionClass)
         .clearInterval(flushInterval)
@@ -74,18 +71,20 @@ public class SequentialMapperBuilder extends BaseBuilder {
         .properties(props)
         .build();
     configuration.addCache(cache);
+    currentCache = cache;
+    return cache;
   }
 
-  //  <parameterMap id="" type="">
-  public void parameterMapStart(String id, Class parameterClass) {
-    id = applyNamespace(id);
-    parameterMappings = new ArrayList<ParameterMapping>();
-    parameterMapBuilder = new ParameterMap.Builder(configuration, id, parameterClass, parameterMappings);
+  public ParameterMap addParameterMap(String id, Class parameterClass, List<ParameterMapping> parameterMappings) {
+    id = applyCurrentNamespace(id);
+    ParameterMap.Builder parameterMapBuilder = new ParameterMap.Builder(configuration, id, parameterClass, parameterMappings);
+    ParameterMap parameterMap = parameterMapBuilder.build();
+    configuration.addParameterMap(parameterMap);
+    return parameterMap;
   }
 
-  //  <parameterMap id="" type="">
-  //    <param property="id" javaType="" jdbcType="" typeHandler="" mode="" scale="" resultMap=""/>
-  public void parameterMapping(
+  public ParameterMapping buildParameterMapping(
+      Class parameterType,
       String property,
       Class javaType,
       JdbcType jdbcType,
@@ -93,10 +92,10 @@ public class SequentialMapperBuilder extends BaseBuilder {
       ParameterMode parameterMode,
       Class typeHandler,
       Integer numericScale) {
-    resultMap = applyNamespace(resultMap);
+    resultMap = applyCurrentNamespace(resultMap);
 
-    Class resultType = parameterMapBuilder.type();
-    Class javaTypeClass = resolveParameterJavaType(resultType, property, javaType);
+    // Class parameterType = parameterMapBuilder.type();
+    Class javaTypeClass = resolveParameterJavaType(parameterType, property, javaType);
     TypeHandler typeHandlerInstance = (TypeHandler) resolveInstance(typeHandler);
 
     ParameterMapping.Builder builder = new ParameterMapping.Builder(configuration, property, javaTypeClass);
@@ -105,40 +104,31 @@ public class SequentialMapperBuilder extends BaseBuilder {
     builder.mode(parameterMode);
     builder.numericScale(numericScale);
     builder.typeHandler(typeHandlerInstance);
-    parameterMappings.add(builder.build());
+    return builder.build();
   }
 
-  //  </parameterMap>
-  public void parameterMapEnd() {
-    configuration.addParameterMap(parameterMapBuilder.build());
-  }
-
-  //  <resultMap id="" type="" extends="">
-  public void resultMapStart(
+  public ResultMap addResultMap(
       String id,
       Class type,
-      String extend) {
-    id = applyNamespace(id);
-    extend = applyNamespace(extend);
+      String extend,
+      Discriminator discriminator,
+      List<ResultMapping> resultMappings) {
+    id = applyCurrentNamespace(id);
+    extend = applyCurrentNamespace(extend);
 
-    resultMappings = new ArrayList<ResultMapping>();
-    resultMapBuilder = new ResultMap.Builder(configuration, id, type, resultMappings);
-
+    ResultMap.Builder resultMapBuilder = new ResultMap.Builder(configuration, id, type, resultMappings);
     if (extend != null) {
       ResultMap resultMap = configuration.getResultMap(extend);
       resultMappings.addAll(resultMap.getResultMappings());
     }
+    resultMapBuilder.discriminator(discriminator);
+    ResultMap resultMap = resultMapBuilder.build();
+    configuration.addResultMap(resultMap);
+    return resultMap;
   }
 
-  //  <constructor>
-  //    <id column="" javaType="" jdbcType="" typeHandler=""/>
-  //  <constructor>
-  //    <result column="" javaType="" jdbcType="" typeHandler=""/>
-  //  <id property="" column="" javaType="" jdbcType="" typeHandler=""/>
-  //  <result property="" column="" javaType="" jdbcType="" typeHandler=""/>
-  //  <collection property="" column="" javaType="" select="" resultMap=""/>
-  //  <association property="" column="" javaType="" select="" resultMap=""/>
-  public void resultMapping(
+  public ResultMapping buildResultMapping(
+      Class resultType,
       String property,
       String column,
       Class javaType,
@@ -147,7 +137,8 @@ public class SequentialMapperBuilder extends BaseBuilder {
       String nestedResultMap,
       Class typeHandler,
       List<ResultFlag> flags) {
-    ResultMapping resultMapping = buildResultMapping(
+    ResultMapping resultMapping = assembleResultMapping(
+        resultType,
         property,
         column,
         javaType,
@@ -156,17 +147,19 @@ public class SequentialMapperBuilder extends BaseBuilder {
         nestedResultMap,
         typeHandler,
         flags);
-    resultMappings.add(resultMapping);
+    return resultMapping;
   }
 
 
-  //  <discriminator column="" javaType="" jdbcType="">
-  public void resultMapDiscriminatorStart(
+  public Discriminator buildDiscriminator(
+      Class resultType,
       String column,
       Class javaType,
       JdbcType jdbcType,
-      Class typeHandler) {
-    ResultMapping resultMapping = buildResultMapping(
+      Class typeHandler,
+      Map<String, String> discriminatorMap) {
+    ResultMapping resultMapping = assembleResultMapping(
+        resultType,
         null,
         column,
         javaType,
@@ -175,33 +168,22 @@ public class SequentialMapperBuilder extends BaseBuilder {
         null,
         typeHandler,
         new ArrayList<ResultFlag>());
-    discriminatorMap = new HashMap<String, String>();
-    discriminatorBuilder = new Discriminator.Builder(configuration, resultMapping, discriminatorMap);
+    Map<String,String> namespaceDiscriminatorMap = new HashMap<String,String>();
+    for (Map.Entry<String,String> e: discriminatorMap.entrySet()) {
+      String resultMap = e.getValue();
+      resultMap = applyCurrentNamespace(resultMap);
+      namespaceDiscriminatorMap .put(e.getKey(), resultMap);
+    }
+    Discriminator.Builder discriminatorBuilder = new Discriminator.Builder(configuration, resultMapping, namespaceDiscriminatorMap);
+    return discriminatorBuilder.build();
   }
 
-  //  <discriminator column="" javaType="" jdbcType="">
-  //    <case value="" resultMap=""/>
-  public void resultMapDiscriminatorCase(
-      String value,
-      String resultMap) {
-    resultMap = applyNamespace(resultMap);
-    discriminatorMap.put(value, resultMap);
-  }
-
-  //  </discriminator>
-  public void resultMapDiscriminatorEnd() {
-    resultMapBuilder.discriminator(discriminatorBuilder.build());
-  }
-
-  //  </resultMap>
-  public void resultMapEnd() {
-    configuration.addResultMap(resultMapBuilder.build());
-  }
-
-  public void statement(
+  public MappedStatement addMappedStatement(
       String id,
       SqlSource sqlSource,
-      StatementType statementType, SqlCommandType sqlCommandType, Integer fetchSize,
+      StatementType statementType,
+      SqlCommandType sqlCommandType,
+      Integer fetchSize,
       Integer timeout,
       String parameterMap,
       Class parameterType,
@@ -212,7 +194,7 @@ public class SequentialMapperBuilder extends BaseBuilder {
       boolean useCache,
       KeyGenerator keyGenerator,
       String keyProperty) {
-    id = applyNamespace(id);
+    id = applyCurrentNamespace(id);
     boolean isSelect = sqlCommandType == SqlCommandType.SELECT;
 
     MappedStatement.Builder statementBuilder = new MappedStatement.Builder(configuration, id, sqlSource, sqlCommandType);
@@ -225,16 +207,11 @@ public class SequentialMapperBuilder extends BaseBuilder {
 
     setStatementParameterMap(parameterMap, parameterType, statementBuilder);
     setStatementResultMap(resultMap, resultType, resultSetType, statementBuilder);
-    setStatementCache(isSelect, flushCache, useCache, statementBuilder);
+    setStatementCache(isSelect, flushCache, useCache, currentCache, statementBuilder);
 
     MappedStatement statement = statementBuilder.build();
     configuration.addMappedStatement(statement);
-  }
-
-  public String applyNamespace(String base) {
-    if (base == null) return null;
-    if (base.contains(".")) return base;
-    return namespace + "." + base;
+    return statement;
   }
 
   private <T> T valueOrDefault(T value, T defaultValue) {
@@ -245,6 +222,7 @@ public class SequentialMapperBuilder extends BaseBuilder {
       boolean isSelect,
       boolean flushCache,
       boolean useCache,
+      Cache cache,
       MappedStatement.Builder statementBuilder) {
     flushCache = valueOrDefault(flushCache, !isSelect);
     useCache = valueOrDefault(useCache, isSelect);
@@ -257,7 +235,7 @@ public class SequentialMapperBuilder extends BaseBuilder {
       String parameterMap,
       Class parameterTypeClass,
       MappedStatement.Builder statementBuilder) {
-    parameterMap = applyNamespace(parameterMap);
+    parameterMap = applyCurrentNamespace(parameterMap);
 
     if (parameterMap != null) {
       statementBuilder.parameterMap(configuration.getParameterMap(parameterMap));
@@ -277,7 +255,7 @@ public class SequentialMapperBuilder extends BaseBuilder {
       Class resultType,
       ResultSetType resultSetType,
       MappedStatement.Builder statementBuilder) {
-    resultMap = applyNamespace(resultMap);
+    resultMap = applyCurrentNamespace(resultMap);
 
     List<ResultMap> resultMaps = new ArrayList<ResultMap>();
     if (resultMap != null) {
@@ -305,7 +283,8 @@ public class SequentialMapperBuilder extends BaseBuilder {
     statementBuilder.timeout(timeout);
   }
 
-  private ResultMapping buildResultMapping(
+  private ResultMapping assembleResultMapping(
+      Class resultType,
       String property,
       String column,
       Class javaType,
@@ -314,16 +293,15 @@ public class SequentialMapperBuilder extends BaseBuilder {
       String nestedResultMap,
       Class typeHandler,
       List<ResultFlag> flags) {
-
-    nestedResultMap = applyNamespace(nestedResultMap);
-    Class resultType = resultMapBuilder.type();
+    // Class resultType = resultMapBuilder.type();
+    nestedResultMap = applyCurrentNamespace(nestedResultMap);
     Class javaTypeClass = resolveResultJavaType(resultType, property, javaType);
     TypeHandler typeHandlerInstance = (TypeHandler) resolveInstance(typeHandler);
 
     ResultMapping.Builder builder = new ResultMapping.Builder(configuration, property, column, javaTypeClass);
     builder.jdbcType(jdbcType);
-    builder.nestedQueryId(applyNamespace(nestedSelect));
-    builder.nestedResultMapId(applyNamespace(nestedResultMap));
+    builder.nestedQueryId(applyCurrentNamespace(nestedSelect));
+    builder.nestedResultMapId(applyCurrentNamespace(nestedResultMap));
     builder.typeHandler(typeHandlerInstance);
     builder.flags(flags == null ? new ArrayList<ResultFlag>() : flags);
 

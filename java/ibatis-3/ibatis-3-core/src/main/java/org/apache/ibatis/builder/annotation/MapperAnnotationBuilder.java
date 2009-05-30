@@ -16,18 +16,18 @@ import java.util.*;
 
 public class MapperAnnotationBuilder {
 
-  private SequentialMapperBuilder sequentialBuilder;
+  private MapperBuilderAssistant assistant;
   private Class type;
 
   public MapperAnnotationBuilder(Configuration config, Class type) {
     String resource = type.getName().replace('.', '/') + ".java (best guess)";
-    this.sequentialBuilder = new SequentialMapperBuilder(config, resource);
+    this.assistant = new MapperBuilderAssistant(config, resource);
     this.type = type;
   }
 
   public void parse() {
     loadXmlResource();
-    sequentialBuilder.namespace(type.getName());
+    assistant.setCurrentNamespace(type.getName());
     parseCache();
     parseCacheRef();
     Method[] methods = type.getMethods();
@@ -46,7 +46,7 @@ public class MapperAnnotationBuilder {
       // ignore, resource is not required
     }
     if (xmlReader != null) {
-      XMLMapperBuilder xmlParser = new XMLMapperBuilder(xmlReader, sequentialBuilder.getConfiguration(), xmlResource, type.getName());
+      XMLMapperBuilder xmlParser = new XMLMapperBuilder(xmlReader, assistant.getConfiguration(), xmlResource, type.getName());
       xmlParser.parse();
     }
   }
@@ -54,14 +54,14 @@ public class MapperAnnotationBuilder {
   private void parseCache() {
     CacheDomain cacheDomain = (CacheDomain) type.getAnnotation(CacheDomain.class);
     if (cacheDomain != null) {
-      sequentialBuilder.cache(cacheDomain.implementation(), cacheDomain.eviction(), cacheDomain.flushInterval(), cacheDomain.size(), !cacheDomain.readWrite(), null);
+      assistant.useNewCache(cacheDomain.implementation(), cacheDomain.eviction(), cacheDomain.flushInterval(), cacheDomain.size(), !cacheDomain.readWrite(), null);
     }
   }
 
   private void parseCacheRef() {
     CacheDomainRef cacheDomainRef = (CacheDomainRef) type.getAnnotation(CacheDomainRef.class);
     if (cacheDomainRef != null) {
-      sequentialBuilder.cacheRef(cacheDomainRef.value().getName());
+      assistant.useCacheRef(cacheDomainRef.value().getName());
     }
   }
 
@@ -89,27 +89,28 @@ public class MapperAnnotationBuilder {
   }
 
   private void applyResultMap(String resultMapId, Class returnType, Arg[] args, Result[] results, TypeDiscriminator discriminator) {
-    sequentialBuilder.resultMapStart(resultMapId, returnType, null);
-    applyConstructorArgs(args);
-    applyResults(results);
-    applyDiscriminator(resultMapId, discriminator);
-    sequentialBuilder.resultMapEnd();
-    createDiscriminatorResultMaps(resultMapId, discriminator);
+    List<ResultMapping> resultMappings = new ArrayList<ResultMapping>();
+    applyConstructorArgs(args, returnType, resultMappings);
+    applyResults(results, returnType, resultMappings);
+    Discriminator disc = applyDiscriminator(resultMapId, returnType, discriminator);
+    assistant.addResultMap(resultMapId, returnType, null, disc, resultMappings);
+    createDiscriminatorResultMaps(resultMapId, returnType, discriminator);
   }
 
-  private void createDiscriminatorResultMaps(String resultMapId, TypeDiscriminator discriminator) {
+  private void createDiscriminatorResultMaps(String resultMapId, Class resultType, TypeDiscriminator discriminator) {
     if (discriminator != null) {
       for (Case c : discriminator.cases()) {
         String value = c.value();
         Class type = c.type();
         String caseResultMapId = resultMapId + "-" + value;
-        sequentialBuilder.resultMapStart(caseResultMapId, type, resultMapId);
+        List<ResultMapping> resultMappings = new ArrayList<ResultMapping>();
         for (Result result : c.results()) {
           List<ResultFlag> flags = new ArrayList<ResultFlag>();
           if (result.id()) {
             flags.add(ResultFlag.ID);
           }
-          sequentialBuilder.resultMapping(
+          ResultMapping resultMapping = assistant.buildResultMapping(
+              resultType,
               result.property(),
               result.column(),
               result.javaType() == void.class ? null : result.javaType(),
@@ -118,32 +119,33 @@ public class MapperAnnotationBuilder {
               null,
               result.typeHandler() == void.class ? null : result.typeHandler(),
               flags);
+          resultMappings.add(resultMapping);
         }
-        sequentialBuilder.resultMapEnd();
+        assistant.addResultMap(caseResultMapId, type, resultMapId, null, resultMappings);
       }
     }
   }
 
-  private void applyDiscriminator(String resultMapId, TypeDiscriminator discriminator) {
+  private Discriminator applyDiscriminator(String resultMapId, Class resultType, TypeDiscriminator discriminator) {
     if (discriminator != null) {
       String column = discriminator.column();
       Class javaType = discriminator.javaType() == void.class ? String.class : discriminator.javaType();
       JdbcType jdbcType = discriminator.jdbcType() == JdbcType.UNDEFINED ? null : discriminator.jdbcType();
       Class typeHandler = discriminator.typeHandler() == void.class ? null : discriminator.typeHandler();
       Case[] cases = discriminator.cases();
-
-      sequentialBuilder.resultMapDiscriminatorStart(column, javaType, jdbcType, typeHandler);
+      Map<String, String> discriminatorMap = new HashMap<String,String>();
       for (Case c : cases) {
         String value = c.value();
         String caseResultMapId = resultMapId + "-" + value;
-        sequentialBuilder.resultMapDiscriminatorCase(value, caseResultMapId);
+        discriminatorMap.put(value, caseResultMapId);
       }
-      sequentialBuilder.resultMapDiscriminatorEnd();
+      return assistant.buildDiscriminator(resultType, column, javaType, jdbcType, typeHandler, discriminatorMap);
     }
+    return null;
   }
 
   private void parseStatement(Method method) {
-    Configuration configuration = sequentialBuilder.getConfiguration();
+    Configuration configuration = assistant.getConfiguration();
     SqlSource sqlSource = getSqlSourceFromAnnotations(method);
     if (sqlSource != null) {
       Options options = method.getAnnotation(Options.class);
@@ -168,10 +170,12 @@ public class MapperAnnotationBuilder {
         keyGenerator = options.useGeneratedKeys() ? new Jdbc3KeyGenerator() : null;
         keyProperty = options.keyProperty();
       }
-      sequentialBuilder.statement(
+      assistant.addMappedStatement(
           mappedStatementId,
           sqlSource,
-          statementType, sqlCommandType, fetchSize,
+          statementType,
+          sqlCommandType,
+          fetchSize,
           timeout,
           null,                             // ParameterMapID
           getParameterType(method),
@@ -228,11 +232,11 @@ public class MapperAnnotationBuilder {
           sql.append(fragment);
           sql.append(" ");
         }
-        SqlSourceBuilder parser = new SqlSourceBuilder(sequentialBuilder.getConfiguration());
+        SqlSourceBuilder parser = new SqlSourceBuilder(assistant.getConfiguration());
         return parser.parse(sql.toString(), getParameterType(method));
       } else if (sqlProviderAnnotationType != null) {
         Annotation sqlProviderAnnotation = method.getAnnotation(sqlProviderAnnotationType);
-        return new ProviderSqlSource(sequentialBuilder.getConfiguration(), sqlProviderAnnotation);
+        return new ProviderSqlSource(assistant.getConfiguration(), sqlProviderAnnotation);
       }
       return null;
     } catch (Exception e) {
@@ -269,12 +273,14 @@ public class MapperAnnotationBuilder {
     return null;
   }
 
-  private void applyResults(Result[] results) {
+  private void applyResults(Result[] results, Class resultType, List<ResultMapping> resultMappings) {
     if (results.length > 0) {
       for (Result result : results) {
         ArrayList<ResultFlag> flags = new ArrayList<ResultFlag>();
         if (result.id()) flags.add(ResultFlag.ID);
-        sequentialBuilder.resultMapping(
+
+        ResultMapping resultMapping = assistant.buildResultMapping(
+            resultType,
             result.property(),
             result.column(),
             result.javaType() == void.class ? null : result.javaType(),
@@ -283,6 +289,7 @@ public class MapperAnnotationBuilder {
             null,
             result.typeHandler() == void.class ? null : result.typeHandler(),
             flags);
+        resultMappings.add(resultMapping);
       }
     }
   }
@@ -303,13 +310,14 @@ public class MapperAnnotationBuilder {
         || result.many().select().length() > 0;
   }
 
-  private void applyConstructorArgs(Arg[] args) {
+  private void applyConstructorArgs(Arg[] args, Class resultType, List<ResultMapping> resultMappings) {
     if (args.length > 0) {
       for (Arg arg : args) {
         ArrayList<ResultFlag> flags = new ArrayList<ResultFlag>();
         flags.add(ResultFlag.CONSTRUCTOR);
         if (arg.id()) flags.add(ResultFlag.ID);
-        sequentialBuilder.resultMapping(
+        ResultMapping resultMapping = assistant.buildResultMapping(
+            resultType,
             null,
             arg.column(),
             arg.javaType() == void.class ? null : arg.javaType(),
@@ -318,6 +326,7 @@ public class MapperAnnotationBuilder {
             null,
             arg.typeHandler() == void.class ? null : arg.typeHandler(),
             flags);
+        resultMappings.add(resultMapping);
       }
     }
   }

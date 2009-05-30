@@ -5,16 +5,17 @@ import org.apache.ibatis.builder.xml.dynamic.*;
 import org.apache.ibatis.executor.keygen.*;
 import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.parsing.XNode;
+import org.apache.ibatis.cache.Cache;
 import org.w3c.dom.*;
 
 import java.util.*;
 
 public class XMLStatementBuilder extends BaseBuilder {
 
-  private SequentialMapperBuilder sequentialBuilder;
+  private MapperBuilderAssistant sequentialBuilder;
   private XMLMapperBuilder xmlMapperParser;
 
-  public XMLStatementBuilder(Configuration configuration, SequentialMapperBuilder sequentialBuilder, XMLMapperBuilder xmlMapperParser) {
+  public XMLStatementBuilder(Configuration configuration, MapperBuilderAssistant sequentialBuilder, XMLMapperBuilder xmlMapperParser) {
     super(configuration);
     this.sequentialBuilder = sequentialBuilder;
     this.xmlMapperParser = xmlMapperParser;
@@ -55,8 +56,9 @@ public class XMLStatementBuilder extends BaseBuilder {
         ? new Jdbc3KeyGenerator() : new NoKeyGenerator();
     }
 
-    sequentialBuilder.statement(id, sqlSource, statementType, sqlCommandType, fetchSize, timeout, parameterMap, parameterTypeClass,
-        resultMap, resultTypeClass, resultSetTypeEnum, flushCache, useCache, keyGenerator,keyProperty);
+    sequentialBuilder.addMappedStatement(id, sqlSource, statementType, sqlCommandType,
+        fetchSize, timeout, parameterMap, parameterTypeClass, resultMap, resultTypeClass,
+        resultSetTypeEnum, flushCache, useCache, keyGenerator,keyProperty);
   }
 
 
@@ -128,11 +130,11 @@ public class XMLStatementBuilder extends BaseBuilder {
       SqlSource sqlSource = new DynamicSqlSource(configuration, rootSqlNode);
       SqlCommandType sqlCommandType = SqlCommandType.SELECT;
 
-      sequentialBuilder.statement(id, sqlSource, statementType, sqlCommandType, fetchSize, timeout, parameterMap, parameterTypeClass,
-          resultMap, resultTypeClass, resultSetTypeEnum, flushCache, useCache,
-          keyGenerator,keyProperty);
+      sequentialBuilder.addMappedStatement(id, sqlSource, statementType, sqlCommandType,
+          fetchSize, timeout, parameterMap, parameterTypeClass, resultMap, resultTypeClass,
+          resultSetTypeEnum, flushCache, useCache, keyGenerator,keyProperty);
 
-      MappedStatement keyStatement = configuration.getMappedStatement(sequentialBuilder.applyNamespace(id));
+      MappedStatement keyStatement = configuration.getMappedStatement(sequentialBuilder.applyCurrentNamespace(id));
 
       configuration.addKeyGenerator(id, new SelectKeyGenerator(keyStatement,executeBefore));
     }
@@ -143,7 +145,7 @@ public class XMLStatementBuilder extends BaseBuilder {
       String refid = nodeToHandle.getStringAttribute("refid");
       XNode includeNode = xmlMapperParser.getSqlFragment(refid);
       if (includeNode == null) {
-        String nsrefid = sequentialBuilder.applyNamespace(refid);
+        String nsrefid = sequentialBuilder.applyCurrentNamespace(refid);
         includeNode = xmlMapperParser.getSqlFragment(nsrefid);
         if (includeNode == null) {
           throw new BulderException("Could not find SQL statement to include with refid '" + refid + "'");
