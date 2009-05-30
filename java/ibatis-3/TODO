@@ -4,9 +4,7 @@
 
 Nice to Have:
 
-  * Add resultType automapping option for collections so a resultMap isn't required
   * Preserve select key id on failed statement (refactor keygenerator interface)
-
   * Commit required option at statement level
   * http://issues.apache.org/jira/browse/IBATIS-357
 
