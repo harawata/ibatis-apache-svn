@@ -129,7 +129,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 
   private Object loadResultObject(ResultSet rs, ResultMap rm, Reference<Boolean> foundValues) throws SQLException {
     if (rm.getType() == null) {
-      throw new ExecutorException("The result class was null when trying to get results for ResultMap.");
+      throw new ExecutorException("The result class was null when trying to get results for ResultMap " + rm.getId());
     }
 
     Object resultObject = createResultObject(rs, rm);
@@ -318,7 +318,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
                   metaObject.setValue(propertyName, nestedResultObject);
                 }
               }
-            } catch (SQLException e) {
+            } catch (Exception e) {
               throw new ExecutorException("Error getting nested result map values for '" + resultMapping.getProperty() + "'.  Cause: " + e, e);
             }
           }

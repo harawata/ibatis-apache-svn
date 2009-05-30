@@ -208,7 +208,7 @@ public class MetaObject {
         throw ExceptionUtil.unwrapThrowable(t);
       }
     } catch (Throwable t) {
-      throw new ReflectionException("Could not set property '" + prop.getName() + "' for " + object + ".  Cause: " + t.toString(), t);
+      throw new ReflectionException("Could not set property '" + prop.getName() + "' of '" + object + "' with value '"+value+"' Cause: " + t.toString(), t);
     }
   }
 

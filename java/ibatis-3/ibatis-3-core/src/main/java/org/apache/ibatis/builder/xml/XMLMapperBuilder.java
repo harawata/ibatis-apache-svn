@@ -23,7 +23,7 @@ public class XMLMapperBuilder extends BaseBuilder {
   public XMLMapperBuilder(Reader reader, Configuration configuration, String resource) {
     super(configuration);
     this.assistant = new MapperBuilderAssistant(configuration, resource);
-    this.parser = new XPathParser(reader,true,new XMLMapperEntityResolver(),configuration.getVariables());
+    this.parser = new XPathParser(reader, true, new XMLMapperEntityResolver(), configuration.getVariables());
   }
 
   public void parse() {
@@ -105,42 +105,40 @@ public class XMLMapperBuilder extends BaseBuilder {
       resultMapElement(resultMapNode);
     }
   }
-  private void resultMapElement(XNode resultMapNode) throws Exception {
-      ErrorContext.instance().activity("processing " + resultMapNode.getValueBasedIdentifier());
-      String id = resultMapNode.getStringAttribute("id");
-      String type = resultMapNode.getStringAttribute("type");
-      String extend = resultMapNode.getStringAttribute("extends");
-      if (id == null) {
-        id = resultMapNode.getValueBasedIdentifier();
-      }
-      Class typeClass = resolveClass(type);
-      processChildrenAsResultMap(resultMapNode);
-      Discriminator discriminator = null;
-      List<ResultMapping> resultMappings = new ArrayList<ResultMapping>();
-      List<XNode> resultChildren = resultMapNode.getChildren();
-      for (XNode resultChild : resultChildren) {
-        if ("constructor".equals(resultChild.getName())) {
-          processConstructorElement(resultChild,typeClass,resultMappings);
-        } else if ("discriminator".equals(resultChild.getName())) {
-          discriminator = processDiscriminatorElement(resultChild,typeClass);
-        } else {
-          ArrayList<ResultFlag> flags = new ArrayList<ResultFlag>();
-          if ("id".equals(resultChild.getName())) {
-            flags.add(ResultFlag.ID);
-          }
-          resultMappings.add(buildResultMappingFromContext(resultChild, typeClass, flags));
-        }
-      }
-    assistant.addResultMap(id, typeClass, extend, discriminator, resultMappings);
-  }
 
-  private void processChildrenAsResultMap(XNode resultChild) throws Exception {
-    List<String> acceptedResultMapElements = Arrays.asList(new String[]{"association","collection","case"});
-    for (XNode arg : resultChild.getChildren()) {
-      if (acceptedResultMapElements.contains(resultChild.getName()) && arg.getChildren().size() > 0) {
-        resultMapElement(arg);
+  private ResultMap resultMapElement(XNode resultMapNode) throws Exception {
+    return resultMapElement(resultMapNode, Collections.EMPTY_LIST);
+  }
+  
+  private ResultMap resultMapElement(XNode resultMapNode, List<ResultMapping> additionalResultMappings) throws Exception {
+    ErrorContext.instance().activity("processing " + resultMapNode.getValueBasedIdentifier());
+    String id = resultMapNode.getStringAttribute("id",
+        resultMapNode.getValueBasedIdentifier());
+    String type = resultMapNode.getStringAttribute("type",
+        resultMapNode.getStringAttribute("ofType",
+            resultMapNode.getStringAttribute("resultType",
+                resultMapNode.getStringAttribute("javaType"))));
+    System.out.println(id + " " + type);
+    String extend = resultMapNode.getStringAttribute("extends");
+    Class typeClass = resolveClass(type);
+    Discriminator discriminator = null;
+    List<ResultMapping> resultMappings = new ArrayList<ResultMapping>();
+    resultMappings.addAll(additionalResultMappings);
+    List<XNode> resultChildren = resultMapNode.getChildren();
+    for (XNode resultChild : resultChildren) {
+      if ("constructor".equals(resultChild.getName())) {
+        processConstructorElement(resultChild, typeClass, resultMappings);
+      } else if ("discriminator".equals(resultChild.getName())) {
+        discriminator = processDiscriminatorElement(resultChild, typeClass, resultMappings);
+      } else {
+        ArrayList<ResultFlag> flags = new ArrayList<ResultFlag>();
+        if ("id".equals(resultChild.getName())) {
+          flags.add(ResultFlag.ID);
+        }
+        resultMappings.add(buildResultMappingFromContext(resultChild, typeClass, flags));
       }
     }
+    return assistant.addResultMap(id, typeClass, extend, discriminator, resultMappings);
   }
 
   private void processConstructorElement(XNode resultChild, Class resultType, List<ResultMapping> resultMappings) throws Exception {
@@ -155,7 +153,7 @@ public class XMLMapperBuilder extends BaseBuilder {
     }
   }
 
-  private Discriminator processDiscriminatorElement(XNode context, Class resultType) throws Exception {
+  private Discriminator processDiscriminatorElement(XNode context, Class resultType, List<ResultMapping> resultMappings) throws Exception {
     String column = context.getStringAttribute("column");
     String javaType = context.getStringAttribute("javaType");
     String jdbcType = context.getStringAttribute("jdbcType");
@@ -163,11 +161,11 @@ public class XMLMapperBuilder extends BaseBuilder {
     Class javaTypeClass = resolveClass(javaType);
     Class typeHandlerClass = resolveClass(typeHandler);
     JdbcType jdbcTypeEnum = resolveJdbcType(jdbcType);
-    Map<String, String> discriminatorMap = new HashMap<String,String>();
+    Map<String, String> discriminatorMap = new HashMap<String, String>();
     for (XNode caseChild : context.getChildren()) {
-      processChildrenAsResultMap(caseChild);
       String value = caseChild.getStringAttribute("value");
-      String resultMap = caseChild.getStringAttribute("resultMap");
+      String resultMap = caseChild.getStringAttribute("resultMap",
+          processNestedResultMappings(caseChild, resultMappings));
       discriminatorMap.put(value, resultMap);
     }
     return assistant.buildDiscriminator(resultType, column, javaTypeClass, jdbcTypeEnum, typeHandlerClass, discriminatorMap);
@@ -187,18 +185,31 @@ public class XMLMapperBuilder extends BaseBuilder {
     }
   }
 
-  private ResultMapping buildResultMappingFromContext(XNode context, Class resultType, ArrayList<ResultFlag> flags) {
+  private ResultMapping buildResultMappingFromContext(XNode context, Class resultType, ArrayList<ResultFlag> flags) throws Exception {
     String property = context.getStringAttribute("property");
     String column = context.getStringAttribute("column");
     String javaType = context.getStringAttribute("javaType");
     String jdbcType = context.getStringAttribute("jdbcType");
     String nestedSelect = context.getStringAttribute("select");
-    String nestedResultMap = context.getStringAttribute("resultMap");
+    String nestedResultMap = context.getStringAttribute("resultMap",
+        processNestedResultMappings(context, Collections.EMPTY_LIST));
     String typeHandler = context.getStringAttribute("typeHandler");
     Class javaTypeClass = resolveClass(javaType);
     Class typeHandlerClass = resolveClass(typeHandler);
     JdbcType jdbcTypeEnum = resolveJdbcType(jdbcType);
     return assistant.buildResultMapping(resultType, property, column, javaTypeClass, jdbcTypeEnum, nestedSelect, nestedResultMap, typeHandlerClass, flags);
+  }
+
+  private String processNestedResultMappings(XNode context, List<ResultMapping> resultMappings) throws Exception {
+    if ("association".equals(context.getName())
+        || "collection".equals(context.getName())
+        || "case".equals(context.getName())) {
+      if (context.getStringAttribute("select") == null) {
+        ResultMap resultMap = resultMapElement(context,resultMappings);
+        return resultMap.getId();
+      }
+    }
+    return null;
   }
 
   private void bindMapperForNamespace() {

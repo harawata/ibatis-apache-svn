@@ -85,6 +85,7 @@ typeHandler CDATA #IMPLIED
 property CDATA #REQUIRED
 column CDATA #IMPLIED
 javaType CDATA #IMPLIED
+ofType CDATA #IMPLIED
 jdbcType CDATA #IMPLIED
 select CDATA #IMPLIED
 resultMap CDATA #IMPLIED
@@ -114,7 +115,7 @@ typeHandler CDATA #IMPLIED
 <!ATTLIST case
 value CDATA #REQUIRED
 resultMap CDATA #IMPLIED 
-javaType CDATA #IMPLIED
+resultType CDATA #IMPLIED
 >
 
 <!ELEMENT property EMPTY>

@@ -310,11 +310,15 @@ public class MapperBuilderAssistant extends BaseBuilder {
 
   private Class resolveResultJavaType(Class resultType, String property, Class javaType) {
     if (javaType == null && property != null) {
-      MetaClass metaResultType = MetaClass.forClass(resultType);
-      javaType = metaResultType.getSetterType(property);
+      try {
+        MetaClass metaResultType = MetaClass.forClass(resultType);
+        javaType = metaResultType.getSetterType(property);
+      } catch (Exception e) {
+        //ignore, following null check statement will deal with the situation
+      }
     }
     if (javaType == null) {
-      throw new BulderException("Could not determine javaType for result.  Specify property or javaType attribute.");
+      throw new BulderException("Could not determine javaType for result property " + property + " using javaType " + javaType);
     }
     return javaType;
   }
