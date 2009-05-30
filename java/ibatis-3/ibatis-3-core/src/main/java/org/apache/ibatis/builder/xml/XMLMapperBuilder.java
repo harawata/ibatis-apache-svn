@@ -118,7 +118,6 @@ public class XMLMapperBuilder extends BaseBuilder {
         resultMapNode.getStringAttribute("ofType",
             resultMapNode.getStringAttribute("resultType",
                 resultMapNode.getStringAttribute("javaType"))));
-    System.out.println(id + " " + type);
     String extend = resultMapNode.getStringAttribute("extends");
     Class typeClass = resolveClass(type);
     Discriminator discriminator = null;
