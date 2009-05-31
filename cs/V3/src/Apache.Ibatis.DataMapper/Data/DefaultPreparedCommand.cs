@@ -1,4 +1,3 @@
-
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
@@ -24,7 +23,6 @@
  ********************************************************************************/
 #endregion
 
-
 using System;
 using System.Collections.Specialized;
 using System.Data;
@@ -32,6 +30,7 @@ using System.Reflection;
 using System.Text;
 using Apache.Ibatis.Common.Logging;
 using Apache.Ibatis.Common.Utilities.Objects;
+using Apache.Ibatis.DataMapper.MappedStatements;
 using Apache.Ibatis.DataMapper.Model.ParameterMapping;
 using Apache.Ibatis.DataMapper.Model.Statements;
 using Apache.Ibatis.DataMapper.Exceptions;
@@ -46,65 +45,99 @@ namespace Apache.Ibatis.DataMapper.Data
 	/// </summary>
 	public class DefaultPreparedCommand : IPreparedCommand
 	{
-		private static readonly ILog logger = LogManager.GetLogger( MethodBase.GetCurrentMethod().DeclaringType );
+		private static readonly ILog log = LogManager.GetLogger( MethodBase.GetCurrentMethod().DeclaringType );
 		
 		#region IPreparedCommand Members
 
 		/// <summary>
-		/// Create an IDbCommand for the SqlMapSession and the current SQL Statement
-		/// and fill IDbCommand IDataParameter's with the parameterObject.
+		/// Create an IDbCommand for the current session and statement then fill in its IDataParameters based on parameterObject.
 		/// </summary>
 		/// <param name="request"></param>
 		/// <param name="session">The SqlMapSession</param>
 		/// <param name="statement">The IStatement</param>
 		/// <param name="parameterObject">
 		/// The parameter object that will fill the sql parameter
-		/// </param>
-		/// <returns>An IDbCommand with all the IDataParameter filled.</returns>
+		/// </param> 
+        /// <remarks>
+        /// The constructed IDbCommand is available from request.IDbCommand
+        /// </remarks>
 		public void Create(RequestScope request, ISession session, IStatement statement, object parameterObject )
 		{
 			// the IDbConnection & the IDbTransaction are assign in the CreateCommand 
-            request.IDbCommand = new DbCommandDecorator(CreateCommand(session, statement.CommandType), request);
+            IDbProvider dbProvider = session.SessionFactory.DataSource.DbProvider;
+            request.IDbCommand = new DbCommandDecorator(CreateCommandAndEnlistTransaction(dbProvider, statement.CommandType, session), request);
 			
 			request.IDbCommand.CommandText = request.PreparedStatement.PreparedSql;
 
-			if (logger.IsDebugEnabled)
+			if (log.IsDebugEnabled)
 			{
-				logger.Debug("Statement Id: [" + statement.Id + "] PreparedStatement : [" + request.IDbCommand.CommandText + "]");
+                log.Debug("Preparing to apply parameter information to Statement Id: [" + statement.Id + "] based off of PreparedStatement: [" + request.IDbCommand.CommandText + "]");
 			}
 
-			ApplyParameterMap( session, request.IDbCommand, request, statement, parameterObject  );
+			ApplyParameterMap( session.SessionFactory.DataSource.DbProvider , request.IDbCommand, request, statement, parameterObject  );
 		}
 
-
+        #endregion
+        
         /// <summary>
-        /// Creates the command.
+        /// Creates an IDbCommand fills its parameters based on the parameterObject.
         /// </summary>
-        /// <param name="session">The session.</param>
-        /// <param name="commandType">Type of the command.</param>
-        /// <returns>the command</returns>
-        private static IDbCommand CreateCommand(ISession session, CommandType commandType)
+        /// <param name="mappedStatement"></param>
+        /// <param name="parameterObject"></param>
+        /// <returns>An IDbCommand with all the IDataParameter filled.</returns>
+        public IDbCommand CreateCommand(IMappedStatement mappedStatement, object parameterObject)
         {
-            IDbCommand command = session.SessionFactory.DataSource.DbProvider.CreateCommand();
+            IDbProvider dbProvider = mappedStatement.ModelStore.SessionFactory.DataSource.DbProvider;
+            IStatement statement = mappedStatement.Statement;
 
-            command.CommandType = commandType;
-            command.Connection = session.Connection;
-            SetCommandTimeout(command, session.SessionFactory.DataSource.CommandTimeout);
+            RequestScope request = statement.Sql.GetRequestScope(mappedStatement, parameterObject, null);
+            request.IDbCommand = CreateCommandAndEnlistTransaction(dbProvider, statement.CommandType, null);
+            request.IDbCommand.CommandText = request.PreparedStatement.PreparedSql;
+            request.IDbCommand.CommandType = statement.CommandType;
 
-            // Assign transaction
-            if (session.Transaction != null)
+            if (log.IsDebugEnabled)
             {
-                session.Transaction.Enlist(command);
+                log.Debug("Preparing to apply parameter information to Statement Id: [" + statement.Id + "] based off of PreparedStatement: [" + request.IDbCommand.CommandText + "]");
             }
-            return command;
+
+            ApplyParameterMap(dbProvider, request.IDbCommand, request, statement, parameterObject);
+
+            return request.IDbCommand;
         }
 
-        /// <summary>
+	    /// <summary>
+        /// Creates the command.
+        /// </summary>
+        /// <param name="dbProvider">The dbProvider.</param>
+        /// <param name="session">If session is not null, attaches the session's Connection and Transaction to the command and sets the command's Timeout property.</param>
+        /// <param name="commandType">Type of the command.</param>
+        /// <returns>the command</returns>
+        protected virtual IDbCommand CreateCommandAndEnlistTransaction(IDbProvider dbProvider, CommandType commandType, ISession session)
+        {
+            IDbCommand command = dbProvider.CreateCommand();
+            command.CommandType = commandType;
+
+            if (session != null)
+            {
+                command.Connection = session.Connection;
+                SetCommandTimeout(command, session.SessionFactory.DataSource.CommandTimeout);
+
+                // Assign transaction
+                if (session.Transaction != null)
+                {
+                    session.Transaction.Enlist(command);
+                }
+            }
+
+	        return command;
+        }
+
+	    /// <summary>
         /// Sets the command timeout.
         /// </summary>
         /// <param name="cmd">The CMD.</param>
         /// <param name="commandTimeout">The command timeout.</param>
-        private static void SetCommandTimeout(IDbCommand cmd, int commandTimeout)
+        protected virtual void SetCommandTimeout(IDbCommand cmd, int commandTimeout)
         {
             if (commandTimeout >= 0)
             {
@@ -114,9 +147,9 @@ namespace Apache.Ibatis.DataMapper.Data
                 }
                 catch (Exception e)
                 {
-                    if (logger.IsWarnEnabled)
+                    if (log.IsWarnEnabled)
                     {
-                        logger.Warn(e.ToString());
+                        log.Warn("Unable to set the IDbCommand.CommandTimeout property to [" + commandTimeout + "]. Cause: " + e.Message, e);
                     }
                 }
             }
@@ -125,20 +158,19 @@ namespace Apache.Ibatis.DataMapper.Data
         /// <summary>
         /// Applies the parameter map.
         /// </summary>
-        /// <param name="session">The session.</param>
+        /// <param name="dbProvider">The dbProvider.</param>
         /// <param name="command">The command.</param>
         /// <param name="request">The request.</param>
         /// <param name="statement">The statement.</param>
         /// <param name="parameterObject">The parameter object.</param>
 		protected virtual void ApplyParameterMap
-			( ISession session, IDbCommand command,
+            (IDbProvider dbProvider, IDbCommand command,
 			RequestScope request, IStatement statement, object parameterObject )
 		{
 			StringCollection properties = request.PreparedStatement.DbParametersName;
             IDbDataParameter[] parameters = request.PreparedStatement.DbParameters;
             StringBuilder paramLogList = new StringBuilder(); // Log info
             StringBuilder typeLogList = new StringBuilder(); // Log info
-            IDbProvider dbProvider = session.SessionFactory.DataSource.DbProvider;
 
 			int count = properties.Count;
 
@@ -149,7 +181,7 @@ namespace Apache.Ibatis.DataMapper.Data
 				ParameterProperty property = request.ParameterMap.GetProperty(i);
 
 				#region Logging
-				if (logger.IsDebugEnabled)
+				if (log.IsDebugEnabled)
 				{
                     paramLogList.Append(sqlParameter.ParameterName);
                     paramLogList.Append("=[");
@@ -179,7 +211,7 @@ namespace Apache.Ibatis.DataMapper.Data
 				}
 
 				#region Logging
-				if (logger.IsDebugEnabled)
+				if (log.IsDebugEnabled)
 				{
                     paramLogList.Append(property.PropertyName);
                     paramLogList.Append(",");
@@ -203,7 +235,7 @@ namespace Apache.Ibatis.DataMapper.Data
 				}
 
 			    #region Logging
-				if (logger.IsDebugEnabled)
+				if (log.IsDebugEnabled)
 				{
 					if (parameterCopy.Value == DBNull.Value) 
 					{
@@ -232,24 +264,7 @@ namespace Apache.Ibatis.DataMapper.Data
 				}
 				#endregion 
 
-				// JIRA-49 Fixes (size, precision, and scale)
-                if (dbProvider.SetDbParameterSize) 
-				{
-					if (sqlParameter.Size > 0) 
-					{
-						parameterCopy.Size = sqlParameter.Size;
-					}
-				}
-
-                if (dbProvider.SetDbParameterPrecision) 
-				{
-					parameterCopy.Precision = sqlParameter.Precision;
-				}
-
-                if (dbProvider.SetDbParameterScale) 
-				{
-					parameterCopy.Scale = sqlParameter.Scale;
-				}				
+                ApplyDbProviderParameterSettings(dbProvider, sqlParameter, parameterCopy);
 
 				parameterCopy.ParameterName = sqlParameter.ParameterName;
 
@@ -258,14 +273,40 @@ namespace Apache.Ibatis.DataMapper.Data
 
 			#region Logging
 
-			if (logger.IsDebugEnabled && properties.Count>0)
+			if (log.IsDebugEnabled && properties.Count>0)
 			{
-                logger.Debug("Statement Id: [" + statement.Id + "] Parameters: [" + paramLogList.ToString(0, paramLogList.Length - 2) + "]");
-                logger.Debug("Statement Id: [" + statement.Id + "] Types: [" + typeLogList.ToString(0, typeLogList.Length - 2) + "]");
+                log.Debug("Statement Id: [" + statement.Id + "] Parameters: [" + paramLogList.ToString(0, paramLogList.Length - 2) + "]");
+                log.Debug("Statement Id: [" + statement.Id + "] Types: [" + typeLogList.ToString(0, typeLogList.Length - 2) + "]");
 			}
 			#endregion 
 		}
 
-		#endregion
+        /// <summary>
+        /// Applies IDbProvider specific settings to the dbParameter by first checking values on the templateParameter.
+        /// </summary>
+        /// <param name="dbProvider"></param>
+        /// <param name="templateParameter">source</param>
+        /// <param name="dbParameter">destination</param>
+        protected virtual void ApplyDbProviderParameterSettings(IDbProvider dbProvider, IDbDataParameter templateParameter, IDbDataParameter dbParameter)
+        {
+            // JIRA-49 Fixes (size, precision, and scale)
+            if (dbProvider.SetDbParameterSize)
+            {
+                if (templateParameter.Size > 0)
+                {
+                    dbParameter.Size = templateParameter.Size;
+                }
+            }
+
+            if (dbProvider.SetDbParameterPrecision)
+            {
+                dbParameter.Precision = templateParameter.Precision;
+            }
+
+            if (dbProvider.SetDbParameterScale)
+            {
+                dbParameter.Scale = templateParameter.Scale;
+            }
+        }
 	}
 }
