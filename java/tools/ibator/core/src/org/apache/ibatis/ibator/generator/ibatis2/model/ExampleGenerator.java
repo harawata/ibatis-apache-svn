@@ -60,7 +60,7 @@ public class ExampleGenerator extends BaseModelClassGenerator {
                 Messages.getString("Progress.6", table.toString())); //$NON-NLS-1$
         CommentGenerator commentGenerator = ibatorContext.getCommentGenerator();
 
-        FullyQualifiedJavaType type = introspectedTable.getExampleType();
+        FullyQualifiedJavaType type = new FullyQualifiedJavaType(introspectedTable.getExampleType());
         TopLevelClass topLevelClass = new TopLevelClass(type);
         topLevelClass.setVisibility(JavaVisibility.PUBLIC);
         commentGenerator.addJavaFileComment(topLevelClass);

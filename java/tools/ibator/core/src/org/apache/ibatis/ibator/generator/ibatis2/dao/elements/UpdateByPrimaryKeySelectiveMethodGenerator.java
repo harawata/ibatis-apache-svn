@@ -72,9 +72,9 @@ public class UpdateByPrimaryKeySelectiveMethodGenerator extends
         FullyQualifiedJavaType parameterType;
         
         if (introspectedTable.getRules().generateRecordWithBLOBsClass()) {
-            parameterType = introspectedTable.getRecordWithBLOBsType();
+            parameterType = new FullyQualifiedJavaType(introspectedTable.getRecordWithBLOBsType());
         } else {
-            parameterType = introspectedTable.getBaseRecordType();
+            parameterType = new FullyQualifiedJavaType(introspectedTable.getBaseRecordType());
         }
         
         importedTypes.add(parameterType);

@@ -68,7 +68,7 @@ public class DeleteByExampleMethodGenerator extends AbstractDAOElementGenerator 
     }
 
     private Method getMethodShell(Set<FullyQualifiedJavaType> importedTypes) {
-        FullyQualifiedJavaType type = introspectedTable.getExampleType();
+        FullyQualifiedJavaType type = new FullyQualifiedJavaType(introspectedTable.getExampleType());
         importedTypes.add(type);
 
         Method method = new Method();

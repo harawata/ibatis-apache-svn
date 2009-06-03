@@ -78,7 +78,7 @@ public class SelectByExampleWithBLOBsMethodGenerator extends
     }
 
     private Method getMethodShell(Set<FullyQualifiedJavaType> importedTypes) {
-        FullyQualifiedJavaType type = introspectedTable.getExampleType();
+        FullyQualifiedJavaType type = new FullyQualifiedJavaType(introspectedTable.getExampleType());
         importedTypes.add(type);
         importedTypes.add(FullyQualifiedJavaType.getNewListInstance());
 
@@ -90,10 +90,10 @@ public class SelectByExampleWithBLOBsMethodGenerator extends
         if (generateForJava5) {
             FullyQualifiedJavaType fqjt;
             if (introspectedTable.getRules().generateRecordWithBLOBsClass()) {
-                fqjt = introspectedTable.getRecordWithBLOBsType();
+                fqjt = new FullyQualifiedJavaType(introspectedTable.getRecordWithBLOBsType());
             } else {
                 // the blob fields must be rolled up into the base class
-                fqjt = introspectedTable.getBaseRecordType();
+                fqjt = new FullyQualifiedJavaType(introspectedTable.getBaseRecordType());
             }
 
             importedTypes.add(fqjt);

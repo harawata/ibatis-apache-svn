@@ -72,7 +72,7 @@ public abstract class BaseIbatorRules implements IbatorRules {
      */
     public FullyQualifiedJavaType calculateAllFieldsClass() {
         
-        FullyQualifiedJavaType answer;
+        String answer;
         
         if (generateRecordWithBLOBsClass()) {
             answer = introspectedTable.getRecordWithBLOBsType();
@@ -82,7 +82,7 @@ public abstract class BaseIbatorRules implements IbatorRules {
             answer = introspectedTable.getPrimaryKeyType();
         }
         
-        return answer;
+        return new FullyQualifiedJavaType(answer);
     }
     
     /**

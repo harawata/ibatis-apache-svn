@@ -75,9 +75,9 @@ public class UpdateByExampleWithBLOBsMethodGenerator extends
     private Method getMethodShell(Set<FullyQualifiedJavaType> importedTypes) {
         FullyQualifiedJavaType parameterType; 
         if (introspectedTable.getRules().generateRecordWithBLOBsClass()) {
-            parameterType = introspectedTable.getRecordWithBLOBsType();
+            parameterType = new FullyQualifiedJavaType(introspectedTable.getRecordWithBLOBsType());
         } else {
-            parameterType = introspectedTable.getBaseRecordType();
+            parameterType = new FullyQualifiedJavaType(introspectedTable.getBaseRecordType());
         }
 
         importedTypes.add(parameterType);
@@ -87,7 +87,8 @@ public class UpdateByExampleWithBLOBsMethodGenerator extends
         method.setReturnType(FullyQualifiedJavaType.getIntInstance());
         method.setName(getDAOMethodNameCalculator().getUpdateByExampleWithBLOBsMethodName(introspectedTable));
         method.addParameter(new Parameter(parameterType, "record")); //$NON-NLS-1$
-        method.addParameter(new Parameter(introspectedTable.getExampleType(), "example")); //$NON-NLS-1$
+        method.addParameter(new Parameter(
+                new FullyQualifiedJavaType(introspectedTable.getExampleType()), "example")); //$NON-NLS-1$
 
         for (FullyQualifiedJavaType fqjt : daoTemplate.getCheckedExceptions()) {
             method.addException(fqjt);

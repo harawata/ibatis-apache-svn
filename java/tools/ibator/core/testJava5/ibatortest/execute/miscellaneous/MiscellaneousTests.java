@@ -903,13 +903,13 @@ public class MiscellaneousTests extends BaseMiscellaneousTest {
             record.setSelect("select");
             record.setInsert("insert");
             
-            sqlMap.insert("ANOTHERAWFULTABLE.ibatorgenerated_insert", record);
+            sqlMap.insert("ANOTHERAWFULTABLE.insert", record);
             
             Anotherawfultable key = new Anotherawfultable();
             key.setId(5);
             
             Anotherawfultable returnedRecord = (Anotherawfultable)
-                sqlMap.queryForObject("ANOTHERAWFULTABLE.ibatorgenerated_selectByPrimaryKey",
+                sqlMap.queryForObject("ANOTHERAWFULTABLE.selectByPrimaryKey",
                         key);
             
             assertEquals(record.getId(), returnedRecord.getId());

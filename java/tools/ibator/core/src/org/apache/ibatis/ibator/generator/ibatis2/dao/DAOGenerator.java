@@ -103,8 +103,8 @@ public class DAOGenerator extends AbstractJavaGenerator {
     }
     
     protected TopLevelClass getTopLevelClassShell() {
-        FullyQualifiedJavaType interfaceType = introspectedTable.getDAOInterfaceType();
-        FullyQualifiedJavaType implementationType = introspectedTable.getDAOImplementationType();
+        FullyQualifiedJavaType interfaceType = new FullyQualifiedJavaType(introspectedTable.getDAOInterfaceType());
+        FullyQualifiedJavaType implementationType = new FullyQualifiedJavaType(introspectedTable.getDAOImplementationType());
         
         CommentGenerator commentGenerator = ibatorContext.getCommentGenerator();
         
@@ -139,7 +139,7 @@ public class DAOGenerator extends AbstractJavaGenerator {
     }
     
     protected Interface getInterfaceShell() {
-        Interface answer = new Interface(introspectedTable.getDAOInterfaceType());
+        Interface answer = new Interface(new FullyQualifiedJavaType(introspectedTable.getDAOInterfaceType()));
         answer.setVisibility(JavaVisibility.PUBLIC);
 
         String rootInterface = introspectedTable.getTableConfigurationProperty(PropertyRegistry.ANY_ROOT_INTERFACE);

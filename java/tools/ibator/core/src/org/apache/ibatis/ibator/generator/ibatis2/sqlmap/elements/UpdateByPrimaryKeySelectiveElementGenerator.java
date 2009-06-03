@@ -16,7 +16,6 @@
 package org.apache.ibatis.ibator.generator.ibatis2.sqlmap.elements;
 
 import org.apache.ibatis.ibator.api.IntrospectedColumn;
-import org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.ibator.api.dom.xml.Attribute;
 import org.apache.ibatis.ibator.api.dom.xml.TextElement;
 import org.apache.ibatis.ibator.api.dom.xml.XmlElement;
@@ -41,7 +40,7 @@ public class UpdateByPrimaryKeySelectiveElementGenerator extends
         answer.addAttribute(new Attribute(
                 "id", introspectedTable.getUpdateByPrimaryKeySelectiveStatementId())); //$NON-NLS-1$
 
-        FullyQualifiedJavaType parameterType;
+        String parameterType;
         
         if (introspectedTable.getRules().generateRecordWithBLOBsClass()) {
             parameterType = introspectedTable.getRecordWithBLOBsType();
@@ -50,7 +49,7 @@ public class UpdateByPrimaryKeySelectiveElementGenerator extends
         }
         
         answer.addAttribute(new Attribute("parameterClass", //$NON-NLS-1$
-                parameterType.getFullyQualifiedName()));
+                parameterType));
 
         ibatorContext.getCommentGenerator().addComment(answer);
 

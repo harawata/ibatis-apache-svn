@@ -16,7 +16,6 @@
 package org.apache.ibatis.ibator.generator.ibatis2.sqlmap.elements;
 
 import org.apache.ibatis.ibator.api.IntrospectedColumn;
-import org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.ibator.api.dom.xml.Attribute;
 import org.apache.ibatis.ibator.api.dom.xml.TextElement;
 import org.apache.ibatis.ibator.api.dom.xml.XmlElement;
@@ -39,14 +38,14 @@ public class DeleteByPrimaryKeyElementGenerator extends AbstractXmlElementGenera
 
         answer.addAttribute(new Attribute(
                 "id", introspectedTable.getDeleteByPrimaryKeyStatementId())); //$NON-NLS-1$
-        FullyQualifiedJavaType parameterClass;
+        String parameterClass;
         if (introspectedTable.getRules().generatePrimaryKeyClass()) {
             parameterClass = introspectedTable.getPrimaryKeyType();
         } else {
             parameterClass = introspectedTable.getBaseRecordType();
         }
         answer.addAttribute(new Attribute("parameterClass", //$NON-NLS-1$
-                parameterClass.getFullyQualifiedName()));
+                parameterClass));
 
         ibatorContext.getCommentGenerator().addComment(answer);
 

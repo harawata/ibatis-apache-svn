@@ -22,12 +22,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.ibator.config.DAOGeneratorConfiguration;
 import org.apache.ibatis.ibator.config.GeneratedKey;
 import org.apache.ibatis.ibator.config.IbatorContext;
 import org.apache.ibatis.ibator.config.JavaModelGeneratorConfiguration;
-import org.apache.ibatis.ibator.config.MergeConstants;
 import org.apache.ibatis.ibator.config.ModelType;
 import org.apache.ibatis.ibator.config.PropertyRegistry;
 import org.apache.ibatis.ibator.config.SqlMapGeneratorConfiguration;
@@ -99,7 +97,7 @@ public abstract class IntrospectedTable {
      * Internal attributes are used
      * to store commonly accessed items by all code generators
      */
-    protected Map<IntrospectedTable.InternalAttribute, Object> internalAttributes;
+    protected Map<IntrospectedTable.InternalAttribute, String> internalAttributes;
     
     public IntrospectedTable() {
         super();
@@ -107,7 +105,7 @@ public abstract class IntrospectedTable {
         baseColumns = new ArrayList<IntrospectedColumn>();
         blobColumns = new ArrayList<IntrospectedColumn>();
         attributes = new HashMap<String, Object>();
-        internalAttributes = new HashMap<IntrospectedTable.InternalAttribute, Object>();
+        internalAttributes = new HashMap<IntrospectedTable.InternalAttribute, String>();
     }
     
     public FullyQualifiedTable getFullyQualifiedTable() {
@@ -314,8 +312,8 @@ public abstract class IntrospectedTable {
         return tableConfiguration.getProperty(property);
     }
 
-    public FullyQualifiedJavaType getPrimaryKeyType() {
-        return (FullyQualifiedJavaType) internalAttributes.get(InternalAttribute.ATTR_PRIMARY_KEY_TYPE);
+    public String getPrimaryKeyType() {
+        return internalAttributes.get(InternalAttribute.ATTR_PRIMARY_KEY_TYPE);
     }
 
     /**
@@ -324,16 +322,16 @@ public abstract class IntrospectedTable {
      *  key and non-BLOB fields).  Note that
      *  the value will be calculated regardless of whether the table has these columns or not.
      */
-    public FullyQualifiedJavaType getBaseRecordType() {
-        return (FullyQualifiedJavaType) internalAttributes.get(InternalAttribute.ATTR_BASE_RECORD_TYPE);
+    public String getBaseRecordType() {
+        return internalAttributes.get(InternalAttribute.ATTR_BASE_RECORD_TYPE);
     }
 
     /**
      * 
      * @return the type for the example class.
      */
-    public FullyQualifiedJavaType getExampleType() {
-        return (FullyQualifiedJavaType) internalAttributes.get(InternalAttribute.ATTR_EXAMPLE_TYPE);
+    public String getExampleType() {
+        return internalAttributes.get(InternalAttribute.ATTR_EXAMPLE_TYPE);
     }
 
     /**
@@ -341,8 +339,8 @@ public abstract class IntrospectedTable {
      * @return the type for the record with BLOBs class.  Note that
      *  the value will be calculated regardless of whether the table has BLOB columns or not.
      */
-    public FullyQualifiedJavaType getRecordWithBLOBsType() {
-        return (FullyQualifiedJavaType) internalAttributes.get(InternalAttribute.ATTR_RECORD_WITH_BLOBS_TYPE);
+    public String getRecordWithBLOBsType() {
+        return internalAttributes.get(InternalAttribute.ATTR_RECORD_WITH_BLOBS_TYPE);
     }
 
     /**
@@ -353,11 +351,11 @@ public abstract class IntrospectedTable {
      * @return the name of the SqlMap file
      */
     public String getSqlMapFileName() {
-        return (String) internalAttributes.get(InternalAttribute.ATTR_SQL_MAP_FILE_NAME);
+        return internalAttributes.get(InternalAttribute.ATTR_SQL_MAP_FILE_NAME);
     }
     
     public String getSqlMapNamespace() {
-        return (String) internalAttributes.get(InternalAttribute.ATTR_SQL_MAP_NAMESPACE);
+        return internalAttributes.get(InternalAttribute.ATTR_SQL_MAP_NAMESPACE);
     }
 
     /**
@@ -366,15 +364,15 @@ public abstract class IntrospectedTable {
      * @return the package for the SqlMap for the current table
      */
     public String getSqlMapPackage() {
-        return (String) internalAttributes.get(InternalAttribute.ATTR_SQL_MAP_PACKAGE);
+        return internalAttributes.get(InternalAttribute.ATTR_SQL_MAP_PACKAGE);
     }
     
-    public FullyQualifiedJavaType getDAOImplementationType() {
-        return (FullyQualifiedJavaType) internalAttributes.get(InternalAttribute.ATTR_DAO_IMPLEMENTATION_TYPE);
+    public String getDAOImplementationType() {
+        return internalAttributes.get(InternalAttribute.ATTR_DAO_IMPLEMENTATION_TYPE);
     }
 
-    public FullyQualifiedJavaType getDAOInterfaceType() {
-        return (FullyQualifiedJavaType) internalAttributes.get(InternalAttribute.ATTR_DAO_INTERFACE_TYPE);
+    public String getDAOInterfaceType() {
+        return internalAttributes.get(InternalAttribute.ATTR_DAO_INTERFACE_TYPE);
     }
 
     public boolean hasAnyColumns() {
@@ -472,101 +470,25 @@ public abstract class IntrospectedTable {
         setSqlMapFullyQualifiedRuntimeTableName(calculateSqlMapFullyQualifiedRuntimeTableName());
         setSqlMapAliasedFullyQualifiedRuntimeTableName(calculateSqlMapAliasedFullyQualifiedRuntimeTableName());
 
-        StringBuilder sb = new StringBuilder();
-
-        sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
-        sb.append("countByExample"); //$NON-NLS-1$
-        setCountByExampleStatementId(sb.toString());
-
-        sb.setLength(0);
-        sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
-        sb.append("deleteByExample"); //$NON-NLS-1$
-        setDeleteByExampleStatementId(sb.toString());
-        
-        sb.setLength(0);
-        sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
-        sb.append("deleteByPrimaryKey"); //$NON-NLS-1$
-        setDeleteByPrimaryKeyStatementId(sb.toString());
-        
-        sb.setLength(0);
-        sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
-        sb.append("insert"); //$NON-NLS-1$
-        setInsertStatementId(sb.toString());
-        
-        sb.setLength(0);
-        sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
-        sb.append("insertSelective"); //$NON-NLS-1$
-        setInsertSelectiveStatementId(sb.toString());
-        
-        sb.setLength(0);
-        sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
-        sb.append("selectByExample"); //$NON-NLS-1$
-        setSelectByExampleStatementId(sb.toString());
-
-        sb.setLength(0);
-        sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
-        sb.append("selectByExampleWithBLOBs"); //$NON-NLS-1$
-        setSelectByExampleWithBLOBsStatementId(sb.toString());
-
-        sb.setLength(0);
-        sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
-        sb.append("selectByPrimaryKey"); //$NON-NLS-1$
-        setSelectByPrimaryKeyStatementId(sb.toString());
-
-        sb.setLength(0);
-        sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
-        sb.append("updateByExample"); //$NON-NLS-1$
-        setUpdateByExampleStatementId(sb.toString());
-
-        sb.setLength(0);
-        sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
-        sb.append("updateByExampleSelective"); //$NON-NLS-1$
-        setUpdateByExampleSelectiveStatementId(sb.toString());
-
-        sb.setLength(0);
-        sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
-        sb.append("updateByExampleWithBLOBs"); //$NON-NLS-1$
-        setUpdateByExampleWithBLOBsStatementId(sb.toString());
-
-        sb.setLength(0);
-        sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
-        sb.append("updateByPrimaryKey"); //$NON-NLS-1$
-        setUpdateByPrimaryKeyStatementId(sb.toString());
-
-        sb.setLength(0);
-        sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
-        sb.append("updateByPrimaryKeySelective"); //$NON-NLS-1$
-        setUpdateByPrimaryKeySelectiveStatementId(sb.toString());
-
-        sb.setLength(0);
-        sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
-        sb.append("updateByPrimaryKeyWithBLOBs"); //$NON-NLS-1$
-        setUpdateByPrimaryKeyWithBLOBsStatementId(sb.toString());
-
-        sb.setLength(0);
-        sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
-        sb.append("BaseResultMap"); //$NON-NLS-1$
-        setBaseResultMapId(sb.toString());
-
-        sb.setLength(0);
-        sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
-        sb.append("ResultMapWithBLOBs"); //$NON-NLS-1$
-        setResultMapWithBLOBsId(sb.toString());
-
-        sb.setLength(0);
-        sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
-        sb.append("Example_Where_Clause"); //$NON-NLS-1$
-        setExampleWhereClauseId(sb.toString());
-
-        sb.setLength(0);
-        sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
-        sb.append("Base_Column_List"); //$NON-NLS-1$
-        setBaseColumnListId(sb.toString());
-
-        sb.setLength(0);
-        sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
-        sb.append("Blob_Column_List"); //$NON-NLS-1$
-        setBlobColumnListId(sb.toString());
+        setCountByExampleStatementId("countByExample"); //$NON-NLS-1$
+        setDeleteByExampleStatementId("deleteByExample"); //$NON-NLS-1$
+        setDeleteByPrimaryKeyStatementId("deleteByPrimaryKey"); //$NON-NLS-1$
+        setInsertStatementId("insert"); //$NON-NLS-1$
+        setInsertSelectiveStatementId("insertSelective"); //$NON-NLS-1$
+        setSelectByExampleStatementId("selectByExample"); //$NON-NLS-1$
+        setSelectByExampleWithBLOBsStatementId("selectByExampleWithBLOBs"); //$NON-NLS-1$
+        setSelectByPrimaryKeyStatementId("selectByPrimaryKey"); //$NON-NLS-1$
+        setUpdateByExampleStatementId("updateByExample"); //$NON-NLS-1$
+        setUpdateByExampleSelectiveStatementId("updateByExampleSelective"); //$NON-NLS-1$
+        setUpdateByExampleWithBLOBsStatementId("updateByExampleWithBLOBs"); //$NON-NLS-1$
+        setUpdateByPrimaryKeyStatementId("updateByPrimaryKey"); //$NON-NLS-1$
+        setUpdateByPrimaryKeySelectiveStatementId("updateByPrimaryKeySelective"); //$NON-NLS-1$
+        setUpdateByPrimaryKeyWithBLOBsStatementId("updateByPrimaryKeyWithBLOBs"); //$NON-NLS-1$
+        setBaseResultMapId("BaseResultMap"); //$NON-NLS-1$
+        setResultMapWithBLOBsId("ResultMapWithBLOBs"); //$NON-NLS-1$
+        setExampleWhereClauseId("Example_Where_Clause"); //$NON-NLS-1$
+        setBaseColumnListId("Base_Column_List"); //$NON-NLS-1$
+        setBlobColumnListId("Blob_Column_List"); //$NON-NLS-1$
     }
 
     public void setBlobColumnListId(String s) {
@@ -625,7 +547,7 @@ public abstract class IntrospectedTable {
         internalAttributes.put(InternalAttribute.ATTR_SELECT_BY_EXAMPLE_STATEMENT_ID, s);
     }
 
-    private void setInsertSelectiveStatementId(String s) {
+    public void setInsertSelectiveStatementId(String s) {
         internalAttributes.put(InternalAttribute.ATTR_INSERT_SELECTIVE_STATEMENT_ID, s);
     }
 
@@ -646,79 +568,79 @@ public abstract class IntrospectedTable {
     }
     
     public String getBlobColumnListId() {
-        return (String) internalAttributes.get(InternalAttribute.ATTR_BLOB_COLUMN_LIST_ID);
+        return internalAttributes.get(InternalAttribute.ATTR_BLOB_COLUMN_LIST_ID);
     }
 
     public String getBaseColumnListId() {
-        return (String) internalAttributes.get(InternalAttribute.ATTR_BASE_COLUMN_LIST_ID);
+        return internalAttributes.get(InternalAttribute.ATTR_BASE_COLUMN_LIST_ID);
     }
 
     public String getExampleWhereClauseId() {
-        return (String) internalAttributes.get(InternalAttribute.ATTR_EXAMPLE_WHERE_CLAUSE_ID);
+        return internalAttributes.get(InternalAttribute.ATTR_EXAMPLE_WHERE_CLAUSE_ID);
     }
 
     public String getResultMapWithBLOBsId() {
-        return (String) internalAttributes.get(InternalAttribute.ATTR_RESULT_MAP_WITH_BLOBS_ID);
+        return internalAttributes.get(InternalAttribute.ATTR_RESULT_MAP_WITH_BLOBS_ID);
     }
 
     public String getBaseResultMapId() {
-        return (String) internalAttributes.get(InternalAttribute.ATTR_BASE_RESULT_MAP_ID);
+        return internalAttributes.get(InternalAttribute.ATTR_BASE_RESULT_MAP_ID);
     }
 
     public String getUpdateByPrimaryKeyWithBLOBsStatementId() {
-        return (String) internalAttributes.get(InternalAttribute.ATTR_UPDATE_BY_PRIMARY_KEY_WITH_BLOBS_STATEMENT_ID);
+        return internalAttributes.get(InternalAttribute.ATTR_UPDATE_BY_PRIMARY_KEY_WITH_BLOBS_STATEMENT_ID);
     }
 
     public String getUpdateByPrimaryKeySelectiveStatementId() {
-        return (String) internalAttributes.get(InternalAttribute.ATTR_UPDATE_BY_PRIMARY_KEY_SELECTIVE_STATEMENT_ID);
+        return internalAttributes.get(InternalAttribute.ATTR_UPDATE_BY_PRIMARY_KEY_SELECTIVE_STATEMENT_ID);
     }
 
     public String getUpdateByPrimaryKeyStatementId() {
-        return (String) internalAttributes.get(InternalAttribute.ATTR_UPDATE_BY_PRIMARY_KEY_STATEMENT_ID);
+        return internalAttributes.get(InternalAttribute.ATTR_UPDATE_BY_PRIMARY_KEY_STATEMENT_ID);
     }
 
     public String getUpdateByExampleWithBLOBsStatementId() {
-        return (String) internalAttributes.get(InternalAttribute.ATTR_UPDATE_BY_EXAMPLE_WITH_BLOBS_STATEMENT_ID);
+        return internalAttributes.get(InternalAttribute.ATTR_UPDATE_BY_EXAMPLE_WITH_BLOBS_STATEMENT_ID);
     }
 
     public String getUpdateByExampleSelectiveStatementId() {
-        return (String) internalAttributes.get(InternalAttribute.ATTR_UPDATE_BY_EXAMPLE_SELECTIVE_STATEMENT_ID);
+        return internalAttributes.get(InternalAttribute.ATTR_UPDATE_BY_EXAMPLE_SELECTIVE_STATEMENT_ID);
     }
 
     public String getUpdateByExampleStatementId() {
-        return (String) internalAttributes.get(InternalAttribute.ATTR_UPDATE_BY_EXAMPLE_STATEMENT_ID);
+        return internalAttributes.get(InternalAttribute.ATTR_UPDATE_BY_EXAMPLE_STATEMENT_ID);
     }
 
     public String getSelectByPrimaryKeyStatementId() {
-        return (String) internalAttributes.get(InternalAttribute.ATTR_SELECT_BY_PRIMARY_KEY_STATEMENT_ID);
+        return internalAttributes.get(InternalAttribute.ATTR_SELECT_BY_PRIMARY_KEY_STATEMENT_ID);
     }
 
     public String getSelectByExampleWithBLOBsStatementId() {
-        return (String) internalAttributes.get(InternalAttribute.ATTR_SELECT_BY_EXAMPLE_WITH_BLOBS_STATEMENT_ID);
+        return internalAttributes.get(InternalAttribute.ATTR_SELECT_BY_EXAMPLE_WITH_BLOBS_STATEMENT_ID);
     }
 
     public String getSelectByExampleStatementId() {
-        return (String) internalAttributes.get(InternalAttribute.ATTR_SELECT_BY_EXAMPLE_STATEMENT_ID);
+        return internalAttributes.get(InternalAttribute.ATTR_SELECT_BY_EXAMPLE_STATEMENT_ID);
     }
 
     public String getInsertSelectiveStatementId() {
-        return (String) internalAttributes.get(InternalAttribute.ATTR_INSERT_SELECTIVE_STATEMENT_ID);
+        return internalAttributes.get(InternalAttribute.ATTR_INSERT_SELECTIVE_STATEMENT_ID);
     }
 
     public String getInsertStatementId() {
-        return (String) internalAttributes.get(InternalAttribute.ATTR_INSERT_STATEMENT_ID);
+        return internalAttributes.get(InternalAttribute.ATTR_INSERT_STATEMENT_ID);
     }
 
     public String getDeleteByPrimaryKeyStatementId() {
-        return (String) internalAttributes.get(InternalAttribute.ATTR_DELETE_BY_PRIMARY_KEY_STATEMENT_ID);
+        return internalAttributes.get(InternalAttribute.ATTR_DELETE_BY_PRIMARY_KEY_STATEMENT_ID);
     }
 
     public String getDeleteByExampleStatementId() {
-        return (String) internalAttributes.get(InternalAttribute.ATTR_DELETE_BY_EXAMPLE_STATEMENT_ID);
+        return internalAttributes.get(InternalAttribute.ATTR_DELETE_BY_EXAMPLE_STATEMENT_ID);
     }
 
     public String getCountByExampleStatementId() {
-        return (String) internalAttributes.get(InternalAttribute.ATTR_COUNT_BY_EXAMPLE_STATEMENT_ID);
+        return internalAttributes.get(InternalAttribute.ATTR_COUNT_BY_EXAMPLE_STATEMENT_ID);
     }
     
     protected String calculateDAOImplementationPackage() {
@@ -765,16 +687,14 @@ public abstract class IntrospectedTable {
         sb.append('.');
         sb.append(fullyQualifiedTable.getDomainObjectName());
         sb.append("DAOImpl"); //$NON-NLS-1$
-        FullyQualifiedJavaType fqjt = new FullyQualifiedJavaType(sb.toString());
-        setDAOImplementationType(fqjt);
+        setDAOImplementationType(sb.toString());
         
         sb.setLength(0);
         sb.append(calculateDAOInterfacePackage());
         sb.append('.');
         sb.append(fullyQualifiedTable.getDomainObjectName());
         sb.append("DAO"); //$NON-NLS-1$
-        fqjt = new FullyQualifiedJavaType(sb.toString());
-        setDAOInterfaceType(fqjt);
+        setDAOInterfaceType(sb.toString());
     }
     
     protected String calculateJavaModelPackage() {
@@ -797,31 +717,27 @@ public abstract class IntrospectedTable {
         sb.append('.');
         sb.append(fullyQualifiedTable.getDomainObjectName());
         sb.append("Key"); //$NON-NLS-1$
-        FullyQualifiedJavaType fqjt = new FullyQualifiedJavaType(sb.toString());
-        setPrimaryKeyType(fqjt);
+        setPrimaryKeyType(sb.toString());
 
         sb.setLength(0);
         sb.append(pakkage);
         sb.append('.');
         sb.append(fullyQualifiedTable.getDomainObjectName());
-        fqjt = new FullyQualifiedJavaType(sb.toString());
-        setBaseRecordType(fqjt);
+        setBaseRecordType(sb.toString());
 
         sb.setLength(0);
         sb.append(pakkage);
         sb.append('.');
         sb.append(fullyQualifiedTable.getDomainObjectName());
         sb.append("WithBLOBs"); //$NON-NLS-1$
-        fqjt = new FullyQualifiedJavaType(sb.toString());
-        setRecordWithBLOBsType(fqjt);
+        setRecordWithBLOBsType(sb.toString());
 
         sb.setLength(0);
         sb.append(pakkage);
         sb.append('.');
         sb.append(fullyQualifiedTable.getDomainObjectName());
         sb.append("Example"); //$NON-NLS-1$
-        fqjt = new FullyQualifiedJavaType(sb.toString());
-        setExampleType(fqjt);
+        setExampleType(sb.toString());
     }
     
     protected String calculateSqlMapPackage() {
@@ -854,11 +770,11 @@ public abstract class IntrospectedTable {
     }
     
     public String getFullyQualifiedTableNameAtRuntime() {
-        return (String) internalAttributes.get(InternalAttribute.ATTR_SQL_MAP_FULLY_QUALIFIED_TABLE_NAME_AT_RUNTIME);
+        return internalAttributes.get(InternalAttribute.ATTR_SQL_MAP_FULLY_QUALIFIED_TABLE_NAME_AT_RUNTIME);
     }
     
     public String getAliasedFullyQualifiedTableNameAtRuntime() {
-        return (String) internalAttributes.get(InternalAttribute.ATTR_SQL_MAP_ALIASED_FULLY_QUALIFIED_TABLE_NAME_AT_RUNTIME);
+        return internalAttributes.get(InternalAttribute.ATTR_SQL_MAP_ALIASED_FULLY_QUALIFIED_TABLE_NAME_AT_RUNTIME);
     }
     
     
@@ -922,27 +838,27 @@ public abstract class IntrospectedTable {
         return tableConfiguration;
     }
     
-    public void setDAOImplementationType(FullyQualifiedJavaType DAOImplementationType) {
+    public void setDAOImplementationType(String DAOImplementationType) {
         internalAttributes.put(InternalAttribute.ATTR_DAO_IMPLEMENTATION_TYPE, DAOImplementationType);
     }
 
-    public void setDAOInterfaceType(FullyQualifiedJavaType DAOInterfaceType) {
+    public void setDAOInterfaceType(String DAOInterfaceType) {
         internalAttributes.put(InternalAttribute.ATTR_DAO_INTERFACE_TYPE, DAOInterfaceType);
     }
 
-    public void setPrimaryKeyType(FullyQualifiedJavaType primaryKeyType) {
+    public void setPrimaryKeyType(String primaryKeyType) {
         internalAttributes.put(InternalAttribute.ATTR_PRIMARY_KEY_TYPE, primaryKeyType);
     }
     
-    public void setBaseRecordType(FullyQualifiedJavaType baseRecordType) {
+    public void setBaseRecordType(String baseRecordType) {
         internalAttributes.put(InternalAttribute.ATTR_BASE_RECORD_TYPE, baseRecordType);
     }
     
-    public void setRecordWithBLOBsType(FullyQualifiedJavaType recordWithBLOBsType) {
+    public void setRecordWithBLOBsType(String recordWithBLOBsType) {
         internalAttributes.put(InternalAttribute.ATTR_RECORD_WITH_BLOBS_TYPE, recordWithBLOBsType);
     }
 
-    public void setExampleType(FullyQualifiedJavaType exampleType) {
+    public void setExampleType(String exampleType) {
         internalAttributes.put(InternalAttribute.ATTR_EXAMPLE_TYPE, exampleType);
     }
     

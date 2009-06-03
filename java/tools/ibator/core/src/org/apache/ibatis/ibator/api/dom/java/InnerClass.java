@@ -56,6 +56,10 @@ public class InnerClass extends JavaElement {
         superInterfaceTypes = new HashSet<FullyQualifiedJavaType>();
         methods = new ArrayList<Method>();
     }
+    
+    public InnerClass(String typeName) {
+        this(new FullyQualifiedJavaType(typeName));
+    }
 
     /**
      * @return Returns the fields.
@@ -81,6 +85,10 @@ public class InnerClass extends JavaElement {
      */
     public void setSuperClass(FullyQualifiedJavaType superClass) {
         this.superClass = superClass;
+    }
+    
+    public void setSuperClass(String superClassType) {
+        this.superClass = new FullyQualifiedJavaType(superClassType);
     }
     /**
      * @return Returns the innerClasses.

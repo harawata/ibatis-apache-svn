@@ -22,7 +22,6 @@ import java.util.regex.Pattern;
 
 import org.apache.ibatis.ibator.api.IbatorPluginAdapter;
 import org.apache.ibatis.ibator.api.IntrospectedTable;
-import org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.ibator.internal.util.StringUtility;
 import org.apache.ibatis.ibator.internal.util.messages.Messages;
 
@@ -93,12 +92,10 @@ public class RenameExampleClassPlugin extends IbatorPluginAdapter {
 
     @Override
     public void initialized(IntrospectedTable introspectedTable) {
-        FullyQualifiedJavaType oldType = introspectedTable.getExampleType();
+        String oldType = introspectedTable.getExampleType();
+        Matcher matcher = pattern.matcher(oldType);
+        oldType = matcher.replaceAll(replaceString);
         
-        String typeName = oldType.getFullyQualifiedName();
-        Matcher matcher = pattern.matcher(typeName);
-        typeName = matcher.replaceAll(replaceString);
-        
-        introspectedTable.setExampleType(new FullyQualifiedJavaType(typeName));
+        introspectedTable.setExampleType(oldType);
     }
 }

@@ -39,8 +39,12 @@ public class TopLevelClass extends InnerClass implements CompilationUnit {
         super(type);
         importedTypes = new TreeSet<FullyQualifiedJavaType>();
         fileCommentLines = new ArrayList<String>();
-}
+    }
 
+    public TopLevelClass(String typeName) {
+        this(new FullyQualifiedJavaType(typeName));
+    }
+    
     /**
      * @return Returns the importedTypes.
      */

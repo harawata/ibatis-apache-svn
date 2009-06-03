@@ -15,7 +15,6 @@
  */
 package org.apache.ibatis.ibator.generator.ibatis2.sqlmap.elements;
 
-import org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.ibator.api.dom.xml.Attribute;
 import org.apache.ibatis.ibator.api.dom.xml.TextElement;
 import org.apache.ibatis.ibator.api.dom.xml.XmlElement;
@@ -35,13 +34,11 @@ public class DeleteByExampleElementGenerator extends AbstractXmlElementGenerator
     public void addElements(XmlElement parentElement) {
         XmlElement answer = new XmlElement("delete"); //$NON-NLS-1$
 
-        FullyQualifiedJavaType fqjt = introspectedTable.getExampleType();
-
         answer
                 .addAttribute(new Attribute(
                         "id", introspectedTable.getDeleteByExampleStatementId())); //$NON-NLS-1$
         answer.addAttribute(new Attribute(
-                "parameterClass", fqjt.getFullyQualifiedName())); //$NON-NLS-1$
+                "parameterClass", introspectedTable.getExampleType())); //$NON-NLS-1$
 
         ibatorContext.getCommentGenerator().addComment(answer);
 

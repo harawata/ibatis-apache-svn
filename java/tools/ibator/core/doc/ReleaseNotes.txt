@@ -28,6 +28,10 @@ Enhancements:
 11. IBATIS-592 - Additional attributes for SqlMaps
 12. Fixed addCriterionfor JDBC* methods so that they all do a null check
 13. Fixed IbatorRunner so that configuration errors are shown (thanks to Karel Rank)
+14. Added XML ids to changeable attributes on introspected table, also
+    change the XML merger so that the XML ids no longer need to contain
+    the prefix "ibatorgenerated_"
+15. Many refactorings to make way for iBATIS3
 
 -------------------------------------------------------------------------------
 Version 1.2.1:

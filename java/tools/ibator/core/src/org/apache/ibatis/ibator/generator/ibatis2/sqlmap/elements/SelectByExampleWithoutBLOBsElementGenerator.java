@@ -15,7 +15,6 @@
  */
 package org.apache.ibatis.ibator.generator.ibatis2.sqlmap.elements;
 
-import org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.ibator.api.dom.xml.Attribute;
 import org.apache.ibatis.ibator.api.dom.xml.TextElement;
 import org.apache.ibatis.ibator.api.dom.xml.XmlElement;
@@ -34,8 +33,6 @@ public class SelectByExampleWithoutBLOBsElementGenerator extends AbstractXmlElem
 
     @Override
     public void addElements(XmlElement parentElement) {
-        FullyQualifiedJavaType fqjt = introspectedTable.getExampleType();
-
         XmlElement answer = new XmlElement("select"); //$NON-NLS-1$
 
         answer.addAttribute(new Attribute("id", //$NON-NLS-1$
@@ -44,7 +41,7 @@ public class SelectByExampleWithoutBLOBsElementGenerator extends AbstractXmlElem
                 .addAttribute(new Attribute(
                         "resultMap", introspectedTable.getBaseResultMapId())); //$NON-NLS-1$
         answer.addAttribute(new Attribute(
-                "parameterClass", fqjt.getFullyQualifiedName())); //$NON-NLS-1$
+                "parameterClass", introspectedTable.getExampleType())); //$NON-NLS-1$
 
         ibatorContext.getCommentGenerator().addComment(answer);
 

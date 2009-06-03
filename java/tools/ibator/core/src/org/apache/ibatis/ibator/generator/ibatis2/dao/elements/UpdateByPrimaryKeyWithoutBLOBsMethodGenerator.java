@@ -70,7 +70,7 @@ public class UpdateByPrimaryKeyWithoutBLOBsMethodGenerator extends
     
     private Method getMethodShell(Set<FullyQualifiedJavaType> importedTypes) {
         FullyQualifiedJavaType parameterType = 
-            introspectedTable.getBaseRecordType();
+            new FullyQualifiedJavaType(introspectedTable.getBaseRecordType());
         importedTypes.add(parameterType);
 
         Method method = new Method();

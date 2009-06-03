@@ -38,7 +38,7 @@ public class UpdateByExampleParmsInnerclassGenerator extends
 
     @Override
     public void addImplementationElements(TopLevelClass topLevelClass) {
-        topLevelClass.addImportedType(introspectedTable.getExampleType());
+        topLevelClass.addImportedType(new FullyQualifiedJavaType(introspectedTable.getExampleType()));
         
         InnerClass innerClass = new InnerClass(
                 new FullyQualifiedJavaType("UpdateByExampleParms")); //$NON-NLS-1$
@@ -55,7 +55,7 @@ public class UpdateByExampleParmsInnerclassGenerator extends
                 new Parameter(FullyQualifiedJavaType.getObjectInstance(),
                         "record")); //$NON-NLS-1$
         method.addParameter(
-                new Parameter(introspectedTable.getExampleType(),
+                new Parameter(new FullyQualifiedJavaType(introspectedTable.getExampleType()),
                         "example")); //$NON-NLS-1$
         method.addBodyLine("super(example);"); //$NON-NLS-1$
         method.addBodyLine("this.record = record;"); //$NON-NLS-1$

@@ -49,8 +49,8 @@ public class SelectByPrimaryKeyMethodGenerator extends AbstractDAOElementGenerat
         if (!introspectedTable.getRules().generatePrimaryKeyClass()) {
             // no primary key class, but primary key is enabled. Primary
             // key columns must be in the base class.
-            FullyQualifiedJavaType keyType = introspectedTable
-                    .getBaseRecordType();
+            FullyQualifiedJavaType keyType =
+                new FullyQualifiedJavaType(introspectedTable.getBaseRecordType());
             topLevelClass.addImportedType(keyType);
 
             sb.setLength(0);
@@ -106,8 +106,8 @@ public class SelectByPrimaryKeyMethodGenerator extends AbstractDAOElementGenerat
         Method method = new Method();
         method.setVisibility(JavaVisibility.PUBLIC);
 
-        FullyQualifiedJavaType returnType = introspectedTable.getRules()
-                .calculateAllFieldsClass();
+        FullyQualifiedJavaType returnType =
+            introspectedTable.getRules().calculateAllFieldsClass();
         method.setReturnType(returnType);
         importedTypes.add(returnType);
 
@@ -115,7 +115,7 @@ public class SelectByPrimaryKeyMethodGenerator extends AbstractDAOElementGenerat
                 .getSelectByPrimaryKeyMethodName(introspectedTable));
 
         if (introspectedTable.getRules().generatePrimaryKeyClass()) {
-            FullyQualifiedJavaType type = introspectedTable.getPrimaryKeyType();
+            FullyQualifiedJavaType type = new FullyQualifiedJavaType(introspectedTable.getPrimaryKeyType());
             importedTypes.add(type);
             method.addParameter(new Parameter(type, "key")); //$NON-NLS-1$
         } else {

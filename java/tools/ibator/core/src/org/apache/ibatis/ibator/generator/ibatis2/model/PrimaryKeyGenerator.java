@@ -53,8 +53,7 @@ public class PrimaryKeyGenerator extends BaseModelClassGenerator {
         IbatorPlugin plugins = ibatorContext.getPlugins();
         CommentGenerator commentGenerator = ibatorContext.getCommentGenerator();
         
-        FullyQualifiedJavaType type = introspectedTable.getPrimaryKeyType();
-        TopLevelClass topLevelClass = new TopLevelClass(type);
+        TopLevelClass topLevelClass = new TopLevelClass(introspectedTable.getPrimaryKeyType());
         topLevelClass.setVisibility(JavaVisibility.PUBLIC);
         commentGenerator.addJavaFileComment(topLevelClass);
 

@@ -16,7 +16,6 @@
 package org.apache.ibatis.ibator.generator.ibatis2.sqlmap.elements;
 
 import org.apache.ibatis.ibator.api.IntrospectedColumn;
-import org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.ibator.api.dom.xml.Attribute;
 import org.apache.ibatis.ibator.api.dom.xml.TextElement;
 import org.apache.ibatis.ibator.api.dom.xml.XmlElement;
@@ -48,7 +47,7 @@ public class SelectByPrimaryKeyElementGenerator extends AbstractXmlElementGenera
                     introspectedTable.getBaseResultMapId()));
         }
         
-        FullyQualifiedJavaType parameterType;
+        String parameterType;
         if (introspectedTable.getRules().generatePrimaryKeyClass()) {
             parameterType = introspectedTable.getPrimaryKeyType();
         } else {
@@ -58,7 +57,7 @@ public class SelectByPrimaryKeyElementGenerator extends AbstractXmlElementGenera
         }
         
         answer.addAttribute(new Attribute("parameterClass", //$NON-NLS-1$
-                parameterType.getFullyQualifiedName()));
+                parameterType));
 
         ibatorContext.getCommentGenerator().addComment(answer);
 

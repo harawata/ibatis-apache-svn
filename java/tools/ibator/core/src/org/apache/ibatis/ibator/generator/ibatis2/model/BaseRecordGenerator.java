@@ -49,8 +49,7 @@ public class BaseRecordGenerator extends BaseModelClassGenerator {
         IbatorPlugin plugins = ibatorContext.getPlugins();
         CommentGenerator commentGenerator = ibatorContext.getCommentGenerator();
 
-        FullyQualifiedJavaType type = introspectedTable.getBaseRecordType();
-        TopLevelClass topLevelClass = new TopLevelClass(type);
+        TopLevelClass topLevelClass = new TopLevelClass(introspectedTable.getBaseRecordType());
         topLevelClass.setVisibility(JavaVisibility.PUBLIC);
         commentGenerator.addJavaFileComment(topLevelClass);
         
@@ -111,7 +110,7 @@ public class BaseRecordGenerator extends BaseModelClassGenerator {
     private FullyQualifiedJavaType getSuperClass() {
         FullyQualifiedJavaType superClass;
         if (introspectedTable.getRules().generatePrimaryKeyClass()) {
-            superClass = introspectedTable.getPrimaryKeyType();
+            superClass = new FullyQualifiedJavaType(introspectedTable.getPrimaryKeyType());
         } else {
             String rootClass = getRootClass();
             if (rootClass != null) {

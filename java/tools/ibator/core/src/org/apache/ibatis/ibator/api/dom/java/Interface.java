@@ -52,6 +52,10 @@ public class Interface extends JavaElement implements CompilationUnit {
         fileCommentLines = new ArrayList<String>();
     }
 
+    public Interface(String type) {
+        this(new FullyQualifiedJavaType(type));
+    }
+    
     public Set<FullyQualifiedJavaType> getImportedTypes() {
         return Collections.unmodifiableSet(importedTypes);
     }

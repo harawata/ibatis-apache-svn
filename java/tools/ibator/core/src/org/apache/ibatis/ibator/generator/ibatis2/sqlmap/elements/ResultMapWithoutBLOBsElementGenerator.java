@@ -16,7 +16,6 @@
 package org.apache.ibatis.ibator.generator.ibatis2.sqlmap.elements;
 
 import org.apache.ibatis.ibator.api.IntrospectedColumn;
-import org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.ibator.api.dom.xml.Attribute;
 import org.apache.ibatis.ibator.api.dom.xml.XmlElement;
 import org.apache.ibatis.ibator.config.PropertyRegistry;
@@ -42,7 +41,7 @@ public class ResultMapWithoutBLOBsElementGenerator extends AbstractXmlElementGen
         answer.addAttribute(new Attribute("id", //$NON-NLS-1$
                 introspectedTable.getBaseResultMapId()));
 
-        FullyQualifiedJavaType returnType;
+        String returnType;
         if (introspectedTable.getRules().generateBaseRecordClass()) {
             returnType = introspectedTable.getBaseRecordType();
         } else {
@@ -50,7 +49,7 @@ public class ResultMapWithoutBLOBsElementGenerator extends AbstractXmlElementGen
         }
         
         answer.addAttribute(new Attribute("class", //$NON-NLS-1$
-                returnType.getFullyQualifiedName()));
+                returnType));
 
         ibatorContext.getCommentGenerator().addComment(answer);
 

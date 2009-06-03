@@ -75,11 +75,11 @@ public class UpdateByExampleSelectiveMethodGenerator extends
         FullyQualifiedJavaType parameterType;
 
         if (introspectedTable.getRules().generateRecordWithBLOBsClass()) {
-            parameterType = introspectedTable.getRecordWithBLOBsType();
+            parameterType = new FullyQualifiedJavaType(introspectedTable.getRecordWithBLOBsType());
         } else if (introspectedTable.getRules().generateBaseRecordClass()) {
-            parameterType = introspectedTable.getBaseRecordType();
+            parameterType = new FullyQualifiedJavaType(introspectedTable.getBaseRecordType());
         } else {
-            parameterType = introspectedTable.getPrimaryKeyType();
+            parameterType = new FullyQualifiedJavaType(introspectedTable.getPrimaryKeyType());
         }
 
         importedTypes.add(parameterType);
@@ -90,8 +90,8 @@ public class UpdateByExampleSelectiveMethodGenerator extends
         method.setName(getDAOMethodNameCalculator()
                 .getUpdateByExampleSelectiveMethodName(introspectedTable));
         method.addParameter(new Parameter(parameterType, "record")); //$NON-NLS-1$
-        method.addParameter(new Parameter(introspectedTable.getExampleType(),
-                "example")); //$NON-NLS-1$
+        method.addParameter(new Parameter(
+                new FullyQualifiedJavaType(introspectedTable.getExampleType()), "example")); //$NON-NLS-1$
 
         for (FullyQualifiedJavaType fqjt : daoTemplate.getCheckedExceptions()) {
             method.addException(fqjt);

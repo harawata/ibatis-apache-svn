@@ -28,6 +28,7 @@ import org.apache.ibatis.ibator.api.GeneratedXmlFile;
 import org.apache.ibatis.ibator.config.MergeConstants;
 import org.apache.ibatis.ibator.exception.ShellException;
 import org.apache.ibatis.ibator.internal.util.messages.Messages;
+import org.w3c.dom.Comment;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentType;
 import org.w3c.dom.Element;
@@ -178,8 +179,30 @@ public class XmlFileMergerJaxp {
                     }
                 }
             }
-        }
 
+            if (rc == false) {
+                // check for new node format - if the first non-whitespace node
+                // is an XML comment, and the comment include "@ibatorgenerated",
+                // then it is an ibator node
+                NodeList children = node.getChildNodes();
+                int length = children.getLength();
+                for (int i = 0; i < length; i++) {
+                    Node childNode = children.item(i);
+                    if (isWhiteSpace(childNode)) {
+                        continue;
+                    } else if (childNode.getNodeType() == Node.COMMENT_NODE) {
+                        Comment comment = (Comment) childNode;
+                        if (comment.getData().indexOf(MergeConstants.NEW_JAVA_ELEMENT_TAG) != -1) {
+                            rc = true;
+                            break;
+                        }
+                    } else {
+                        break;
+                    }
+                }
+            }
+        }
+        
         return rc;
     }
 

@@ -78,7 +78,7 @@ public class SelectByExampleWithoutBLOBsMethodGenerator extends
     }
 
     private Method getMethodShell(Set<FullyQualifiedJavaType> importedTypes) {
-        FullyQualifiedJavaType type = introspectedTable.getExampleType();
+        FullyQualifiedJavaType type = new FullyQualifiedJavaType(introspectedTable.getExampleType());
         importedTypes.add(type);
         importedTypes.add(FullyQualifiedJavaType.getNewListInstance());
 
@@ -91,9 +91,9 @@ public class SelectByExampleWithoutBLOBsMethodGenerator extends
         if (generateForJava5) {
             FullyQualifiedJavaType fqjt;
             if (introspectedTable.getRules().generateBaseRecordClass()) {
-                fqjt = introspectedTable.getBaseRecordType();
+                fqjt = new FullyQualifiedJavaType(introspectedTable.getBaseRecordType());
             } else if (introspectedTable.getRules().generatePrimaryKeyClass()) {
-                fqjt = introspectedTable.getPrimaryKeyType();
+                fqjt = new FullyQualifiedJavaType(introspectedTable.getPrimaryKeyType());
             } else {
                 throw new RuntimeException(Messages
                         .getString("RuntimeError.12")); //$NON-NLS-1$

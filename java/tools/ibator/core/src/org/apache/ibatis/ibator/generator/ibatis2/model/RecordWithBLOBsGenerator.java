@@ -24,7 +24,6 @@ import org.apache.ibatis.ibator.api.IbatorPlugin;
 import org.apache.ibatis.ibator.api.IntrospectedColumn;
 import org.apache.ibatis.ibator.api.dom.java.CompilationUnit;
 import org.apache.ibatis.ibator.api.dom.java.Field;
-import org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.ibator.api.dom.java.JavaVisibility;
 import org.apache.ibatis.ibator.api.dom.java.Method;
 import org.apache.ibatis.ibator.api.dom.java.TopLevelClass;
@@ -53,18 +52,17 @@ public class RecordWithBLOBsGenerator extends BaseModelClassGenerator {
         IbatorPlugin plugins = ibatorContext.getPlugins();
         CommentGenerator commentGenerator = ibatorContext.getCommentGenerator();
         
-        FullyQualifiedJavaType type = introspectedTable.getRecordWithBLOBsType();
-        TopLevelClass topLevelClass = new TopLevelClass(type);
+        TopLevelClass topLevelClass = new TopLevelClass(introspectedTable.getRecordWithBLOBsType());
         topLevelClass.setVisibility(JavaVisibility.PUBLIC);
         commentGenerator.addJavaFileComment(topLevelClass);
 
-        String rootClass = getRootClass();
         if (introspectedTable.getRules().generateBaseRecordClass()) {
             topLevelClass.setSuperClass(introspectedTable.getBaseRecordType());
         } else {
             topLevelClass.setSuperClass(introspectedTable.getPrimaryKeyType());
         }
         
+        String rootClass = getRootClass();
         for (IntrospectedColumn introspectedColumn : introspectedTable.getBLOBColumns()) {
             if (RootClassInfo.getInstance(rootClass, warnings).containsProperty(introspectedColumn)) {
                 continue;
