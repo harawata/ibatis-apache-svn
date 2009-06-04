@@ -71,7 +71,7 @@ public class SqlSourceBuilder extends BaseBuilder {
             builder.typeHandler((TypeHandler) resolveInstance(value));
           }
         } else {
-          throw new BulderException("Improper inline parameter map format.  Should be: #{propName,attr1=val1,attr2=val2}");
+          throw new BuilderException("Improper inline parameter map format.  Should be: #{propName,attr1=val1,attr2=val2}");
         }
       }
       return builder.build();

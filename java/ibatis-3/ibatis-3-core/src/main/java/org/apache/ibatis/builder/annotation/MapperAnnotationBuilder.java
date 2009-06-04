@@ -240,7 +240,7 @@ public class MapperAnnotationBuilder {
       }
       return null;
     } catch (Exception e) {
-      throw new BulderException("Could not find value method on SQL annotation.  Cause: " + e, e);
+      throw new BuilderException("Could not find value method on SQL annotation.  Cause: " + e, e);
     }
   }
 

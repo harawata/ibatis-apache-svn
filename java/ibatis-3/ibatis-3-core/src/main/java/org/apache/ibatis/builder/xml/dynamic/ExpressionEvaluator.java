@@ -1,6 +1,6 @@
 package org.apache.ibatis.builder.xml.dynamic;
 
-import org.apache.ibatis.builder.BulderException;
+import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.ognl.*;
 
 import java.math.BigDecimal;
@@ -15,7 +15,7 @@ public class ExpressionEvaluator {
       if (value instanceof Number) return !new BigDecimal(String.valueOf(value)).equals(BigDecimal.ZERO);
       return value != null;
     } catch (OgnlException e) {
-      throw new BulderException("Error evaluating expression '"+expression+"'. Cause: " + e, e);
+      throw new BuilderException("Error evaluating expression '"+expression+"'. Cause: " + e, e);
     }
   }
 
@@ -24,9 +24,9 @@ public class ExpressionEvaluator {
       Object value = Ognl.getValue(expression, parameterObject);
       if (value instanceof Iterable) return (Iterable) value;
       if (value.getClass().isArray()) return Arrays.asList((Object[])value);
-      throw new BulderException("Error evaluating expression '"+expression+"'.  Return value ("+value+") was not iterable.");
+      throw new BuilderException("Error evaluating expression '"+expression+"'.  Return value ("+value+") was not iterable.");
     } catch (OgnlException e) {
-      throw new BulderException("Error evaluating expression '"+expression+"'. Cause: " + e, e);
+      throw new BuilderException("Error evaluating expression '"+expression+"'. Cause: " + e, e);
     }
   }
 

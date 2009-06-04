@@ -32,7 +32,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
       this.currentNamespace = currentNamespace;
     }
     if (this.currentNamespace == null) {
-      throw new BulderException("The mapper element requires a namespace attribute to be specified.");
+      throw new BuilderException("The mapper element requires a namespace attribute to be specified.");
     }
   }
 
@@ -44,11 +44,11 @@ public class MapperBuilderAssistant extends BaseBuilder {
 
   public Cache useCacheRef(String namespace) {
     if (namespace == null) {
-      throw new BulderException("cache-ref element requires a namespace attribute.");
+      throw new BuilderException("cache-ref element requires a namespace attribute.");
     }
     Cache cache = configuration.getCache(namespace);
     if (cache == null) {
-      throw new BulderException("No cache for namespace '" + namespace + "' could be found.");
+      throw new BuilderException("No cache for namespace '" + namespace + "' could be found.");
     }
     currentCache = cache;
     return cache;
@@ -318,7 +318,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
       }
     }
     if (javaType == null) {
-      throw new BulderException("Could not determine javaType for result property " + property + " using javaType " + javaType);
+      throw new BuilderException("Could not determine javaType for result property " + property + " using javaType " + javaType);
     }
     return javaType;
   }
@@ -329,7 +329,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
       javaType = metaResultType.getGetterType(property);
     }
     if (javaType == null) {
-      throw new BulderException("Could not determine javaType for result.  Specify property or javaType attribute.");
+      throw new BuilderException("Could not determine javaType for result.  Specify property or javaType attribute.");
     }
     return javaType;
   }

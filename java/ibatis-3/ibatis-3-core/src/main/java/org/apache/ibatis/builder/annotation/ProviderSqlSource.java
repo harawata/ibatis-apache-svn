@@ -28,7 +28,7 @@ public class ProviderSqlSource implements SqlSource {
         }
       }
     } catch (Exception e) {
-      throw new BulderException("Error creating SqlSource for SqlProvider.  Cause: " + e, e);
+      throw new BuilderException("Error creating SqlSource for SqlProvider.  Cause: " + e, e);
     }
   }
 
@@ -48,7 +48,7 @@ public class ProviderSqlSource implements SqlSource {
       Class parameterType = parameterObject == null ? Object.class : parameterObject.getClass();
       return sqlSourceParser.parse(sql, parameterType);
     } catch (Exception e) {
-      throw new BulderException("Error invoking SqlProvider method ("
+      throw new BuilderException("Error invoking SqlProvider method ("
           + providerType.getName() + "." + providerMethod.getName()
           + ").  Cause: " + e, e);
     }

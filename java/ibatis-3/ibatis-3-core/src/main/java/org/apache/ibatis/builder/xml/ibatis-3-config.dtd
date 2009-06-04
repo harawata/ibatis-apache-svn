@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<!ELEMENT configuration (properties?, settings?, typeAliases?, typeHandlers?, objectFactory?, plugins?, environments?, mappers)>
+<!ELEMENT configuration (properties?, settings?, typeAliases?, typeHandlers?, objectFactory?, plugins?, environments?, mappers?)>
 
 <!ELEMENT properties (property*)>
 <!ATTLIST properties
@@ -14,7 +14,7 @@ name CDATA #REQUIRED
 value CDATA #REQUIRED
 >
 
-<!ELEMENT settings (setting*)>
+<!ELEMENT settings (setting+)>
 
 <!ELEMENT setting EMPTY>
 <!ATTLIST setting
@@ -51,7 +51,7 @@ type CDATA #REQUIRED
 interceptor CDATA #REQUIRED
 >
 
-<!ELEMENT environments (environment*)>
+<!ELEMENT environments (environment+)>
 <!ATTLIST environments
 default CDATA #REQUIRED
 >

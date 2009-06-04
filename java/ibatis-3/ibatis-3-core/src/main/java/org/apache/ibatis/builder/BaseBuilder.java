@@ -35,7 +35,7 @@ public abstract class BaseBuilder {
     try {
       return JdbcType.valueOf(resolveAlias(alias));
     } catch (IllegalArgumentException e) {
-      throw new BulderException("Error resolving JdbcType. Cause: " + e, e);
+      throw new BuilderException("Error resolving JdbcType. Cause: " + e, e);
     }
   }
 
@@ -44,7 +44,7 @@ public abstract class BaseBuilder {
     try {
       return ResultSetType.valueOf(resolveAlias(alias));
     } catch (IllegalArgumentException e) {
-      throw new BulderException("Error resolving ResultSetType. Cause: " + e, e);
+      throw new BuilderException("Error resolving ResultSetType. Cause: " + e, e);
     }
   }
 
@@ -53,7 +53,7 @@ public abstract class BaseBuilder {
     try {
       return ParameterMode.valueOf(resolveAlias(alias));
     } catch (IllegalArgumentException e) {
-      throw new BulderException("Error resolving ParameterMode. Cause: " + e, e);
+      throw new BuilderException("Error resolving ParameterMode. Cause: " + e, e);
     }
   }
 
@@ -62,7 +62,7 @@ public abstract class BaseBuilder {
     try {
       return Class.forName(resolveAlias(alias));
     } catch (ClassNotFoundException e) {
-      throw new BulderException("Error resolving class . Cause: " + e, e);
+      throw new BuilderException("Error resolving class . Cause: " + e, e);
     }
   }
 
@@ -72,7 +72,7 @@ public abstract class BaseBuilder {
       Class type = resolveClass(alias);
       return type.newInstance();
     } catch (Exception e) {
-      throw new BulderException("Error instantiating class. Cause: " + e, e);
+      throw new BuilderException("Error instantiating class. Cause: " + e, e);
     }
   }
 
@@ -81,7 +81,7 @@ public abstract class BaseBuilder {
     try {
       return type.newInstance();
     } catch (Exception e) {
-      throw new BulderException("Error instantiating class. Cause: " + e, e);
+      throw new BuilderException("Error instantiating class. Cause: " + e, e);
     }
   }
 

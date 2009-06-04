@@ -5,7 +5,6 @@ import org.apache.ibatis.builder.xml.dynamic.*;
 import org.apache.ibatis.executor.keygen.*;
 import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.parsing.XNode;
-import org.apache.ibatis.cache.Cache;
 import org.w3c.dom.*;
 
 import java.util.*;
@@ -75,7 +74,7 @@ public class XMLStatementBuilder extends BaseBuilder {
       } else {
         NodeHandler handler = nodeHandlers.get(nodeName);
         if (handler == null) {
-          throw new BulderException("Unknown element <" + nodeName + "> in SQL statement.");
+          throw new BuilderException("Unknown element <" + nodeName + "> in SQL statement.");
         }
         handler.handleNode(child, contents);
 
@@ -148,7 +147,7 @@ public class XMLStatementBuilder extends BaseBuilder {
         String nsrefid = sequentialBuilder.applyCurrentNamespace(refid);
         includeNode = xmlMapperParser.getSqlFragment(nsrefid);
         if (includeNode == null) {
-          throw new BulderException("Could not find SQL statement to include with refid '" + refid + "'");
+          throw new BuilderException("Could not find SQL statement to include with refid '" + refid + "'");
         }
       }
       MixedSqlNode mixedSqlNode = new MixedSqlNode(contents(includeNode));
@@ -248,7 +247,7 @@ public class XMLStatementBuilder extends BaseBuilder {
       if (defaultSqlNodes.size() == 1) {
         defaultSqlNode = defaultSqlNodes.get(0);
       } else if (defaultSqlNodes.size() > 1) {
-        throw new BulderException("Too many default (otherwise) elements in choose statement.");
+        throw new BuilderException("Too many default (otherwise) elements in choose statement.");
       }
       return defaultSqlNode;
     }
