@@ -11,15 +11,15 @@ public class SqlRunner {
 
   private Connection connection;
   private TypeHandlerRegistry typeHandlerRegistry;
-  private boolean forceGeneratedKeySupport;
+  private boolean useGeneratedKeySupport;
 
   public SqlRunner(Connection connection) {
     this.connection = connection;
     this.typeHandlerRegistry = new TypeHandlerRegistry();
   }
 
-  public void setForceGeneratedKeySupport(boolean forceGeneratedKeySupport) {
-    this.forceGeneratedKeySupport = forceGeneratedKeySupport;
+  public void setUseGeneratedKeySupport(boolean useGeneratedKeySupport) {
+    this.useGeneratedKeySupport = useGeneratedKeySupport;
   }
 
   /**
@@ -71,7 +71,7 @@ public class SqlRunner {
    */
   public int insert(String sql, Object... args) throws SQLException {
     PreparedStatement ps;
-    if (forceGeneratedKeySupport || connection.getMetaData().supportsGetGeneratedKeys()) {
+    if (useGeneratedKeySupport) {
       ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
     } else {
       ps = connection.prepareStatement(sql);
@@ -80,13 +80,20 @@ public class SqlRunner {
     try {
       setParameters(ps, args);
       ps.executeUpdate();
-      if (forceGeneratedKeySupport || connection.getMetaData().supportsGetGeneratedKeys()) {
+      if (useGeneratedKeySupport) {
         List<Map<String, Object>> keys = getResults(ps.getGeneratedKeys());
         if (keys.size() == 1) {
           Map<String, Object> key = keys.get(0);
           Iterator i = key.values().iterator();
           if (i.hasNext()) {
-            return Integer.parseInt(i.next().toString());
+            Object genkey = i.next();
+            if (genkey != null) {
+              try {
+                return Integer.parseInt(genkey.toString());
+              } catch (NumberFormatException e) {
+                //ignore, no numeric key suppot
+              }
+            }
           }
         }
       }

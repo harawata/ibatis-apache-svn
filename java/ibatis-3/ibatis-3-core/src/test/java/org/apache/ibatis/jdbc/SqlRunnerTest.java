@@ -38,7 +38,7 @@ public class SqlRunnerTest extends BaseDataTest {
     runScript(ds, BLOG_DDL);
     Connection connection = ds.getConnection();
     SqlRunner exec = new SqlRunner(connection);
-    exec.setForceGeneratedKeySupport(true);
+    exec.setUseGeneratedKeySupport(true);
     int id = exec.insert("INSERT INTO author (username, password, email, bio) VALUES (?,?,?,?)", "someone", "******", "someone@apache.org", Null.LONGVARCHAR);
     Map row = exec.selectOne("SELECT * FROM author WHERE username = ?", "someone");
     connection.rollback();

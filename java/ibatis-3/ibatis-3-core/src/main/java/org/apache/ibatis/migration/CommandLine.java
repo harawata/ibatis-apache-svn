@@ -12,6 +12,7 @@ public class CommandLine {
   private static final String PATH_PREFIX = "--path=";
   private static final String ENV_PREFIX = "--env=";
   private static final String FORCE = "--force";
+  private static final String TRACE = "--trace";
   private static final String HELP = "--help";
 
   private static final String INIT = "init";
@@ -28,6 +29,7 @@ public class CommandLine {
   private File repository;
   private String environment;
   private boolean force;
+  private boolean trace;
 
   private String command;
   private String params;
@@ -51,8 +53,10 @@ public class CommandLine {
         try {
           runCommand();
         } catch (MigrationException e) {
-          out.println("ERROR: " + e.getMessage());
-          printUsage();
+          out.println("\nERROR: " + e.getMessage());
+          if (trace) {
+            e.printStackTrace();
+          }
         }
       }
     } finally {
@@ -86,6 +90,8 @@ public class CommandLine {
         repository = new File(arg.split("=")[1]);
       } else if (arg.startsWith(ENV_PREFIX) && arg.length() > ENV_PREFIX.length()) {
         environment = arg.split("=")[1];
+      } else if (arg.startsWith(TRACE)) {
+        trace = true;
       } else if (arg.startsWith(FORCE)) {
         force = true;
       } else if (arg.startsWith(HELP)) {
