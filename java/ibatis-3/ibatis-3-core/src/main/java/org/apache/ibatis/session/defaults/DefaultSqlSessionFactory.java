@@ -7,6 +7,7 @@ import org.apache.ibatis.logging.jdbc.ConnectionLogger;
 import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.session.*;
 import org.apache.ibatis.transaction.*;
+import org.apache.ibatis.transaction.managed.ManagedTransactionFactory;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -23,8 +24,13 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
   public DefaultSqlSessionFactory(Configuration configuration) {
     this.configuration = configuration;
     this.environment = configuration.getEnvironment();
-    this.dataSource = environment.getDataSource();
-    this.transactionFactory = environment.getTransactionFactory();
+    if (environment == null) {
+      this.dataSource = null;
+      this.transactionFactory = new ManagedTransactionFactory();
+    } else {
+      this.dataSource = environment.getDataSource();
+      this.transactionFactory = environment.getTransactionFactory();
+    }
   }
 
   public SqlSession openSession() {
@@ -41,6 +47,9 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
 
   public SqlSession openSession(ExecutorType execType, boolean autoCommit) {
     try {
+      if (dataSource == null) {
+        throw new SessionException("Configuration does not include an environment with a DataSource, so session cannot be created unless a connection is passed in.");
+      }
       Connection connection = dataSource.getConnection();
       connection = wrapConnection(connection);
       Transaction tx = transactionFactory.newTransaction(connection, autoCommit);

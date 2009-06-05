@@ -33,7 +33,7 @@ public abstract class BaseBuilder {
   protected JdbcType resolveJdbcType(String alias) {
     if (alias == null) return null;
     try {
-      return JdbcType.valueOf(resolveAlias(alias));
+      return JdbcType.valueOf(alias);
     } catch (IllegalArgumentException e) {
       throw new BuilderException("Error resolving JdbcType. Cause: " + e, e);
     }
