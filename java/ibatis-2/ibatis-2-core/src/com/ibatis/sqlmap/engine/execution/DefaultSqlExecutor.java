@@ -15,22 +15,29 @@
  */
 package com.ibatis.sqlmap.engine.execution;
 
-import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMapping;
+import java.sql.BatchUpdateException;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Types;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.ibatis.sqlmap.engine.impl.SqlMapClientImpl;
+import com.ibatis.sqlmap.engine.impl.SqlMapExecutorDelegate;
 import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMap;
+import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMapping;
 import com.ibatis.sqlmap.engine.mapping.result.ResultMap;
 import com.ibatis.sqlmap.engine.mapping.result.ResultObjectFactoryUtil;
+import com.ibatis.sqlmap.engine.mapping.statement.DefaultRowHandler;
 import com.ibatis.sqlmap.engine.mapping.statement.MappedStatement;
 import com.ibatis.sqlmap.engine.mapping.statement.RowHandlerCallback;
 import com.ibatis.sqlmap.engine.scope.ErrorContext;
-import com.ibatis.sqlmap.engine.scope.StatementScope;
 import com.ibatis.sqlmap.engine.scope.SessionScope;
-import com.ibatis.sqlmap.engine.impl.SqlMapClientImpl;
-import com.ibatis.sqlmap.engine.impl.SqlMapExecutorDelegate;
-import com.ibatis.sqlmap.engine.mapping.statement.DefaultRowHandler;
-
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import com.ibatis.sqlmap.engine.scope.StatementScope;
 
 /**
  * Class responsible for executing the SQL
@@ -337,15 +344,32 @@ public class DefaultSqlExecutor implements SqlExecutor {
   private boolean moveToNextResultsIfPresent(StatementScope scope, Statement stmt) throws SQLException {
     boolean moreResults;
     // This is the messed up JDBC approach for determining if there are more results
-    moreResults = !(((moveToNextResultsSafely(scope, stmt) == false) && (stmt.getUpdateCount() == -1)));
+    boolean movedToNextResultsSafely = moveToNextResultsSafely(scope, stmt);
+    int updateCount = stmt.getUpdateCount();
+    
+    moreResults = !(!movedToNextResultsSafely && (updateCount == -1));
+    
+    //ibatis-384: workaround for mysql not returning -1 for stmt.getUpdateCount()
+    if (moreResults == true){
+	moreResults = !(!movedToNextResultsSafely && !isMultipleResultSetSupportPresent(scope, stmt));
+    }
+    
     return moreResults;
   }
 
   private boolean moveToNextResultsSafely(StatementScope scope, Statement stmt) throws SQLException {
-    if (forceMultipleResultSetSupport(scope) || stmt.getConnection().getMetaData().supportsMultipleResultSets()) {
+    if (isMultipleResultSetSupportPresent(scope, stmt)) {
       return stmt.getMoreResults();
     }
     return false;
+  }
+
+  /**
+   * checks whether multiple result set support is present - either by direct support of the database driver or by forcing it
+   */
+  private boolean isMultipleResultSetSupportPresent(StatementScope scope,
+	  Statement stmt) throws SQLException {
+      return forceMultipleResultSetSupport(scope) || stmt.getConnection().getMetaData().supportsMultipleResultSets();
   }
 
   private boolean forceMultipleResultSetSupport(StatementScope scope) {
