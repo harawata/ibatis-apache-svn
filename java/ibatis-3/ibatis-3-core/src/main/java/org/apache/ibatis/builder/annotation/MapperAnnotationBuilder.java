@@ -46,7 +46,7 @@ public class MapperAnnotationBuilder {
       // ignore, resource is not required
     }
     if (xmlReader != null) {
-      XMLMapperBuilder xmlParser = new XMLMapperBuilder(xmlReader, assistant.getConfiguration(), xmlResource, type.getName());
+      XMLMapperBuilder xmlParser = new XMLMapperBuilder(xmlReader, assistant.getConfiguration(), xmlResource, new HashMap(), type.getName());
       xmlParser.parse();
     }
   }

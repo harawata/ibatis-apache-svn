@@ -19,6 +19,7 @@ public class XMLConfigBuilder extends BaseBuilder {
   private boolean parsed;
   private XPathParser parser;
   private String environment;
+  private Map<String, XNode> sqlFragments = new HashMap<String, XNode>();  
 
   public XMLConfigBuilder(Reader reader) {
     this(reader, null, null);
@@ -206,12 +207,12 @@ public class XMLConfigBuilder extends BaseBuilder {
         if (resource != null && url == null) {
           ErrorContext.instance().resource(resource);
           reader = Resources.getResourceAsReader(resource);
-          XMLMapperBuilder mapperParser = new XMLMapperBuilder(reader, configuration, resource);
+          XMLMapperBuilder mapperParser = new XMLMapperBuilder(reader, configuration, resource, sqlFragments);
           mapperParser.parse();
         } else if (url != null && resource == null) {
           ErrorContext.instance().resource(url);
           reader = Resources.getUrlAsReader(url);
-          XMLMapperBuilder mapperParser = new XMLMapperBuilder(reader, configuration, url);
+          XMLMapperBuilder mapperParser = new XMLMapperBuilder(reader, configuration, url, sqlFragments);
           mapperParser.parse();
         } else {
           throw new BuilderException("A mapper element may only specify a url or resource, but not both.");
