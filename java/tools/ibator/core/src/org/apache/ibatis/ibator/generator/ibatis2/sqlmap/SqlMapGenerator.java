@@ -60,7 +60,7 @@ public class SqlMapGenerator extends AbstractXmlGenerator {
                 Messages.getString("Progress.12", table.toString())); //$NON-NLS-1$
         XmlElement answer = new XmlElement("sqlMap"); //$NON-NLS-1$
         answer.addAttribute(new Attribute("namespace", //$NON-NLS-1$
-                introspectedTable.getSqlMapNamespace()));
+                introspectedTable.getIbatis2SqlMapNamespace()));
 
         ibatorContext.getCommentGenerator().addRootComment(answer);
         

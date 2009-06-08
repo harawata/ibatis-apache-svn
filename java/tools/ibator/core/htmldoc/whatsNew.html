@@ -44,6 +44,12 @@
       release of Ibator - so subclasses should be reworked as soon as
       convenient.</p>
   </li>
+  <li>The SQL Map generator has changed in that it no longer prepends the string
+      "ibatorgenerated_" to every generated XML id.  If you were relying on these
+      generated names in other code, you can force Ibator to prepend the string
+      with the property <code>useLegacyXMLIds</code> on the
+      <a href="configreference/sqlMapGenerator.html">&lt;SqlMapGenerator&gt;</a> configuration.</li>
+
 </ul>
 <h3>Bugs Fixed</h3>
 <ul>

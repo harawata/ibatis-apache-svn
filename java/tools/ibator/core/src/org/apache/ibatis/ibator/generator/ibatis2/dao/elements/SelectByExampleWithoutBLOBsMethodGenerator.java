@@ -53,7 +53,7 @@ public class SelectByExampleWithoutBLOBsMethodGenerator extends
         StringBuilder sb = new StringBuilder();
         sb.append(method.getReturnType().getShortName());
         sb.append(" list = "); //$NON-NLS-1$
-        sb.append(daoTemplate.getQueryForListMethod(introspectedTable.getSqlMapNamespace(),
+        sb.append(daoTemplate.getQueryForListMethod(introspectedTable.getIbatis2SqlMapNamespace(),
                 introspectedTable.getSelectByExampleStatementId(), "example")); //$NON-NLS-1$
         method.addBodyLine(sb.toString());
         method.addBodyLine("return list;"); //$NON-NLS-1$

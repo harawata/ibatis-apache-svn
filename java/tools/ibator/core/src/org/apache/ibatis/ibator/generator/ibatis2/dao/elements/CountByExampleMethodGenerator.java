@@ -48,7 +48,7 @@ public class CountByExampleMethodGenerator extends AbstractDAOElementGenerator {
         StringBuilder sb = new StringBuilder();
 
         sb.append("Integer count = (Integer)  "); //$NON-NLS-1$
-        sb.append(daoTemplate.getQueryForObjectMethod(introspectedTable.getSqlMapNamespace(),
+        sb.append(daoTemplate.getQueryForObjectMethod(introspectedTable.getIbatis2SqlMapNamespace(),
                 introspectedTable.getCountByExampleStatementId(), "example")); //$NON-NLS-1$
         method.addBodyLine(sb.toString());
 

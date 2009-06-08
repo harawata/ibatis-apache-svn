@@ -49,7 +49,7 @@ public class GeneratedKey {
         this.type = type;
         this.isIdentity = isIdentity;
         this.configuredSqlStatement = configuredSqlStatement;
-        
+
         DatabaseDialects dialect = DatabaseDialects.getDatabaseDialect(configuredSqlStatement);
         if (dialect == null) {
             this.runtimeSqlStatement = configuredSqlStatement;

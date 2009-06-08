@@ -49,7 +49,7 @@ public class DeleteByExampleElementGenerator extends AbstractXmlElementGenerator
 
         XmlElement includeElement = new XmlElement("include"); //$NON-NLS-1$
         sb.setLength(0);
-        sb.append(introspectedTable.getSqlMapNamespace());
+        sb.append(introspectedTable.getIbatis2SqlMapNamespace());
         sb.append('.');
         sb.append(introspectedTable.getExampleWhereClauseId());
         includeElement.addAttribute(new Attribute("refid", //$NON-NLS-1$

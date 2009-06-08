@@ -78,6 +78,14 @@ specified with the <a href="property.html">&lt;property&gt;</a> child element:</
         SQL Map will be placed in the "com.mycompany" schema.</p>
         <p><i>The default value is false.</i></p></td>
   </tr>
+  <tr>
+    <td valign="top">useLegacyXMLIds</td>
+    <td>If true, Ibator will prepend the string "ibatorgenerated_" to the ID of every
+        generated XML element.  This is in keeping with older versions of Ibator.
+        Only use this feature if you have previously existing Ibator generated SQL maps and
+        you are using the generated XML in custom code..
+        <p><i>The default value is false.</i></p></td>
+  </tr>
 </table>
 
 <h2>Example</h2>

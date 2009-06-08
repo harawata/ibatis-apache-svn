@@ -155,8 +155,8 @@ public class IntrospectedTableIbatis2Java2Impl extends IntrospectedTable {
         
         Document document = sqlMapGenerator.getDocument();
         GeneratedXmlFile gxf = new GeneratedXmlFile(document,
-            getSqlMapFileName(),
-            getSqlMapPackage(),
+            getIbatis2SqlMapFileName(),
+            getIbatis2SqlMapPackage(),
             ibatorContext.getSqlMapGeneratorConfiguration().getTargetProject(),
             true);
         if (ibatorContext.getPlugins().sqlMapGenerated(gxf, this)) {

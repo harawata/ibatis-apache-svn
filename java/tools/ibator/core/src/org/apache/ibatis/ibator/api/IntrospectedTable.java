@@ -26,6 +26,7 @@ import org.apache.ibatis.ibator.config.DAOGeneratorConfiguration;
 import org.apache.ibatis.ibator.config.GeneratedKey;
 import org.apache.ibatis.ibator.config.IbatorContext;
 import org.apache.ibatis.ibator.config.JavaModelGeneratorConfiguration;
+import org.apache.ibatis.ibator.config.MergeConstants;
 import org.apache.ibatis.ibator.config.ModelType;
 import org.apache.ibatis.ibator.config.PropertyRegistry;
 import org.apache.ibatis.ibator.config.SqlMapGeneratorConfiguration;
@@ -53,11 +54,14 @@ public abstract class IntrospectedTable {
         ATTR_BASE_RECORD_TYPE,
         ATTR_RECORD_WITH_BLOBS_TYPE,
         ATTR_EXAMPLE_TYPE,
-        ATTR_SQL_MAP_PACKAGE,
-        ATTR_SQL_MAP_FILE_NAME,
-        ATTR_SQL_MAP_NAMESPACE,
-        ATTR_SQL_MAP_FULLY_QUALIFIED_TABLE_NAME_AT_RUNTIME,
-        ATTR_SQL_MAP_ALIASED_FULLY_QUALIFIED_TABLE_NAME_AT_RUNTIME,
+        ATTR_IBATIS2_SQL_MAP_PACKAGE,
+        ATTR_IBATIS2_SQL_MAP_FILE_NAME,
+        ATTR_IBATIS2_SQL_MAP_NAMESPACE,
+        ATTR_IBATIS3_XML_MAPPER_PACKAGE,
+        ATTR_IBATIS3_XML_MAPPER_FILE_NAME,
+        ATTR_IBATIS3_JAVA_MAPPER_TYPE, // also used as XML Mapper namespace
+        ATTR_FULLY_QUALIFIED_TABLE_NAME_AT_RUNTIME,
+        ATTR_ALIASED_FULLY_QUALIFIED_TABLE_NAME_AT_RUNTIME,
         ATTR_COUNT_BY_EXAMPLE_STATEMENT_ID,
         ATTR_DELETE_BY_EXAMPLE_STATEMENT_ID,
         ATTR_DELETE_BY_PRIMARY_KEY_STATEMENT_ID,
@@ -350,12 +354,12 @@ public abstract class IntrospectedTable {
      * 
      * @return the name of the SqlMap file
      */
-    public String getSqlMapFileName() {
-        return internalAttributes.get(InternalAttribute.ATTR_SQL_MAP_FILE_NAME);
+    public String getIbatis2SqlMapFileName() {
+        return internalAttributes.get(InternalAttribute.ATTR_IBATIS2_SQL_MAP_FILE_NAME);
     }
     
-    public String getSqlMapNamespace() {
-        return internalAttributes.get(InternalAttribute.ATTR_SQL_MAP_NAMESPACE);
+    public String getIbatis2SqlMapNamespace() {
+        return internalAttributes.get(InternalAttribute.ATTR_IBATIS2_SQL_MAP_NAMESPACE);
     }
 
     /**
@@ -363,8 +367,8 @@ public abstract class IntrospectedTable {
      * 
      * @return the package for the SqlMap for the current table
      */
-    public String getSqlMapPackage() {
-        return internalAttributes.get(InternalAttribute.ATTR_SQL_MAP_PACKAGE);
+    public String getIbatis2SqlMapPackage() {
+        return internalAttributes.get(InternalAttribute.ATTR_IBATIS2_SQL_MAP_PACKAGE);
     }
     
     public String getDAOImplementationType() {
@@ -464,9 +468,12 @@ public abstract class IntrospectedTable {
      * 
      */
     protected void calculateXmlAttributes() {
-        setSqlMapPackage(calculateSqlMapPackage());
-        setSqlMapFileName(calculateSqlMapFileName());
-        setSqlMapNamespace(calculateSqlMapNamespace());
+        setIbatis2SqlMapPackage(calculateIbatis2SqlMapPackage());
+        setIbatis2SqlMapFileName(calculateIbatis2SqlMapFileName());
+        setIbatis3XmlMapperFileName(calculateIbatis3XmlMapperFileName()); // TODO? works for now
+        setIbatis3XmlMapperPackage(getIbatis2SqlMapPackage()); // TODO? works for now
+        
+        setIbatis2SqlMapNamespace(calculateIbatis2SqlMapNamespace());
         setSqlMapFullyQualifiedRuntimeTableName(calculateSqlMapFullyQualifiedRuntimeTableName());
         setSqlMapAliasedFullyQualifiedRuntimeTableName(calculateSqlMapAliasedFullyQualifiedRuntimeTableName());
 
@@ -489,8 +496,116 @@ public abstract class IntrospectedTable {
         setExampleWhereClauseId("Example_Where_Clause"); //$NON-NLS-1$
         setBaseColumnListId("Base_Column_List"); //$NON-NLS-1$
         setBlobColumnListId("Blob_Column_List"); //$NON-NLS-1$
+        applyLegacyXMLPrefix();
     }
+    
+    protected boolean useLegacyXMLIds() {
+        SqlMapGeneratorConfiguration config = ibatorContext.getSqlMapGeneratorConfiguration();
+        
+        return StringUtility.isTrue(config.getProperty(PropertyRegistry.SQL_MAP_USE_LEGACY_XML_IDS));
+    }
+    
+    protected void applyLegacyXMLPrefix() {
+        if (!useLegacyXMLIds()) {
+            return;
+        }
+        
+        StringBuilder sb = new StringBuilder();
+        sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
+        sb.append(getCountByExampleStatementId());
+        setCountByExampleStatementId(sb.toString());
+        
+        sb.setLength(0);
+        sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
+        sb.append(getDeleteByExampleStatementId());
+        setDeleteByExampleStatementId(sb.toString());
+        
+        sb.setLength(0);
+        sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
+        sb.append(getDeleteByPrimaryKeyStatementId());
+        setDeleteByPrimaryKeyStatementId(sb.toString());
+        
+        sb.setLength(0);
+        sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
+        sb.append(getInsertStatementId());
+        setInsertStatementId(sb.toString());
+        
+        sb.setLength(0);
+        sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
+        sb.append(getInsertSelectiveStatementId());
+        setInsertSelectiveStatementId(sb.toString());
+        
+        sb.setLength(0);
+        sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
+        sb.append(getSelectByExampleStatementId());
+        setSelectByExampleStatementId(sb.toString());
+        
+        sb.setLength(0);
+        sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
+        sb.append(getSelectByExampleWithBLOBsStatementId());
+        setSelectByExampleWithBLOBsStatementId(sb.toString());
+        
+        sb.setLength(0);
+        sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
+        sb.append(getSelectByPrimaryKeyStatementId());
+        setSelectByPrimaryKeyStatementId(sb.toString());
 
+        sb.setLength(0);
+        sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
+        sb.append(getUpdateByExampleStatementId());
+        setUpdateByExampleStatementId(sb.toString());
+        
+        sb.setLength(0);
+        sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
+        sb.append(getUpdateByExampleSelectiveStatementId());
+        setUpdateByExampleSelectiveStatementId(sb.toString());
+
+        sb.setLength(0);
+        sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
+        sb.append(getUpdateByExampleWithBLOBsStatementId());
+        setUpdateByExampleWithBLOBsStatementId(sb.toString());
+        
+        sb.setLength(0);
+        sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
+        sb.append(getUpdateByPrimaryKeyStatementId());
+        setUpdateByPrimaryKeyStatementId(sb.toString());
+        
+        sb.setLength(0);
+        sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
+        sb.append(getUpdateByPrimaryKeySelectiveStatementId());
+        setUpdateByPrimaryKeySelectiveStatementId(sb.toString());
+        
+        sb.setLength(0);
+        sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
+        sb.append(getUpdateByPrimaryKeyWithBLOBsStatementId());
+        setUpdateByPrimaryKeyWithBLOBsStatementId(sb.toString());
+        
+        sb.setLength(0);
+        sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
+        sb.append(getBaseResultMapId());
+        setBaseResultMapId(sb.toString());
+        
+        sb.setLength(0);
+        sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
+        sb.append(getResultMapWithBLOBsId());
+        setResultMapWithBLOBsId(sb.toString());
+        
+        sb.setLength(0);
+        sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
+        sb.append(getExampleWhereClauseId());
+        setExampleWhereClauseId(sb.toString());
+        
+        sb.setLength(0);
+        sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
+        sb.append(getBaseColumnListId());
+        setBaseColumnListId(sb.toString());
+        
+        sb.setLength(0);
+        sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
+        sb.append(getBlobColumnListId());
+        setBlobColumnListId(sb.toString());
+    }
+    
     public void setBlobColumnListId(String s) {
         internalAttributes.put(InternalAttribute.ATTR_BLOB_COLUMN_LIST_ID, s);
     }
@@ -695,6 +810,13 @@ public abstract class IntrospectedTable {
         sb.append(fullyQualifiedTable.getDomainObjectName());
         sb.append("DAO"); //$NON-NLS-1$
         setDAOInterfaceType(sb.toString());
+        
+        sb.setLength(0);
+        sb.append(calculateDAOInterfacePackage());
+        sb.append('.');
+        sb.append(fullyQualifiedTable.getDomainObjectName());
+        sb.append("Mapper"); //$NON-NLS-1$
+        setIbatis3JavaMapperType(sb.toString());
     }
     
     protected String calculateJavaModelPackage() {
@@ -740,7 +862,7 @@ public abstract class IntrospectedTable {
         setExampleType(sb.toString());
     }
     
-    protected String calculateSqlMapPackage() {
+    protected String calculateIbatis2SqlMapPackage() {
         SqlMapGeneratorConfiguration config = ibatorContext.getSqlMapGeneratorConfiguration();
         
         StringBuilder sb = new StringBuilder(config.getTargetPackage());
@@ -750,15 +872,22 @@ public abstract class IntrospectedTable {
         return sb.toString();
     }
 
-    protected String calculateSqlMapFileName() {
+    protected String calculateIbatis2SqlMapFileName() {
         StringBuilder sb = new StringBuilder();
-        sb.append(fullyQualifiedTable.getSqlMapNamespace());
+        sb.append(fullyQualifiedTable.getIbatis2SqlMapNamespace());
         sb.append("_SqlMap.xml"); //$NON-NLS-1$
         return sb.toString();
     }
     
-    protected String calculateSqlMapNamespace() {
-        return fullyQualifiedTable.getSqlMapNamespace();
+    protected String calculateIbatis3XmlMapperFileName() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(fullyQualifiedTable.getDomainObjectName());
+        sb.append("Mapper.xml"); //$NON-NLS-1$
+        return sb.toString();
+    }
+    
+    protected String calculateIbatis2SqlMapNamespace() {
+        return fullyQualifiedTable.getIbatis2SqlMapNamespace();
     }
     
     protected String calculateSqlMapFullyQualifiedRuntimeTableName() {
@@ -770,11 +899,11 @@ public abstract class IntrospectedTable {
     }
     
     public String getFullyQualifiedTableNameAtRuntime() {
-        return internalAttributes.get(InternalAttribute.ATTR_SQL_MAP_FULLY_QUALIFIED_TABLE_NAME_AT_RUNTIME);
+        return internalAttributes.get(InternalAttribute.ATTR_FULLY_QUALIFIED_TABLE_NAME_AT_RUNTIME);
     }
     
     public String getAliasedFullyQualifiedTableNameAtRuntime() {
-        return internalAttributes.get(InternalAttribute.ATTR_SQL_MAP_ALIASED_FULLY_QUALIFIED_TABLE_NAME_AT_RUNTIME);
+        return internalAttributes.get(InternalAttribute.ATTR_ALIASED_FULLY_QUALIFIED_TABLE_NAME_AT_RUNTIME);
     }
     
     
@@ -862,25 +991,49 @@ public abstract class IntrospectedTable {
         internalAttributes.put(InternalAttribute.ATTR_EXAMPLE_TYPE, exampleType);
     }
     
-    public void setSqlMapPackage(String sqlMapPackage) {
-        internalAttributes.put(InternalAttribute.ATTR_SQL_MAP_PACKAGE, sqlMapPackage);
+    public void setIbatis2SqlMapPackage(String sqlMapPackage) {
+        internalAttributes.put(InternalAttribute.ATTR_IBATIS2_SQL_MAP_PACKAGE, sqlMapPackage);
     }
 
-    public void setSqlMapFileName(String sqlMapFileName) {
-        internalAttributes.put(InternalAttribute.ATTR_SQL_MAP_FILE_NAME, sqlMapFileName);
+    public void setIbatis2SqlMapFileName(String sqlMapFileName) {
+        internalAttributes.put(InternalAttribute.ATTR_IBATIS2_SQL_MAP_FILE_NAME, sqlMapFileName);
     }
     
-    public void setSqlMapNamespace(String sqlMapNamespace) {
-        internalAttributes.put(InternalAttribute.ATTR_SQL_MAP_NAMESPACE, sqlMapNamespace);
+    public void setIbatis2SqlMapNamespace(String sqlMapNamespace) {
+        internalAttributes.put(InternalAttribute.ATTR_IBATIS2_SQL_MAP_NAMESPACE, sqlMapNamespace);
     }
     
     public void setSqlMapFullyQualifiedRuntimeTableName(String fullyQualifiedRuntimeTableName) {
-        internalAttributes.put(InternalAttribute.ATTR_SQL_MAP_FULLY_QUALIFIED_TABLE_NAME_AT_RUNTIME,
+        internalAttributes.put(InternalAttribute.ATTR_FULLY_QUALIFIED_TABLE_NAME_AT_RUNTIME,
                 fullyQualifiedRuntimeTableName);
     }
     
     public void setSqlMapAliasedFullyQualifiedRuntimeTableName(String aliasedFullyQualifiedRuntimeTableName) {
-        internalAttributes.put(InternalAttribute.ATTR_SQL_MAP_ALIASED_FULLY_QUALIFIED_TABLE_NAME_AT_RUNTIME,
+        internalAttributes.put(InternalAttribute.ATTR_ALIASED_FULLY_QUALIFIED_TABLE_NAME_AT_RUNTIME,
                 aliasedFullyQualifiedRuntimeTableName);
+    }
+    
+    public String getIbatis3XmlMapperPackage() {
+        return internalAttributes.get(InternalAttribute.ATTR_IBATIS3_XML_MAPPER_PACKAGE);
+    }
+
+    public void setIbatis3XmlMapperPackage(String ibatis3XmlMapperPackage) {
+        internalAttributes.put(InternalAttribute.ATTR_IBATIS3_XML_MAPPER_PACKAGE, ibatis3XmlMapperPackage);
+    }
+
+    public String getIbatis3XmlMapperFileName() {
+        return internalAttributes.get(InternalAttribute.ATTR_IBATIS3_XML_MAPPER_FILE_NAME);
+    }
+
+    public void setIbatis3XmlMapperFileName(String ibatis3XmlMapperFileName) {
+        internalAttributes.put(InternalAttribute.ATTR_IBATIS3_XML_MAPPER_FILE_NAME, ibatis3XmlMapperFileName);
+    }
+
+    public String getIbatis3JavaMapperType() {
+        return internalAttributes.get(InternalAttribute.ATTR_IBATIS3_JAVA_MAPPER_TYPE);
+    }
+
+    public void setIbatis3JavaMapperType(String ibatis3JavaMapperType) {
+        internalAttributes.put(InternalAttribute.ATTR_IBATIS3_JAVA_MAPPER_TYPE, ibatis3JavaMapperType);
     }
 }

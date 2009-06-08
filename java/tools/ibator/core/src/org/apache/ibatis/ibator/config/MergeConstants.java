@@ -31,6 +31,7 @@ public class MergeConstants {
     private MergeConstants() {
     }
     
+    public static final String NEW_XML_ELEMENT_PREFIX = "ibatorgenerated_"; //$NON-NLS-1$
     public static final String[] OLD_XML_ELEMENT_PREFIXES =
         {"ibatorgenerated_", "abatorgenerated_"}; //$NON-NLS-1$ //$NON-NLS-2$
     

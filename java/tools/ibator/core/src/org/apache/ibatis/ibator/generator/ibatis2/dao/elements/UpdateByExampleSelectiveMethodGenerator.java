@@ -45,7 +45,7 @@ public class UpdateByExampleSelectiveMethodGenerator extends
 
         sb.append("int rows = "); //$NON-NLS-1$
 
-        sb.append(daoTemplate.getUpdateMethod(introspectedTable.getSqlMapNamespace(),
+        sb.append(daoTemplate.getUpdateMethod(introspectedTable.getIbatis2SqlMapNamespace(),
                 introspectedTable.getUpdateByExampleSelectiveStatementId(),
                         "parms")); //$NON-NLS-1$
         method.addBodyLine(sb.toString());

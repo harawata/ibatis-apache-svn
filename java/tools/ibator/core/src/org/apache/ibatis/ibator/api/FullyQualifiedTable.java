@@ -204,7 +204,7 @@ public class FullyQualifiedTable {
      * 
      * @return the namespace
      */
-    public String getSqlMapNamespace() {
+    public String getIbatis2SqlMapNamespace() {
         String localCatalog = 
             StringUtility.stringHasValue(runtimeCatalog) ? runtimeCatalog : introspectedCatalog;
         String localSchema =

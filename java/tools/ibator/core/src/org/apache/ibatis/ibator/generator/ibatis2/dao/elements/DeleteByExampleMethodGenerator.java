@@ -43,7 +43,7 @@ public class DeleteByExampleMethodGenerator extends AbstractDAOElementGenerator 
 
         StringBuilder sb = new StringBuilder();
         sb.append("int rows = "); //$NON-NLS-1$
-        sb.append(daoTemplate.getDeleteMethod(introspectedTable.getSqlMapNamespace(),
+        sb.append(daoTemplate.getDeleteMethod(introspectedTable.getIbatis2SqlMapNamespace(),
                 introspectedTable.getDeleteByExampleStatementId(), "example")); //$NON-NLS-1$
         method.addBodyLine(sb.toString());
         method.addBodyLine("return rows;"); //$NON-NLS-1$

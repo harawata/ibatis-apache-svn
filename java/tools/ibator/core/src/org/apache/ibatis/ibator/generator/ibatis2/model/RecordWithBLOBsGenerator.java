@@ -27,6 +27,7 @@ import org.apache.ibatis.ibator.api.dom.java.Field;
 import org.apache.ibatis.ibator.api.dom.java.JavaVisibility;
 import org.apache.ibatis.ibator.api.dom.java.Method;
 import org.apache.ibatis.ibator.api.dom.java.TopLevelClass;
+import org.apache.ibatis.ibator.generator.RootClassInfo;
 import org.apache.ibatis.ibator.internal.util.messages.Messages;
 
 /**

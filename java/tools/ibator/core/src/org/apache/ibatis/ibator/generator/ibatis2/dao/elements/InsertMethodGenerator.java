@@ -52,7 +52,7 @@ public class InsertMethodGenerator extends AbstractDAOElementGenerator {
             sb.append("Object newKey = "); //$NON-NLS-1$
         }
 
-        sb.append(daoTemplate.getInsertMethod(introspectedTable.getSqlMapNamespace(),
+        sb.append(daoTemplate.getInsertMethod(introspectedTable.getIbatis2SqlMapNamespace(),
                 introspectedTable.getInsertStatementId(), "record")); //$NON-NLS-1$
         method.addBodyLine(sb.toString());
 

@@ -44,7 +44,7 @@ public class UpdateByPrimaryKeyWithBLOBsMethodGenerator extends
 
         StringBuilder sb = new StringBuilder();
         sb.append("int rows = "); //$NON-NLS-1$
-        sb.append(daoTemplate.getUpdateMethod(introspectedTable.getSqlMapNamespace(),
+        sb.append(daoTemplate.getUpdateMethod(introspectedTable.getIbatis2SqlMapNamespace(),
                 introspectedTable.getUpdateByPrimaryKeyWithBLOBsStatementId(),
                 "record")); //$NON-NLS-1$
         method.addBodyLine(sb.toString());

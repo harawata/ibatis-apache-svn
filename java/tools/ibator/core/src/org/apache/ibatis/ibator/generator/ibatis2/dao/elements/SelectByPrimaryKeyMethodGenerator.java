@@ -80,7 +80,7 @@ public class SelectByPrimaryKeyMethodGenerator extends AbstractDAOElementGenerat
         sb.append(returnType.getShortName());
         sb.append(") "); //$NON-NLS-1$
         sb.append(daoTemplate.getQueryForObjectMethod(introspectedTable
-                .getSqlMapNamespace(),
+                .getIbatis2SqlMapNamespace(),
                 introspectedTable.getSelectByPrimaryKeyStatementId(), "key")); //$NON-NLS-1$
         method.addBodyLine(sb.toString());
         method.addBodyLine("return record;"); //$NON-NLS-1$
