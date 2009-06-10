@@ -32,6 +32,7 @@ public class InitializeCommand extends BaseCommand {
           }
         });
     out.println("Done!");
+    out.println();
   }
 
   protected void ensureDirectoryIsEmpty(File path) {

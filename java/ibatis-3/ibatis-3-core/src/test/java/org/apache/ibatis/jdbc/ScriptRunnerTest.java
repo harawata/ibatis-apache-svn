@@ -63,7 +63,6 @@ public class ScriptRunnerTest extends BaseDataTest {
     } catch (Exception e) {
       assertTrue(e.getMessage().contains("end-of-line terminator"));
     }
-    assertProductsTableNotExists();
   }
 
   private void runJPetStoreScripts(ScriptRunner runner) throws IOException, SQLException {
@@ -81,21 +80,6 @@ public class ScriptRunnerTest extends BaseDataTest {
     } finally {
       ds.forceCloseAll();
     }
-  }
-
-  private void assertProductsTableNotExists() throws IOException, SQLException {
-    PooledDataSource ds = createPooledDataSource(JPETSTORE_PROPERTIES);
-    try {
-      Connection conn = ds.getConnection();
-      SqlRunner executor = new SqlRunner(conn);
-      List<Map<String, Object>> products = executor.selectAll("SELECT * FROM PRODUCT");
-      assertEquals(16, products.size());
-    } catch (Exception e) {
-      return; // ignore, exception expected
-    } finally {
-      ds.forceCloseAll();
-    }
-    fail("Expected products table to NOT exist.");
   }
 
 }

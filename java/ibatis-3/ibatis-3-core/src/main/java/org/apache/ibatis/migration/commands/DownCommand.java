@@ -32,6 +32,7 @@ public class DownCommand extends BaseCommand {
           } else {
             out.println("Changelog doesn't exist. No further migrations will be undone (normal for the last migration).");
           }
+          out.println();
           break;
         }
       }

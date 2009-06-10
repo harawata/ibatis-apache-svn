@@ -25,6 +25,7 @@ public class BootstrapCommand extends BaseCommand {
           } finally {
             runner.closeConnection();
           }
+          out.println();
         } else {
           out.println("Error, could not run bootstrap.sql.  The file does not exist.");
         }

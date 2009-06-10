@@ -20,11 +20,12 @@ public class CommandLine {
   private static final String NEW = "new";
   private static final String UP = "up";
   private static final String DOWN = "down";
+  private static final String PENDING = "pending";
   private static final String VERSION = "version";
   private static final String STATUS = "status";
 
   private static final Set<String> KNOWN_COMMANDS = Collections.unmodifiableSet(
-      new HashSet<String>(Arrays.asList(INIT, NEW, UP, VERSION, DOWN, STATUS, BOOTSTRAP)));
+      new HashSet<String>(Arrays.asList(INIT, NEW, UP, VERSION, DOWN, PENDING, STATUS, BOOTSTRAP)));
 
   private File repository;
   private String environment;
@@ -77,6 +78,8 @@ public class CommandLine {
       new UpCommand(repository, environment, force).execute(params);
     } else if (VERSION.equals(command)) {
       new VersionCommand(repository, environment, force).execute(params);
+    } else if (PENDING.equals(command)) {
+      new PendingCommand(repository, environment, force).execute(params);
     } else if (DOWN.equals(command)) {
       new DownCommand(repository, environment, force).execute(params);
     } else {
@@ -149,6 +152,7 @@ public class CommandLine {
     out.println("  up                 Run all unapplied migrations.");
     out.println("  down               Undoes the last migration applied to the database.");
     out.println("  version <version>  Migrates the database up or down to the specified version.");
+    out.println("  pending            Force executes pending migrations out of order (not recommended).");
     out.println("  status             Prints the changelog from the database if the changelog table exists.");
     out.println();
     out.flush();

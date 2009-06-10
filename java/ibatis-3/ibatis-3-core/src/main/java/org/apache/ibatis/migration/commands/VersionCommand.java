@@ -37,6 +37,7 @@ public class VersionCommand extends BaseCommand {
     } else {
       out.println("Already at version: " + version);
     }
+    out.println();
   }
 
   private void ensureParamsPassed(String... params) {

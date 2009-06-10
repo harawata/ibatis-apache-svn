@@ -29,6 +29,7 @@
     <antcall target="_external_run">
       <param name="target" value="all"/>
     </antcall>
+    <antcall target="build.migrations"/>
   </target>
 
   <target name="clean">

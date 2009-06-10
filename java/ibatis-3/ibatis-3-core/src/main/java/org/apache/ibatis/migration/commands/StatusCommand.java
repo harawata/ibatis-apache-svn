@@ -33,6 +33,7 @@ public class StatusCommand extends BaseCommand {
     for (Change change : merged) {
       out.println(change);
     }
+    out.println();
   }
 
 
