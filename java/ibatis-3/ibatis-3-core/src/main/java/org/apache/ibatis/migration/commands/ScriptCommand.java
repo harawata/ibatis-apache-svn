@@ -14,6 +14,9 @@ public class ScriptCommand extends BaseCommand {
 
   public void execute(String... sparams) {
     try {
+      if (sparams == null || sparams.length < 1 || sparams[0] == null) {
+        throw new MigrationException("The script command requires a range of versions from v1 - v2.");
+      }
       StringTokenizer parser = new StringTokenizer(sparams[0]);
       if (parser.countTokens() != 2) {
         throw new MigrationException("The script command requires a range of versions from v1 - v2.");
