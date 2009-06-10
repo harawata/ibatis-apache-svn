@@ -44,6 +44,7 @@
       ACC_FIRST_NAME,
       ACC_LAST_NAME,
       ACC_EMAIL
+    )
     values (
       #id#, #firstName#, #lastName#, #emailAddress#
     )
