@@ -21,11 +21,12 @@ public class CommandLine {
   private static final String UP = "up";
   private static final String DOWN = "down";
   private static final String PENDING = "pending";
+  private static final String SCRIPT = "script";
   private static final String VERSION = "version";
   private static final String STATUS = "status";
 
   private static final Set<String> KNOWN_COMMANDS = Collections.unmodifiableSet(
-      new HashSet<String>(Arrays.asList(INIT, NEW, UP, VERSION, DOWN, PENDING, STATUS, BOOTSTRAP)));
+      new HashSet<String>(Arrays.asList(INIT, NEW, UP, VERSION, DOWN, PENDING, STATUS, BOOTSTRAP, SCRIPT)));
 
   private File repository;
   private String environment;
@@ -82,6 +83,8 @@ public class CommandLine {
       new PendingCommand(repository, environment, force).execute(params);
     } else if (DOWN.equals(command)) {
       new DownCommand(repository, environment, force).execute(params);
+    } else if (SCRIPT.equals(command)) {
+      new ScriptCommand(repository, environment, force).execute(params);
     } else {
       throw new MigrationException("Attempt to execute unkown command.");
     }
@@ -144,6 +147,7 @@ public class CommandLine {
     out.println("--env=<environment>  Environment to configure. Default environment is 'development'.");
     out.println("--force              Forces script to continue even if SQL errors are encountered.");
     out.println("--help               Displays this usage message.");
+    out.println("--trace              Shows additional error details (if any).");
     out.println();
     out.println("Commands:");
     out.println("  init               Creates (if necessary) and initializes a migration path.");
@@ -154,6 +158,7 @@ public class CommandLine {
     out.println("  version <version>  Migrates the database up or down to the specified version.");
     out.println("  pending            Force executes pending migrations out of order (not recommended).");
     out.println("  status             Prints the changelog from the database if the changelog table exists.");
+    out.println("  script <v1> <v2>   Generates a delta migration script from version v1 to v2 (undo if v1 > v2).");
     out.println();
     out.flush();
   }

@@ -94,6 +94,26 @@ public class MigratorTest extends BaseDataTest {
     Migrator.main(args("--path=" + f.getAbsolutePath(), "--help"));
     assertTrue(buffer.toString().contains("--help"));
     buffer.clear();
+
+    Migrator.main(args("--path=" + f.getAbsolutePath(), "script","20080827200212","20080827200214"));
+    assertFalse(buffer.toString().contains("20080827200210"));
+    assertFalse(buffer.toString().contains("20080827200211"));
+    assertTrue(buffer.toString().contains("20080827200212"));
+    assertTrue(buffer.toString().contains("20080827200213"));
+    assertTrue(buffer.toString().contains("20080827200214"));
+    assertFalse(buffer.toString().contains("20080827200215"));
+    assertFalse(buffer.toString().contains("--//@UNDO"));
+    buffer.clear();
+
+    Migrator.main(args("--path=" + f.getAbsolutePath(), "script","20080827200215", "20080827200213"));
+    assertFalse(buffer.toString().contains("20080827200210"));
+    assertFalse(buffer.toString().contains("20080827200211"));
+    assertFalse(buffer.toString().contains("20080827200212"));
+    assertTrue(buffer.toString().contains("20080827200213"));
+    assertTrue(buffer.toString().contains("20080827200214"));
+    assertTrue(buffer.toString().contains("20080827200215"));
+    assertTrue(buffer.toString().contains("--//@UNDO"));
+    buffer.clear();
   }
 
 

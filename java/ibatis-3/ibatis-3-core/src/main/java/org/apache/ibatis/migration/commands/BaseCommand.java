@@ -248,7 +248,7 @@ public abstract class BaseCommand implements Command {
 
   protected void insertChangelog(Change change) {
     SqlRunner runner = getSqlRunner();
-    change.setAppliedTimestamp(getAppliedTimestampAsString());
+    change.setAppliedTimestamp(generateAppliedTimeStampAsString());
     try {
       runner.insert("insert into " + changelogTable() + " (ID, APPLIED_AT, DESCRIPTION) values (?,?,?)", change.getId(), change.getAppliedTimestamp(), change.getDescription());
     } catch (SQLException e) {
@@ -258,7 +258,7 @@ public abstract class BaseCommand implements Command {
     }
   }
 
-  protected String getAppliedTimestampAsString() {
+  protected String generateAppliedTimeStampAsString() {
     return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.sql.Date(System.currentTimeMillis()));
   }
 
