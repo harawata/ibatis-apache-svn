@@ -133,8 +133,9 @@ public class XMLStatementBuilder extends BaseBuilder {
           fetchSize, timeout, parameterMap, parameterTypeClass, resultMap, resultTypeClass,
           resultSetTypeEnum, flushCache, useCache, keyGenerator,keyProperty);
 
-      MappedStatement keyStatement = configuration.getMappedStatement(builderAssistant.applyCurrentNamespace(id));
+      id = builderAssistant.applyCurrentNamespace(id);
 
+      MappedStatement keyStatement = configuration.getMappedStatement(id);
       configuration.addKeyGenerator(id, new SelectKeyGenerator(keyStatement,executeBefore));
     }
   }
