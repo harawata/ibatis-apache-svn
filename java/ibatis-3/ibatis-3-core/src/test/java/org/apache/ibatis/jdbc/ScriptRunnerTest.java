@@ -4,11 +4,11 @@ import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.datasource.pooled.PooledDataSource;
 import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
 import org.apache.ibatis.io.Resources;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import org.junit.Test;
 
 import javax.sql.DataSource;
-import java.io.IOException;
+import java.io.*;
 import java.sql.*;
 import java.util.*;
 
@@ -44,6 +44,28 @@ public class ScriptRunnerTest extends BaseDataTest {
     assertProductsTableExistsAndLoaded();
   }
 
+  @Test
+  public void shouldReturnWarningIfEndOfLineTerminatorNotFound() throws Exception {
+    DataSource ds = createUnpooledDataSource(JPETSTORE_PROPERTIES);
+    Connection conn = ds.getConnection();
+    ScriptRunner runner = new ScriptRunner(conn);
+    runner.setAutoCommit(true);
+    runner.setStopOnError(false);
+    runner.setErrorLogWriter(null);
+    runner.setLogWriter(null);
+
+    String resource = "org/apache/ibatis/jdbc/ScriptMissingEOLTerminator.sql";
+    Reader reader = Resources.getResourceAsReader(resource);
+
+    try {
+      runner.runScript(reader);
+      fail("Expected script runner to fail due to missing end of line terminator.");
+    } catch (Exception e) {
+      assertTrue(e.getMessage().contains("end-of-line terminator"));
+    }
+    assertProductsTableNotExists();
+  }
+
   private void runJPetStoreScripts(ScriptRunner runner) throws IOException, SQLException {
     runScript(runner, JPETSTORE_DDL);
     runScript(runner, JPETSTORE_DATA);
@@ -59,6 +81,21 @@ public class ScriptRunnerTest extends BaseDataTest {
     } finally {
       ds.forceCloseAll();
     }
+  }
+
+  private void assertProductsTableNotExists() throws IOException, SQLException {
+    PooledDataSource ds = createPooledDataSource(JPETSTORE_PROPERTIES);
+    try {
+      Connection conn = ds.getConnection();
+      SqlRunner executor = new SqlRunner(conn);
+      List<Map<String, Object>> products = executor.selectAll("SELECT * FROM PRODUCT");
+      assertEquals(16, products.size());
+    } catch (Exception e) {
+      return; // ignore, exception expected
+    } finally {
+      ds.forceCloseAll();
+    }
+    fail("Expected products table to NOT exist.");
   }
 
 }

@@ -145,6 +145,9 @@ public class ScriptRunner {
       if (!autoCommit && !conn.getAutoCommit()) {
         conn.commit();
       }
+      if (command != null && command.toString().trim().length() > 0) {
+        throw new IOException("Line missing end-of-line terminator ("+delimiter+") => " + command);
+      }
     } catch (SQLException e) {
       e.fillInStackTrace();
       printlnError("Error executing: " + command);
