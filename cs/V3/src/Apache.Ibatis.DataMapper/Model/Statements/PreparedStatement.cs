@@ -34,14 +34,18 @@ using System.Data;
 namespace Apache.Ibatis.DataMapper.Model.Statements
 {
 	/// <summary>
-	/// Construct the list of IDataParameters for the statement
-	/// and prepare the sql
-	/// </summary>
+	/// Construct the list of IDataParameters for the statement and prepare the sql. 
+    /// </summary>
+    /// <remarks>
+    /// This class is used as a template for filling the parameters
+    /// on a real IDbCommand. The template is constructured once and its values are copied
+    /// to the current command's parameter as appropriate.
+    /// </remarks>
 	public class PreparedStatement
 	{
 		#region Fields
 
-		private string _preparedSsql = string.Empty;
+		private string _preparedSql = string.Empty;
 		private StringCollection  _dbParametersName = new StringCollection ();
 		private IDbDataParameter[] _dbParameters = null;
 
@@ -72,8 +76,8 @@ namespace Apache.Ibatis.DataMapper.Model.Statements
 		/// </summary>
 		public string PreparedSql
 		{
-			get { return _preparedSsql; }
-			set {_preparedSsql = value;}
+			get { return _preparedSql; }
+			set {_preparedSql = value;}
 		}
 
 		#endregion

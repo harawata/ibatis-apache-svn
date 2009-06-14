@@ -109,12 +109,16 @@ namespace Apache.Ibatis.DataMapper.Model.Statements
         /// <value>The list class.</value>
         Type ListClass { get; }
 
-
         /// <summary>
         /// Gets or sets the SQL source.
         /// </summary>
         /// <value>The SQL source.</value>
         ISqlSource SqlSource { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        bool CondenseSql { get; }
 
         #endregion
 

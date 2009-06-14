@@ -93,13 +93,12 @@ namespace Apache.Ibatis.DataMapper.Model.Statements
             bool remapResults,
             string extends,
             SelectKey selectKey,
-            ISqlSource sqlSource
+            ISqlSource sqlSource,
+            bool condenseSql
             )
-            : base(id, parameterClass, parameterMap, resultClass, resultMaps, listClass, listClassFactory, cacheModel, remapResults, extends, sqlSource)
+            : base(id, parameterClass, parameterMap, resultClass, resultMaps, listClass, listClassFactory, cacheModel, remapResults, extends, sqlSource, condenseSql)
 		{
             this.selectKey = selectKey;
         }
-
-
 	}
 }

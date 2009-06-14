@@ -89,19 +89,12 @@ namespace Apache.Ibatis.DataMapper.Configuration
 
             this.configurationSetting = configurationSetting;
 
-            IConfiguration config = new MutableConfiguration(
-                ConfigConstants.ATTRIBUTE_VALIDATE_SQLMAP,
-                ConfigConstants.ATTRIBUTE_VALIDATE_SQLMAP,
-                configurationSetting.ValidateMapperConfigFile.ToString()
-                );
-            configurationStore.AddSettingConfiguration(config);
-
             if (configurationSetting.Properties.Count > 0)
             {
                 IEnumerator<KeyValuePair<string, string>> properties = configurationSetting.Properties.GetEnumerator();
                 while (properties.MoveNext())
                 {
-                    config = new MutableConfiguration(
+                    IConfiguration config = new MutableConfiguration(
                     ConfigConstants.ELEMENT_PROPERTY,
                     properties.Current.Key,
                     properties.Current.Value);
@@ -152,6 +145,17 @@ namespace Apache.Ibatis.DataMapper.Configuration
             modules.Add(module);
         }
 
+        private bool tryGetSettingBoolean(string attributeKey, bool defaultValue)
+        {
+            var setting = configurationStore.Settings[attributeKey];
+            if (setting != null)
+            {
+                return (bool)setting.GetValue(typeof(bool), defaultValue);
+            }
+
+            return defaultValue;
+        }
+
 
         /// <summary>
         /// Builds the mapper factory.
@@ -163,6 +167,13 @@ namespace Apache.Ibatis.DataMapper.Configuration
             if (interpreter!=null)
             {
                 interpreter.ProcessResource(configurationStore);
+
+                // ensure that the default configuration settings get updated after the interpreter runs
+                configurationSetting.CondenseSql = tryGetSettingBoolean(ConfigConstants.ATTRIBUTE_CONDENSESQL, configurationSetting.CondenseSql);
+                configurationSetting.UseReflectionOptimizer = tryGetSettingBoolean(ConfigConstants.ATTRIBUTE_USE_REFLECTION_OPTIMIZER, configurationSetting.UseReflectionOptimizer);
+                configurationSetting.IsCacheModelsEnabled = tryGetSettingBoolean(ConfigConstants.ATTRIBUTE_CACHE_MODELS_ENABLED, configurationSetting.IsCacheModelsEnabled);
+                configurationSetting.UseStatementNamespaces = tryGetSettingBoolean(ConfigConstants.ATTRIBUTE_USE_STATEMENT_NAMESPACES, configurationSetting.UseStatementNamespaces);
+                configurationSetting.ValidateMapperConfigFile = tryGetSettingBoolean(ConfigConstants.ATTRIBUTE_VALIDATE_SQLMAP, configurationSetting.ValidateMapperConfigFile);
             }
 
             // Registers code configuration element

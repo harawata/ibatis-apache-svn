@@ -47,10 +47,11 @@ namespace Apache.Ibatis.DataMapper.Configuration.Serializers
         /// </summary>
         /// <param name="modelStore">The model store.</param>
         /// <param name="config">The config.</param>
+        /// <param name="configurationSetting"></param>
         /// <returns></returns>
-        public override IStatement Deserialize(IModelStore modelStore, IConfiguration config)
+        public override IStatement Deserialize(IModelStore modelStore, IConfiguration config, ConfigurationSetting configurationSetting)
         {
-            BaseDeserialize(modelStore, config);
+            BaseDeserialize(modelStore, config, configurationSetting);
 
             return new Select(
                 id,
@@ -63,7 +64,8 @@ namespace Apache.Ibatis.DataMapper.Configuration.Serializers
                 cacheModel,
                 remapResults,
                 extendsName,
-                sqlSource);
+                sqlSource,
+                condenseSql);
 
         }
 

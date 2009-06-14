@@ -58,9 +58,9 @@ namespace Apache.Ibatis.DataMapper.Model.Statements
             ParameterMap parameterMap,
             bool remapResults,
             string extends,
-            ISqlSource sqlSource
-            )
-            : base(id, parameterClass, parameterMap, null, new ResultMapCollection(), null, null, null, remapResults, extends, sqlSource)
+            ISqlSource sqlSource,
+            bool condenseSql)
+            : base(id, parameterClass, parameterMap, null, new ResultMapCollection(), null, null, null, remapResults, extends, sqlSource, condenseSql)
 		{}
 
 	}

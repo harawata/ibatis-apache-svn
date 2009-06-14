@@ -46,10 +46,11 @@ namespace Apache.Ibatis.DataMapper.Configuration.Serializers
         /// </summary>
         /// <param name="modelStore">The model store.</param>
         /// <param name="config">The config.</param>
+        /// <param name="configurationSetting"></param>
         /// <returns></returns>
-        public override IStatement Deserialize(IModelStore modelStore, IConfiguration config)
+        public override IStatement Deserialize(IModelStore modelStore, IConfiguration config, ConfigurationSetting configurationSetting)
         {
-            BaseDeserialize(modelStore, config);
+            BaseDeserialize(modelStore, config, configurationSetting);
 
             string propertyName = ConfigurationUtils.GetMandatoryStringAttribute(config, ConfigConstants.ATTRIBUTE_PROPERTY);
             SelectKeyType selectKeyType = ReadSelectKeyType(ConfigurationUtils.GetMandatoryStringAttribute(config, ConfigConstants.ATTRIBUTE_TYPE));
@@ -60,10 +61,8 @@ namespace Apache.Ibatis.DataMapper.Configuration.Serializers
                 resultClass,
                 resultsMap,
                 selectKeyType,
-                sqlSource );
-
-
-
+                sqlSource,
+                condenseSql);
         }
 
         private SelectKeyType ReadSelectKeyType(string s)
@@ -72,6 +71,7 @@ namespace Apache.Ibatis.DataMapper.Configuration.Serializers
             {
                 case @"pre": return SelectKeyType.@pre;
                 case @"post": return SelectKeyType.@post;
+                case @"inline": return SelectKeyType.@inline;
                 default: throw new ConfigurationException("Unknown selectKey type : '" + s + "'");
             }
         }

@@ -50,12 +50,13 @@ namespace Apache.Ibatis.DataMapper.Configuration.Serializers
         /// </summary>
         /// <param name="modelStore">The model store.</param>
         /// <param name="config">The config.</param>
+        /// <param name="configurationSetting"></param>
         /// <returns></returns>
-        public override IStatement Deserialize(IModelStore modelStore, IConfiguration config)
+        public override IStatement Deserialize(IModelStore modelStore, IConfiguration config, ConfigurationSetting configurationSetting)
         {
-            BaseDeserialize(modelStore, config);
+            BaseDeserialize(modelStore, config, configurationSetting);
 
-            SelectKey selectKey = BuildSelectKey(modelStore, config);
+            SelectKey selectKey = BuildSelectKey(modelStore, config, configurationSetting);
 
             return new Insert(
                 id,
@@ -69,11 +70,12 @@ namespace Apache.Ibatis.DataMapper.Configuration.Serializers
                 remapResults,
                 extendsName,
                 selectKey,
-                sqlSource
+                sqlSource,
+                condenseSql
                 );
         }
 
-        private SelectKey BuildSelectKey(IModelStore modelStore, IConfiguration config)
+        private SelectKey BuildSelectKey(IModelStore modelStore, IConfiguration config, ConfigurationSetting configurationSetting)
         {
             SelectKey selectKey = null;
             
@@ -84,7 +86,7 @@ namespace Apache.Ibatis.DataMapper.Configuration.Serializers
                 IConfiguration selectKeyConfig = selectKeys[0];
 
                 BaseStatementDeSerializer selectKeyDeSerializer = new SelectKeyDeSerializer();
-                selectKey = (SelectKey)selectKeyDeSerializer.Deserialize(modelStore, selectKeyConfig);
+                selectKey = (SelectKey)selectKeyDeSerializer.Deserialize(modelStore, selectKeyConfig, configurationSetting);
             }
             return selectKey;
        }

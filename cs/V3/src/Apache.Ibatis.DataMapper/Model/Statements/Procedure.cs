@@ -91,9 +91,10 @@ namespace Apache.Ibatis.DataMapper.Model.Statements
             CacheModel cacheModel,
             bool remapResults,
             string extends,
-            ISqlSource sqlSource
+            ISqlSource sqlSource,
+            bool condenseSql
             )
-            : base(id, parameterClass, parameterMap, resultClass, resultMaps, listClass, listClassFactory, cacheModel, remapResults, extends, sqlSource)
+            : base(id, parameterClass, parameterMap, resultClass, resultMaps, listClass, listClassFactory, cacheModel, remapResults, extends, sqlSource, condenseSql)
 		{}
 
 	}

@@ -116,7 +116,7 @@ namespace Apache.Ibatis.DataMapper.Model.ParameterMapping
             {
                 newSqlCommandText = newSqlCommandText.Replace(MARK_TOKEN, string.Empty).Replace(COMMA_TOKEN, string.Empty);
             }
-            newSqlCommandText = newSqlCommandText.Trim();
+            // newSqlCommandText = newSqlCommandText.Trim();
 
             return map;
         }

@@ -74,13 +74,16 @@ namespace Apache.Ibatis.DataMapper.Model.Statements
         private readonly bool allowRemapping = false;
         [NonSerialized]
         private readonly string extends = string.Empty;
+        [NonSerialized]
         private ISql sql = null;
+        [NonSerialized]
         private ISqlSource sqlSource = null;
+        [NonSerialized]
+        private readonly bool condenseSql = true;
 
         #endregion
 
         #region Properties
-
 
         /// <summary>
         /// Gets the result class type.
@@ -196,6 +199,25 @@ namespace Apache.Ibatis.DataMapper.Model.Statements
         {
             get { return CommandType.Text; }
         }
+
+        /// <summary>
+        /// Gets the SQL source.
+        /// </summary>
+        /// <value>The SQL source.</value>
+        public ISqlSource SqlSource
+        {
+            get { return sqlSource; }
+            set { sqlSource = value;}
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool CondenseSql
+        {
+            get { return condenseSql; }
+        }
+
         #endregion
 
         /// <summary>
@@ -212,6 +234,7 @@ namespace Apache.Ibatis.DataMapper.Model.Statements
         /// <param name="remapResults">if set to <c>true</c> [remap results].</param>
         /// <param name="extends">The extends.</param>
         /// <param name="sqlSource">The SQL source.</param>
+        /// <param name="condenseSql"></param>
         public Statement(
             string id, 
             Type parameterClass,
@@ -223,8 +246,8 @@ namespace Apache.Ibatis.DataMapper.Model.Statements
             CacheModel cacheModel,
             bool remapResults,
             string extends,
-            ISqlSource sqlSource
-            )
+            ISqlSource sqlSource,
+            bool condenseSql)
         {
             Contract.Require.That(id, Is.Not.Null & Is.Not.Empty).When("retrieving argument id");
 
@@ -239,6 +262,7 @@ namespace Apache.Ibatis.DataMapper.Model.Statements
             allowRemapping = remapResults;
             this.extends = extends;
             this.sqlSource = sqlSource;
+            this.condenseSql = condenseSql;
         }
 
         #region Methods
@@ -260,22 +284,6 @@ namespace Apache.Ibatis.DataMapper.Model.Statements
         {
             return (IList<T>)listClassFactory.CreateInstance(null); 
         }
-        #endregion
-
-
-        #region IStatement Members
-
-
-        /// <summary>
-        /// Gets the SQL source.
-        /// </summary>
-        /// <value>The SQL source.</value>
-        public ISqlSource SqlSource
-        {
-            get { return sqlSource; }
-            set { sqlSource = value;}
-        }
-
         #endregion
     }
 }

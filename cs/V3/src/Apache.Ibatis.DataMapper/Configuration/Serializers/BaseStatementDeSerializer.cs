@@ -58,6 +58,7 @@ namespace Apache.Ibatis.DataMapper.Configuration.Serializers
         protected bool remapResults = false;
         protected string nameSpace = string.Empty;
         protected string sqlSourceClassName = string.Empty;
+        protected bool condenseSql = true;
 
         protected ResultMapCollection resultsMap = new ResultMapCollection();
         protected Type resultClass = null;
@@ -71,12 +72,14 @@ namespace Apache.Ibatis.DataMapper.Configuration.Serializers
         /// <summary>
         /// Deserializes the specified configuration in a Statement object.
         /// </summary>
-        /// <param name="modelStore">The model store.</param>
+        /// <param name="modelStore"></param>
         /// <param name="config">The config.</param>
+        /// <param name="configurationSetting">Default settings.</param>
         /// <returns></returns>
-        protected void BaseDeserialize(IModelStore modelStore, IConfiguration config)
+        protected void BaseDeserialize(IModelStore modelStore, IConfiguration config, ConfigurationSetting configurationSetting)
         {
-            id = config.Id;
+            nameSpace = ConfigurationUtils.GetStringAttribute(config.Attributes, ConfigConstants.ATTRIBUTE_NAMESPACE);
+            id = configurationSetting.UseStatementNamespaces ? ApplyNamespace(nameSpace, config.Id) : config.Id;
             cacheModelName = ConfigurationUtils.GetStringAttribute(config.Attributes, ConfigConstants.ATTRIBUTE_CACHEMODEL);
             extendsName = ConfigurationUtils.GetStringAttribute(config.Attributes, ConfigConstants.ATTRIBUTE_EXTENDS);
             listClassName = ConfigurationUtils.GetStringAttribute(config.Attributes, ConfigConstants.ATTRIBUTE_LISTCLASS);
@@ -85,8 +88,8 @@ namespace Apache.Ibatis.DataMapper.Configuration.Serializers
             resultClassName = ConfigurationUtils.GetStringAttribute(config.Attributes, ConfigConstants.ATTRIBUTE_RESULTCLASS);
             resultMapName = ConfigurationUtils.GetStringAttribute(config.Attributes, ConfigConstants.ATTRIBUTE_RESULTMAP);
             remapResults = ConfigurationUtils.GetBooleanAttribute(config.Attributes, ConfigConstants.ATTRIBUTE_REMAPRESULTS, false);
-            nameSpace = ConfigurationUtils.GetStringAttribute(config.Attributes, ConfigConstants.ATTRIBUTE_NAMESPACE);
             sqlSourceClassName = ConfigurationUtils.GetStringAttribute(config.Attributes, ConfigConstants.ATTRIBUTE_SQLSOURCE);
+            condenseSql = ConfigurationUtils.GetBooleanAttribute(config.Attributes, ConfigConstants.ATTRIBUTE_CONDENSESQL, configurationSetting.CondenseSql);
 
             // Gets the results Map
             if (resultMapName.Length > 0)
@@ -156,7 +159,7 @@ namespace Apache.Ibatis.DataMapper.Configuration.Serializers
         /// <param name="modelStore">The model store.</param>
         /// <param name="config">The config.</param>
         /// <returns></returns>
-        public abstract IStatement Deserialize(IModelStore modelStore, IConfiguration config);
+        public abstract IStatement Deserialize(IModelStore modelStore, IConfiguration config, ConfigurationSetting configurationSetting);
 
         /// <summary>
         /// Register under Statement Name or Fully Qualified Statement Name

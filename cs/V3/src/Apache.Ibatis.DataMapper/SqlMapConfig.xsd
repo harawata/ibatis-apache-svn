@@ -86,6 +86,7 @@ vs:defaultnsprefix="">
 			<xs:attribute name="useEmbedStatementParams" type="xs:boolean" default="false"/>
 			<xs:attribute name="useReflectionOptimizer" type="xs:boolean" default="true"/>
 			<xs:attribute name="commandTimeout" type="xs:positiveInteger"/>
+			<xs:attribute name="condenseSql" type="xs:boolean" default="true"/>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="settings">

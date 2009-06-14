@@ -32,7 +32,7 @@ namespace Apache.Ibatis.DataMapper.Session
     /// <summary>
     /// Local SessionScope management
     /// </summary>
-    internal class DataMapperLocalSessionScope : IDisposable
+    public class DataMapperLocalSessionScope : IDisposable
     {
         private readonly bool isSessionLocal = false;
         private readonly ISession session = null;

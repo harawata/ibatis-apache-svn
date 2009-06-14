@@ -97,9 +97,10 @@ namespace Apache.Ibatis.DataMapper.Model.Statements
             Type type,
             ResultMapCollection resultMaps,
             SelectKeyType selectKeyType,
-            ISqlSource sqlSource
+            ISqlSource sqlSource,
+            bool condenseSql
             )
-            : base(id, null, null, type, resultMaps, null, null, null, false, string.Empty, sqlSource)
+            : base(id, null, null, type, resultMaps, null, null, null, false, string.Empty, sqlSource, condenseSql)
 		{
             this.propertyName = propertyName;
             this.selectKeyType = selectKeyType;

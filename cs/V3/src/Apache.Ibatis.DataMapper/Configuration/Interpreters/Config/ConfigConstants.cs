@@ -52,6 +52,11 @@ namespace Apache.Ibatis.DataMapper.Configuration.Interpreters.Config
         #region Token attribute
 
         /// <summary>
+        /// Token for attribute condenseSql
+        /// </summary>
+        public const string ATTRIBUTE_CONDENSESQL = "condenseSql";
+
+        /// <summary>
         /// Token for attribute sqlSource
         /// </summary>
         public const string ATTRIBUTE_SQLSOURCE = "sqlSource";
@@ -273,7 +278,11 @@ namespace Apache.Ibatis.DataMapper.Configuration.Interpreters.Config
         #region Token element
 
         /// <summary>
-        /// Token to odentify the empty parameter map.
+        /// Token to preserve whitespace in statements.
+        /// </summary>
+        public const string ELEMENT_CONDENSESQL = "condenseSql";
+        /// <summary>
+        /// Token to identify the empty parameter map.
         /// </summary>
         public const string EMPTY_PARAMETER_MAP = "iBATIS.Empty.ParameterMap";
         /// <summary>

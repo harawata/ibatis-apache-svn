@@ -23,6 +23,7 @@
  ********************************************************************************/
 #endregion
 
+using System;
 using System.Text;
 using Apache.Ibatis.Common.Configuration;
 using Apache.Ibatis.Common.Contracts;
@@ -52,7 +53,8 @@ namespace Apache.Ibatis.DataMapper.Configuration
         /// Builds the mapped statements.
         /// </summary>
         /// <param name="store">The store.</param>
-        private void BuildMappedStatements(IConfigurationStore store)
+        /// <param name="configurationSetting"></param>
+        private void BuildMappedStatements(IConfigurationStore store, ConfigurationSetting configurationSetting)
         {
             for (int i = 0; i < store.Statements.Length; i++)
             {
@@ -62,22 +64,22 @@ namespace Apache.Ibatis.DataMapper.Configuration
                 switch (statementConfig.Type)
                 {
                     case ConfigConstants.ELEMENT_STATEMENT:
-                        mappedStatement = BuildStatement(statementConfig);
+                        mappedStatement = BuildStatement(statementConfig, configurationSetting);
                         break;
                     case ConfigConstants.ELEMENT_SELECT:
-                        mappedStatement = BuildSelect(statementConfig);
+                        mappedStatement = BuildSelect(statementConfig, configurationSetting);
                         break;
                     case ConfigConstants.ELEMENT_INSERT:
-                        mappedStatement = BuildInsert(statementConfig);
+                        mappedStatement = BuildInsert(statementConfig, configurationSetting);
                         break;
                     case ConfigConstants.ELEMENT_UPDATE:
-                        mappedStatement = BuildUpdate(statementConfig);
+                        mappedStatement = BuildUpdate(statementConfig, configurationSetting);
                         break;
                     case ConfigConstants.ELEMENT_DELETE:
-                        mappedStatement = BuildDelete(statementConfig);
+                        mappedStatement = BuildDelete(statementConfig, configurationSetting);
                         break;
                     case ConfigConstants.ELEMENT_PROCEDURE:
-                        mappedStatement = BuildProcedure(statementConfig);
+                        mappedStatement = BuildProcedure(statementConfig, configurationSetting);
                         break;
                     case ConfigConstants.ELEMENT_SQL:
                         break;
@@ -112,10 +114,11 @@ namespace Apache.Ibatis.DataMapper.Configuration
         /// Builds a <see cref="Statement"/> for a statement configuration.
         /// </summary>
         /// <param name="statementConfig">The statement config.</param>
-        private IMappedStatement BuildStatement(IConfiguration statementConfig)
+        /// <param name="configurationSetting"></param>
+        private IMappedStatement BuildStatement(IConfiguration statementConfig, ConfigurationSetting configurationSetting)
         {
             BaseStatementDeSerializer statementDeSerializer = new StatementDeSerializer();
-            IStatement statement = statementDeSerializer.Deserialize(modelStore, statementConfig);
+            IStatement statement = statementDeSerializer.Deserialize(modelStore, statementConfig, configurationSetting);
             ProcessSqlStatement(statementConfig, statement);
             MappedStatement mappedStatement = new MappedStatement(modelStore, statement);
 
@@ -126,10 +129,11 @@ namespace Apache.Ibatis.DataMapper.Configuration
         /// Builds an <see cref="Insert"/> for a insert configuration.
         /// </summary>
         /// <param name="statementConfig">The statement config.</param>
-        private IMappedStatement BuildInsert(IConfiguration statementConfig)
+        /// <param name="configurationSetting"></param>
+        private IMappedStatement BuildInsert(IConfiguration statementConfig, ConfigurationSetting configurationSetting)
         {
             BaseStatementDeSerializer insertDeSerializer = new InsertDeSerializer();
-            IStatement statement = insertDeSerializer.Deserialize(modelStore, statementConfig);
+            IStatement statement = insertDeSerializer.Deserialize(modelStore, statementConfig, configurationSetting);
             ProcessSqlStatement(statementConfig, statement);
             MappedStatement mappedStatement = new InsertMappedStatement(modelStore, statement);
             Insert insert = (Insert)statement;
@@ -150,10 +154,11 @@ namespace Apache.Ibatis.DataMapper.Configuration
         /// Builds an <see cref="Statement"/> for a statement configuration.
         /// </summary>
         /// <param name="statementConfig">The statement config.</param>
-        private IMappedStatement BuildUpdate(IConfiguration statementConfig)
+        /// <param name="configurationSetting"></param>
+        private IMappedStatement BuildUpdate(IConfiguration statementConfig, ConfigurationSetting configurationSetting)
         {
             BaseStatementDeSerializer updateDeSerializer = new UpdateDeSerializer();
-            IStatement statement = updateDeSerializer.Deserialize(modelStore, statementConfig);
+            IStatement statement = updateDeSerializer.Deserialize(modelStore, statementConfig, configurationSetting);
             ProcessSqlStatement(statementConfig, statement);
             MappedStatement mappedStatement = new UpdateMappedStatement(modelStore, statement);
 
@@ -165,10 +170,11 @@ namespace Apache.Ibatis.DataMapper.Configuration
         /// Builds an <see cref="Delete"/> for a delete configuration.
         /// </summary>
         /// <param name="statementConfig">The statement config.</param>
-        private IMappedStatement BuildDelete(IConfiguration statementConfig)
+        /// <param name="configurationSetting"></param>
+        private IMappedStatement BuildDelete(IConfiguration statementConfig, ConfigurationSetting configurationSetting)
         {
             BaseStatementDeSerializer deleteDeSerializer = new DeleteDeSerializer();
-            IStatement statement = deleteDeSerializer.Deserialize(modelStore, statementConfig);
+            IStatement statement = deleteDeSerializer.Deserialize(modelStore, statementConfig, configurationSetting);
             ProcessSqlStatement(statementConfig, statement);
             MappedStatement mappedStatement = new DeleteMappedStatement(modelStore, statement);
 
@@ -180,10 +186,11 @@ namespace Apache.Ibatis.DataMapper.Configuration
         /// Builds an <see cref="Select"/> for a select configuration.
         /// </summary>
         /// <param name="statementConfig">The statement config.</param>
-        private IMappedStatement BuildSelect(IConfiguration statementConfig)
+        /// <param name="configurationSetting"></param>
+        private IMappedStatement BuildSelect(IConfiguration statementConfig, ConfigurationSetting configurationSetting)
         {
             BaseStatementDeSerializer selectDeSerializer = new SelectDeSerializer();
-            IStatement statement = selectDeSerializer.Deserialize(modelStore, statementConfig);
+            IStatement statement = selectDeSerializer.Deserialize(modelStore, statementConfig, configurationSetting);
             ProcessSqlStatement(statementConfig, statement);
             MappedStatement mappedStatement = new SelectMappedStatement(modelStore, statement);
 
@@ -195,10 +202,11 @@ namespace Apache.Ibatis.DataMapper.Configuration
         /// Builds an <see cref="Procedure"/> for a procedure configuration.
         /// </summary>
         /// <param name="statementConfig">The statement config.</param>
-        private IMappedStatement BuildProcedure(IConfiguration statementConfig)
+        /// <param name="configurationSetting"></param>
+        private IMappedStatement BuildProcedure(IConfiguration statementConfig, ConfigurationSetting configurationSetting)
         {
             BaseStatementDeSerializer procedureDeSerializer = new ProcedureDeSerializer();
-            IStatement statement = procedureDeSerializer.Deserialize(modelStore, statementConfig);
+            IStatement statement = procedureDeSerializer.Deserialize(modelStore, statementConfig, configurationSetting);
             ProcessSqlStatement(statementConfig, statement);
             MappedStatement mappedStatement = new MappedStatement(modelStore, statement);
 
@@ -219,7 +227,7 @@ namespace Apache.Ibatis.DataMapper.Configuration
 
             if (statement.SqlSource!=null)
             {
-                #region SqlSource
+                #region sqlSource - external processor
                 string commandText = string.Empty;
 
                 if (statementConfiguration.Children.Count > 0)
@@ -227,6 +235,7 @@ namespace Apache.Ibatis.DataMapper.Configuration
                     IConfiguration child = statementConfiguration.Children[0];
                     if (child.Type == ConfigConstants.ELEMENT_TEXT || child.Type == ConfigConstants.ELEMENT_CDATA)
                     {
+                        // pass the unformated sql to the external processor
                         commandText = child.Value;
                     }
                 }
@@ -237,7 +246,7 @@ namespace Apache.Ibatis.DataMapper.Configuration
             }
             else
             {
-                #region other case
+                #region default - internal processor
                 bool isDynamic = false;
 
                 DynamicSql dynamic = new DynamicSql(
@@ -291,6 +300,8 @@ namespace Apache.Ibatis.DataMapper.Configuration
                                 modelStore.DataExchangeFactory,
                                 modelStore.DBHelperParameterCache,
                                 statement);
+
+                            // this does not open a connection to the database
                             ISession session = modelStore.SessionFactory.OpenSession();
 
                             ((StaticSql)statement.Sql).BuildPreparedStatement(session, newSqlCommandText);
@@ -331,20 +342,29 @@ namespace Apache.Ibatis.DataMapper.Configuration
                 IConfiguration child = children[i];
                 if (child.Type == ConfigConstants.ELEMENT_TEXT || child.Type == ConfigConstants.ELEMENT_CDATA)
                 {
+                    string childValueString = child.Value;
+                    if (statement.CondenseSql)
+                    {
+                        childValueString = childValueString
+                            .Replace('\n', ' ')
+                            .Replace('\r', ' ')
+                            .Replace('\t', ' ')
+                            .Trim(); 
+                    }
+
                     SqlText sqlText = null;
                     if (postParseRequired)
                     {
                         sqlText = new SqlText();
-                        sqlText.Text = child.Value;
+                        sqlText.Text = childValueString;
                     }
                     else
                     {
-                        
-                        sqlText = InlineParameterMapParser.ParseInlineParameterMap(modelStore.DataExchangeFactory, statementConfig.Id, null, child.Value);
+                        sqlText = InlineParameterMapParser.ParseInlineParameterMap(modelStore.DataExchangeFactory, statementConfig.Id, null, childValueString);
                     }
 
                     dynamic.AddChild(sqlText);
-                    sqlBuffer.Append(" "+child.Value);
+                    sqlBuffer.Append(" " + childValueString);
                 }
                 else if (child.Type == ConfigConstants.ELEMENT_SELECTKEY || child.Type == ConfigConstants.ELEMENT_INCLUDE)
                 { }

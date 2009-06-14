@@ -51,6 +51,7 @@ namespace Apache.Ibatis.DataMapper.Configuration
         private bool useStatementNamespaces = false;
         private bool isCacheModelsEnabled = false;
         private bool useReflectionOptimizer = true;
+        private bool condenseSql = true;
 
         /// <summary>
         /// Gets or sets the dynamic SQL engine.
@@ -177,6 +178,15 @@ namespace Apache.Ibatis.DataMapper.Configuration
         {
             get { return useReflectionOptimizer; }
             set { useReflectionOptimizer = value; }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool CondenseSql
+        {
+            get { return condenseSql; }
+            set { condenseSql = value; }
         }
     }
 }
