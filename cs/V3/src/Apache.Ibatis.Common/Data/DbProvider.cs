@@ -63,8 +63,6 @@ namespace Apache.Ibatis.Common.Data
 		[NonSerialized]
 		private string _parameterDbTypeProperty = string.Empty;
 		[NonSerialized]
-		private string _dataAdapterClass = string.Empty;
-		[NonSerialized]
 		private string _commandBuilderClass = string.Empty;
 
 		[NonSerialized]
@@ -341,23 +339,6 @@ namespace Apache.Ibatis.Common.Data
 		}
 
 		/// <summary>
-		/// The dataAdapter class name to use.
-		/// </summary>
-		/// <example >
-		/// "System.Data.SqlDbType"
-		/// </example>
-		[XmlAttribute("dataAdapterClass")]
-		public string DataAdapterClass
-		{             
-			get { return _dataAdapterClass; }
-			set
-			{
-				CheckPropertyString("DataAdapterClass", value);
-				_dataAdapterClass = value;
-			}
-		}
-
-		/// <summary>
 		/// The commandBuilder class name to use.
 		/// </summary>
 		/// <example >
@@ -464,11 +445,6 @@ namespace Apache.Ibatis.Common.Data
 			{
 				assembly = Assembly.Load(_assemblyName);
 
-				// Build the DataAdapter template 
-				type = assembly.GetType(_dataAdapterClass, true);
-				CheckPropertyType("DataAdapterClass", typeof(IDbDataAdapter), type);
-				_templateDataAdapter = (IDbDataAdapter)type.GetConstructor(Type.EmptyTypes).Invoke(null);
-				
 				// Build the connection template 
 				type = assembly.GetType(_connectionClass, true);
 				CheckPropertyType("DbConnectionClass", typeof(IDbConnection), type);
@@ -486,7 +462,6 @@ namespace Apache.Ibatis.Common.Data
 				}
 
 				_templateConnectionIsICloneable = _templateConnection is ICloneable;
-				_templateDataAdapterIsICloneable = _templateDataAdapter is ICloneable;
 			}
 			catch(Exception e)
 			{
@@ -527,20 +502,6 @@ namespace Apache.Ibatis.Common.Data
 		{
             return _templateConnection.CreateCommand();
 		}
-
-		/// <summary>
-		/// Create a dataAdapter object for this provider.
-		/// </summary>
-		/// <returns>An 'IDbDataAdapter' object.</returns>
-		public virtual IDbDataAdapter CreateDataAdapter()
-		{
-		    if (_templateDataAdapterIsICloneable)
-			{
-				return (IDbDataAdapter) ((ICloneable)_templateDataAdapter).Clone();
-			}
-		    return (IDbDataAdapter) Activator.CreateInstance(_templateDataAdapter.GetType());
-		}
-
 
         /// <summary>
 		/// Create a IDbDataParameter object for this provider.

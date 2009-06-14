@@ -51,7 +51,6 @@ namespace Apache.Ibatis.Common.Data
             provider.CommandBuilderClass = config.Attributes[DataConstants.ATTRIBUTE_COMMANDBUILDERCLASS];
             provider.DbCommandClass = config.Attributes[DataConstants.ATTRIBUTE_COMMANDCLASS];
             provider.DbConnectionClass = config.Attributes[DataConstants.ATTRIBUTE_CONNECTIONCLASS];
-            provider.DataAdapterClass = config.Attributes[DataConstants.ATTRIBUTE_DATAADAPTERCLASS];
             provider.Description = config.Attributes[DataConstants.ATTRIBUTE_DESCRIPTION];
             provider.IsDefault = ConfigurationUtils.GetBooleanAttribute(config.Attributes, "default", false);
             provider.IsEnabled = ConfigurationUtils.GetBooleanAttribute(config.Attributes, "enabled", true);

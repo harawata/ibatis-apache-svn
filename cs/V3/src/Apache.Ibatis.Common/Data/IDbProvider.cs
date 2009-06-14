@@ -150,15 +150,6 @@ namespace Apache.Ibatis.Common.Data
 		string ParameterDbTypeProperty { get; set; }
 
 		/// <summary>
-		/// The dataAdapter class name to use.
-		/// </summary>
-		/// <example >
-		/// "System.Data.SqlDbType"
-		/// </example>
-		[XmlAttribute("dataAdapterClass")]
-		string DataAdapterClass { get; set; }
-
-		/// <summary>
 		/// The commandBuilder class name to use.
 		/// </summary>
 		/// <example >
@@ -206,12 +197,6 @@ namespace Apache.Ibatis.Common.Data
 		/// </summary>
 		/// <returns>An 'IDbCommand' object.</returns>
 		IDbCommand CreateCommand();
-
-		/// <summary>
-        /// Returns a new adapter objects for use with offline DataSets.
-        /// </summary>
-		/// <returns>An 'IDbDataAdapter' object.</returns>
-		IDbDataAdapter CreateDataAdapter();
 
 		/// <summary>
         /// Returns a new parameter object for binding values to parameter

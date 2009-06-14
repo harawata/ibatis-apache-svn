@@ -56,10 +56,6 @@ namespace Apache.Ibatis.Common.Data
         /// </summary>
         public const string ATTRIBUTE_CONNECTIONCLASS = "connectionClass";
         /// <summary>
-        /// Token for attribute dataAdapterClass.
-        /// </summary>
-        public const string ATTRIBUTE_DATAADAPTERCLASS = "dataAdapterClass";
-        /// <summary>
         /// Token for attribute description.
         /// </summary>
         public const string ATTRIBUTE_DESCRIPTION = "description";
