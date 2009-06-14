@@ -61,7 +61,7 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
 
             // Check IList collection
             Assert.IsNotNull(order.LineItemsIList);
-            Assert.AreEqual(2, order.LineItemsIList.Count);
+            Assert.AreEqual(3, order.LineItemsIList.Count);
 
         }
 

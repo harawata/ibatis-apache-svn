@@ -108,6 +108,7 @@ namespace Apache.Ibatis.Common.Utilities
                     case "oracleClient1.0":
                     case "ByteFx":
                     case "MySql":
+                    case "SQLite3":
                         sqlStatements = ParseScript(script);
                         break;
                     case "OleDb1.1":
