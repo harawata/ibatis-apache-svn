@@ -43,11 +43,7 @@ namespace Apache.Ibatis.DataMapper.Configuration.Interpreters.Config.Xml.Process
             config.CreateAttributes(element.Attributes);
             config.CreateAttribute(ConfigConstants.ATTRIBUTE_NAMESPACE, nameSpace);
 
-            if (config.Attributes.ContainsKey(ConfigConstants.ATTRIBUTE_EXTENDS))
-            {
-                config.Attributes[ConfigConstants.ATTRIBUTE_EXTENDS] =
-                    ApplyNamespace(config.Attributes[ConfigConstants.ATTRIBUTE_EXTENDS]);
-            }
+            AddAttribute(config, ConfigConstants.ATTRIBUTE_EXTENDS, true);
 
             configurationStore.AddResultMapConfiguration(config);
             element.Configuration = config;

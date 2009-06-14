@@ -23,12 +23,7 @@
  ********************************************************************************/
 #endregion
 
-using System;
-using System.Text;
-using System.Xml;
-
 using Apache.Ibatis.Common.Configuration;
-using Apache.Ibatis.Common.Resources;
 
 namespace Apache.Ibatis.DataMapper.Configuration.Interpreters.Config.Xml.Processor
 {
@@ -42,12 +37,15 @@ namespace Apache.Ibatis.DataMapper.Configuration.Interpreters.Config.Xml.Process
         /// <param name="configurationStore">The configuration store.</param>
         private void ProcessSettingElement(Tag element, IConfigurationStore configurationStore)
         {
-            string value = element.GetAttributeValue(0);
+            // <setting hello="world" />
+
+            string settingKey = element.GetAttributeName(0);
+            string settingValue = element.GetAttributeValue(0);
 
             IConfiguration config = new MutableConfiguration(
                 element.Name,
-                element.GetAttributeName(0),
-                value);
+                settingKey,
+                settingValue);
             configurationStore.AddSettingConfiguration(config);
         }
     }

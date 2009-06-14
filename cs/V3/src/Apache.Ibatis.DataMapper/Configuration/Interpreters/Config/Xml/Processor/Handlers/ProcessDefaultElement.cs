@@ -45,8 +45,7 @@ namespace Apache.Ibatis.DataMapper.Configuration.Interpreters.Config.Xml.Process
                 config.CreateAttributes(element.Attributes);
                 config.CreateAttribute(ConfigConstants.ATTRIBUTE_VALUE, Discriminator.DEFAULT_KEY);
 
-                config.Attributes[ConfigConstants.ATTRIBUTE_RESULTMAP] =
-                        ApplyNamespace(config.Attributes[ConfigConstants.ATTRIBUTE_RESULTMAP]);
+                AddAttribute(config, ConfigConstants.ATTRIBUTE_RESULTMAP, true);
 
                 element.Parent.Configuration.Children.Add(config);
             }

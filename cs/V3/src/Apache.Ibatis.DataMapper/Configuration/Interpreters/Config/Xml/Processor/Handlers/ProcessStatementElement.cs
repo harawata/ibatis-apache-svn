@@ -42,24 +42,23 @@ namespace Apache.Ibatis.DataMapper.Configuration.Interpreters.Config.Xml.Process
             config.CreateAttributes(element.Attributes);
             config.CreateAttribute(ConfigConstants.ATTRIBUTE_NAMESPACE, nameSpace);
 
-            if (config.Attributes.ContainsKey(ConfigConstants.ATTRIBUTE_CACHEMODEL))
-            {
-                config.Attributes[ConfigConstants.ATTRIBUTE_CACHEMODEL] =
-                    ApplyNamespace(config.Attributes[ConfigConstants.ATTRIBUTE_CACHEMODEL]);
-            }
-            if (config.Attributes.ContainsKey(ConfigConstants.ELEMENT_PARAMETERMAP))
-            {
-                config.Attributes[ConfigConstants.ELEMENT_PARAMETERMAP] =
-                    ApplyNamespace(config.Attributes[ConfigConstants.ELEMENT_PARAMETERMAP]);
-            }
-            if (config.Attributes.ContainsKey(ConfigConstants.ELEMENT_RESULTMAP))
-            {
-                config.Attributes[ConfigConstants.ELEMENT_RESULTMAP] =
-                    ApplyNamespace(config.Attributes[ConfigConstants.ELEMENT_RESULTMAP]);
-            }
+            AddAttribute(config, ConfigConstants.ATTRIBUTE_CACHEMODEL, true);
+            AddAttribute(config, ConfigConstants.ELEMENT_PARAMETERMAP, true);
+            AddAttribute(config, ConfigConstants.ELEMENT_RESULTMAP, true);
+            AddAttribute(config, ConfigConstants.ELEMENT_CONDENSESQL, false);
 
             configurationStore.AddStatementConfiguration(config);
             element.Configuration = config;
+        }
+
+        private void AddAttribute(IConfiguration config, string configConstant, bool applyNamespace)
+        {
+            if (config.Attributes.ContainsKey(configConstant))
+            {
+                config.Attributes[configConstant] = applyNamespace
+                    ? ApplyNamespace(config.Attributes[configConstant])
+                    : config.Attributes[configConstant];
+            }
         }
     }
 }

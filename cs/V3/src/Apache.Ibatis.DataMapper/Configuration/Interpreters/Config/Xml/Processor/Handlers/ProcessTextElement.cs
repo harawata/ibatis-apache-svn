@@ -23,12 +23,7 @@
  ********************************************************************************/
 #endregion
 
-using System;
-using System.Text;
-using System.Xml;
-
 using Apache.Ibatis.Common.Configuration;
-using Apache.Ibatis.Common.Resources;
 
 namespace Apache.Ibatis.DataMapper.Configuration.Interpreters.Config.Xml.Processor
 {
@@ -48,7 +43,7 @@ namespace Apache.Ibatis.DataMapper.Configuration.Interpreters.Config.Xml.Process
                 MutableConfiguration config = new MutableConfiguration(
                                     element.Name,
                                     string.Empty,
-                                   text);
+                                    element.Value); // text);
 
                 element.Parent.Configuration.Children.Add(config);
                 element.Configuration = config;
