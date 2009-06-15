@@ -1,6 +1,9 @@
 package org.apache.ibatis.jdbc;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.Reader;
 import java.sql.*;
 
 public class ScriptRunner {
@@ -11,6 +14,7 @@ public class ScriptRunner {
 
   private boolean stopOnError;
   private boolean autoCommit;
+  private boolean sendFullScript;
 
   private PrintWriter logWriter = new PrintWriter(System.out);
   private PrintWriter errorLogWriter = new PrintWriter(System.err);
@@ -30,6 +34,10 @@ public class ScriptRunner {
     this.autoCommit = autoCommit;
   }
 
+  public void setSendFullScript(boolean sendFullScript) {
+    this.sendFullScript = sendFullScript;
+  }
+
   public void setLogWriter(PrintWriter logWriter) {
     this.logWriter = logWriter;
   }
@@ -46,10 +54,24 @@ public class ScriptRunner {
     this.fullLineDelimiter = fullLineDelimiter;
   }
 
-  public void runScript(Reader reader) throws IOException, SQLException {
+  public void runScript(Reader reader) {
+    setAutoCommit();
+
+    StringBuffer command = new StringBuffer();
     try {
-      runScriptWithConnection(connection, reader);
+      BufferedReader lineReader = new BufferedReader(reader);
+      String line;
+      while ((line = lineReader.readLine()) != null) {
+        command = handleLine(command, line);
+      }
+      commitConnection();
+      checkForMissingLineTerminator(command);
+    } catch (Exception e) {
+      String message = "Error executing: " + command + ".  Cause: " + e;
+      printlnError(message);
+      throw new RuntimeSqlException(message, e);
     } finally {
+      rollbackConnection();
       flush();
     }
   }
@@ -62,105 +84,113 @@ public class ScriptRunner {
     }
   }
 
-  /**
-   * Runs an SQL script (read in using the Reader parameter) using the connection passed in
-   *
-   * @param conn   - the connection to use for the script
-   * @param reader - the source of the script
-   * @throws java.sql.SQLException if any SQL errors occur
-   * @throws java.io.IOException   if there is an error reading from the Reader
-   */
-  private void runScriptWithConnection(Connection conn, Reader reader)
-      throws IOException, SQLException {
-    StringBuffer command = null;
+  private void setAutoCommit() {
     try {
-      BufferedReader lineReader = new BufferedReader(reader);
-      String line;
-      while ((line = lineReader.readLine()) != null) {
-        if (command == null) {
-          command = new StringBuffer();
-        }
-        String trimmedLine = line.trim();
-        if (trimmedLine.length() < 1) {
-          // do nothing
-        } else if (trimmedLine.startsWith("//") || trimmedLine.startsWith("--")) {
-          println(trimmedLine);
-        } else if (!fullLineDelimiter && trimmedLine.endsWith(delimiter)
-            || fullLineDelimiter && trimmedLine.equals(delimiter)) {
-          command.append(line.substring(0, line.lastIndexOf(delimiter)));
-          command.append(" ");
-          Statement statement = conn.createStatement();
-
-          println(command);
-
-          boolean hasResults = false;
-          if (stopOnError) {
-            hasResults = statement.execute(command.toString());
-          } else {
-            try {
-              hasResults = statement.execute(command.toString());
-            } catch (SQLException e) {
-              e.fillInStackTrace();
-              printlnError("Error executing: " + command);
-              printlnError(e);
-            }
-          }
-
-          if (autoCommit && !conn.getAutoCommit()) {
-            conn.commit();
-          }
-
-          if (hasResults) {
-            ResultSet rs = statement.getResultSet();
-            if (rs != null) {
-              ResultSetMetaData md = rs.getMetaData();
-              int cols = md.getColumnCount();
-              for (int i = 0; i < cols; i++) {
-                String name = md.getColumnLabel(i + 1);
-                print(name + "\t");
-              }
-              println("");
-              while (rs.next()) {
-                for (int i = 0; i < cols; i++) {
-                  String value = rs.getString(i + 1);
-                  print(value + "\t");
-                }
-                println("");
-              }
-            }
-          }
-
-          command = null;
-          try {
-            statement.close();
-          } catch (Exception e) {
-            // Ignore to workaround a bug in Jakarta DBCP
-          }
-          Thread.yield();
-        } else {
-          command.append(line);
-          command.append(" ");
-        }
+      if (autoCommit != connection.getAutoCommit()) {
+        connection.setAutoCommit(autoCommit);
       }
-      if (!autoCommit && !conn.getAutoCommit()) {
-        conn.commit();
+    } catch (Throwable t) {
+      throw new RuntimeSqlException("Could not set AutoCommit to " + autoCommit + ". Cause: " + t, t);
+    }
+  }
+
+  private void commitConnection() {
+    try {
+      if (!connection.getAutoCommit()) {
+        connection.commit();
       }
-      if (command != null && command.toString().trim().length() > 0) {
-        throw new IOException("Line missing end-of-line terminator ("+delimiter+") => " + command);
+    } catch (Throwable t) {
+      throw new RuntimeSqlException("Could not commit transaction. Cause: " + t, t);
+    }
+  }
+
+  private void rollbackConnection() {
+    try {
+      if (!connection.getAutoCommit()) {
+        connection.rollback();
+      }
+    } catch (Throwable t) {
+      // ignore
+    }
+  }
+
+  private void checkForMissingLineTerminator(StringBuffer command) {
+    if (command != null && command.toString().trim().length() > 0) {
+      throw new RuntimeSqlException("Line missing end-of-line terminator (" + delimiter + ") => " + command);
+    }
+  }
+
+  private StringBuffer handleLine(StringBuffer command, String line) throws SQLException {
+    String trimmedLine = line.trim();
+    if (lineIsComment(trimmedLine)) {
+      println(trimmedLine);
+    } else if (commandReadyToExecute(trimmedLine)) {
+      command.append(line.substring(0, line.lastIndexOf(delimiter)));
+      command.append(" ");
+      println(command);
+      executeStatement(command.toString());
+      command.setLength(0);
+    } else if (trimmedLine.length() > 0) {
+      command.append(line);
+      command.append(" ");
+    }
+    return command;
+  }
+
+  private boolean lineIsComment(String trimmedLine) {
+    return trimmedLine.startsWith("//") || trimmedLine.startsWith("--");
+  }
+
+  private boolean commandReadyToExecute(String trimmedLine) {
+    return !fullLineDelimiter && trimmedLine.endsWith(delimiter)
+        || fullLineDelimiter && trimmedLine.equals(delimiter);
+  }
+
+  private void executeStatement(String command) throws SQLException {
+    boolean hasResults = false;
+    Statement statement = connection.createStatement();
+    if (stopOnError) {
+      hasResults = statement.execute(command);
+    } else {
+      try {
+        hasResults = statement.execute(command);
+      } catch (SQLException e) {
+        String message = "Error executing: " + command + ".  Cause: " + e;
+        printlnError(message);
+      }
+    }
+    printResults(statement, hasResults);
+    try {
+      statement.close();
+    } catch (Exception e) {
+      // Ignore to workaround a bug in some connection pools
+    }
+    commitConnection();
+  }
+
+  private void printResults(Statement statement, boolean hasResults) {
+    try {
+      if (hasResults) {
+        ResultSet rs = statement.getResultSet();
+        if (rs != null) {
+          ResultSetMetaData md = rs.getMetaData();
+          int cols = md.getColumnCount();
+          for (int i = 0; i < cols; i++) {
+            String name = md.getColumnLabel(i + 1);
+            print(name + "\t");
+          }
+          println("");
+          while (rs.next()) {
+            for (int i = 0; i < cols; i++) {
+              String value = rs.getString(i + 1);
+              print(value + "\t");
+            }
+            println("");
+          }
+        }
       }
     } catch (SQLException e) {
-      e.fillInStackTrace();
-      printlnError("Error executing: " + command);
-      printlnError(e);
-      throw e;
-    } catch (IOException e) {
-      e.fillInStackTrace();
-      printlnError("Error executing: " + command);
-      printlnError(e);
-      throw e;
-    } finally {
-      conn.rollback();
-      flush();
+      printlnError("Error printing results: " + e.getMessage()); 
     }
   }
 
