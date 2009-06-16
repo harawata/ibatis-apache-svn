@@ -29,7 +29,8 @@ public enum DatabaseDialects {
     DERBY("VALUES IDENTITY_VAL_LOCAL()"), //$NON-NLS-1$
     HSQLDB("CALL IDENTITY()"), //$NON-NLS-1$
     SYBASE("SELECT @@IDENTITY"), //$NON-NLS-1$
-    DB2_MF("SELECT IDENTITY_VAL_LOCAL() FROM SYSIBM.SYSDUMMY1"); //$NON-NLS-1$
+    DB2_MF("SELECT IDENTITY_VAL_LOCAL() FROM SYSIBM.SYSDUMMY1"), //$NON-NLS-1$
+    INFORMIX("select dbinfo('sqlca.sqlerrd1') from systables where tabid=1"); //$NON-NLS-1$
     
     private String identityRetrievalStatement;
 
@@ -69,6 +70,8 @@ public enum DatabaseDialects {
             returnValue = SYBASE;
         } else if ("DB2_MF".equalsIgnoreCase(database)) { //$NON-NLS-1$
             returnValue = DB2_MF;
+        } else if ("Informix".equalsIgnoreCase(database)) { //$NON-NLS-1$
+            returnValue = INFORMIX;
         }
         
         return returnValue;

@@ -62,6 +62,10 @@ element of the <a href="table.html">&lt;table&gt;</a> element.</p>
               <td>This will translate to: <code>CALL IDENTITY()</code></td>
             </tr>
             <tr>
+              <th valign="top">Informix</th>
+              <td>This will translate to: <code>select dbinfo('sqlca.sqlerrd1') from systables where tabid=1</code></td>
+            </tr>
+            <tr>
               <th>MySql</th>
               <td>This will translate to: <code>SELECT LAST_INSERT_ID()</code></td>
             </tr>

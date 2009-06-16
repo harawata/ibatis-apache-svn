@@ -33,6 +33,7 @@ Enhancements:
     change the XML merger so that the XML ids no longer need to contain
     the prefix "ibatorgenerated_"
 15. Many refactorings to make way for iBATIS3
+16. IBATIS-605 - Added Informix Dialect
 
 -------------------------------------------------------------------------------
 Version 1.2.1:
