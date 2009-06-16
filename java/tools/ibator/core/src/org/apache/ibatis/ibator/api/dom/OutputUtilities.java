@@ -15,6 +15,11 @@
  */
 package org.apache.ibatis.ibator.api.dom;
 
+import java.util.Set;
+import java.util.TreeSet;
+
+import org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType;
+
 /**
  * @author Jeff Butler
  */
@@ -74,5 +79,26 @@ public class OutputUtilities {
      */
     public static void newLine(StringBuilder sb) {
         sb.append(lineSeparator);
+    }
+
+    /**
+     * returns a unique set of "import xxx;" Strings for the set of types  
+     * @param importedTypes
+     * @return
+     */
+    public static Set<String> calculateImports(Set<FullyQualifiedJavaType> importedTypes) {
+        StringBuilder sb = new StringBuilder();
+        Set<String> importStrings = new TreeSet<String>();
+        for (FullyQualifiedJavaType fqjt : importedTypes) {
+            for (String importString : fqjt.getImportList()) {
+                sb.setLength(0);
+                sb.append("import "); //$NON-NLS-1$
+                sb.append(importString);
+                sb.append(';');
+                importStrings.add(sb.toString());
+            }
+        }
+        
+        return importStrings;
     }
 }

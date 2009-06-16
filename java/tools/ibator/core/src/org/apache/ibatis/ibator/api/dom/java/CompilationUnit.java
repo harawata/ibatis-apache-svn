@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * This interface describes metods common to all Java compilation
+ * This interface describes methods common to all Java compilation
  * units (Java classes, interfaces, and enums).
  * 
  * @author Jeff Butler

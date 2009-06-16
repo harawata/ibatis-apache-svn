@@ -63,16 +63,13 @@ public class TopLevelEnumeration extends InnerEnum implements CompilationUnit {
             OutputUtilities.newLine(sb);
         }
 
-        for (FullyQualifiedJavaType fqjt : importedTypes) {
-            if (fqjt.isExplicitlyImported()) {
-                sb.append("import "); //$NON-NLS-1$
-                sb.append(fqjt.getFullyQualifiedName());
-                sb.append(';');
-                OutputUtilities.newLine(sb);
-            }
+        Set<String> importStrings = OutputUtilities.calculateImports(importedTypes);
+        for (String importString : importStrings) {
+            sb.append(importString);
+            OutputUtilities.newLine(sb);
         }
-        
-        if (importedTypes.size() > 0) {
+
+        if (importStrings.size() > 0) {
             OutputUtilities.newLine(sb);
         }
 

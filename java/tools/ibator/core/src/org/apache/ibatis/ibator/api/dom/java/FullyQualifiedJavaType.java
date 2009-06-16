@@ -17,6 +17,7 @@ package org.apache.ibatis.ibator.api.dom.java;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 /**
  * @author Jeff Butler
@@ -29,12 +30,16 @@ public class FullyQualifiedJavaType implements Comparable<FullyQualifiedJavaType
     private static FullyQualifiedJavaType dateInstance = null;
     private static FullyQualifiedJavaType criteriaInstance = null;
     
+    /**
+     * The short name without any generic arguments
+     */
     private String baseShortName;
     
-    //  this is the short name including the parameterized types and wildcards
-    private String calculatedShortName;
+    /**
+     * The fully qualified name without any generic arguments
+     */
+    private String baseQualifiedName;
     
-    private String fullyQualifiedName;
     private boolean explicitlyImported;
     private String packageName;
     private boolean primitive;
@@ -47,56 +52,10 @@ public class FullyQualifiedJavaType implements Comparable<FullyQualifiedJavaType
      * 
      * @param fullyQualifiedName
      */
-    public FullyQualifiedJavaType(String fullyQualifiedName) {
+    public FullyQualifiedJavaType(String fullTypeSpecification) {
         super();
         typeArguments = new ArrayList<FullyQualifiedJavaType>();
-        this.fullyQualifiedName = fullyQualifiedName;
-        
-        int lastIndex = fullyQualifiedName.lastIndexOf('.');
-        if (lastIndex == -1) {
-            baseShortName = fullyQualifiedName;
-            explicitlyImported = false;
-            packageName = ""; //$NON-NLS-1$
-            
-            if ("byte".equals(fullyQualifiedName)) { //$NON-NLS-1$
-                primitive = true;
-                primitiveTypeWrapper = PrimitiveTypeWrapper.getByteInstance();
-            } else if ("short".equals(fullyQualifiedName)) { //$NON-NLS-1$
-                primitive = true;
-                primitiveTypeWrapper = PrimitiveTypeWrapper.getShortInstance();
-            } else if ("int".equals(fullyQualifiedName)) { //$NON-NLS-1$
-                primitive = true;
-                primitiveTypeWrapper = PrimitiveTypeWrapper.getIntegerInstance();
-            } else if ("long".equals(fullyQualifiedName)) { //$NON-NLS-1$
-                primitive = true;
-                primitiveTypeWrapper = PrimitiveTypeWrapper.getLongInstance();
-            } else if ("char".equals(fullyQualifiedName)) { //$NON-NLS-1$
-                primitive = true;
-                primitiveTypeWrapper = PrimitiveTypeWrapper.getCharacterInstance();
-            } else if ("float".equals(fullyQualifiedName)) { //$NON-NLS-1$
-                primitive = true;
-                primitiveTypeWrapper = PrimitiveTypeWrapper.getFloatInstance();
-            } else if ("double".equals(fullyQualifiedName)) { //$NON-NLS-1$
-                primitive = true;
-                primitiveTypeWrapper = PrimitiveTypeWrapper.getDoubleInstance();
-            } else if ("boolean".equals(fullyQualifiedName)) { //$NON-NLS-1$
-                primitive = true;
-                primitiveTypeWrapper = PrimitiveTypeWrapper.getBooleanInstance();
-            } else {
-                primitive = false;
-                primitiveTypeWrapper = null;
-            }
-        } else {
-            baseShortName = fullyQualifiedName.substring(lastIndex + 1);
-            packageName = fullyQualifiedName.substring(0, lastIndex);
-            if ("java.lang".equals(packageName)) { //$NON-NLS-1$
-                explicitlyImported = false;
-            } else {
-                explicitlyImported = true;
-            }
-        }
-        
-        calculatedShortName = baseShortName;
+        parse(fullTypeSpecification);
     }
     
     /**
@@ -106,14 +65,50 @@ public class FullyQualifiedJavaType implements Comparable<FullyQualifiedJavaType
         return explicitlyImported;
     }
     /**
-     * This method returns the fully qualified name that is suitable
-     * for an import statement (i.e. - without the generics specified)
+     * This method returns the fully qualified name  - including
+     * any generic type parameters
      * 
      * @return Returns the fullyQualifiedName.
      */
     public String getFullyQualifiedName() {
-        return fullyQualifiedName;
+        StringBuilder sb = new StringBuilder();
+        sb.append(baseQualifiedName);
+        if (typeArguments.size() > 0) {
+            boolean first = true;
+            sb.append('<');
+            for (FullyQualifiedJavaType fqjt : typeArguments) {
+                if (first) {
+                    first = false;
+                } else {
+                    sb.append(", "); //$NON-NLS-1$
+                }
+                sb.append(fqjt.getFullyQualifiedName());
+            
+            }
+            sb.append('>');
+        }
+        
+        return sb.toString();
     }
+    
+    /**
+     * Returns a list of Strings that are the fully qualified names
+     * of this type, and any generic type argument associated
+     * with this type.
+     */
+    public List<String> getImportList() {
+        List<String> answer = new ArrayList<String>();
+        if (isExplicitlyImported()) {
+            answer.add(baseQualifiedName);
+        }
+        
+        for (FullyQualifiedJavaType fqjt : typeArguments) {
+            answer.addAll(fqjt.getImportList());
+        }
+        
+        return answer;
+    }
+    
     /**
      * @return Returns the packageName.
      */
@@ -121,10 +116,27 @@ public class FullyQualifiedJavaType implements Comparable<FullyQualifiedJavaType
         return packageName;
     }
     /**
-     * @return Returns the shortName.
+     * @return Returns the shortName - including any type arguments.
      */
     public String getShortName() {
-        return calculatedShortName;
+        StringBuilder sb = new StringBuilder();
+        sb.append(baseShortName);
+        if (typeArguments.size() > 0) {
+            boolean first = true;
+            sb.append('<');
+            for (FullyQualifiedJavaType fqjt : typeArguments) {
+                if (first) {
+                    first = false;
+                } else {
+                    sb.append(", "); //$NON-NLS-1$
+                }
+                sb.append(fqjt.getShortName());
+            
+            }
+            sb.append('>');
+        }
+        
+        return sb.toString();
     }
     
     /* (non-Javadoc)
@@ -142,7 +154,7 @@ public class FullyQualifiedJavaType implements Comparable<FullyQualifiedJavaType
 
 		FullyQualifiedJavaType other = (FullyQualifiedJavaType) obj;
 		
-        return fullyQualifiedName.equals(other.fullyQualifiedName);
+        return getFullyQualifiedName().equals(other.getFullyQualifiedName());
     }
     
     /* (non-Javadoc)
@@ -150,7 +162,7 @@ public class FullyQualifiedJavaType implements Comparable<FullyQualifiedJavaType
      */
 	@Override
     public int hashCode() {
-        return fullyQualifiedName.hashCode();
+        return getFullyQualifiedName().hashCode();
     }
     
     /* (non-Javadoc)
@@ -158,7 +170,7 @@ public class FullyQualifiedJavaType implements Comparable<FullyQualifiedJavaType
      */
 	@Override
     public String toString() {
-        return fullyQualifiedName;
+        return getFullyQualifiedName();
     }
     
     /**
@@ -252,26 +264,77 @@ public class FullyQualifiedJavaType implements Comparable<FullyQualifiedJavaType
      * @see java.lang.Comparable#compareTo(java.lang.Object)
      */
     public int compareTo(FullyQualifiedJavaType other) {
-        return fullyQualifiedName.compareTo(other.fullyQualifiedName);
+        return getFullyQualifiedName().compareTo(other.getFullyQualifiedName());
     }
     
     public void addTypeArgument(FullyQualifiedJavaType type) {
         typeArguments.add(type);
-        
-        StringBuilder sb = new StringBuilder();
-        sb.append(baseShortName);
-        sb.append('<');
-        
-        boolean comma = false;
-        for (FullyQualifiedJavaType fqjt : typeArguments) {
-            if (comma) {
-                sb.append(", "); //$NON-NLS-1$
-            } else {
-                comma = true;
-            }
-            sb.append(fqjt.getShortName());
+    }
+    
+    private void parse(String fullTypeSpecification) {
+        int index = fullTypeSpecification.indexOf('<');
+        if (index == -1) {
+            simpleParse(fullTypeSpecification);
+        } else {
+            simpleParse(fullTypeSpecification.substring(0, index));
+            genericParse(fullTypeSpecification.substring(index));
         }
-        sb.append('>');
-        calculatedShortName = sb.toString();
+    }
+    
+    private void simpleParse(String typeSpecification) {
+        baseQualifiedName = typeSpecification.trim();
+        int lastIndex = baseQualifiedName.lastIndexOf('.');
+        if (lastIndex == -1) {
+            baseShortName = typeSpecification;
+            explicitlyImported = false;
+            packageName = ""; //$NON-NLS-1$
+            
+            if ("byte".equals(baseQualifiedName)) { //$NON-NLS-1$
+                primitive = true;
+                primitiveTypeWrapper = PrimitiveTypeWrapper.getByteInstance();
+            } else if ("short".equals(baseQualifiedName)) { //$NON-NLS-1$
+                primitive = true;
+                primitiveTypeWrapper = PrimitiveTypeWrapper.getShortInstance();
+            } else if ("int".equals(baseQualifiedName)) { //$NON-NLS-1$
+                primitive = true;
+                primitiveTypeWrapper = PrimitiveTypeWrapper.getIntegerInstance();
+            } else if ("long".equals(baseQualifiedName)) { //$NON-NLS-1$
+                primitive = true;
+                primitiveTypeWrapper = PrimitiveTypeWrapper.getLongInstance();
+            } else if ("char".equals(baseQualifiedName)) { //$NON-NLS-1$
+                primitive = true;
+                primitiveTypeWrapper = PrimitiveTypeWrapper.getCharacterInstance();
+            } else if ("float".equals(baseQualifiedName)) { //$NON-NLS-1$
+                primitive = true;
+                primitiveTypeWrapper = PrimitiveTypeWrapper.getFloatInstance();
+            } else if ("double".equals(baseQualifiedName)) { //$NON-NLS-1$
+                primitive = true;
+                primitiveTypeWrapper = PrimitiveTypeWrapper.getDoubleInstance();
+            } else if ("boolean".equals(baseQualifiedName)) { //$NON-NLS-1$
+                primitive = true;
+                primitiveTypeWrapper = PrimitiveTypeWrapper.getBooleanInstance();
+            } else {
+                primitive = false;
+                primitiveTypeWrapper = null;
+            }
+        } else {
+            baseShortName = baseQualifiedName.substring(lastIndex + 1);
+            packageName = baseQualifiedName.substring(0, lastIndex);
+            if ("java.lang".equals(packageName)) { //$NON-NLS-1$
+                explicitlyImported = false;
+            } else {
+                explicitlyImported = true;
+            }
+        }
+    }
+    
+    private void genericParse(String genericSpecification) {
+        int lastIndex = genericSpecification.lastIndexOf('>');
+        String argumentString = genericSpecification.substring(1, lastIndex);
+        StringTokenizer st = new StringTokenizer(argumentString, ","); //$NON-NLS-1$
+        while (st.hasMoreTokens()) {
+            String type = st.nextToken();
+            typeArguments.add(new FullyQualifiedJavaType(type));
+        }
     }
 }
