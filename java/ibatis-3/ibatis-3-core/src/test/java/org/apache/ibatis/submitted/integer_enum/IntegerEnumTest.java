@@ -1,10 +1,10 @@
 package org.apache.ibatis.submitted.integer_enum;
 
+import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.*;
-import org.apache.ibatis.BaseDataTest;
+import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 import javax.sql.DataSource;
 import java.io.Reader;

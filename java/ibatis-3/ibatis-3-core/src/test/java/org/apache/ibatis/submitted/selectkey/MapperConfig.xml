@@ -6,8 +6,8 @@
 <configuration>
 
   <mappers>
-    <mapper resource="org/apache/ibatis/submitted/selectkey/Table1.xml" />
-    <mapper resource="org/apache/ibatis/submitted/selectkey/Table2.xml" />
+    <mapper resource="org/apache/ibatis/submitted/selectkey/Table1.xml"/>
+    <mapper resource="org/apache/ibatis/submitted/selectkey/Table2.xml"/>
   </mappers>
 
 </configuration>

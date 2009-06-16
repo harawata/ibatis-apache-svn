@@ -6,8 +6,8 @@
 <configuration>
 
   <mappers>
-    <mapper resource="org/apache/ibatis/submitted/includes/Fragments.xml" />
-    <mapper resource="org/apache/ibatis/submitted/includes/Mapper.xml" />
+    <mapper resource="org/apache/ibatis/submitted/includes/Fragments.xml"/>
+    <mapper resource="org/apache/ibatis/submitted/includes/Mapper.xml"/>
   </mappers>
 
 </configuration>
