@@ -16,14 +16,19 @@
 
 package org.apache.ibatis.ibator.api.dom.java;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import org.junit.Test;
 
 /**
  * @author Jeff Butler
  *
  */
-public class FullyQualifiedJavaTypeTests extends TestCase {
+public class FullyQualifiedJavaTypeTests {
     
+    @Test
     public void testJavaType() {
         FullyQualifiedJavaType fqjt =
             new FullyQualifiedJavaType("java.lang.String"); //$NON-NLS-1$
@@ -34,6 +39,7 @@ public class FullyQualifiedJavaTypeTests extends TestCase {
         assertEquals(0, fqjt.getImportList().size());
     }
 
+    @Test
     public void testSimpleType() {
         FullyQualifiedJavaType fqjt =
             new FullyQualifiedJavaType("com.foo.Bar"); //$NON-NLS-1$
@@ -44,6 +50,7 @@ public class FullyQualifiedJavaTypeTests extends TestCase {
         assertEquals(1, fqjt.getImportList().size());
     }
 
+    @Test
     public void testGenericType1() {
         FullyQualifiedJavaType fqjt =
             new FullyQualifiedJavaType("java.util.List<java.lang.String>"); //$NON-NLS-1$
@@ -55,6 +62,7 @@ public class FullyQualifiedJavaTypeTests extends TestCase {
     }
 
 
+    @Test
     public void testGenericType2() {
         FullyQualifiedJavaType fqjt =
             new FullyQualifiedJavaType("java.util.Map<java.lang.String, java.util.List<java.lang.String>>"); //$NON-NLS-1$
@@ -66,6 +74,7 @@ public class FullyQualifiedJavaTypeTests extends TestCase {
     }
 
 
+    @Test
     public void testGenericType3() {
         FullyQualifiedJavaType listOfStrings = new FullyQualifiedJavaType("java.util.List"); //$NON-NLS-1$
         listOfStrings.addTypeArgument(new FullyQualifiedJavaType("java.lang.String")); //$NON-NLS-1$

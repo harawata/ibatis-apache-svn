@@ -16,15 +16,16 @@
 
 package org.apache.ibatis.ibator.internal.util;
 
-import org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType;
+import static org.junit.Assert.assertEquals;
 
-import junit.framework.TestCase;
+import org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType;
+import org.junit.Test;
 
 /**
  * @author Jeff Butler
  *
  */
-public class JavaBeansUtilTests extends TestCase {
+public class JavaBeansUtilTests {
     
     /**
      * 
@@ -33,13 +34,7 @@ public class JavaBeansUtilTests extends TestCase {
         super();
     }
 
-    /**
-     * @param arg0
-     */
-    public JavaBeansUtilTests(String arg0) {
-        super(arg0);
-    }
-    
+    @Test
     public void testGetValidPropertyName() {
         assertEquals("eMail", JavaBeansUtil.getValidPropertyName("eMail")); //$NON-NLS-1$ //$NON-NLS-2$
         assertEquals("firstName", JavaBeansUtil.getValidPropertyName("firstName")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -53,6 +48,7 @@ public class JavaBeansUtilTests extends TestCase {
         assertEquals("accountType", JavaBeansUtil.getValidPropertyName("AccountType")); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
+    @Test
     public void testGetGetterMethodName() {
         assertEquals("geteMail", JavaBeansUtil.getGetterMethodName("eMail", FullyQualifiedJavaType.getStringInstance())); //$NON-NLS-1$ //$NON-NLS-2$
         assertEquals("getFirstName", JavaBeansUtil.getGetterMethodName("firstName", FullyQualifiedJavaType.getStringInstance())); //$NON-NLS-1$ //$NON-NLS-2$
@@ -65,6 +61,7 @@ public class JavaBeansUtilTests extends TestCase {
         assertEquals("getAccountType", JavaBeansUtil.getGetterMethodName("AccountType", FullyQualifiedJavaType.getStringInstance())); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
+    @Test
     public void testGetSetterMethodName() {
         assertEquals("seteMail", JavaBeansUtil.getSetterMethodName("eMail")); //$NON-NLS-1$ //$NON-NLS-2$
         assertEquals("setFirstName", JavaBeansUtil.getSetterMethodName("firstName")); //$NON-NLS-1$ //$NON-NLS-2$
