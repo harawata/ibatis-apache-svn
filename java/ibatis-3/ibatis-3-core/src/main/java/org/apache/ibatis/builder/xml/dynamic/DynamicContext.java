@@ -8,7 +8,6 @@ public class DynamicContext {
 
   private Map<String,Object> bindings = new HashMap<String,Object>();
   private StringBuilder sqlBuilder = new StringBuilder();
-  private Object parameterObject;
 
   public DynamicContext(Object parameterObject) {
     if (parameterObject instanceof Map) {
@@ -20,7 +19,6 @@ public class DynamicContext {
         bindings.put(name,metaObject.getValue(name));
       }
     }
-    this.parameterObject = parameterObject;
   }
 
   public Map<String, Object> getBindings() {
