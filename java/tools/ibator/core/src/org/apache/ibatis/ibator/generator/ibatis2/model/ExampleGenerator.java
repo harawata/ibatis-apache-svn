@@ -29,7 +29,6 @@ import org.apache.ibatis.ibator.api.dom.java.Field;
 import org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.ibator.api.dom.java.InnerClass;
 import org.apache.ibatis.ibator.api.dom.java.JavaVisibility;
-import org.apache.ibatis.ibator.api.dom.java.JavaWildcardType;
 import org.apache.ibatis.ibator.api.dom.java.Method;
 import org.apache.ibatis.ibator.api.dom.java.Parameter;
 import org.apache.ibatis.ibator.api.dom.java.TopLevelClass;
@@ -129,10 +128,11 @@ public class ExampleGenerator extends BaseModelClassGenerator {
         field = new Field();
         field.setVisibility(JavaVisibility.PROTECTED);
 
-        FullyQualifiedJavaType fqjt = FullyQualifiedJavaType
-                .getNewListInstance();
+        FullyQualifiedJavaType fqjt;
         if (generateForJava5) {
-            fqjt.addTypeArgument(new FullyQualifiedJavaType("Criteria")); //$NON-NLS-1$
+            fqjt = new FullyQualifiedJavaType("java.util.List<Criteria>"); //$NON-NLS-1$
+        } else {
+            fqjt = new FullyQualifiedJavaType("java.util.List"); //$NON-NLS-1$
         }
 
         field.setType(fqjt);
@@ -295,10 +295,11 @@ public class ExampleGenerator extends BaseModelClassGenerator {
 
         field = new Field();
         field.setVisibility(JavaVisibility.PROTECTED);
-        FullyQualifiedJavaType listOfStrings = FullyQualifiedJavaType
-                .getNewListInstance();
+        FullyQualifiedJavaType listOfStrings;
         if (generateForJava5) {
-            listOfStrings.addTypeArgument(FullyQualifiedJavaType.getStringInstance());
+            listOfStrings = new FullyQualifiedJavaType("java.util.List<java.lang.String>"); //$NON-NLS-1$
+        } else {
+            listOfStrings = new FullyQualifiedJavaType("java.util.List"); //$NON-NLS-1$
         }
         field.setType(listOfStrings);
         field.setName("criteriaWithoutValue"); //$NON-NLS-1$
@@ -312,13 +313,11 @@ public class ExampleGenerator extends BaseModelClassGenerator {
         method.addBodyLine("return criteriaWithoutValue;"); //$NON-NLS-1$
         answer.addMethod(method);
 
-        FullyQualifiedJavaType listOfMaps = FullyQualifiedJavaType
-                .getNewListInstance();
+        FullyQualifiedJavaType listOfMaps;
         if (generateForJava5) {
-            FullyQualifiedJavaType mapStringObject = FullyQualifiedJavaType.getNewMapInstance();
-            mapStringObject.addTypeArgument(FullyQualifiedJavaType.getStringInstance());
-            mapStringObject.addTypeArgument(FullyQualifiedJavaType.getObjectInstance());
-            listOfMaps.addTypeArgument(mapStringObject);
+            listOfMaps = new FullyQualifiedJavaType("java.util.List<java.util.Map<java.lang.String, java.lang.Object>>"); //$NON-NLS-1$
+        } else {
+            listOfMaps = new FullyQualifiedJavaType("java.util.List"); //$NON-NLS-1$
         }
 
         field = new Field();
@@ -400,11 +399,11 @@ public class ExampleGenerator extends BaseModelClassGenerator {
         method.addBodyLine("criteriaWithSingleValue.add(map);"); //$NON-NLS-1$
         answer.addMethod(method);
 
-        FullyQualifiedJavaType listOfObjects = FullyQualifiedJavaType
-                .getNewListInstance();
+        FullyQualifiedJavaType listOfObjects;
         if (generateForJava5) {
-            JavaWildcardType extendsObject = new JavaWildcardType("java.lang.Object", true); //$NON-NLS-1$
-            listOfObjects.addTypeArgument(extendsObject);
+            listOfObjects = new FullyQualifiedJavaType("java.util.List<? extends java.lang.Object>"); //$NON-NLS-1$
+        } else {
+            listOfObjects = new FullyQualifiedJavaType("java.util.List"); //$NON-NLS-1$
         }
 
         method = new Method();
@@ -463,10 +462,11 @@ public class ExampleGenerator extends BaseModelClassGenerator {
         method.addBodyLine("criteriaWithBetweenValue.add(map);"); //$NON-NLS-1$
         answer.addMethod(method);
 
-        FullyQualifiedJavaType listOfDates = FullyQualifiedJavaType
-                .getNewListInstance();
+        FullyQualifiedJavaType listOfDates;
         if (generateForJava5) {
-            listOfDates.addTypeArgument(FullyQualifiedJavaType.getDateInstance());
+            listOfDates = new FullyQualifiedJavaType("java.util.List<java.util.Date>"); //$NON-NLS-1$
+        } else {
+            listOfDates = new FullyQualifiedJavaType("java.util.List"); //$NON-NLS-1$
         }
 
         if (introspectedTable.hasJDBCDateColumns()) {
@@ -655,13 +655,11 @@ public class ExampleGenerator extends BaseModelClassGenerator {
         StringBuilder sb = new StringBuilder();
 
         // add new private fields and public accessors in the class
-        FullyQualifiedJavaType listOfMaps = FullyQualifiedJavaType
-                .getNewListInstance();
+        FullyQualifiedJavaType listOfMaps;
         if (generateForJava5) {
-            FullyQualifiedJavaType mapStringObject = FullyQualifiedJavaType.getNewMapInstance();
-            mapStringObject.addTypeArgument(FullyQualifiedJavaType.getStringInstance());
-            mapStringObject.addTypeArgument(FullyQualifiedJavaType.getObjectInstance());
-            listOfMaps.addTypeArgument(mapStringObject);
+            listOfMaps = new FullyQualifiedJavaType("java.util.List<java.util.Map<java.lang.String, java.lang.Object>>"); //$NON-NLS-1$
+        } else {
+            listOfMaps = new FullyQualifiedJavaType("java.util.List"); //$NON-NLS-1$
         }
 
         sb.setLength(0);

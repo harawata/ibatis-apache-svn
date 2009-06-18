@@ -19,6 +19,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import org.apache.ibatis.ibator.internal.util.StringUtility;
+import org.apache.ibatis.ibator.internal.util.messages.Messages;
+
 /**
  * @author Jeff Butler
  */
@@ -46,6 +49,11 @@ public class FullyQualifiedJavaType implements Comparable<FullyQualifiedJavaType
     private PrimitiveTypeWrapper primitiveTypeWrapper;
     private List<FullyQualifiedJavaType> typeArguments;
     
+    // the following three values are used for dealing with wildcard types
+    private boolean wildcardType;
+    private boolean boundedWildcard;
+    private boolean extendsBoundedWildcard;
+    
     /**
      * Use this constructor to construct a generic type with the specified
      * type parameters
@@ -72,20 +80,33 @@ public class FullyQualifiedJavaType implements Comparable<FullyQualifiedJavaType
      */
     public String getFullyQualifiedName() {
         StringBuilder sb = new StringBuilder();
-        sb.append(baseQualifiedName);
-        if (typeArguments.size() > 0) {
-            boolean first = true;
-            sb.append('<');
-            for (FullyQualifiedJavaType fqjt : typeArguments) {
-                if (first) {
-                    first = false;
+        if (wildcardType) {
+            sb.append('?');
+            if (boundedWildcard) {
+                if (extendsBoundedWildcard) {
+                    sb.append(" extends ");
                 } else {
-                    sb.append(", "); //$NON-NLS-1$
+                    sb.append(" super ");
                 }
-                sb.append(fqjt.getFullyQualifiedName());
-            
+                
+                sb.append(baseQualifiedName);
             }
-            sb.append('>');
+        } else {
+            sb.append(baseQualifiedName);
+            if (typeArguments.size() > 0) {
+                boolean first = true;
+                sb.append('<');
+                for (FullyQualifiedJavaType fqjt : typeArguments) {
+                    if (first) {
+                        first = false;
+                    } else {
+                        sb.append(", "); //$NON-NLS-1$
+                    }
+                    sb.append(fqjt.getFullyQualifiedName());
+            
+                }
+                sb.append('>');
+            }
         }
         
         return sb.toString();
@@ -120,20 +141,33 @@ public class FullyQualifiedJavaType implements Comparable<FullyQualifiedJavaType
      */
     public String getShortName() {
         StringBuilder sb = new StringBuilder();
-        sb.append(baseShortName);
-        if (typeArguments.size() > 0) {
-            boolean first = true;
-            sb.append('<');
-            for (FullyQualifiedJavaType fqjt : typeArguments) {
-                if (first) {
-                    first = false;
+        if (wildcardType) {
+            sb.append('?');
+            if (boundedWildcard) {
+                if (extendsBoundedWildcard) {
+                    sb.append(" extends ");
                 } else {
-                    sb.append(", "); //$NON-NLS-1$
+                    sb.append(" super ");
                 }
-                sb.append(fqjt.getShortName());
-            
+                
+                sb.append(baseShortName);
             }
-            sb.append('>');
+        } else {
+            sb.append(baseShortName);
+            if (typeArguments.size() > 0) {
+                boolean first = true;
+                sb.append('<');
+                for (FullyQualifiedJavaType fqjt : typeArguments) {
+                    if (first) {
+                        first = false;
+                    } else {
+                        sb.append(", "); //$NON-NLS-1$
+                    }
+                    sb.append(fqjt.getShortName());
+            
+                }
+                sb.append('>');
+            }
         }
         
         return sb.toString();
@@ -274,7 +308,12 @@ public class FullyQualifiedJavaType implements Comparable<FullyQualifiedJavaType
     private void parse(String fullTypeSpecification) {
         int index = fullTypeSpecification.indexOf('<');
         if (index == -1) {
-            simpleParse(fullTypeSpecification);
+            index = fullTypeSpecification.indexOf('?');
+            if (index == -1) {
+                simpleParse(fullTypeSpecification);
+            } else {
+                wildCardParse(fullTypeSpecification);
+            }
         } else {
             simpleParse(fullTypeSpecification.substring(0, index));
             genericParse(fullTypeSpecification.substring(index));
@@ -330,11 +369,64 @@ public class FullyQualifiedJavaType implements Comparable<FullyQualifiedJavaType
     
     private void genericParse(String genericSpecification) {
         int lastIndex = genericSpecification.lastIndexOf('>');
+        if (lastIndex == -1) {
+            throw new RuntimeException(Messages.getString("RuntimeError.22", genericSpecification)); //$NON-NLS-1$
+        }
         String argumentString = genericSpecification.substring(1, lastIndex);
-        StringTokenizer st = new StringTokenizer(argumentString, ","); //$NON-NLS-1$
+        // need to find "," outside of a <> bounds
+        StringTokenizer st = new StringTokenizer(argumentString, ",<>", true); //$NON-NLS-1$
+        int openCount = 0;
+        StringBuilder sb = new StringBuilder();
         while (st.hasMoreTokens()) {
-            String type = st.nextToken();
-            typeArguments.add(new FullyQualifiedJavaType(type));
+            String token = st.nextToken();
+            if ("<".equals(token)) {
+                sb.append(token);
+                openCount++;
+            } else if (">".equals(token)) {
+                sb.append(token);
+                openCount--;
+            } else if (",".equals(token)) {
+                if (openCount == 0) {
+                    typeArguments.add(new FullyQualifiedJavaType(sb.toString()));
+                    sb.setLength(0);
+                } else {
+                    sb.append(token);
+                }
+            } else {
+                sb.append(token);
+            }
+        }
+        
+        if (openCount != 0) {
+            throw new RuntimeException(Messages.getString("RuntimeError.22", genericSpecification)); //$NON-NLS-1$
+        }
+        
+        String finalType = sb.toString();
+        if (StringUtility.stringHasValue(finalType)) {
+            typeArguments.add(new FullyQualifiedJavaType(finalType));
+        }
+    }
+    
+    private void wildCardParse(String wildCardSpecification) {
+        StringTokenizer st = new StringTokenizer(wildCardSpecification, " "); //$NON-NLS-1$
+        int tokenCount = st.countTokens();
+        if (tokenCount != 1 && tokenCount != 3) {
+            throw new RuntimeException(Messages.getString("RuntimeError.22", wildCardSpecification)); //$NON-NLS-1$
+        }
+        
+        String token = st.nextToken();
+        if (!"?".equals(token)) {
+            throw new RuntimeException(Messages.getString("RuntimeError.22", wildCardSpecification)); //$NON-NLS-1$
+        }
+        
+        wildcardType = true;
+        
+        if (tokenCount == 1) {
+            boundedWildcard = false;
+        } else {
+            boundedWildcard = true;
+            extendsBoundedWildcard = "extends".equals(st.nextToken());
+            simpleParse(st.nextToken());
         }
     }
 }

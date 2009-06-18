@@ -90,4 +90,37 @@ public class FullyQualifiedJavaTypeTests {
         assertEquals("java.util", fqjt.getPackageName()); //$NON-NLS-1$
         assertEquals(2, fqjt.getImportList().size());
     }
+    
+    @Test
+    public void testGenericType4() {
+        FullyQualifiedJavaType fqjt =
+            new FullyQualifiedJavaType("java.util.List<java.util.Map<java.lang.String, java.lang.Object>>"); //$NON-NLS-1$
+        assertTrue(fqjt.isExplicitlyImported());
+        assertEquals("List<Map<String, Object>>", fqjt.getShortName()); //$NON-NLS-1$
+        assertEquals("java.util.List<java.util.Map<java.lang.String, java.lang.Object>>", fqjt.getFullyQualifiedName()); //$NON-NLS-1$
+        assertEquals("java.util", fqjt.getPackageName()); //$NON-NLS-1$
+        assertEquals(2, fqjt.getImportList().size());
+    }
+    
+    @Test
+    public void testWildcardType1() {
+        FullyQualifiedJavaType fqjt =
+            new FullyQualifiedJavaType("java.util.Map<java.lang.String, ? extends com.foo.Bar>");
+        assertTrue(fqjt.isExplicitlyImported());
+        assertEquals("Map<String, ? extends Bar>", fqjt.getShortName()); //$NON-NLS-1$
+        assertEquals("java.util.Map<java.lang.String, ? extends com.foo.Bar>", fqjt.getFullyQualifiedName()); //$NON-NLS-1$
+        assertEquals("java.util", fqjt.getPackageName()); //$NON-NLS-1$
+        assertEquals(2, fqjt.getImportList().size());
+    }
+
+    @Test
+    public void testWildcardType2() {
+        FullyQualifiedJavaType fqjt =
+            new FullyQualifiedJavaType("java.util.Map<java.lang.String, ?>");
+        assertTrue(fqjt.isExplicitlyImported());
+        assertEquals("Map<String, ?>", fqjt.getShortName()); //$NON-NLS-1$
+        assertEquals("java.util.Map<java.lang.String, ?>", fqjt.getFullyQualifiedName()); //$NON-NLS-1$
+        assertEquals("java.util", fqjt.getPackageName()); //$NON-NLS-1$
+        assertEquals(1, fqjt.getImportList().size());
+    }
 }
