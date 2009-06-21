@@ -1,6 +1,6 @@
 package org.apache.ibatis.reflection;
 
-public class BeanDynamicObject extends BaseDynamicObject {
+class BeanDynamicObject extends BaseDynamicObject {
 
   private Object object;
   private MetaClass metaClass;

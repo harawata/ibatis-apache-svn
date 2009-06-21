@@ -2,7 +2,7 @@ package org.apache.ibatis.reflection;
 
 import java.util.Iterator;
 
-class PropertyTokenizer implements Iterable<PropertyTokenizer>, Iterator<PropertyTokenizer> {
+public class PropertyTokenizer implements Iterable<PropertyTokenizer>, Iterator<PropertyTokenizer> {
   private String name;
   private String indexedName;
   private String index;

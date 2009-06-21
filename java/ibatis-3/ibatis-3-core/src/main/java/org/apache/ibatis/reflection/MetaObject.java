@@ -104,6 +104,10 @@ public class MetaObject {
     return MetaObject.forObject(value);
   }
 
+  public DynamicObject getDynamicObject() {
+    return dynamicObject;
+  }
+
   private static class NullObject {
   }
 

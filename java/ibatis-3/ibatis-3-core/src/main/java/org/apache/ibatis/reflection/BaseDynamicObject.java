@@ -2,7 +2,7 @@ package org.apache.ibatis.reflection;
 
 import java.util.*;
 
-public abstract class BaseDynamicObject implements DynamicObject {
+abstract class BaseDynamicObject implements DynamicObject {
 
   protected static final Object[] NO_ARGUMENTS = new Object[0];
   protected MetaObject metaObject;

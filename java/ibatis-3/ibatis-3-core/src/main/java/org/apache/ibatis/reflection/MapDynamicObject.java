@@ -2,7 +2,7 @@ package org.apache.ibatis.reflection;
 
 import java.util.Map;
 
-public class MapDynamicObject extends BaseDynamicObject {
+class MapDynamicObject extends BaseDynamicObject {
 
   private Map map;
 
