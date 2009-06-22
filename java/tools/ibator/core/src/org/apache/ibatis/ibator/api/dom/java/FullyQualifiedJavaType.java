@@ -93,20 +93,21 @@ public class FullyQualifiedJavaType implements Comparable<FullyQualifiedJavaType
             }
         } else {
             sb.append(baseQualifiedName);
-            if (typeArguments.size() > 0) {
-                boolean first = true;
-                sb.append('<');
-                for (FullyQualifiedJavaType fqjt : typeArguments) {
-                    if (first) {
-                        first = false;
-                    } else {
-                        sb.append(", "); //$NON-NLS-1$
-                    }
-                    sb.append(fqjt.getFullyQualifiedName());
-            
+        }
+        
+        if (typeArguments.size() > 0) {
+            boolean first = true;
+            sb.append('<');
+            for (FullyQualifiedJavaType fqjt : typeArguments) {
+                if (first) {
+                    first = false;
+                } else {
+                    sb.append(", "); //$NON-NLS-1$
                 }
-                sb.append('>');
+                sb.append(fqjt.getFullyQualifiedName());
+            
             }
+            sb.append('>');
         }
         
         return sb.toString();
@@ -154,20 +155,21 @@ public class FullyQualifiedJavaType implements Comparable<FullyQualifiedJavaType
             }
         } else {
             sb.append(baseShortName);
-            if (typeArguments.size() > 0) {
-                boolean first = true;
-                sb.append('<');
-                for (FullyQualifiedJavaType fqjt : typeArguments) {
-                    if (first) {
-                        first = false;
-                    } else {
-                        sb.append(", "); //$NON-NLS-1$
-                    }
-                    sb.append(fqjt.getShortName());
-            
+        }
+        
+        if (typeArguments.size() > 0) {
+            boolean first = true;
+            sb.append('<');
+            for (FullyQualifiedJavaType fqjt : typeArguments) {
+                if (first) {
+                    first = false;
+                } else {
+                    sb.append(", "); //$NON-NLS-1$
                 }
-                sb.append('>');
+                sb.append(fqjt.getShortName());
+            
             }
+            sb.append('>');
         }
         
         return sb.toString();
@@ -306,17 +308,31 @@ public class FullyQualifiedJavaType implements Comparable<FullyQualifiedJavaType
     }
     
     private void parse(String fullTypeSpecification) {
-        int index = fullTypeSpecification.indexOf('<');
-        if (index == -1) {
-            index = fullTypeSpecification.indexOf('?');
+        String spec = fullTypeSpecification.trim();
+        
+        if (spec.startsWith("?")) {
+            wildcardType = true;
+            spec = spec.substring(1).trim();
+            if (spec.startsWith("extends ")) {
+                boundedWildcard = true;
+                extendsBoundedWildcard = true;
+                spec = spec.substring(8);
+            } else if (spec.startsWith("super ")) {
+                boundedWildcard = true;
+                extendsBoundedWildcard = false;
+                spec = spec.substring(6);
+            } else {
+                boundedWildcard = false;
+            }
+            parse(spec);
+        } else {
+            int index = fullTypeSpecification.indexOf('<');
             if (index == -1) {
                 simpleParse(fullTypeSpecification);
             } else {
-                wildCardParse(fullTypeSpecification);
+                simpleParse(fullTypeSpecification.substring(0, index));
+                genericParse(fullTypeSpecification.substring(index));
             }
-        } else {
-            simpleParse(fullTypeSpecification.substring(0, index));
-            genericParse(fullTypeSpecification.substring(index));
         }
     }
     
@@ -404,29 +420,6 @@ public class FullyQualifiedJavaType implements Comparable<FullyQualifiedJavaType
         String finalType = sb.toString();
         if (StringUtility.stringHasValue(finalType)) {
             typeArguments.add(new FullyQualifiedJavaType(finalType));
-        }
-    }
-    
-    private void wildCardParse(String wildCardSpecification) {
-        StringTokenizer st = new StringTokenizer(wildCardSpecification, " "); //$NON-NLS-1$
-        int tokenCount = st.countTokens();
-        if (tokenCount != 1 && tokenCount != 3) {
-            throw new RuntimeException(Messages.getString("RuntimeError.22", wildCardSpecification)); //$NON-NLS-1$
-        }
-        
-        String token = st.nextToken();
-        if (!"?".equals(token)) {
-            throw new RuntimeException(Messages.getString("RuntimeError.22", wildCardSpecification)); //$NON-NLS-1$
-        }
-        
-        wildcardType = true;
-        
-        if (tokenCount == 1) {
-            boundedWildcard = false;
-        } else {
-            boundedWildcard = true;
-            extendsBoundedWildcard = "extends".equals(st.nextToken());
-            simpleParse(st.nextToken());
         }
     }
 }
