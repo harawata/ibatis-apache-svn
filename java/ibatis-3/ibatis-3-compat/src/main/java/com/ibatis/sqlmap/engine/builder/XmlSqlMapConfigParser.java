@@ -9,7 +9,7 @@ import com.ibatis.common.util.NodeEvent;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.ExecutorType;
 import org.apache.ibatis.reflection.MetaClass;
-import org.apache.ibatis.reflection.ObjectFactory;
+import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.parsing.XNode;

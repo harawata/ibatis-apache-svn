@@ -1,4 +1,6 @@
-package org.apache.ibatis.reflection;
+package org.apache.ibatis.reflection.factory;
+
+import org.apache.ibatis.reflection.ReflectionException;
 
 import java.lang.reflect.Constructor;
 import java.util.*;

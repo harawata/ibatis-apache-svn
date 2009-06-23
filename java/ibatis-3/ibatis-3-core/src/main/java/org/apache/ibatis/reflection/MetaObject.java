@@ -1,23 +1,30 @@
 package org.apache.ibatis.reflection;
 
+import org.apache.ibatis.reflection.wrapper.BeanWrapper;
+import org.apache.ibatis.reflection.wrapper.MapWrapper;
+import org.apache.ibatis.reflection.wrapper.ObjectWrapper;
+import org.apache.ibatis.reflection.property.PropertyTokenizer;
+import org.apache.ibatis.reflection.factory.ObjectFactory;
+import org.apache.ibatis.reflection.factory.DefaultObjectFactory;
+
 import java.util.Map;
 
 public class MetaObject {
 
   private static final ObjectFactory DEFAULT_OBJECT_FACTORY = new DefaultObjectFactory();
-  protected static final MetaObject NULL_META_OBJECT = new MetaObject(NullObject.class, DEFAULT_OBJECT_FACTORY);
+  public static final MetaObject NULL_META_OBJECT = new MetaObject(NullObject.class, DEFAULT_OBJECT_FACTORY);
 
-  private DynamicObject dynamicObject;
+  private ObjectWrapper dynamicObject;
   private ObjectFactory objectFactory;
 
   private MetaObject(Object object, ObjectFactory objectFactory) {
     this.objectFactory = objectFactory;
-    if (object instanceof DynamicObject) {
-      this.dynamicObject = (DynamicObject) object;
+    if (object instanceof ObjectWrapper) {
+      this.dynamicObject = (ObjectWrapper) object;
     } else if (object instanceof Map) {
-      this.dynamicObject = new MapDynamicObject(this, (Map)object);
+      this.dynamicObject = new MapWrapper(this, (Map)object);
     } else {
-      this.dynamicObject = new BeanDynamicObject(this, object);
+      this.dynamicObject = new BeanWrapper(this, object);
     }
   }
 
@@ -104,7 +111,7 @@ public class MetaObject {
     return MetaObject.forObject(value);
   }
 
-  public DynamicObject getDynamicObject() {
+  public ObjectWrapper getDynamicObject() {
     return dynamicObject;
   }
 

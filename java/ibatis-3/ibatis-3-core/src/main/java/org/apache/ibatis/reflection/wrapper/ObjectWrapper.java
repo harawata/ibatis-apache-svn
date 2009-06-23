@@ -1,6 +1,8 @@
-package org.apache.ibatis.reflection;
+package org.apache.ibatis.reflection.wrapper;
 
-public interface DynamicObject {
+import org.apache.ibatis.reflection.property.PropertyTokenizer;
+
+public interface ObjectWrapper {
 
   Object get(PropertyTokenizer prop);
 

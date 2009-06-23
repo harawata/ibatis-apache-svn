@@ -1,5 +1,11 @@
 package org.apache.ibatis.reflection;
 
+import org.apache.ibatis.reflection.invoker.Invoker;
+import org.apache.ibatis.reflection.invoker.GetFieldInvoker;
+import org.apache.ibatis.reflection.invoker.SetFieldInvoker;
+import org.apache.ibatis.reflection.invoker.MethodInvoker;
+import org.apache.ibatis.reflection.property.PropertyNamer;
+
 import java.lang.reflect.*;
 import java.util.*;
 
@@ -7,7 +13,7 @@ import java.util.*;
  * This class represents a cached set of class definition information that
  * allows for easy mapping between property names and getter/setter methods.
  */
-class Reflector {
+public class Reflector {
 
   private static boolean classCacheEnabled = true;
   private static final String[] EMPTY_STRING_ARRAY = new String[0];

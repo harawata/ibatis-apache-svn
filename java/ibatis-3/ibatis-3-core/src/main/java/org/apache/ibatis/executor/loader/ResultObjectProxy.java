@@ -2,7 +2,7 @@ package org.apache.ibatis.executor.loader;
 
 import net.sf.cglib.proxy.*;
 import org.apache.ibatis.reflection.*;
-import org.apache.ibatis.mapping.Configuration;
+import org.apache.ibatis.reflection.property.PropertyNamer;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 
 import java.io.Serializable;

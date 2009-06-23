@@ -1,4 +1,4 @@
-package org.apache.ibatis.reflection;
+package org.apache.ibatis.reflection.property;
 
 import java.util.Iterator;
 

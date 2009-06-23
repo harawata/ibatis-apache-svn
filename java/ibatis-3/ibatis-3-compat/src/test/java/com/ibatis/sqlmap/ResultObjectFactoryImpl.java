@@ -1,6 +1,6 @@
 package com.ibatis.sqlmap;
 
-import org.apache.ibatis.reflection.ObjectFactory;
+import org.apache.ibatis.reflection.factory.ObjectFactory;
 import testdomain.*;
 
 import java.util.List;

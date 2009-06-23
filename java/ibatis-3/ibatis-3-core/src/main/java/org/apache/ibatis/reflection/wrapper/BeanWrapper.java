@@ -1,11 +1,15 @@
-package org.apache.ibatis.reflection;
+package org.apache.ibatis.reflection.wrapper;
 
-class BeanDynamicObject extends BaseDynamicObject {
+import org.apache.ibatis.reflection.*;
+import org.apache.ibatis.reflection.property.PropertyTokenizer;
+import org.apache.ibatis.reflection.invoker.Invoker;
+
+public class BeanWrapper extends BaseWrapper {
 
   private Object object;
   private MetaClass metaClass;
 
-  public BeanDynamicObject(MetaObject metaObject, Object object) {
+  public BeanWrapper(MetaObject metaObject, Object object) {
     super(metaObject);
     this.object = object;
     this.metaClass = MetaClass.forClass(object.getClass());

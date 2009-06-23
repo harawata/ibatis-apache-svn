@@ -1,15 +1,18 @@
-package org.apache.ibatis.reflection;
+package org.apache.ibatis.reflection.wrapper;
+
+import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.reflection.property.PropertyTokenizer;
 
 import java.util.*;
 
-public class HybridDynamicObject implements DynamicObject {
+public class HybridWrapper implements ObjectWrapper {
 
   private Object object;
   private HashMap dynamicProperties;
-  private DynamicObject dynamicMap;
-  private DynamicObject dynamicBean;
+  private ObjectWrapper dynamicMap;
+  private ObjectWrapper dynamicBean;
 
-  public HybridDynamicObject(Object object) {
+  public HybridWrapper(Object object) {
     this.object = object;
     this.dynamicBean = MetaObject.forObject(object).getDynamicObject();
     this.dynamicProperties = new HashMap();

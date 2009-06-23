@@ -1,12 +1,15 @@
-package org.apache.ibatis.reflection;
+package org.apache.ibatis.reflection.wrapper;
+
+import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.reflection.property.PropertyTokenizer;
 
 import java.util.Map;
 
-class MapDynamicObject extends BaseDynamicObject {
+public class MapWrapper extends BaseWrapper {
 
   private Map map;
 
-  public MapDynamicObject(MetaObject metaObject, Map map) {
+  public MapWrapper(MetaObject metaObject, Map map) {
     super(metaObject);
     this.map = map;
   }

@@ -1,13 +1,17 @@
-package org.apache.ibatis.reflection;
+package org.apache.ibatis.reflection.wrapper;
+
+import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.reflection.property.PropertyTokenizer;
+import org.apache.ibatis.reflection.ReflectionException;
 
 import java.util.*;
 
-abstract class BaseDynamicObject implements DynamicObject {
+public abstract class BaseWrapper implements ObjectWrapper {
 
   protected static final Object[] NO_ARGUMENTS = new Object[0];
   protected MetaObject metaObject;
 
-  protected BaseDynamicObject(MetaObject metaObject) {
+  protected BaseWrapper(MetaObject metaObject) {
     this.metaObject = metaObject;
   }
 

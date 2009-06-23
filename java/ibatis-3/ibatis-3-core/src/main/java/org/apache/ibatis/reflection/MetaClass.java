@@ -1,5 +1,8 @@
 package org.apache.ibatis.reflection;
 
+import org.apache.ibatis.reflection.invoker.Invoker;
+import org.apache.ibatis.reflection.property.PropertyTokenizer;
+
 public class MetaClass {
 
   private Reflector reflector;

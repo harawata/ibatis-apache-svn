@@ -7,6 +7,7 @@ import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.executor.result.*;
 import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.reflection.*;
+import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.type.*;
 
 import java.sql.*;

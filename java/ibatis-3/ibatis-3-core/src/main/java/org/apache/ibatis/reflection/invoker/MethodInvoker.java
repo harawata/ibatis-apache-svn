@@ -1,8 +1,8 @@
-package org.apache.ibatis.reflection;
+package org.apache.ibatis.reflection.invoker;
 
 import java.lang.reflect.*;
 
-class MethodInvoker implements Invoker {
+public class MethodInvoker implements Invoker {
 
   private Class type;
   private Method method;

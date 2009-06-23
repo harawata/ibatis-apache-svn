@@ -8,6 +8,7 @@ import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.parsing.*;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.reflection.*;
+import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.transaction.TransactionFactory;
 import org.apache.ibatis.type.TypeHandler;
 
