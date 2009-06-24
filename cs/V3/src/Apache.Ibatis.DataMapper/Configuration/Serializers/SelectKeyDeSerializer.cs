@@ -71,7 +71,6 @@ namespace Apache.Ibatis.DataMapper.Configuration.Serializers
             {
                 case @"pre": return SelectKeyType.@pre;
                 case @"post": return SelectKeyType.@post;
-                case @"inline": return SelectKeyType.@inline;
                 default: throw new ConfigurationException("Unknown selectKey type : '" + s + "'");
             }
         }
