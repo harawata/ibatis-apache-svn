@@ -11,6 +11,7 @@ import java.io.Reader;
 import java.sql.*;
 import java.util.*;
 
+@Ignore
 public class DynSqlTest {
 
   protected static SqlSessionFactory sqlSessionFactory;
