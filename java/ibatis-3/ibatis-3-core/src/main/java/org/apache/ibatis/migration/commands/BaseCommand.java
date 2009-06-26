@@ -177,15 +177,22 @@ public abstract class BaseCommand implements Command {
       UnpooledDataSource dataSource = new UnpooledDataSource(driverClassLoader, driver, url, username, password);
       dataSource.setAutoCommit(false);
       ScriptRunner scriptRunner = new ScriptRunner(dataSource.getConnection());
-      scriptRunner.setAutoCommit(true);
       scriptRunner.setStopOnError(!force);
-      scriptRunner.setSendFullScript(false);
       scriptRunner.setLogWriter(outWriter);
       scriptRunner.setErrorLogWriter(outWriter);
+      setPropertiesFromFile(scriptRunner, props);
       return scriptRunner;
     } catch (Exception e) {
       throw new MigrationException("Error creating ScriptRunner.  Cause: " + e, e);
     }
+  }
+
+  private void setPropertiesFromFile(ScriptRunner scriptRunner, Properties props) {
+    String delimiterString = props.getProperty("delimiter");
+    scriptRunner.setAutoCommit(Boolean.valueOf(props.getProperty("auto_commit")));
+    scriptRunner.setDelimiter(delimiterString == null ? ";" : delimiterString);
+    scriptRunner.setFullLineDelimiter(Boolean.valueOf(props.getProperty("full_line_delimiter")));
+    scriptRunner.setSendFullScript(Boolean.valueOf(props.getProperty("send_full_script")));
   }
 
   protected File baseFile(String fileName) {
