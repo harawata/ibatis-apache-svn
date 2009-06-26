@@ -1,7 +1,6 @@
 package org.apache.ibatis.jdbc;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.sql.*;
@@ -57,6 +56,39 @@ public class ScriptRunner {
   public void runScript(Reader reader) {
     setAutoCommit();
 
+    try {
+      if (sendFullScript) {
+        executeFullScript(reader);
+      } else {
+        executeLineByLine(reader);
+      }
+    } finally {
+      rollbackConnection();
+      flush();
+    }
+  }
+
+  private void executeFullScript(Reader reader) {
+    final String lineseparator = System.getProperty("line.separator");
+    StringBuffer script = new StringBuffer();
+    try {
+      BufferedReader lineReader = new BufferedReader(reader);
+      String line;
+      while ((line = lineReader.readLine()) != null) {
+        script.append(line);
+        script.append(lineseparator);
+      }
+      System.out.println(script);
+      executeStatement(script.toString());
+      commitConnection();
+    } catch (Exception e) {
+      String message = "Error executing: " + script + ".  Cause: " + e;
+      printlnError(message);
+      throw new RuntimeSqlException(message, e);
+    }
+  }
+
+  private void executeLineByLine(Reader reader) {
     StringBuffer command = new StringBuffer();
     try {
       BufferedReader lineReader = new BufferedReader(reader);
@@ -70,9 +102,6 @@ public class ScriptRunner {
       String message = "Error executing: " + command + ".  Cause: " + e;
       printlnError(message);
       throw new RuntimeSqlException(message, e);
-    } finally {
-      rollbackConnection();
-      flush();
     }
   }
 
@@ -190,7 +219,7 @@ public class ScriptRunner {
         }
       }
     } catch (SQLException e) {
-      printlnError("Error printing results: " + e.getMessage()); 
+      printlnError("Error printing results: " + e.getMessage());
     }
   }
 

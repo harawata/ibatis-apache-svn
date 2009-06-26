@@ -25,6 +25,7 @@ public class MigratorTest extends BaseDataTest {
     DataSource ds = createUnpooledDataSource(BLOG_PROPERTIES);
     Connection conn = ds.getConnection();
     SqlRunner executor = new SqlRunner(conn);
+    safeRun(executor, "DROP TABLE bootstrap");
     safeRun(executor, "DROP TABLE comment");
     safeRun(executor, "DROP TABLE post_tag");
     safeRun(executor, "DROP TABLE tag");

@@ -15,6 +15,20 @@ import java.util.*;
 public class ScriptRunnerTest extends BaseDataTest {
 
   @Test
+  public void shouldRunScriptsBySendingFullScriptAtOnce() throws Exception {
+    DataSource ds = createUnpooledDataSource(JPETSTORE_PROPERTIES);
+    Connection conn = ds.getConnection();
+    ScriptRunner runner = new ScriptRunner(conn);
+    runner.setSendFullScript(true);
+    runner.setAutoCommit(true);
+    runner.setStopOnError(false);
+    runner.setErrorLogWriter(null);
+    runner.setLogWriter(null);
+    runJPetStoreScripts(runner);
+    assertProductsTableExistsAndLoaded();
+  }
+
+  @Test
   public void shouldRunScriptsUsingConnection() throws Exception {
     DataSource ds = createUnpooledDataSource(JPETSTORE_PROPERTIES);
     Connection conn = ds.getConnection();

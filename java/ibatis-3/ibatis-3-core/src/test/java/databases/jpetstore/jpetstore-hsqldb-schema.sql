@@ -1,20 +1,20 @@
-drop index productCat;
-drop index productName;
-drop index itemProd;
+drop index productCat if exists;
+drop index productName if exists;
+drop index itemProd if exists;
 
-drop table lineitem;
-drop table orderstatus;
-drop table orders;
-drop table bannerdata;
-drop table profile;
-drop table signon;
-drop table inventory;
-drop table item;
-drop table product;
-drop table account;
-drop table category;
-drop table supplier;
-drop table sequence;
+drop table lineitem if exists;
+drop table orderstatus if exists;
+drop table orders if exists;
+drop table bannerdata if exists;
+drop table profile if exists;
+drop table signon if exists;
+drop table inventory if exists;
+drop table item if exists;
+drop table product if exists;
+drop table account if exists;
+drop table category if exists;
+drop table supplier if exists;
+drop table sequence if exists;
 
 create table supplier (
     suppid int not null,

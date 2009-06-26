@@ -179,6 +179,7 @@ public abstract class BaseCommand implements Command {
       ScriptRunner scriptRunner = new ScriptRunner(dataSource.getConnection());
       scriptRunner.setAutoCommit(true);
       scriptRunner.setStopOnError(!force);
+      scriptRunner.setSendFullScript(false);
       scriptRunner.setLogWriter(outWriter);
       scriptRunner.setErrorLogWriter(outWriter);
       return scriptRunner;
