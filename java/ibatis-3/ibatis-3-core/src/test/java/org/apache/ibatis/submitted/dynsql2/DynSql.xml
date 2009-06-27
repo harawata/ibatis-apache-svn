@@ -10,7 +10,7 @@
     from ibtest.names
     <where>
       <foreach collection="names" item="name" separator="or">
-        (firstName = #{name,typeHandler=org.apache.ibatis.submitted.dynsql2.FirstNameTypeHandler} and
+        (firstName = #{name,typeHandler=org.apache.ibatis.submitted.dynsql2.FirstNameTypeHandler}) and
         (lastName = #{name,typeHandler=org.apache.ibatis.submitted.dynsql2.LastNameTypeHandler})
       </foreach>
     </where>
