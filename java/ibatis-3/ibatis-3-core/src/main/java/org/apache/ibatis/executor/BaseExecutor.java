@@ -111,7 +111,12 @@ public abstract class BaseExecutor implements Executor {
       } else {
         MetaObject metaObject = MetaObject.forObject(parameterObject);
         for (ParameterMapping parameterMapping : parameterMappings) {
-          cacheKey.update(metaObject.getValue(parameterMapping.getProperty()));
+          String propertyName = parameterMapping.getProperty();
+          if (metaObject.hasGetter(propertyName)) {
+            cacheKey.update(metaObject.getValue(propertyName));
+          } else if (boundSql.hasAdditionalParameter(propertyName)) {
+            cacheKey.update(boundSql.getAdditionalParameter(propertyName));
+          }
         }
       }
     }

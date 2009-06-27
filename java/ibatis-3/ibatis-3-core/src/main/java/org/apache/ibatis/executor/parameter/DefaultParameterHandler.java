@@ -38,16 +38,19 @@ public class DefaultParameterHandler implements ParameterHandler {
         ParameterMapping parameterMapping = parameterMappings.get(i);
         if (parameterMapping.getMode() != ParameterMode.OUT) {
           Object value;
+          String propertyName = parameterMapping.getProperty();
           if (parameterObject == null) {
             value = null;
           } else if (typeHandlerRegistry.hasTypeHandler(parameterObject.getClass())) {
             value = parameterObject;
+          } else if (boundSql.hasAdditionalParameter(propertyName)) {
+            value = boundSql.getAdditionalParameter(propertyName);
           } else {
-            value = metaObject == null ? null : metaObject.getValue(parameterMapping.getProperty());
+            value = metaObject == null ? null : metaObject.getValue(propertyName);
           }
           TypeHandler typeHandler = parameterMapping.getTypeHandler();
           if (typeHandler == null) {
-            throw new ExecutorException("There was no TypeHandler found for parameter " + parameterMapping.getProperty() + " of statement " + mappedStatement.getId());
+            throw new ExecutorException("There was no TypeHandler found for parameter " + propertyName + " of statement " + mappedStatement.getId());
           }
           typeHandler.setParameter(ps, i + 1, value, parameterMapping.getJdbcType());
         }

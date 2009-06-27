@@ -43,12 +43,13 @@ public class SqlSourceBuilder extends BaseBuilder {
       StringTokenizer parameterMappingParts = new StringTokenizer(content, ", ");
       String property = parameterMappingParts.nextToken();
       Class propertyType;
+      MetaClass metaClass = MetaClass.forClass(parameterType);
       if (typeHandlerRegistry.hasTypeHandler(parameterType)) {
         propertyType = parameterType;
-      } else if (Map.class.isAssignableFrom(parameterType)) {
-        propertyType = Object.class;
+      } else if (metaClass.hasGetter(property)){
+        propertyType = metaClass.getGetterType(property);
       } else {
-        propertyType = MetaClass.forClass(parameterType).getGetterType(property);
+        propertyType = Object.class;
       }
       ParameterMapping.Builder builder = new ParameterMapping.Builder(configuration, property, propertyType);
       while (parameterMappingParts.hasMoreTokens()) {
