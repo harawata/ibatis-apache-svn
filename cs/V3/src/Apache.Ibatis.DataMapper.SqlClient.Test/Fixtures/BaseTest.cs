@@ -35,6 +35,7 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures
         protected static KeyConvert ConvertKey = null;
         protected static ISessionFactory sessionFactory = null;
         protected ISessionStore sessionStore = null;
+        protected ConfigurationSetting configurationSetting;
 
         /// <summary>
         /// Initialize an sqlMap
@@ -44,7 +45,7 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures
         {
             //DateTime start = DateTime.Now;
 
-            ConfigurationSetting configurationSetting = new ConfigurationSetting();
+            configurationSetting = new ConfigurationSetting();
             configurationSetting.Properties.Add("collection2Namespace", "Apache.Ibatis.DataMapper.SqlClient.Test.Domain.LineItemCollection2, Apache.Ibatis.DataMapper.SqlClient.Test");
             configurationSetting.Properties.Add("nullableInt", "int?");
 
@@ -187,6 +188,14 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures
             Assert.AreEqual("Joe", account.FirstName, "account.FirstName");
             Assert.AreEqual("Dalton", account.LastName, "account.LastName");
             Assert.AreEqual("Joe.Dalton@somewhere.com", account.EmailAddress, "account.EmailAddress");
+        }
+
+        protected void AssertAccount2(Account account)
+        {
+            Assert.AreEqual(2, account.Id, "account.Id");
+            Assert.AreEqual("Averel", account.FirstName, "account.FirstName");
+            Assert.AreEqual("Dalton", account.LastName, "account.LastName");
+            Assert.AreEqual("Averel.Dalton@somewhere.com", account.EmailAddress, "account.EmailAddress");
         }
 
         /// <summary>

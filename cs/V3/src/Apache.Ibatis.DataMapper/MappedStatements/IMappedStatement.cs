@@ -50,7 +50,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
 		/// <summary>
 		/// Event launch on exceute query
 		/// </summary>
-        event EventHandler<ExecuteEventArgs> Execute;
+        event EventHandler<ExecuteEventArgs> Executed;
 
 		#endregion 
 

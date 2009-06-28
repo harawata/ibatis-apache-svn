@@ -1,10 +1,6 @@
 using System;
-using System.Reflection;
 using System.Threading;
-using Apache.Ibatis.Common.Logging;
-using Apache.Ibatis.DataMapper.Session;
 using Apache.Ibatis.DataMapper.SqlClient.Test.Domain;
-using Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures;
 using NUnit.Framework;
 
 namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
@@ -15,9 +11,6 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
     [TestFixture] 
     public class ThreadTest: BaseTest
     {
-        private static readonly ILog _logger = LogManager.GetLogger( MethodBase.GetCurrentMethod().DeclaringType );
-
-        private static readonly int numberOfThreads = 10;
         private readonly ManualResetEvent startEvent = new ManualResetEvent(false);
         private readonly ManualResetEvent stopEvent = new ManualResetEvent(false);
 
@@ -41,105 +34,78 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
 
         #endregion
 
-        #region Thread test
-
         [Test]
         public void TestCommonUsageMultiThread()
         {
-            const int threadCount = 10;
+            // 10 threads for 5 seconds
+            RunThreadsForDuration(10, 5, i =>
+             {
+                 string prefix = String.Format("[Thread #{0:00} HashCode: {1:00}]: ", i, Thread.CurrentThread.GetHashCode());
 
-            Thread[] threads = new Thread[threadCount];
-			
-            for(int i = 0; i < threadCount; i++)
-            {
-                threads[i] = new Thread(new ThreadStart(ExecuteMethodUntilSignal));
-                threads[i].Start();
-            }
+                 // ???
+                 Assert.IsNull(sessionStore.CurrentSession);
 
-            startEvent.Set();
-
-            Thread.CurrentThread.Join(1 * 2000);
-
-            stopEvent.Set();
+                 Console.WriteLine(prefix + "Beginning");
+                 int parameter = i % 2 == 0 ? 2 : 1; // check parity of current thread
+                 Account account = (Account)dataMapper.QueryForObject("GetAccountViaColumnIndex", parameter);
+                 Assert.IsNull(sessionStore.CurrentSession);
+                 Console.WriteLine(prefix + "AssertAccount" + parameter);
+                 if (parameter == 1)
+                 {
+                     AssertAccount1(account);
+                 }
+                 else
+                 {
+                     AssertAccount2(account);
+                 }
+                 Console.WriteLine(prefix + "Ending");
+             });
         }
 
-        public void ExecuteMethodUntilSignal()
+        public void RunThreadsForDuration(int numberOfThreads, int duration, Action<int> action)
         {
-            startEvent.WaitOne(int.MaxValue, false);
+            Thread[] threads = new Thread[numberOfThreads];
+            for (int i = 0; i < numberOfThreads; i++)
+            {
+                threads[i] = new Thread(ExecuteUntilSignal);
+                threads[i].Start(new CurrentThreadActionInfo(i, action));
+            }
+            startEvent.Set();
+            Thread.CurrentThread.Join(1000 * duration);
+            stopEvent.Set();
 
+            // give things time to stop ???
+            Thread.Sleep(2000);
+        }
+
+        public void ExecuteUntilSignal(object state)
+        {
+            var actionInfo = (CurrentThreadActionInfo)state;
+
+            Console.WriteLine("Queueing thread #{0} until all threads are ready to start...", actionInfo.CurrentThread);
+
+            startEvent.WaitOne(int.MaxValue, false);
             while (!stopEvent.WaitOne(1, false))
             {
-                Assert.IsNull(sessionStore.CurrentSession);
-
-                Console.WriteLine("Begin Thread : " + Thread.CurrentThread.GetHashCode());
-
-                Account account = (Account)dataMapper.QueryForObject("GetAccountViaColumnIndex", 1);
-
-                Assert.IsNull(sessionStore.CurrentSession);
-
-                Assert.AreEqual(1, account.Id, "account.Id");
-                Assert.AreEqual("Joe", account.FirstName, "account.FirstName");
-                Assert.AreEqual("Dalton", account.LastName, "account.LastName");
-
-                Console.WriteLine("End Thread : " + Thread.CurrentThread.GetHashCode());
+                actionInfo.Invoke();
             }
         }
 
-        /// <summary>
-        /// Test BeginTransaction, CommitTransaction
-        /// </summary>
-        [Test] 
-        public void TestThread() 
+        class CurrentThreadActionInfo
         {
-            Account account = NewAccount6();
+            public int CurrentThread { get; private set; }
+            public Action<int> Action { get; private set; }
 
-            try 
+            public CurrentThreadActionInfo(int currentThread, Action<int> action)
             {
-                Thread[] threads = new Thread[numberOfThreads];
-
-                AccessTest accessTest = new AccessTest();
-
-                for (int i = 0; i < numberOfThreads; i++) 
-                {
-                    Thread thread = new Thread(new ThreadStart(accessTest.GetAccount));
-                    threads[i] = thread;
-                }
-                for (int i = 0; i < numberOfThreads; i++) 
-                {
-                    threads[i].Start();
-                }
-            } 
-            finally 
-            {
+                CurrentThread = currentThread;
+                Action = action;
             }
 
+            public void Invoke()
+            {
+                Action(CurrentThread);
+            }
         }
-
-        #endregion
-
-        /// <summary>
-        /// Summary description for AccessTest.
-        /// </summary>
-        private class AccessTest
-        {
-		
-            /// <summary>
-            /// Get an account
-            /// </summary>
-            public void GetAccount()
-            {
-                ISessionStore sessionStore = ((IModelStoreAccessor)dataMapper).ModelStore.SessionStore;
-
-                Assert.IsNull(sessionStore.CurrentSession);
-
-                Account account = (Account)dataMapper.QueryForObject("GetAccountViaColumnIndex", 1);
-
-                Assert.IsNull(sessionStore.CurrentSession);
-
-                Assert.AreEqual(1, account.Id, "account.Id");
-                Assert.AreEqual("Joe", account.FirstName, "account.FirstName");
-                Assert.AreEqual("Dalton", account.LastName, "account.LastName");
-            }
-        }	
     }
 }

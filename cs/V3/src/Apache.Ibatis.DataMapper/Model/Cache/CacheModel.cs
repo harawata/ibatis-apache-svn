@@ -155,7 +155,7 @@ namespace Apache.Ibatis.DataMapper.Model.Cache
 		/// <param name="mappedStatement">A MappedStatement on which we listen ExecuteEventArgs event.</param>
 		public void RegisterTriggerStatement(IMappedStatement mappedStatement)
 		{
-			mappedStatement.Execute +=FlushHandler;
+			mappedStatement.Executed +=FlushHandler;
 		}
 		
 		

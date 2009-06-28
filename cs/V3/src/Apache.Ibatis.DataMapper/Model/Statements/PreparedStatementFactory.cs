@@ -114,10 +114,10 @@ namespace Apache.Ibatis.DataMapper.Model.Statements
 		{
 			preparedStatement = new PreparedStatement();
 
-			preparedStatement.PreparedSql = commandText;
-
 			if (statement.CommandType == CommandType.Text)
 			{
+                preparedStatement.PreparedSql = commandText;
+
 				if (request.ParameterMap != null) 
 				{
 					CreateParametersForTextCommand();
@@ -126,6 +126,10 @@ namespace Apache.Ibatis.DataMapper.Model.Statements
 			}
 			else if (statement.CommandType == CommandType.StoredProcedure) // StoredProcedure
 			{
+                // Necessary to prevent stored procedures with extra space around their name like 
+                // " ps_SelectAccount " to be sent to the database as "ps_SelectAccount".
+                preparedStatement.PreparedSql = commandText.Trim();
+
 				if (request.ParameterMap == null) // No parameterMap --> error
 				{
 					throw new DataMapperException("A procedure statement tag must have a parameterMap attribute, which is not the case for the procedure '"+statement.Id+"."); 

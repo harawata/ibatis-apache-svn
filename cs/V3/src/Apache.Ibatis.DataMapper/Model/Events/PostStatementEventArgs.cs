@@ -28,12 +28,17 @@ namespace Apache.Ibatis.DataMapper.Model.Events
     /// <summary>
     /// Base class for post <see cref="BaseStatementEventArgs"/>
     /// </summary>
-    public abstract class PostStatementEventArgs : BaseStatementEventArgs
+    public class PostStatementEventArgs : BaseStatementEventArgs
     {
         /// <summary>
         /// Gets or sets the result object.
         /// </summary>
         /// <value>The result object.</value>
         public object ResultObject { get; set; }
+
+        /// <summary>
+        /// Was the ResultObject populated from cache?
+        /// </summary>
+        public bool CacheHit { get; set; }
     }
 }

@@ -60,7 +60,7 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
             statement.PreSelect -= PreSelectEventHandler;
         }
 
-        private static void PreSelectEventHandler(object src, PreSelectEventArgs evnt)
+        private static void PreSelectEventHandler(object src, PreStatementEventArgs evnt)
         {
             Assert.That(((IMappedStatement)src).Id, Is.EqualTo("SelectAccount"));
             evnt.ParameterObject = ((int)evnt.ParameterObject) +1;
@@ -81,7 +81,7 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
             statement.PostSelect -= PostSelectEventHandler;
         }
 
-        private static void PostSelectEventHandler(object src, PostSelectEventArgs evnt)
+        private static void PostSelectEventHandler(object src, PostStatementEventArgs evnt)
         {
             Assert.That(((IMappedStatement)src).Id, Is.EqualTo("SelectAccount"));
             Account account = (Account)evnt.ResultObject;
@@ -115,7 +115,7 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
             statement.PreInsert -= PreInsertEventHandler;
         }
 
-        private static void PreInsertEventHandler(object src, PreInsertEventArgs evnt)
+        private static void PreInsertEventHandler(object src, PreStatementEventArgs evnt)
         {
             Assert.That(((IMappedStatement)src).Id, Is.EqualTo("InsertAccount"));
             Account account = (Account)evnt.ParameterObject;
@@ -145,7 +145,7 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
 
         }
 
-        private static void PostInsertEventHandler(object src, PostInsertEventArgs evnt)
+        private static void PostInsertEventHandler(object src, PostStatementEventArgs evnt)
         {
             Assert.That(((IMappedStatement)src).Id, Is.EqualTo("InsertAccount"));
             Account account = (Account)evnt.ParameterObject;
@@ -174,7 +174,7 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
             statement.PreUpdateOrDelete -= PreUpdateOrDeleteEventHandler;
         }
 
-        private static void PreUpdateOrDeleteEventHandler(object src, PreUpdateOrDeleteEventArgs evnt)
+        private static void PreUpdateOrDeleteEventHandler(object src, PreStatementEventArgs evnt)
         {
             Assert.That(((IMappedStatement)src).Id, Is.EqualTo("UpdateAccount"));
             Account account = (Account)evnt.ParameterObject;
@@ -198,7 +198,7 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
 
         }
 
-        private static void PostUpdateOrDeleteEventHandler(object src, PostUpdateOrDeleteEventArgs evnt)
+        private static void PostUpdateOrDeleteEventHandler(object src, PostStatementEventArgs evnt)
         {
             Assert.That(((IMappedStatement)src).Id, Is.EqualTo("UpdateAccount"));
             Account account = (Account)evnt.ParameterObject;

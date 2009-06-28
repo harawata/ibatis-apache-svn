@@ -48,12 +48,15 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
     [DebuggerDisplay("MappedStatement: {mappedStatement.Id}")]
     public sealed class CachingStatement : MappedStatementEventSupport, IMappedStatement
 	{
-		private readonly MappedStatement mappedStatement =null;
+        // Func<T1, T2, T3, T4, T5, TResult>
+        delegate T RequestRunner<T>(RequestScope requestScope, ISession session, object parameter, CacheKey cacheKey, out bool cacheHit);
+
+        private readonly MappedStatement mappedStatement;
 
 		/// <summary>
         /// Event launch on Execute query
 		/// </summary>
-        public event EventHandler<ExecuteEventArgs> Execute = delegate { };
+        public event EventHandler<ExecuteEventArgs> Executed = delegate { };
 
 		/// <summary>
 		/// Constructor
@@ -108,7 +111,21 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         /// <returns>The object</returns>
         public DataTable ExecuteQueryForDataTable(ISession session, object parameterObject)
         {
-            return mappedStatement.ExecuteQueryForDataTable(session, parameterObject);
+            RequestRunner<DataTable> requestRunner = delegate(RequestScope requestscope, ISession session2, object parameter, CacheKey cachekey, out bool cachehit)
+            {
+                cachehit = true;
+                DataTable dataTable = Statement.CacheModel[cachekey] as DataTable;
+                if (dataTable == null)
+                {
+                    cachehit = false;
+                    dataTable = mappedStatement.RunQueryForDataTable(requestscope, session, parameter);
+                    Statement.CacheModel[cachekey] = dataTable;
+                }
+
+                return dataTable;
+            };
+
+            return CachingStatementExecute(PreSelectEventKey, PostSelectEventKey, session, parameterObject, "ExecuteQueryForDataTable", requestRunner);
         }
 
 		/// <summary>
@@ -124,34 +141,34 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
 		///<exception cref="Apache.Ibatis.DataMapper.Exceptions.DataMapperException">If a transaction is not in progress, or the database throws an exception.</exception>
 		public IDictionary ExecuteQueryForMap(ISession session, object parameterObject, string keyProperty, string valueProperty)
 		{
-			IDictionary map = new Hashtable();
+            // this doesn't need to be in its own RunQueryForCachedMap method because the class is sealed and can't be called by anyone else
+            RequestRunner<IDictionary> requestRunner = delegate(RequestScope requestscope, ISession session2, object parameter, CacheKey cachekey, out bool cachehit)
+               {
+                   if (keyProperty != null)
+                   {
+                       cachekey.Update(keyProperty);
+                   }
+                   if (valueProperty != null)
+                   {
+                       cachekey.Update(valueProperty);
+                   }
 
-			RequestScope request = Statement.Sql.GetRequestScope(this, parameterObject, session);
+                   cachehit = true;
+                   IDictionary map = Statement.CacheModel[cachekey] as IDictionary;
+                   if (map == null)
+                   {
+                       cachehit = false;
+                       map = mappedStatement.RunQueryForMap(requestscope, session, parameter, keyProperty, valueProperty, null);
+                       Statement.CacheModel[cachekey] = map;
+                   }
 
-			mappedStatement.PreparedCommand.Create( request, session, Statement, parameterObject );
+                   return map;
+               };
 
-			CacheKey cacheKey = GetCacheKey(request);
-			cacheKey.Update("ExecuteQueryForMap");
-			if (keyProperty!=null)
-			{
-				cacheKey.Update(keyProperty);
-			}
-			if (valueProperty!=null)
-			{
-				cacheKey.Update(valueProperty);
-			}
-
-			map = Statement.CacheModel[cacheKey] as IDictionary;
-			if (map == null) 
-			{
-				map = mappedStatement.RunQueryForMap( request, session, parameterObject, keyProperty, valueProperty, null );
-                Statement.CacheModel[cacheKey] = map;
-			}
-
-			return map;
+            return CachingStatementExecute(PreSelectEventKey, PostSelectEventKey, session, parameterObject, "ExecuteQueryForMap", requestRunner);
 		}
 
-        #region ExecuteQueryForMap .NET 2.0
+	    #region ExecuteQueryForMap .NET 2.0
 	    
         /// <summary>
         /// Executes the SQL and retuns all rows selected in a map that is keyed on the property named
@@ -166,36 +183,40 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         ///<exception cref="Apache.Ibatis.DataMapper.Exceptions.DataMapperException">If a transaction is not in progress, or the database throws an exception.</exception>
         public IDictionary<K, V> ExecuteQueryForDictionary<K, V>(ISession session, object parameterObject, string keyProperty, string valueProperty)
         {
-            IDictionary<K, V> map = new Dictionary<K, V>();
-            RequestScope request = Statement.Sql.GetRequestScope(this, parameterObject, session);
+            // this doesn't need to be in its own RunQueryForCachedDictionary method because the class is sealed and can't be called by anyone else
+            RequestRunner<IDictionary<K, V>> requestRunner = delegate(RequestScope requestScope, ISession session2, object parameter, CacheKey cacheKey, out bool cacheHit)
+             {
+                 if (keyProperty != null)
+                 {
+                     cacheKey.Update(keyProperty);
+                 }
+                 if (valueProperty != null)
+                 {
+                     cacheKey.Update(valueProperty);
+                 }
 
-            mappedStatement.PreparedCommand.Create(request, session, Statement, parameterObject);
+                 cacheHit = true;
+                 IDictionary<K, V> map = Statement.CacheModel[cacheKey] as IDictionary<K, V>;
+                 if (map == null)
+                 {
+                     cacheHit = false;
+                     map = mappedStatement.RunQueryForDictionary<K, V>(requestScope, session2, parameter, keyProperty, valueProperty, null);
+                     Statement.CacheModel[cacheKey] = map;
+                 }
 
-            CacheKey cacheKey = GetCacheKey(request);
-            cacheKey.Update("ExecuteQueryForMap");
-            if (keyProperty != null)
-            {
-                cacheKey.Update(keyProperty);
-            }
-            if (valueProperty != null)
-            {
-                cacheKey.Update(valueProperty);
-            }
+                 return map;
+             };
 
-            map = Statement.CacheModel[cacheKey] as IDictionary<K, V>;
-            if (map == null)
-            {
-                map = mappedStatement.RunQueryForDictionary<K, V>(request, session, parameterObject, keyProperty, valueProperty, null);
-                Statement.CacheModel[cacheKey] = map;
-            }
-
-            return map;
+            return CachingStatementExecute(PreSelectEventKey, PostSelectEventKey, session, parameterObject, "ExecuteQueryForDictionary", requestRunner);
         }
 
         /// <summary>
         /// Runs a query with a custom object that gets a chance 
         /// to deal with each row as it is processed.
         /// </summary>
+        /// <remarks>
+        /// This method always bypasses the cache.
+        /// </remarks>
         /// <param name="session">The session used to execute the statement</param>
         /// <param name="parameterObject">The object used to set the parameters in the SQL. </param>
         /// <param name="keyProperty">The property of the result object to be used as the key. </param>
@@ -205,7 +226,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         /// <exception cref="Apache.Ibatis.DataMapper.Exceptions.DataMapperException">If a transaction is not in progress, or the database throws an exception.</exception>
         public IDictionary<K, V> ExecuteQueryForDictionary<K, V>(ISession session, object parameterObject, string keyProperty, string valueProperty, DictionaryRowDelegate<K, V> rowDelegate)
         {
-            return mappedStatement.ExecuteQueryForDictionary<K, V>(session, parameterObject, keyProperty, valueProperty, rowDelegate);
+            return mappedStatement.ExecuteQueryForDictionary(session, parameterObject, keyProperty, valueProperty, rowDelegate);
         }
         #endregion
         
@@ -213,6 +234,9 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
 		/// Execute an update statement. Also used for delete statement.
 		/// Return the number of row effected.
 		/// </summary>
+        /// <remarks>
+        /// This method always bypasses the cache.
+        /// </remarks>
 		/// <param name="session">The session used to execute the statement.</param>
 		/// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
 		/// <returns>The number of row effected.</returns>
@@ -225,6 +249,9 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
 		/// Execute an insert statement. Fill the parameter object with 
 		/// the ouput parameters if any, also could return the insert generated key
 		/// </summary>
+        /// <remarks>
+        /// This method always bypasses the cache.
+        /// </remarks>
 		/// <param name="session">The session</param>
 		/// <param name="parameterObject">The parameter object used to fill the statement.</param>
 		/// <returns>Can return the insert generated key.</returns>
@@ -238,6 +265,9 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         /// <summary>
 		/// Executes the SQL and and fill a strongly typed collection.
 		/// </summary>
+        /// <remarks>
+        /// This method always bypasses the cache.
+        /// </remarks>
 		/// <param name="session">The session used to execute the statement.</param>
 		/// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
 		/// <param name="resultObject">A strongly typed collection of result objects.</param>
@@ -254,33 +284,33 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         /// <returns>A List of result objects.</returns>
         public IList ExecuteQueryForList(ISession session, object parameterObject)
         {
-            IList list = null;
+            // this doesn't need to be in its own RunQueryForCachedList method because the class is sealed and can't be called by anyone else
+            RequestRunner<IList> requestRunner = delegate(RequestScope requestScope, ISession session2, object parameter, CacheKey cacheKey, out bool cacheHit)
+             {
+                 cacheHit = true;
+                 IList list = Statement.CacheModel[cacheKey] as IList;
+                 if (list == null)
+                 {
+                     cacheHit = false;
+                     list = mappedStatement.RunQueryForList(requestScope, session, parameter, null, null);
+                     Statement.CacheModel[cacheKey] = list;
+                 }
+                 return list;
+             };
 
-            object param = RaisePreEvent<PreSelectEventArgs>(PreSelectEvent, parameterObject);
-
-            RequestScope request = Statement.Sql.GetRequestScope(this, param, session);
-
-            mappedStatement.PreparedCommand.Create(request, session, Statement, param);
-
-            CacheKey cacheKey = GetCacheKey(request);
-            cacheKey.Update("ExecuteQueryForList");
-
-            list = Statement.CacheModel[cacheKey] as IList;
-            if (list == null)
-            {
-                list = mappedStatement.RunQueryForList(request, session, param);
-                Statement.CacheModel[cacheKey] = list;
-            }
-
-            return RaisePostEvent<IList, PostSelectEventArgs>(PostSelectEvent, param, list);
+            return CachingStatementExecute(PreSelectEventKey, PostSelectEventKey, session, parameterObject, "ExecuteQueryForList", requestRunner);
         }
-        #endregion
+
+	    #endregion
 
         #region ExecuteQueryForList .NET 2.0
 
         /// <summary>
         /// Executes the SQL and and fill a strongly typed collection.
         /// </summary>
+        /// <remarks>
+        /// This method always bypasses the cache.
+        /// </remarks>
         /// <param name="session">The session used to execute the statement.</param>
         /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
         /// <param name="resultObject">A strongly typed collection of result objects.</param>
@@ -297,25 +327,23 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         /// <returns>A List of result objects.</returns>
         public IList<T> ExecuteQueryForList<T>(ISession session, object parameterObject)
         {
-            IList<T> list = null;
-
-            object param = RaisePreEvent<PreSelectEventArgs>(PreSelectEvent, parameterObject);
-
-            RequestScope request = Statement.Sql.GetRequestScope(this, param, session);
-
-            mappedStatement.PreparedCommand.Create(request, session, Statement, param);
-
-            CacheKey cacheKey = GetCacheKey(request);
-            cacheKey.Update("ExecuteQueryForList");
-
-            list = Statement.CacheModel[cacheKey] as IList<T>;
-            if (list == null)
+            // this doesn't need to be in its own RunQueryForCachedList method because the class is sealed and can't be called by anyone else
+            RequestRunner<IList<T>> requestRunner = delegate(RequestScope requestScope, ISession session2, object parameter, CacheKey cacheKey, out bool cacheHit)
             {
-                list = mappedStatement.RunQueryForList<T>(request, session, param);
-                Statement.CacheModel[cacheKey] = list;
-            }
-            return RaisePostEvent<IList<T>, PostSelectEventArgs>(PostSelectEvent, param, list);
+                cacheHit = true;
+                IList<T> list = Statement.CacheModel[cacheKey] as IList<T>;
+                if (list == null)
+                {
+                    cacheHit = false;
+                    list = mappedStatement.RunQueryForList<T>(requestScope, session, parameter, null, null);
+                    Statement.CacheModel[cacheKey] = list;
+                }
+                return list;
+            };
+
+            return CachingStatementExecute(PreSelectEventKey, PostSelectEventKey, session, parameterObject, "ExecuteQueryForList", requestRunner);
         }
+       
         #endregion
 
         #region ExecuteQueryForObject
@@ -330,31 +358,27 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
 		/// <returns>The object</returns>
 		public object ExecuteQueryForObject(ISession session, object parameterObject, object resultObject)
 		{
-			object obj = null;
+            // this doesn't need to be in its own RunQueryForCachedObject method because the class is sealed and can't be called by anyone else
+            RequestRunner<object> requestRunner = delegate(RequestScope requestScope, ISession session2, object parameter, CacheKey cacheKey, out bool cacheHit)
+            {
+                cacheHit = true;
+                object obj = Statement.CacheModel[cacheKey];
+                // check if this query has alreay been run 
+                if (obj == CacheModel.NULL_OBJECT)
+                {
+                    // convert the marker object back into a null value 
+                    obj = null;
+                }
+                else if (obj == null)
+                {
+                    cacheHit = false;
+                    obj = mappedStatement.RunQueryForObject(requestScope, session, parameter, resultObject);
+                    Statement.CacheModel[cacheKey] = obj;
+                }
+                return obj;
+            };
 
-            object param = RaisePreEvent<PreSelectEventArgs>(PreSelectEvent, parameterObject);
-
-            RequestScope request = Statement.Sql.GetRequestScope(this, param, session);
-
-            mappedStatement.PreparedCommand.Create(request, session, Statement, param);
-
-			CacheKey cacheKey = GetCacheKey(request);
-			cacheKey.Update("ExecuteQueryForObject");
-
-            obj = Statement.CacheModel[cacheKey];
-			// check if this query has alreay been run 
-            if (obj == CacheModel.NULL_OBJECT) 
-			{ 
-				// convert the marker object back into a null value 
-				obj = null; 
-			} 
-			else if (obj ==null)
-			{
-                obj = mappedStatement.RunQueryForObject(request, session, param, resultObject);
-                Statement.CacheModel[cacheKey] = obj;
-			}
-
-            return RaisePostEvent<object, PostSelectEventArgs>(PostSelectEvent, param, obj);
+            return CachingStatementExecute(PreSelectEventKey, PostSelectEventKey, session, parameterObject, "ExecuteQueryForObject", requestRunner);
         }
         
         #endregion
@@ -371,35 +395,35 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         /// <returns>The object</returns>
         public T ExecuteQueryForObject<T>(ISession session, object parameterObject, T resultObject)
         {
-            T obj = default(T);
-
-            object param = RaisePreEvent<PreSelectEventArgs>(PreSelectEvent, parameterObject);
-
-            RequestScope request = Statement.Sql.GetRequestScope(this, param, session);
-
-            mappedStatement.PreparedCommand.Create(request, session, Statement, param);
-
-            CacheKey cacheKey = GetCacheKey(request);
-            cacheKey.Update("ExecuteQueryForObject");
-
-            object cacheObjet = Statement.CacheModel[cacheKey];
-            // check if this query has alreay been run 
-            if (cacheObjet is T)
+            // this doesn't need to be in its own RunQueryForCachedObject method because the class is sealed and can't be called by anyone else
+            RequestRunner<T> requestRunner = delegate(RequestScope requestScope, ISession session2, object parameter, CacheKey cacheKey, out bool cacheHit)
             {
-                obj = (T)cacheObjet;
-            }
-            else if (cacheObjet == CacheModel.NULL_OBJECT)
-            {
-                // convert the marker object back into a null value 
-                obj = default(T);
-            }
-            else //if ((object)obj == null)
-            {
-                obj = (T)mappedStatement.RunQueryForObject(request, session, param, resultObject);
-                Statement.CacheModel[cacheKey] = obj;
-            }
+                T obj; 
 
-            return RaisePostEvent<T, PostSelectEventArgs>(PostSelectEvent, param, obj);
+                cacheHit = false;
+                object cacheObjet = Statement.CacheModel[cacheKey];
+                // check if this query has alreay been run 
+                if (cacheObjet is T)
+                {
+                    cacheHit = true;
+                    obj = (T)cacheObjet;
+                }
+                else if (cacheObjet == CacheModel.NULL_OBJECT)
+                {
+                    // convert the marker object back into a null value 
+                    cacheHit = true;
+                    obj = default(T);
+                }
+                else //if ((object)obj == null)
+                {
+                    obj = mappedStatement.RunQueryForObject(requestScope, session, parameter, resultObject);
+                    Statement.CacheModel[cacheKey] = obj;
+                }
+
+                return obj;
+            };
+
+            return CachingStatementExecute(PreSelectEventKey, PostSelectEventKey, session, parameterObject, "ExecuteQueryForObject", requestRunner);
         }
         
         #endregion
@@ -408,11 +432,15 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
 		/// Runs a query with a custom object that gets a chance 
 		/// to deal with each row as it is processed.
 		/// </summary>
+        /// <remarks>
+        /// This method always bypasses the cache.
+        /// </remarks>
 		/// <param name="session">The session used to execute the statement.</param>
 		/// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
 		/// <param name="rowDelegate"></param>
 		public IList ExecuteQueryForRowDelegate(ISession session, object parameterObject, RowDelegate rowDelegate)
 		{
+            // TODO: investigate allow the cached data to be processed by a different rowDelegate...add rowDelegate to the CacheKey ???
 			return mappedStatement.ExecuteQueryForRowDelegate(session, parameterObject, rowDelegate);
 		}
 
@@ -420,18 +448,25 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         /// Runs a query with a custom object that gets a chance 
         /// to deal with each row as it is processed.
         /// </summary>
+        /// <remarks>
+        /// This method always bypasses the cache.
+        /// </remarks>
         /// <param name="session">The session used to execute the statement.</param>
         /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
         /// <param name="rowDelegate"></param>
         public IList<T> ExecuteQueryForRowDelegate<T>(ISession session, object parameterObject, RowDelegate<T> rowDelegate)
         {
-            return mappedStatement.ExecuteQueryForRowDelegate<T>(session, parameterObject, rowDelegate);
+            // TODO: investigate allow the cached data to be processed by a different rowDelegate...add rowDelegate to the CacheKey ???
+            return mappedStatement.ExecuteQueryForRowDelegate(session, parameterObject, rowDelegate);
         }
 
 		/// <summary>
 		/// Runs a query with a custom object that gets a chance 
 		/// to deal with each row as it is processed.
 		/// </summary>
+        /// <remarks>
+        /// This method always bypasses the cache.
+        /// </remarks>
 		/// <param name="session">The session used to execute the statement</param>
 		/// <param name="parameterObject">The object used to set the parameters in the SQL. </param>
 		/// <param name="keyProperty">The property of the result object to be used as the key. </param>
@@ -441,6 +476,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
 		/// <exception cref="Apache.Ibatis.DataMapper.Exceptions.DataMapperException">If a transaction is not in progress, or the database throws an exception.</exception>
 		public IDictionary ExecuteQueryForMapWithRowDelegate(ISession session, object parameterObject, string keyProperty, string valueProperty, DictionaryRowDelegate rowDelegate)
 		{
+            // TODO: investigate allow the cached data to be processed by a different rowDelegate...add rowDelegate to the CacheKey ???
 			return mappedStatement.ExecuteQueryForMapWithRowDelegate(session, parameterObject, keyProperty, valueProperty, rowDelegate);
 		}
 
@@ -476,5 +512,27 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
             //}
 			return cacheKey;
 		}
+
+        /// <summary>
+        /// Ensures all the related Execute methods are run in a consistent manner with pre and post events.
+        /// </summary>
+        /// <remarks>
+        /// Based off of MappedStatement.Execute
+        /// </remarks>
+        private T CachingStatementExecute<T>(object preEvent, object postEvent, ISession session, object parameterObject, string baseCacheKey, RequestRunner<T> requestRunner)
+        {
+            object paramPreEvent = RaisePreEvent(preEvent, parameterObject);
+
+            RequestScope requestScope = Statement.Sql.GetRequestScope(this, paramPreEvent, session);
+            mappedStatement.PreparedCommand.Create(requestScope, session, Statement, paramPreEvent);
+
+            CacheKey cacheKey = GetCacheKey(requestScope);
+            cacheKey.Update(baseCacheKey);
+
+            bool cacheHit;
+            T result = requestRunner(requestScope, session, paramPreEvent, cacheKey, out cacheHit);
+
+            return RaisePostEvent(postEvent, paramPreEvent, result, cacheHit);
+        }
     }
 }

@@ -1,14 +1,13 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Threading;
 using Apache.Ibatis.Common.Utilities;
 
 using Apache.Ibatis.DataMapper.MappedStatements;
-using Apache.Ibatis.DataMapper.Model.Cache.Decorators;
 using Apache.Ibatis.DataMapper.Model.Cache.Implementation;
 using Apache.Ibatis.DataMapper.SqlClient.Test.Domain;
-using Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures;
 using NUnit.Framework;
 using Apache.Ibatis.DataMapper.Model.Cache;
 using Apache.Ibatis.DataMapper.Session;
@@ -83,6 +82,32 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
             int secondId = HashCodeProvider.GetIdentityHashCode(account2);
 
             Assert.AreEqual(firstId, secondId);
+        }
+
+        /// <summary>
+        /// Cache error with QueryForObject<T> PostStatementEventArgs with object in cache
+        /// </summary>
+        [Test]
+        public void TestJIRA242WithCacheAndPostStatementEventArgs()
+        {
+            List<bool> postSelectedWithCacheHitCalled = new List<bool>();
+
+            IMappedStatement statement = ((IModelStoreAccessor)dataMapper).ModelStore.GetMappedStatement("GetNoAccountWithCache");
+            statement.Statement.CacheModel.Cache.Clear();
+            statement.PostSelect += (sender, e) => postSelectedWithCacheHitCalled.Add(e.CacheHit);
+
+            Account first = dataMapper.QueryForObject<Account>("GetNoAccountWithCache", 1);
+            Account second = dataMapper.QueryForObject<Account>("GetNoAccountWithCache", 1);
+            Assert.AreEqual(first.Id, second.Id);
+
+            // ensure the PostSelect event was called twice
+            Assert.IsTrue(postSelectedWithCacheHitCalled.Count == 2);
+
+            // the first time through we should get CacheHit==false because the cache is empty
+            Assert.IsFalse(postSelectedWithCacheHitCalled[0]);
+
+            // the second time through we should get CacheHit==true
+            Assert.IsTrue(postSelectedWithCacheHitCalled[1]);
         }
 
         /// <summary>

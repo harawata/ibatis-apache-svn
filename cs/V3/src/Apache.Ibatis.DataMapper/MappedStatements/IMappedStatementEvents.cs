@@ -33,11 +33,11 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
     /// </summary>
     public interface IMappedStatementEvents
     {
-        event EventHandler<PreInsertEventArgs> PreInsert;
-        event EventHandler<PreSelectEventArgs> PreSelect;
-        event EventHandler<PreUpdateOrDeleteEventArgs> PreUpdateOrDelete;
-        event EventHandler<PostInsertEventArgs> PostInsert;
-        event EventHandler<PostSelectEventArgs> PostSelect;
-        event EventHandler<PostUpdateOrDeleteEventArgs> PostUpdateOrDelete;
+        event EventHandler<PreStatementEventArgs> PreInsert;
+        event EventHandler<PreStatementEventArgs> PreSelect;
+        event EventHandler<PreStatementEventArgs> PreUpdateOrDelete;
+        event EventHandler<PostStatementEventArgs> PostInsert;
+        event EventHandler<PostStatementEventArgs> PostSelect;
+        event EventHandler<PostStatementEventArgs> PostUpdateOrDelete;
     }
 }

@@ -44,8 +44,16 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
         /// </summary>
         [Test] 
         public void TestQueryForObject() {
-            Account account = dataMapper.QueryForObject("Account.GetAccountViaResultClass", 1) as Account;
-            AssertAccount1(account);
+
+            if (configurationSetting.UseStatementNamespaces)
+            {
+                Account account = dataMapper.QueryForObject("Account.GetAccountViaResultClass", 1) as Account;
+                AssertAccount1(account);
+            }
+            else
+            {
+                Assert.Ignore("UseStatementNamespaces is false, skipping");
+            }
         }
 
         /// <summary>
@@ -55,14 +63,22 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
         /// </summary>
         [Test]
         public void TestListMapping() {
-            Order order = (Order) dataMapper.QueryForObject("Order.GetOrderWithLineItemsUsingStatementNamespaces", 1);
 
-            AssertOrder1(order);
+            if (configurationSetting.UseStatementNamespaces)
+            {
+                Order order =
+                    (Order) dataMapper.QueryForObject("Order.GetOrderWithLineItemsUsingStatementNamespaces", 1);
 
-            // Check IList collection
-            Assert.IsNotNull(order.LineItemsIList);
-            Assert.AreEqual(3, order.LineItemsIList.Count);
+                AssertOrder1(order);
 
+                // Check IList collection
+                Assert.IsNotNull(order.LineItemsIList);
+                Assert.AreEqual(3, order.LineItemsIList.Count);
+            }
+            else
+            {
+                Assert.Ignore("UseStatementNamespaces is false, skipping");
+            }
         }
 
         /// <summary>
@@ -73,12 +89,20 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
         /// </summary>
         [Test] 
         public void TestInsertSelectKey() {
-            Category category = new Category();
-            category.Name = "toto";
-            category.Guid = Guid.NewGuid();
 
-            int key = (int)dataMapper.Insert("Category.InsertCategoryViaInsertStatement", category);
-            Assert.AreEqual(1, key);
+            if (configurationSetting.UseStatementNamespaces)
+            {
+                Category category = new Category();
+                category.Name = "toto";
+                category.Guid = Guid.NewGuid();
+
+                int key = (int) dataMapper.Insert("Category.InsertCategoryViaInsertStatement", category);
+                Assert.AreEqual(1, key);
+            }
+            else
+            {
+                Assert.Ignore("UseStatementNamespaces is false, skipping");
+            }
         }
 
         #endregion

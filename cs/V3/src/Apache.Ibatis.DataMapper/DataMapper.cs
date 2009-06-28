@@ -79,9 +79,9 @@ namespace Apache.Ibatis.DataMapper
         /// </returns>
         public object Insert(string statementId, object parameterObject)
         {
-            using (DataMapperLocalSessionScope sessionScope = new DataMapperLocalSessionScope(sessionStore, sessionFactory))
+            using (var sessionScope = new DataMapperLocalSessionScope(sessionStore, sessionFactory))
             {
-                IMappedStatement statement = modelStore.GetMappedStatement(statementId);
+                IMappedStatement statement = GetMappedStatement(statementId);
                 return statement.ExecuteInsert(sessionScope.Session, parameterObject);
             }
         }
@@ -135,9 +135,9 @@ namespace Apache.Ibatis.DataMapper
                 throw new DataMapperException("resultObject parameter must be instantiated before being passed to QueryForList");
             }
 
-            using (DataMapperLocalSessionScope sessionScope = new DataMapperLocalSessionScope(sessionStore, sessionFactory))
+            using (var sessionScope = new DataMapperLocalSessionScope(sessionStore, sessionFactory))
             {
-                IMappedStatement statement = modelStore.GetMappedStatement(statementId);
+                IMappedStatement statement = GetMappedStatement(statementId);
                 statement.ExecuteQueryForList(sessionScope.Session, parameterObject, resultObject);
             }
         }
@@ -154,9 +154,9 @@ namespace Apache.Ibatis.DataMapper
         /// <returns>A List of result objects.</returns>
         public IList QueryForList(string statementId, object parameterObject)
         {
-            using (DataMapperLocalSessionScope sessionScope = new DataMapperLocalSessionScope(sessionStore, sessionFactory))
+            using (var sessionScope = new DataMapperLocalSessionScope(sessionStore, sessionFactory))
             {
-                IMappedStatement statement = modelStore.GetMappedStatement(statementId);
+                IMappedStatement statement = GetMappedStatement(statementId);
                 return statement.ExecuteQueryForList(sessionScope.Session, parameterObject);
             }
         }
@@ -192,9 +192,9 @@ namespace Apache.Ibatis.DataMapper
         /// <exception cref="DataMapperException">If a transaction is not in progress, or the database throws an exception.</exception>
         public IDictionary QueryForMap(string statementId, object parameterObject, string keyProperty, string valueProperty)
         {
-            using (DataMapperLocalSessionScope sessionScope = new DataMapperLocalSessionScope(sessionStore, sessionFactory))
+            using (var sessionScope = new DataMapperLocalSessionScope(sessionStore, sessionFactory))
             {
-                IMappedStatement statement = modelStore.GetMappedStatement(statementId);
+                IMappedStatement statement = GetMappedStatement(statementId);
                 return statement.ExecuteQueryForMap(sessionScope.Session, parameterObject, keyProperty, valueProperty);
             }
         }
@@ -217,9 +217,9 @@ namespace Apache.Ibatis.DataMapper
         /// <exception cref="DataMapperException">If a transaction is not in progress, or the database throws an exception.</exception>
         public IDictionary QueryForMapWithRowDelegate(string statementId, object parameterObject, string keyProperty, string valueProperty, DictionaryRowDelegate rowDelegate)
         {
-            using (DataMapperLocalSessionScope sessionScope = new DataMapperLocalSessionScope(sessionStore, sessionFactory))
+            using (var sessionScope = new DataMapperLocalSessionScope(sessionStore, sessionFactory))
             {
-                IMappedStatement statement = modelStore.GetMappedStatement(statementId);
+                IMappedStatement statement = GetMappedStatement(statementId);
                 return statement.ExecuteQueryForMapWithRowDelegate(sessionScope.Session, parameterObject, keyProperty, valueProperty, rowDelegate);
             }
         }
@@ -236,9 +236,9 @@ namespace Apache.Ibatis.DataMapper
         /// </returns>
         public object QueryForObject(string statementId, object parameterObject, object resultObject)
         {
-            using (DataMapperLocalSessionScope sessionScope = new DataMapperLocalSessionScope(sessionStore, sessionFactory))
+            using (var sessionScope = new DataMapperLocalSessionScope(sessionStore, sessionFactory))
             {
-                IMappedStatement statement = modelStore.GetMappedStatement(statementId);
+                IMappedStatement statement = GetMappedStatement(statementId);
                 return statement.ExecuteQueryForObject(sessionScope.Session, parameterObject, resultObject);
             }
         }
@@ -273,9 +273,9 @@ namespace Apache.Ibatis.DataMapper
         /// <returns>A List of result objects.</returns>
         public IList QueryWithRowDelegate(string statementId, object parameterObject, RowDelegate rowDelegate)
         {
-            using (DataMapperLocalSessionScope sessionScope = new DataMapperLocalSessionScope(sessionStore, sessionFactory))
+            using (var sessionScope = new DataMapperLocalSessionScope(sessionStore, sessionFactory))
             {
-                IMappedStatement statement = modelStore.GetMappedStatement(statementId);
+                IMappedStatement statement = GetMappedStatement(statementId);
                 return statement.ExecuteQueryForRowDelegate(sessionScope.Session, parameterObject, rowDelegate);
             }
         }
@@ -294,9 +294,9 @@ namespace Apache.Ibatis.DataMapper
         /// <returns>The number of rows effected.</returns>
         public int Update(string statementId, object parameterObject)
         {
-            using (DataMapperLocalSessionScope sessionScope = new DataMapperLocalSessionScope(sessionStore, sessionFactory))
+            using (var sessionScope = new DataMapperLocalSessionScope(sessionStore, sessionFactory))
             {
-                IMappedStatement statement = modelStore.GetMappedStatement(statementId);
+                IMappedStatement statement = GetMappedStatement(statementId);
                 return statement.ExecuteUpdate(sessionScope.Session, parameterObject);
             }
         }
@@ -318,9 +318,9 @@ namespace Apache.Ibatis.DataMapper
         /// <exception cref="DataMapperException">If a transaction is not in progress, or the database throws an exception.</exception>
         public IDictionary<K, V> QueryForDictionary<K, V>(string statementId, object parameterObject, string keyProperty, string valueProperty)
         {
-            using (DataMapperLocalSessionScope sessionScope = new DataMapperLocalSessionScope(sessionStore, sessionFactory))
+            using (var sessionScope = new DataMapperLocalSessionScope(sessionStore, sessionFactory))
             {
-                IMappedStatement statement = modelStore.GetMappedStatement(statementId);
+                IMappedStatement statement = GetMappedStatement(statementId);
                 return statement.ExecuteQueryForDictionary<K, V>(sessionScope.Session, parameterObject, keyProperty, valueProperty);
             }
         }
@@ -362,9 +362,9 @@ namespace Apache.Ibatis.DataMapper
         /// <exception cref="DataMapperException">If a transaction is not in progress, or the database throws an exception.</exception>
         public IDictionary<K, V> QueryForDictionary<K, V>(string statementId, object parameterObject, string keyProperty, string valueProperty, DictionaryRowDelegate<K, V> rowDelegate)
         {
-            using (DataMapperLocalSessionScope sessionScope = new DataMapperLocalSessionScope(sessionStore, sessionFactory))
+            using (var sessionScope = new DataMapperLocalSessionScope(sessionStore, sessionFactory))
             {
-                IMappedStatement statement = modelStore.GetMappedStatement(statementId);
+                IMappedStatement statement = GetMappedStatement(statementId);
                 return statement.ExecuteQueryForDictionary(sessionScope.Session, parameterObject, keyProperty, valueProperty, rowDelegate);
             }
         }
@@ -382,9 +382,9 @@ namespace Apache.Ibatis.DataMapper
         /// </returns>
         public T QueryForObject<T>(string statementId, object parameterObject, T instanceObject)
         {
-            using (DataMapperLocalSessionScope sessionScope = new DataMapperLocalSessionScope(sessionStore, sessionFactory))
+            using (var sessionScope = new DataMapperLocalSessionScope(sessionStore, sessionFactory))
             {
-                IMappedStatement statement = modelStore.GetMappedStatement(statementId);
+                IMappedStatement statement = GetMappedStatement(statementId);
                 return statement.ExecuteQueryForObject(sessionScope.Session, parameterObject, instanceObject);
             }
         }
@@ -404,7 +404,7 @@ namespace Apache.Ibatis.DataMapper
         /// </returns>
         public T QueryForObject<T>(string statementId, object parameterObject)
         {
-            return QueryForObject<T>(statementId, parameterObject, default(T));
+            return QueryForObject(statementId, parameterObject, default(T));
         }
 
         /// <summary>
@@ -420,9 +420,9 @@ namespace Apache.Ibatis.DataMapper
         /// <returns>A List of result objects.</returns>
         public IList<T> QueryForList<T>(string statementId, object parameterObject)
         {
-            using (DataMapperLocalSessionScope sessionScope = new DataMapperLocalSessionScope(sessionStore, sessionFactory))
+            using (var sessionScope = new DataMapperLocalSessionScope(sessionStore, sessionFactory))
             {
-                IMappedStatement statement = modelStore.GetMappedStatement(statementId);
+                IMappedStatement statement = GetMappedStatement(statementId);
                 return statement.ExecuteQueryForList<T>(sessionScope.Session, parameterObject);
             }
         }
@@ -445,9 +445,9 @@ namespace Apache.Ibatis.DataMapper
                 throw new DataMapperException("resultObject parameter must be instantiated before being passed to SqlMapper.QueryForList");
             }
 
-            using (DataMapperLocalSessionScope sessionScope = new DataMapperLocalSessionScope(sessionStore, sessionFactory))
+            using (var sessionScope = new DataMapperLocalSessionScope(sessionStore, sessionFactory))
             {
-                IMappedStatement statement = modelStore.GetMappedStatement(statementId);
+                IMappedStatement statement = GetMappedStatement(statementId);
                 statement.ExecuteQueryForList(sessionScope.Session, parameterObject, resultObject);
             }
         }
@@ -467,9 +467,9 @@ namespace Apache.Ibatis.DataMapper
         /// <returns>A List of result objects.</returns>
         public IList<T> QueryWithRowDelegate<T>(string statementId, object parameterObject, RowDelegate<T> rowDelegate)
         {
-            using (DataMapperLocalSessionScope sessionScope = new DataMapperLocalSessionScope(sessionStore, sessionFactory))
+            using (var sessionScope = new DataMapperLocalSessionScope(sessionStore, sessionFactory))
             {
-                IMappedStatement statement = modelStore.GetMappedStatement(statementId);
+                IMappedStatement statement = GetMappedStatement(statementId);
                 return statement.ExecuteQueryForRowDelegate(sessionScope.Session, parameterObject, rowDelegate);
             }
         }
@@ -496,9 +496,9 @@ namespace Apache.Ibatis.DataMapper
         /// <returns>A DataTable</returns>
         public DataTable QueryForDataTable(string statementId, object parameterObject)
         {
-            using (DataMapperLocalSessionScope sessionScope = new DataMapperLocalSessionScope(sessionStore, sessionFactory))
+            using (var sessionScope = new DataMapperLocalSessionScope(sessionStore, sessionFactory))
             {
-                IMappedStatement statement = modelStore.GetMappedStatement(statementId);
+                IMappedStatement statement = GetMappedStatement(statementId);
                 return statement.ExecuteQueryForDataTable(sessionScope.Session, parameterObject);
             }
         }
@@ -516,6 +516,11 @@ namespace Apache.Ibatis.DataMapper
         }
 
         #endregion
+
+        private IMappedStatement GetMappedStatement(string statementId)
+        {
+            return modelStore.GetMappedStatement(statementId);
+        }
 
     }
 }

@@ -28,7 +28,7 @@ namespace Apache.Ibatis.DataMapper.Model.Events
     /// <summary>
     /// Base class for pre <see cref="BaseStatementEventArgs"/>
     /// </summary>
-    public abstract class PreStatementEventArgs : BaseStatementEventArgs
+    public class PreStatementEventArgs : BaseStatementEventArgs
     {
 
     }

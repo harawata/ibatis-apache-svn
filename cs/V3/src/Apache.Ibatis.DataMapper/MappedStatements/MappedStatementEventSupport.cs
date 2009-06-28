@@ -35,69 +35,69 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
     [Serializable]
     public abstract class MappedStatementEventSupport : IMappedStatementEvents
     {
-        protected static readonly object PreInsertEvent = new object();
-        protected static readonly object PreSelectEvent = new object();
-        protected static readonly object PreUpdateOrDeleteEvent = new object();
-        protected static readonly object PostInsertEvent = new object();
-        protected static readonly object PostSelectEvent = new object();
-        protected static readonly object PostUpdateOrDeleteEvent = new object();
+        protected static readonly object PreInsertEventKey = new object();
+        protected static readonly object PreSelectEventKey = new object();
+        protected static readonly object PreUpdateOrDeleteEventKey = new object();
+        protected static readonly object PostInsertEventKey = new object();
+        protected static readonly object PostSelectEventKey = new object();
+        protected static readonly object PostUpdateOrDeleteEventKey = new object();
 
         private readonly EventHandlerList events = new EventHandlerList();
 
         #region IMappedStatementEvents Members
 
         /// <summary>
-        /// Will handle an <see cref="PreInsertEventArgs"/>. 
+        /// Will handle an <see cref="PreStatementEventArgs"/>. 
         /// </summary>
-        public event EventHandler<PreInsertEventArgs> PreInsert
+        public event EventHandler<PreStatementEventArgs> PreInsert
         {
-            add { events.AddHandler(PreInsertEvent, value); }
-            remove { events.RemoveHandler(PreInsertEvent, value); }
+            add { events.AddHandler(PreInsertEventKey, value); }
+            remove { events.RemoveHandler(PreInsertEventKey, value); }
         }
 
         /// <summary>
-        /// Will handle an <see cref="PreSelectEventArgs"/>. 
+        /// Will handle an <see cref="PreStatementEventArgs"/>. 
         /// </summary>
-        public event EventHandler<PreSelectEventArgs> PreSelect
+        public event EventHandler<PreStatementEventArgs> PreSelect
         {
-            add { events.AddHandler(PreSelectEvent, value); }
-            remove { events.RemoveHandler(PreSelectEvent, value); }
+            add { events.AddHandler(PreSelectEventKey, value); }
+            remove { events.RemoveHandler(PreSelectEventKey, value); }
         }
 
         /// <summary>
-        /// Will handle an <see cref="PreUpdateOrDeleteEventArgs"/>. 
+        /// Will handle an <see cref="PreStatementEventArgs"/>. 
         /// </summary>
-        public event EventHandler<PreUpdateOrDeleteEventArgs> PreUpdateOrDelete
+        public event EventHandler<PreStatementEventArgs> PreUpdateOrDelete
         {
-            add { events.AddHandler(PreUpdateOrDeleteEvent, value); }
-            remove { events.RemoveHandler(PreUpdateOrDeleteEvent, value); }
+            add { events.AddHandler(PreUpdateOrDeleteEventKey, value); }
+            remove { events.RemoveHandler(PreUpdateOrDeleteEventKey, value); }
         }
 
         /// <summary>
-        /// Will handle an <see cref="PostInsertEventArgs"/>. 
+        /// Will handle an <see cref="PostStatementEventArgs"/>. 
         /// </summary>
-        public event EventHandler<PostInsertEventArgs> PostInsert
+        public event EventHandler<PostStatementEventArgs> PostInsert
         {
-            add { events.AddHandler(PostInsertEvent, value); }
-            remove { events.RemoveHandler(PostInsertEvent, value); }
+            add { events.AddHandler(PostInsertEventKey, value); }
+            remove { events.RemoveHandler(PostInsertEventKey, value); }
         }
 
         /// <summary>
-        /// Will handle an <see cref="PostSelectEventArgs"/>. 
+        /// Will handle an <see cref="PostStatementEventArgs"/>. 
         /// </summary>
-        public event EventHandler<PostSelectEventArgs> PostSelect
+        public event EventHandler<PostStatementEventArgs> PostSelect
         {
-            add { events.AddHandler(PostSelectEvent, value); }
-            remove { events.RemoveHandler(PostSelectEvent, value); }
+            add { events.AddHandler(PostSelectEventKey, value); }
+            remove { events.RemoveHandler(PostSelectEventKey, value); }
         }
 
         /// <summary>
-        /// Will handle an <see cref="PostUpdateOrDeleteEventArgs"/>. 
+        /// Will handle an <see cref="PostStatementEventArgs"/>. 
         /// </summary>
-        public event EventHandler<PostUpdateOrDeleteEventArgs> PostUpdateOrDelete
+        public event EventHandler<PostStatementEventArgs> PostUpdateOrDelete
         {
-            add { events.AddHandler(PostUpdateOrDeleteEvent, value); }
-            remove { events.RemoveHandler(PostUpdateOrDeleteEvent, value); }
+            add { events.AddHandler(PostUpdateOrDeleteEventKey, value); }
+            remove { events.RemoveHandler(PostUpdateOrDeleteEventKey, value); }
         }
 
         #endregion
@@ -108,14 +108,13 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         /// <param name="key">The key.</param>
         /// <param name="parameterObject">The parameter object.</param>
         /// <returns>Returns is used as the parameter object</returns>
-        protected object RaisePreEvent<TEvent>(object key,  object parameterObject)
-            where TEvent : PreStatementEventArgs, new()
+        protected object RaisePreEvent(object key,  object parameterObject)
         {
-            EventHandler<TEvent> handlers = (EventHandler<TEvent>)events[key];
+            var handlers = (EventHandler<PreStatementEventArgs>)events[key];
 
             if (handlers != null)
             {
-                TEvent eventArgs = new TEvent();
+                var eventArgs = new PreStatementEventArgs();
                 eventArgs.ParameterObject = parameterObject;
                 handlers(this, eventArgs);            
                 return eventArgs.ParameterObject;
@@ -129,17 +128,18 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         /// <param name="key">The key.</param>
         /// <param name="parameterObject">The parameter object.</param>
         /// <param name="resultObject">The result object.</param>
+        /// <param name="cacheHit">Did the ResultObject come from cache?</param>
         /// <returns>Returns is used as the result object</returns>
-        protected TType RaisePostEvent<TType, TEvent>(object key, object parameterObject, TType resultObject)
-            where TEvent : PostStatementEventArgs, new()
+        protected TType RaisePostEvent<TType>(object key, object parameterObject, TType resultObject, bool cacheHit)
         {
-            EventHandler<TEvent> handlers = (EventHandler<TEvent>)events[key];
+            var handlers = (EventHandler<PostStatementEventArgs>)events[key];
 
             if (handlers != null)
             {
-                TEvent eventArgs = new TEvent();
+                var eventArgs = new PostStatementEventArgs();
                 eventArgs.ParameterObject = parameterObject;
                 eventArgs.ResultObject = resultObject;
+                eventArgs.CacheHit = cacheHit;
                 handlers(this, eventArgs);
                 return (TType)eventArgs.ResultObject;
             }

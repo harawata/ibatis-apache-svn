@@ -1,7 +1,7 @@
 ﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{F3E45F39-3224-4EAD-B138-EB5CC0E32824}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -27,7 +27,7 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <OldToolsVersion>2.0</OldToolsVersion>
-    <TargetFrameworkVersion>v3.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\Debug\</OutputPath>
@@ -86,6 +86,9 @@
       <Name>System</Name>
     </Reference>
     <Reference Include="System.configuration" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System.Data">
       <Name>System.Data</Name>
     </Reference>
@@ -123,6 +126,12 @@
     <Compile Include="Configuration\Module\ResultMapModuleBuilder.cs" />
     <Compile Include="Configuration\Module\TypeAliasModuleBuilder.cs" />
     <Compile Include="Configuration\Module\TypeHandlerModuleBuilder.cs" />
+    <Compile Include="MappedStatements\MappedStatement.ExecuteInsert.cs" />
+    <Compile Include="MappedStatements\MappedStatement.ExecuteQueryForDataTable.cs" />
+    <Compile Include="MappedStatements\MappedStatement.ExecuteQueryForList.cs" />
+    <Compile Include="MappedStatements\MappedStatement.ExecuteQueryForMap.cs" />
+    <Compile Include="MappedStatements\MappedStatement.ExecuteQueryForObject.cs" />
+    <Compile Include="MappedStatements\MappedStatement.ExecuteUpdate.cs" />
     <Compile Include="MappedStatements\ResultStrategy\DataRowStrategy.cs" />
     <Compile Include="Model\Cache\BaseCache.cs" />
     <Compile Include="Model\Cache\Decorators\LoggingCache.cs" />
@@ -198,12 +207,6 @@
     <Compile Include="Model\Events\PrePropertyEventArgs.cs" />
     <Compile Include="Model\Events\PreStatementEventArgs.cs" />
     <Compile Include="Model\Events\BaseStatementEventArgs.cs" />
-    <Compile Include="Model\Events\PostInsertEventArgs.cs" />
-    <Compile Include="Model\Events\PostSelectEventArgs.cs" />
-    <Compile Include="Model\Events\PostUpdateOrDeleteEventArgs.cs" />
-    <Compile Include="Model\Events\PreInsertEventArgs.cs" />
-    <Compile Include="Model\Events\PreSelectEventArgs.cs" />
-    <Compile Include="Model\Events\PreUpdateOrDeleteEventArgs.cs" />
     <Compile Include="Model\ParameterMapping\InlineParemeterMapBuilder.cs" />
     <Compile Include="Model\ResultMapping\ArgumentPropertyCollection.cs" />
     <Compile Include="Model\ResultMapping\IResultMapEvents.cs" />
