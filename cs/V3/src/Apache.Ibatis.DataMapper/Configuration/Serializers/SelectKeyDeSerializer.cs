@@ -62,7 +62,7 @@ namespace Apache.Ibatis.DataMapper.Configuration.Serializers
                 resultsMap,
                 selectKeyType,
                 sqlSource,
-                condenseSql);
+                preserveWhitespace);
         }
 
         private SelectKeyType ReadSelectKeyType(string s)

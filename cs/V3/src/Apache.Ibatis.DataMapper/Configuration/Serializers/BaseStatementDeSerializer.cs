@@ -58,7 +58,7 @@ namespace Apache.Ibatis.DataMapper.Configuration.Serializers
         protected bool remapResults = false;
         protected string nameSpace = string.Empty;
         protected string sqlSourceClassName = string.Empty;
-        protected bool condenseSql = true;
+        protected bool preserveWhitespace;
 
         protected ResultMapCollection resultsMap = new ResultMapCollection();
         protected Type resultClass = null;
@@ -89,7 +89,7 @@ namespace Apache.Ibatis.DataMapper.Configuration.Serializers
             resultMapName = ConfigurationUtils.GetStringAttribute(config.Attributes, ConfigConstants.ATTRIBUTE_RESULTMAP);
             remapResults = ConfigurationUtils.GetBooleanAttribute(config.Attributes, ConfigConstants.ATTRIBUTE_REMAPRESULTS, false);
             sqlSourceClassName = ConfigurationUtils.GetStringAttribute(config.Attributes, ConfigConstants.ATTRIBUTE_SQLSOURCE);
-            condenseSql = ConfigurationUtils.GetBooleanAttribute(config.Attributes, ConfigConstants.ATTRIBUTE_CONDENSESQL, configurationSetting.CondenseSql);
+            preserveWhitespace = ConfigurationUtils.GetBooleanAttribute(config.Attributes, ConfigConstants.ATTRIBUTE_PRESERVEWHITSPACE, configurationSetting.PreserveWhitespace);
 
             // Gets the results Map
             if (resultMapName.Length > 0)

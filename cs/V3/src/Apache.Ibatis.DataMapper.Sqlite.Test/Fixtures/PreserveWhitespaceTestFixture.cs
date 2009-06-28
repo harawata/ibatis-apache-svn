@@ -7,10 +7,10 @@ using NUnit.Framework;
 namespace Apache.Ibatis.DataMapper.Sqlite.Test.Fixtures
 {
     [TestFixture]
-    public class CondenseSqlTestFixture : BaseTest
+    public class PreserveWhitespaceTestFixture : BaseTest
     {
         [Test]
-        public void CondenseSql()
+        public void PreserveWhitespace()
         {
             LogManager.Adapter = new ConsoleOutLoggerFA(new NameValueCollection());
 

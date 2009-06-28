@@ -72,7 +72,7 @@ namespace Apache.Ibatis.DataMapper.Configuration
         private bool useStatementNamespaces = false;
         private bool isCacheModelsEnabled = false;
         private bool useReflectionOptimizer = true;
-        private bool condenseSql = true;
+        private bool preserveWhitespace;
         private int commandTimeOut = -1;
 
         private readonly WaitResultPropertyResolution waitResultPropertyResolution = null;
@@ -123,7 +123,7 @@ namespace Apache.Ibatis.DataMapper.Configuration
                 isCacheModelsEnabled = configurationSetting.IsCacheModelsEnabled;
                 useStatementNamespaces = configurationSetting.UseStatementNamespaces;
                 useReflectionOptimizer = configurationSetting.UseReflectionOptimizer;
-                condenseSql = configurationSetting.CondenseSql;
+                preserveWhitespace = configurationSetting.PreserveWhitespace;
             }
             
             // Xml setting override code setting

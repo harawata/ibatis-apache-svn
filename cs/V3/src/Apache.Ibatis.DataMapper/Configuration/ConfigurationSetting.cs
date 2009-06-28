@@ -51,7 +51,7 @@ namespace Apache.Ibatis.DataMapper.Configuration
         private bool useStatementNamespaces = false;
         private bool isCacheModelsEnabled = false;
         private bool useReflectionOptimizer = true;
-        private bool condenseSql = true;
+        private bool preserveWhitespace;
 
         /// <summary>
         /// Gets or sets the dynamic SQL engine.
@@ -181,12 +181,16 @@ namespace Apache.Ibatis.DataMapper.Configuration
         }
 
         /// <summary>
-        /// 
+        /// Gets or sets a value indicating whether whitespace within &lt;statement&gt; nodes should be preserved.
         /// </summary>
-        public bool CondenseSql
+        /// <remarks>
+        /// Using the default value of false may cause single line SQL comments '--' to comment out more than expected. A 
+        /// safer commenting syntax is to always use the multi-line comments supported by most vendors: '/* ... */'
+        /// </remarks>
+        public bool PreserveWhitespace
         {
-            get { return condenseSql; }
-            set { condenseSql = value; }
+            get { return preserveWhitespace; }
+            set { preserveWhitespace = value; }
         }
     }
 }

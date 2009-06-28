@@ -52,6 +52,7 @@ namespace Apache.Ibatis.DataMapper.Model.Statements
         /// <param name="remapResults">if set to <c>true</c> [remap results].</param>
         /// <param name="extends">The extends.</param>
         /// <param name="sqlSource">The SQL source.</param>
+        /// <param name="preserveWhitespace">Preserve whitespace.</param>
         public Update(
             string id, 
             Type parameterClass,
@@ -59,8 +60,8 @@ namespace Apache.Ibatis.DataMapper.Model.Statements
             bool remapResults,
             string extends,
             ISqlSource sqlSource,
-            bool condenseSql)
-            : base(id, parameterClass, parameterMap, null, new ResultMapCollection(), null, null, null, remapResults, extends, sqlSource, condenseSql)
+            bool preserveWhitespace)
+            : base(id, parameterClass, parameterMap, null, new ResultMapCollection(), null, null, null, remapResults, extends, sqlSource, preserveWhitespace)
 		{}
 
 	}

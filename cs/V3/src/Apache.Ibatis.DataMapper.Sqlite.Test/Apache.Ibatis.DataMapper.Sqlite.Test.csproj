@@ -51,8 +51,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Domain\Account.cs" />
-    <Compile Include="Fixtures\CondenseSqlTestFixture.cs" />
     <Compile Include="Fixtures\BaseTest.cs" />
+    <Compile Include="Fixtures\PreserveWhitespaceTestFixture.cs" />
     <Compile Include="Fixtures\ScriptBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

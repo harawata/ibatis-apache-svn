@@ -343,7 +343,7 @@ namespace Apache.Ibatis.DataMapper.Configuration
                 if (child.Type == ConfigConstants.ELEMENT_TEXT || child.Type == ConfigConstants.ELEMENT_CDATA)
                 {
                     string childValueString = child.Value;
-                    if (statement.CondenseSql)
+                    if (statement.PreserveWhitespace)
                     {
                         childValueString = childValueString
                             .Replace('\n', ' ')

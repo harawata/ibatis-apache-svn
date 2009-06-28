@@ -116,9 +116,13 @@ namespace Apache.Ibatis.DataMapper.Model.Statements
         ISqlSource SqlSource { get; set; }
 
         /// <summary>
-        /// 
+        /// Gets or sets a value indicating whether whitespace within &lt;statement&gt; nodes should be preserved.
         /// </summary>
-        bool CondenseSql { get; }
+        /// <remarks>
+        /// Using the default value of false may cause single line SQL comments '--' to comment out more than expected. A 
+        /// safer commenting syntax is to always use the multi-line comments supported by most vendors: '/* ... */'
+        /// </remarks>
+        bool PreserveWhitespace { get; }
 
         #endregion
 

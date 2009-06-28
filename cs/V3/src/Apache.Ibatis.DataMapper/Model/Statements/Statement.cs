@@ -79,7 +79,7 @@ namespace Apache.Ibatis.DataMapper.Model.Statements
         [NonSerialized]
         private ISqlSource sqlSource = null;
         [NonSerialized]
-        private readonly bool condenseSql = true;
+        private readonly bool preserveWhitespace;
 
         #endregion
 
@@ -211,11 +211,15 @@ namespace Apache.Ibatis.DataMapper.Model.Statements
         }
 
         /// <summary>
-        /// 
+        /// Gets or sets a value indicating whether whitespace within &lt;statement&gt; nodes should be preserved.
         /// </summary>
-        public bool CondenseSql
+        /// <remarks>
+        /// Using the default value of false may cause single line SQL comments '--' to comment out more than expected. A 
+        /// safer commenting syntax is to always use the multi-line comments supported by most vendors: '/* ... */'
+        /// </remarks>
+        public bool PreserveWhitespace
         {
-            get { return condenseSql; }
+            get { return preserveWhitespace; }
         }
 
         #endregion
@@ -234,7 +238,7 @@ namespace Apache.Ibatis.DataMapper.Model.Statements
         /// <param name="remapResults">if set to <c>true</c> [remap results].</param>
         /// <param name="extends">The extends.</param>
         /// <param name="sqlSource">The SQL source.</param>
-        /// <param name="condenseSql"></param>
+        /// <param name="preserveWhitespace">Preserve whitespace.</param>
         public Statement(
             string id, 
             Type parameterClass,
@@ -247,7 +251,7 @@ namespace Apache.Ibatis.DataMapper.Model.Statements
             bool remapResults,
             string extends,
             ISqlSource sqlSource,
-            bool condenseSql)
+            bool preserveWhitespace)
         {
             Contract.Require.That(id, Is.Not.Null & Is.Not.Empty).When("retrieving argument id");
 
@@ -262,7 +266,7 @@ namespace Apache.Ibatis.DataMapper.Model.Statements
             allowRemapping = remapResults;
             this.extends = extends;
             this.sqlSource = sqlSource;
-            this.condenseSql = condenseSql;
+            this.preserveWhitespace = preserveWhitespace;
         }
 
         #region Methods

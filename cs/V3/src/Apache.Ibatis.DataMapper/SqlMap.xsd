@@ -102,7 +102,7 @@ vs:defaultnsprefix="" >
 			<xs:attribute name="cacheModel" type="xs:string"/>
 			<xs:attribute name="listClass" type="xs:string"/>
 			<xs:attribute name="sqlSource" type="xs:string"/>
-			<xs:attribute name="condenseSql" type="xs:boolean" default="true"/>
+			<xs:attribute name="preserveWhitespace" type="xs:boolean" default="false"/>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="delete">
@@ -131,7 +131,7 @@ vs:defaultnsprefix="" >
 			<xs:attribute name="parameterClass" type="xs:string"/>
 			<xs:attribute name="extends" type="xs:string"/>	
 			<xs:attribute name="sqlSource" type="xs:string"/>
-      <xs:attribute name="condenseSql" type="xs:boolean" default="true"/>
+      <xs:attribute name="preserveWhitespace" type="xs:boolean" default="false"/>
 			<xs:attribute name="remapResults">        
 				<xs:simpleType>
 					<xs:restriction base="xs:NMTOKEN">
@@ -216,7 +216,7 @@ vs:defaultnsprefix="" >
 			<xs:attribute name="parameterMap" type="xs:string"/>
 			<xs:attribute name="resultClass" type="xs:string"/>
 			<xs:attribute name="sqlSource" type="xs:string"/>
-      <xs:attribute name="condenseSql" type="xs:boolean" default="true"/>
+      <xs:attribute name="preserveWhitespace" type="xs:boolean" default="false"/>
 			<xs:attribute name="remapResults">
 				<xs:simpleType>
 					<xs:restriction base="xs:NMTOKEN">
@@ -725,7 +725,7 @@ vs:defaultnsprefix="" >
 			<xs:attribute name="listClass" type="xs:string"/>
 			<xs:attribute name="extends" type="xs:string"/>
 			<xs:attribute name="sqlSource" type="xs:string"/>
-      <xs:attribute name="condenseSql" type="xs:boolean" default="true"/>
+      <xs:attribute name="preserveWhitespace" type="xs:boolean" default="false"/>
 			<xs:attribute name="remapResults">
 				<xs:simpleType>
 					<xs:restriction base="xs:NMTOKEN">
@@ -751,7 +751,7 @@ vs:defaultnsprefix="" >
 					</xs:attribute>
 					<xs:attribute name="resultClass" type="xs:string" use="required"/>
 					<xs:attribute name="sqlSource" type="xs:string"/>
-          <xs:attribute name="condenseSql" type="xs:boolean" default="true"/>
+          <xs:attribute name="preserveWhitespace" type="xs:boolean" default="false"/>
 				</xs:extension>
 			</xs:simpleContent>
 		</xs:complexType>
@@ -821,7 +821,7 @@ vs:defaultnsprefix="" >
 			<xs:attribute name="listClass" type="xs:string"/>
 			<xs:attribute name="cacheModel" type="xs:string"/>
 			<xs:attribute name="sqlSource" type="xs:string"/>
-      <xs:attribute name="condenseSql" type="xs:boolean" default="true"/>
+      <xs:attribute name="preserveWhitespace" type="xs:boolean" default="false"/>
 			<xs:attribute name="remapResults">
 				<xs:simpleType>
 					<xs:restriction base="xs:NMTOKEN">
@@ -878,7 +878,7 @@ vs:defaultnsprefix="" >
 			<xs:attribute name="parameterClass" type="xs:string"/>
 			<xs:attribute name="extends" type="xs:string"/>
 			<xs:attribute name="sqlSource" type="xs:string"/>
-      <xs:attribute name="condenseSql" type="xs:boolean" default="true"/>
+      <xs:attribute name="preserveWhitespace" type="xs:boolean" default="false"/>
 			<xs:attribute name="remapResults">
 				<xs:simpleType>
 					<xs:restriction base="xs:NMTOKEN">

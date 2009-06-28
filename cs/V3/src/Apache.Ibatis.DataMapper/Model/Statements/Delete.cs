@@ -61,6 +61,7 @@ namespace Apache.Ibatis.DataMapper.Model.Statements
         /// <param name="remapResults">if set to <c>true</c> [remap results].</param>
         /// <param name="extends">The extends.</param>
         /// <param name="sqlSource">The SQL source.</param>
+        /// <param name="preserveWhitespace">Preserve whitespace.</param>
         public Delete(
             string id, 
             Type parameterClass,
@@ -73,9 +74,9 @@ namespace Apache.Ibatis.DataMapper.Model.Statements
             bool remapResults,
             string extends,
             ISqlSource sqlSource,
-            bool condenseSql
+            bool preserveWhitespace
             )
-            : base(id, parameterClass, parameterMap, resultClass, resultMaps, listClass, listClassFactory, cacheModel, remapResults, extends, sqlSource, condenseSql)
+            : base(id, parameterClass, parameterMap, resultClass, resultMaps, listClass, listClassFactory, cacheModel, remapResults, extends, sqlSource, preserveWhitespace)
 		{}
 
 	}

@@ -91,6 +91,7 @@ namespace Apache.Ibatis.DataMapper.Model.Statements
         /// <param name="resultMaps">The result maps.</param>
         /// <param name="selectKeyType">Type of the select key.</param>
         /// <param name="sqlSource">The SQL source.</param>
+        /// <param name="preserveWhitespace">Preserve whitespace.</param>
         public SelectKey(
             string id, 
             string propertyName,
@@ -98,9 +99,9 @@ namespace Apache.Ibatis.DataMapper.Model.Statements
             ResultMapCollection resultMaps,
             SelectKeyType selectKeyType,
             ISqlSource sqlSource,
-            bool condenseSql
+            bool preserveWhitespace
             )
-            : base(id, null, null, type, resultMaps, null, null, null, false, string.Empty, sqlSource, condenseSql)
+            : base(id, null, null, type, resultMaps, null, null, null, false, string.Empty, sqlSource, preserveWhitespace)
 		{
             this.propertyName = propertyName;
             this.selectKeyType = selectKeyType;

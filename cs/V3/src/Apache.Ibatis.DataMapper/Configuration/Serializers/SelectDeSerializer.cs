@@ -65,7 +65,7 @@ namespace Apache.Ibatis.DataMapper.Configuration.Serializers
                 remapResults,
                 extendsName,
                 sqlSource,
-                condenseSql);
+                preserveWhitespace);
 
         }
 
