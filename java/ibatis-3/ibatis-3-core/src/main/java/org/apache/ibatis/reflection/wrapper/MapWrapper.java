@@ -1,9 +1,10 @@
 package org.apache.ibatis.reflection.wrapper;
 
-import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.reflection.*;
+import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
 
-import java.util.Map;
+import java.util.*;
 
 public class MapWrapper extends BaseWrapper {
 
@@ -37,19 +38,47 @@ public class MapWrapper extends BaseWrapper {
   }
 
   public String[] getGetterNames() {
-    return (String[]) ((Map) map).keySet().toArray(new String[map.size()]);
+    return (String[])map.keySet().toArray(new String[map.keySet().size()]);
   }
 
   public String[] getSetterNames() {
-    return (String[]) ((Map) map).keySet().toArray(new String[map.size()]);
+    return (String[])map.keySet().toArray(new String[map.keySet().size()]);
   }
 
   public Class getSetterType(String name) {
-    return map.get(name) == null ? Object.class : map.get(name).getClass();
+    PropertyTokenizer prop = new PropertyTokenizer(name);
+    if (prop.hasNext()) {
+      MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());
+      if (metaValue == MetaObject.NULL_META_OBJECT) {
+        return Object.class;
+      } else {
+        return metaValue.getSetterType(prop.getChildren());
+      }
+    } else {
+      if (map.get(name) != null) {
+        return map.get(name).getClass();
+      } else {
+        return Object.class;
+      }
+    }
   }
 
   public Class getGetterType(String name) {
-    return map.get(name) == null ? Object.class : map.get(name).getClass();
+    PropertyTokenizer prop = new PropertyTokenizer(name);
+    if (prop.hasNext()) {
+      MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());
+      if (metaValue == MetaObject.NULL_META_OBJECT) {
+        return Object.class;
+      } else {
+        return metaValue.getGetterType(prop.getChildren());
+      }
+    } else {
+      if (map.get(name) != null) {
+        return map.get(name).getClass();
+      } else {
+        return Object.class;
+      }
+    }
   }
 
   public boolean hasSetter(String name) {
@@ -57,6 +86,26 @@ public class MapWrapper extends BaseWrapper {
   }
 
   public boolean hasGetter(String name) {
-    return true;
+    PropertyTokenizer prop = new PropertyTokenizer(name);
+    if (prop.hasNext()) {
+      if (map.containsKey(prop.getIndexedName())) {
+        MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());
+        if (metaValue == MetaObject.NULL_META_OBJECT) {
+          return map.containsKey(name);
+        } else {
+          return metaValue.hasGetter(prop.getChildren());
+        }
+      } else {
+        return false;
+      }
+    } else {
+      return map.containsKey(name);
+    }
+  }
+
+  public MetaObject instantiatePropertyValue(String name, PropertyTokenizer prop, ObjectFactory objectFactory) {
+    HashMap map = new HashMap();
+    set(prop, map);
+    return MetaObject.forObject(map);
   }
 }

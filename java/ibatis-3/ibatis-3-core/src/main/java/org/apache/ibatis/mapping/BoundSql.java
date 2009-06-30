@@ -1,5 +1,7 @@
 package org.apache.ibatis.mapping;
 
+import org.apache.ibatis.reflection.MetaObject;
+
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
@@ -10,12 +12,14 @@ public class BoundSql {
   private List<ParameterMapping> parameterMappings;
   private Object parameterObject;
   private Map<String,Object> additionalParameters;
+  private MetaObject metaParameters;
 
   public BoundSql(String sql, List<ParameterMapping> parameterMappings, Object parameterObject) {
     this.sql = sql;
     this.parameterMappings = parameterMappings;
     this.parameterObject = parameterObject;
     this.additionalParameters = new HashMap<String,Object>();
+    this.metaParameters = MetaObject.forObject(additionalParameters);
   }
 
   public String getSql() {
@@ -31,14 +35,14 @@ public class BoundSql {
   }
 
   public boolean hasAdditionalParameter(String name) {
-    return additionalParameters.containsKey(name);
+    return metaParameters.hasGetter(name);
   }
 
   public void setAdditionalParameter(String name, Object value) {
-    additionalParameters.put(name, value);
+    metaParameters.setValue(name, value);
   }
 
   public Object getAdditionalParameter(String name) {
-    return additionalParameters.get(name);
+    return metaParameters.getValue(name);
   }
 }

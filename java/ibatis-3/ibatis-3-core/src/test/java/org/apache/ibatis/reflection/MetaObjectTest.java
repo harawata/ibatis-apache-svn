@@ -5,6 +5,8 @@ import domain.misc.RichType;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
+import java.util.*;
+
 public class MetaObjectTest {
 
   @Test
@@ -177,6 +179,41 @@ public class MetaObjectTest {
         assertEquals(String.class, object.getSetterType(writeable));
       }
     }
+  }
+
+  @Test
+  public void shouldDemonstrateDeeplyNestedMapProperties() {
+    HashMap map = new HashMap();
+    MetaObject metaMap = MetaObject.forObject(map);
+
+    assertTrue(metaMap.hasSetter("id"));
+    assertTrue(metaMap.hasSetter("name.first"));
+    assertTrue(metaMap.hasSetter("address.street"));
+
+    assertFalse(metaMap.hasGetter("id"));
+    assertFalse(metaMap.hasGetter("name.first"));
+    assertFalse(metaMap.hasGetter("address.street"));
+
+    metaMap.setValue("id", "100");
+    metaMap.setValue("name.first", "Clinton");
+    metaMap.setValue("name.last", "Begin");
+    metaMap.setValue("address.street", "1 Some Street");
+    metaMap.setValue("address.city", "This City");
+    metaMap.setValue("address.province", "A Province");
+    metaMap.setValue("address.postal_code", "1A3 4B6");
+
+    assertTrue(metaMap.hasGetter("id"));
+    assertTrue(metaMap.hasGetter("name.first"));
+    assertTrue(metaMap.hasGetter("address.street"));
+
+    assertEquals(3, metaMap.getGetterNames().length);
+    assertEquals(3, metaMap.getSetterNames().length);
+
+    Map name = (Map)metaMap.getValue("name");
+    Map address = (Map)metaMap.getValue("address");
+
+    assertEquals("Clinton", name.get("first"));
+    assertEquals("1 Some Street", address.get("street"));
   }
 
 

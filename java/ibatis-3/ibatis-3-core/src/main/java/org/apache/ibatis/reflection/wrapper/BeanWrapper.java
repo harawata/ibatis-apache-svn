@@ -1,6 +1,7 @@
 package org.apache.ibatis.reflection.wrapper;
 
 import org.apache.ibatis.reflection.*;
+import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
 import org.apache.ibatis.reflection.invoker.Invoker;
 
@@ -76,11 +77,15 @@ public class BeanWrapper extends BaseWrapper {
   public boolean hasSetter(String name) {
     PropertyTokenizer prop = new PropertyTokenizer(name);
     if (prop.hasNext()) {
-      MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());
-      if (metaValue == MetaObject.NULL_META_OBJECT) {
-        return metaClass.hasSetter(name);
+      if (metaClass.hasSetter(prop.getIndexedName())) {
+        MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());
+        if (metaValue == MetaObject.NULL_META_OBJECT) {
+          return metaClass.hasSetter(name);
+        } else {
+          return metaValue.hasSetter(prop.getChildren());
+        }
       } else {
-        return metaValue.hasSetter(prop.getChildren());
+        return false;
       }
     } else {
       return metaClass.hasSetter(name);
@@ -90,15 +95,32 @@ public class BeanWrapper extends BaseWrapper {
   public boolean hasGetter(String name) {
     PropertyTokenizer prop = new PropertyTokenizer(name);
     if (prop.hasNext()) {
-      MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());
-      if (metaValue == MetaObject.NULL_META_OBJECT) {
-        return metaClass.hasGetter(name);
+      if (metaClass.hasGetter(prop.getIndexedName())) {
+        MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());
+        if (metaValue == MetaObject.NULL_META_OBJECT) {
+          return metaClass.hasGetter(name);
+        } else {
+          return metaValue.hasGetter(prop.getChildren());
+        }
       } else {
-        return metaValue.hasGetter(prop.getChildren());
+        return false;
       }
     } else {
       return metaClass.hasGetter(name);
     }
+  }
+
+  public MetaObject instantiatePropertyValue(String name, PropertyTokenizer prop, ObjectFactory objectFactory) {
+    MetaObject metaValue;
+    Class type = getSetterType(prop.getName());
+    try {
+      Object newObject = objectFactory.create(type);
+      metaValue = MetaObject.forObject(newObject);
+      set(prop, newObject);
+    } catch (Exception e) {
+      throw new ReflectionException("Cannot set value of property '" + name + "' because '" + name + "' is null and cannot be instantiated on instance of " + type.getName() + ". Cause:" + e.toString(), e);
+    }
+    return metaValue;
   }
 
   private Object getBeanProperty(PropertyTokenizer prop, Object object) {
