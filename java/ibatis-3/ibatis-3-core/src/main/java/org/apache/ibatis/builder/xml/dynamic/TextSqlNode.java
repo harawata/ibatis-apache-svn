@@ -1,5 +1,8 @@
 package org.apache.ibatis.builder.xml.dynamic;
 
+import org.apache.ibatis.builder.BuilderException;
+import org.apache.ibatis.ognl.Ognl;
+import org.apache.ibatis.ognl.OgnlException;
 import org.apache.ibatis.parsing.GenericTokenParser;
 
 public class TextSqlNode implements SqlNode {
@@ -24,7 +27,12 @@ public class TextSqlNode implements SqlNode {
     }
 
     public String handleToken(String content) {
-      return String.valueOf(context.getBindings().get(content));
+      try {
+        Object value = Ognl.getValue(content, context.getBindings());
+        return String.valueOf(value);
+      } catch (OgnlException e) {
+        throw new BuilderException("Error evaluating expression '"+content+"'. Cause: " + e, e);
+      }
     }
   }
 
