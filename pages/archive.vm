@@ -7,11 +7,56 @@
 
      <h2>News Archive</h2>
 
+     <h3>Call for Official QA/Testing Team Members</h3>
+
+     <p>(Jul 16, 2008) It seems that we have two very distinct types of teams using iBATIS:</p>
+     <ul>
+       <li>Adventurous bleeding edge types</li>
+       <li>Conservative stable types</li>
+     </ul>
+     <p>It's hard to cater to both groups, so we've come up with a way that these groups can help each other. We've now
+       provided access to
+       a <b>Parabuild continuous build server</b>. The software and hosting is graciously provided by <b>Viewtier Systems</b>.
+       This will
+       allow the bleeding edge types to simply download the latest and greatest software, without waiting for a formal
+       release by us.</p>
+
+     <p><b>In addition, we'd like to invite some of these teams or individuals to become a formal QA/Testing group for
+       iBATIS.</b></p>
+
+     <p>This doesn't have to mean a lot of work! The best candidates are teams with excellent test suites for their
+       applications and those who use a lot of the different features
+       of iBATIS in different or even odd ways. We especially want to target groups who are using <b>Spring</b> or other 3rd
+       party software that integrates
+       or works closely with iBATIS. Alone we cannot test every single deployment, but together we can. This will allow us to
+       learn about potential
+       integration problems sooner and allow us to get to General Availability status faster.
+     </p>
+
+     <p>The continuous integration link and instructions can be found on the <a href="java.cgi">Java Downloads</a>
+       page.</p>
+
+     <p><b>If you'd like to register yourself or your team as a formal tester</b>, please send an email to the mailing list.
+       Or to Clinton Begin if you'd
+       like to remain anonymous (you should know my email if you're on the list). Of course I recommend you keep it wide open
+       and identify yourselves both for
+       credit and so that you can share knowledge with other testers or teams</p>
+
+     <p>Thanks to all!</p>
+
+     <h3>iBATIS 2.3.3 BETA Released.  And it will remain beta until...</h3>
+     <p>(Jul 16, 2008) Practically moments after promoting iBATIS 2.3.2 to GA, a number of nasty bugs were discovered, particularly with the Spring integration.  We refactored a lot of
+     "internal" (i.e. non-client) code in these latest versions, and so as an end-user, you really need to test the betas!  So from now on, we're going to wait until we get enough confirmation
+     from actual production implementations (either through test suites or staging environments) that things are working well.  I'm thinking at least 20 responses before moving to GA. Maybe in the long run we'll
+     identify dedicated testers who are willing to update to the latest beta and run a comprehensive application test suite against it. </p>
+     <p><b><a href="java.cgi">Get the 2.3.3 Beta from the Java downloads page now!</a></b></p>
+
+
 <h3>iBATIS 2.3.2 Promoted to General Availability</h3>
 <p>(Jun 30, 2008) The latest version of iBATIS has been promoted to GA.  This latest version requires Java 5.  While it wasn't planned that way originally, we decided to take the plunge 
 and start to "encourage" our users to upgrade their platforms (or at least become one more reason to do so).  Sun will be discontinuing support for JDK 1.4 in about four months and 
 most of the world has already moved to Java 5.  This also allows us to include built-in support for enumerations and will better prepare you for iBATIS 3 when the time comes. </p>
-<p><b><a href="javadownloads.cgi">Get the 2.3.2 GA from the Java downloads page now!</a></b></p>
+<p><b><a href="java.cgi">Get the 2.3.2 GA from the Java downloads page now!</a></b></p>
   
 <h3>iBATIS 2.3.2 Beta and German Docs</h3>
 <p>(Apr 22, 2008) I've released a small update which corrects a few logistical issues with the 2.3.1 deploy.  It's a very minor release, but this will be the next GA version if all goes well.  Thus 2.3.1 will never be GA, so get this one.  In addition to that, <b>Axel Leucht</b> has contributed documentation in German.  So now all of my co-workers at Arvato can read about iBATIS too!  ;-)   Thanks Axel.  
@@ -51,14 +96,14 @@ most of the world has already moved to Java 5.  This also allows us to include b
  <p>(June 12, 2007) Thanks to the contributions from our iBATIS community, we now have
  documentation in 7 languages!  The most recent addition is Japanese, which joins Chinese,
  Korean, Italian, Spanish, French and English.</p>
- <p><b><a href="javadownloads.cgi">Download documentation from the Java downloads page</a></b></p>
+ <p><b><a href="java.cgi">Download documentation from the Java downloads page</a></b></p>
 
 	 <h3>iBATIS.NET DataMapper 1.6.1 and DataAccess 1.9.1 General Availability!</h3>
   <p>(April 6, 2007) The votes are in and both distributions are now tagged as GA!</p>
   <p>This release includes primarily several bug fixes and enhancements, documentation have been updated.</p>
   iBATIS now supports support to groupBy attribute on resultMap to resolve N+1 select issue.
   <p/>
-  <p><b><a href="dotnetdownloads.cgi">Download iBATIS.NET DataMapper 1.6.1 and DataAccess 1.9.1 (GA)!</a></b></p>
+  <p><b><a href="dotnet.cgi">Download iBATIS.NET DataMapper 1.6.1 and DataAccess 1.9.1 (GA)!</a></b></p>
 
 <h3>iBATIS.NET DataMapper 1.6.1 and DataAccess 1.9.1 Released [Status: Beta]</h3>
   <p>(March 1, 2007) The iBATIS.NET team is proud to announce that the BETA release of DataAccess V1.9.1 and DataMapper V1.6.1 are now available.</p>
@@ -86,7 +131,7 @@ most of the world has already moved to Java 5.  This also allows us to include b
 
 </div>
 <p/>
-<p><b><a href="dotnetdownloads.cgi">Download iBATIS.NET DataMapper 1.6.1 and DataAccess 1.9.1 (BETA)!</a></b></p>
+<p><b><a href="dotnet.cgi">Download iBATIS.NET DataMapper 1.6.1 and DataAccess 1.9.1 (BETA)!</a></b></p>
 
   <h3>iBATIS for Java 2.3.0 General Availability</h3>
   <p>(February 11, 2007) The votes are in an iBATIS for Java 2.3.0 is promoted to
@@ -102,7 +147,7 @@ most of the world has already moved to Java 5.  This also allows us to include b
   <p>The paginated list methods have been deprecated with this release.  The methods were confusing
      to many users and often misused.  We suggest using native database support for paging,
      or that you use the query methods with skip and max settings.</p>
-  <p><b><a href="javadownloads.cgi">Download iBATIS 2.3.0!</a></b></p>
+  <p><b><a href="java.cgi">Download iBATIS 2.3.0!</a></b></p>
   
   <h3>iBATIS.NET DataMapper 1.6.0 and DataAccess 1.9.0 Released [Status: Beta]</h3>
 <p>(February 1, 2007) The iBATIS.NET team is proud to announce that the BETA release of DataAccess V1.9.0 and DataMapper V1.6.0 are now available.</p>
@@ -152,7 +197,7 @@ Thanks once again for your comments and suggestions. Enjoy!</p>
 </ul>
 </div>
 <p/>
-<p><b><a href="dotnetdownloads.cgi">Download iBATIS.NET DataMapper 1.6.0 and DataAccess 1.9.0 (BETA)!</a></b></p>
+<p><b><a href="dotnet.cgi">Download iBATIS.NET DataMapper 1.6.0 and DataAccess 1.9.0 (BETA)!</a></b></p>
 
   <h3>iBATIS in Action Released</h3>
   <p>(January 26, 2007) A book for iBATIS?  No way!  Yes way.  The book is here.
@@ -187,7 +232,7 @@ Thanks once again for your comments and suggestions. Enjoy!</p>
   on the Java downloads page.  Deprecated basically means we just won't be
   adding any features to it in the future, which is pretty much the same way it's been
   for a couple of years -- I guess it's perfect. ;-)  Kidding.</p>
-  <p><b><a href="javadownloads.cgi">The DAO framework will always be available here.</a></b></p>
+  <p><b><a href="java.cgi">The DAO framework will always be available here.</a></b></p>
 
 
   <h3>iBATIS for Java 2.2.0 General Availability</h3>
@@ -196,7 +241,7 @@ Thanks once again for your comments and suggestions. Enjoy!</p>
     of iBATIS in at least a year.  See the
     release notes on the download page for full details.
     This is the last release of iBATIS that will include the DAO framework.</p>
-  <p><b><a href="javadownloads.cgi">Download iBATIS 2.2.0!</a></b></p>
+  <p><b><a href="java.cgi">Download iBATIS 2.2.0!</a></b></p>
 
   <h3>ARTICLE: InfoQ has posted an article on iBATIS.NET</h3>
   <p>
@@ -210,7 +255,7 @@ Thanks once again for your comments and suggestions. Enjoy!</p>
   <p>This release is primarily an enhancement release to support .NET 2.0 and also bug fix, documentation have been updated.
    iBATIS now supports all essential features of .NET 2.0 (generics, nullable types), see change log for more information.
    </p>
-  <p><b><a href="dotnetdownloads.cgi">Download iBATIS.NET DataMapper 1.5.1 and DataAccess 1.8.1!</a></b></p>
+  <p><b><a href="dotnet.cgi">Download iBATIS.NET DataMapper 1.5.1 and DataAccess 1.8.1!</a></b></p>
 
 
   <h3>RBatis - iBATIS for Ruby has been released!</h3>
@@ -254,7 +299,7 @@ Thanks once again for your comments and suggestions. Enjoy!</p>
   <p>The paginated list methods have been deprecated with this release.  The methods were confusing
      to many users and often misused.  We suggest using native database support for paging,
      or that you use the query methods with skip and max settings.</p>
-  <p><b><a href="javadownloads.cgi">Download iBATIS 2.3.0!</a></b></p>
+  <p><b><a href="java.cgi">Download iBATIS 2.3.0!</a></b></p>
   
 <h3>iBATIS for Java 2.2.0 Released [Status: Beta]</h3>
 <p>(August 16, 2006) This is probably the most significant iBATIS 2.x release in at least a year.  If you
@@ -295,7 +340,7 @@ Thanks once again for your comments and suggestions. Enjoy!</p>
 
 <h3>iBATIS.NET DataMapper 1.3 and DataAccess 1.7 General Availability!</h3>
 <p>(Jun 12, 2006) The votes are in and both distributions are now tagged as GA!</p>
-<p><b><a href="dotnetdownloads.cgi">Download iBATIS.NET DataMapper 1.3 and DataAccess 1.7!</a></b></p>
+<p><b><a href="dotnet.cgi">Download iBATIS.NET DataMapper 1.3 and DataAccess 1.7!</a></b></p>
 
 <h3>iBATIS Java 2.1.7 - Maintenance Release - Last 1.3 Compatible Release!</h3>
 

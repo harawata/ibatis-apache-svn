@@ -1,0 +1,204 @@
+<html>
+<head>
+  <title>iBATIS.NET</title>
+</head>
+
+<body>
+
+<!-- start content -->
+<div id="content">
+
+<div class="post">
+<h1 class="title">iBATIS.NET</h1>
+
+<div class="entry">
+  <h2>Download</h2>
+
+  <form action="[location]" method="get" id="SelectMirror">
+    <p>The currently selected mirror is <b>[preferred]</b>. If you encounter a problem with this
+      mirror, please select another mirror.
+      <select name="Preferred"> [if-any http] [for http]
+        <option value="[http]">[http]</option>
+        [end][end][if-any ftp] [for ftp]
+        <option value="[ftp]">[ftp]</option>
+        [end][end][if-any backup] [for backup]
+        <option value="[backup]">[backup] (backup)</option>
+        [end][end]</select>
+      <input type="submit" value="Change"/>
+    </p>
+  </form>
+  <h4>Releases</h4>
+
+  <ul>
+    <li><a href="[preferred]/ibatis/binaries/ibatis.net/IBatis.DataMapper.1.6.2.bin.zip"
+           onClick="javascript:urchinTracker('/downloads/DataMapper162');">DataMapper 1.6.2</a> [<a
+        href="[preferred]/ibatis/binaries/ibatis.net/IBatis.DataMapper.1.6.2.bin.zip.md5">MD5</a>] [<a
+        href="[preferred]/ibatis/binaries/ibatis.net/IBatis.DataMapper.1.6.2.bin.zip.asc">PGP</a>] (BETA)
+    </li>
+    <li><a href="[preferred]/ibatis/binaries/ibatis.net/IBatis.DataAccess.1.9.2.bin.zip"
+           onClick="javascript:urchinTracker('/downloads/DataAccess192');">DataAccess 1.9.2</a> [<a
+        href="[preferred]/ibatis/binaries/ibatis.net/IBatis.DataAccess.1.9.2.bin.zip.md5">MD5</a>] [<a
+        href="[preferred]/ibatis/binaries/ibatis.net/IBatis.DataAccess.1.9.2.bin.zip.asc">PGP</a>] (BETA)
+    </li>
+    <li><a href="[preferred]/ibatis/source/ibatis.net/src-revision-709676.zip"
+           onClick="javascript:urchinTracker('/downloads/DotNetSource709676');">Source Revision 709676</a> [<a
+        href="[preferred]/ibatis/source/ibatis.net/src-revision-709676.zip.md5">MD5</a>] [<a
+        href="[preferred]/ibatis/source/ibatis.net/src-revision-709676.zip.asc">PGP</a>]
+    </li>
+  </ul>
+
+  <ul>
+    <li><a href="[preferred]/ibatis/binaries/ibatis.net/IBatisNet.DataMapper-bin-1.6.1.zip"
+           onClick="javascript:urchinTracker('/downloads/DataMapper161');">DataMapper 1.6.1</a> [<a
+        href="[preferred]/ibatis/binaries/ibatis.net/IBatisNet.DataMapper-bin-1.6.1.zip.md5">MD5</a>] [<a
+        href="[preferred]/ibatis/binaries/ibatis.net/IBatisNet.DataMapper-bin-1.6.1.zip.asc">PGP</a>] (Apache
+      General Availability)
+    </li>
+    <li><a href="[preferred]/ibatis/binaries/ibatis.net/IBatisNet.DataAccess-bin-1.9.1.zip"
+           onClick="javascript:urchinTracker('/downloads/DataAccess191');">DataAccess 1.9.1</a> [<a
+        href="[preferred]/ibatis/binaries/ibatis.net/IBatisNet.DataAccess-bin-1.9.1.zip.md5">MD5</a>] [<a
+        href="[preferred]/ibatis/binaries/ibatis.net/IBatisNet.DataAccess-bin-1.9.1.zip.asc">PGP</a>] (Apache
+      General Availability)
+    </li>
+    <li><a href="[preferred]/ibatis/source/ibatis.net/source-revision-513437.zip"
+           onClick="javascript:urchinTracker('/downloads/DotNetSource513437');">Source Revision 513437</a> [<a
+        href="[preferred]/ibatis/source/ibatis.net/source-revision-513437.zip.md5">MD5</a>] [<a
+        href="[preferred]/ibatis/source/ibatis.net/source-revision-513437.zip.asc">PGP</a>]
+    </li>
+  </ul>
+
+  <h4>Examples</h4>
+  <ul>
+    <li><a href="http://prdownloads.sourceforge.net/ibatisnet/Tutorial-1.2.1.zip?download">DataMapper Tutorial 1.2.1
+      Docs and Source</a></li>
+    <li><a href="http://prdownloads.sourceforge.net/ibatisnet/NPetshop-1.0.0.RC1.zip?download">NPetShop Example
+      Application</a></li>
+  </ul>
+  <ul>
+    <li><a href="http://people.apache.org/dist/ibatis/ibatis.net/beta/tutorial2.zip"
+           onClick="javascript:urchinTracker('/downloads/DataMapperTutorial20');">DataMapper Tutorial .NET 2.0
+      Beta</a> [<a href="http://people.apache.org/dist/ibatis/ibatis.net/beta/tutorial2.zip.md5">MD5</a>] [<a
+        href="http://people.apache.org/dist/ibatis/ibatis.net/beta/tutorial2.zip.asc">PGP</a>]
+    </li>
+  </ul>
+</div>
+<h1 class="title">Old Stuff</h1>
+
+<div class="entry">
+  <h4>Releases</h4>
+
+  <ul>
+    <li><a href="[preferred]/ibatis/binaries/ibatis.net/IBatisNet.DataMapper-bin-1.5.1.zip"
+           onClick="javascript:urchinTracker('/downloads/DataMapper151');">DataMapper 1.5.1</a> [<a
+        href="[preferred]/ibatis/binaries/ibatis.net/IBatisNet.DataMapper-bin-1.5.1.zip.md5">MD5</a>] [<a
+        href="[preferred]/ibatis/binaries/ibatis.net/IBatisNet.DataMapper-bin-1.5.1.zip.asc">PGP</a>] (Apache
+      General Availability)
+    </li>
+    <li><a href="[preferred]/ibatis/binaries/ibatis.net/IBatisNet.DataAccess-bin-1.8.1.zip"
+           onClick="javascript:urchinTracker('/downloads/DataAccess181');">DataAccess 1.8.1</a> [<a
+        href="[preferred]/ibatis/binaries/ibatis.net/IBatisNet.DataAccess-bin-1.8.1.zip.md5">MD5</a>] [<a
+        href="[preferred]/ibatis/binaries/ibatis.net/IBatisNet.DataAccess-bin-1.8.1.zip.asc">PGP</a>] (Apache
+      General Availability)
+    </li>
+    <li><a href="[preferred]/ibatis/source/ibatis.net/Source-revision-426164.zip"
+           onClick="javascript:urchinTracker('/downloads/DotNetSource426164');">Source Revision 426164</a> [<a
+        href="[preferred]/ibatis/source/ibatis.net/Source-revision-426164.zip.md5">MD5</a>] [<a
+        href="[preferred]/ibatis/source/ibatis.net/Source-revision-426164.zip.asc">PGP</a>]
+    </li>
+  </ul>
+
+  <ul>
+    <li><a href="[preferred]/ibatis/binaries/ibatis.net/IBatisNet.DataMapper-bin-1.3.0.zip"
+           onClick="javascript:urchinTracker('/downloads/DataMapper130');">DataMapper 1.3</a> [<a
+        href="[preferred]/ibatis/binaries/ibatis.net/IBatisNet.DataMapper-bin-1.3.0.zip.md5">MD5</a>] [<a
+        href="[preferred]/ibatis/binaries/ibatis.net/IBatisNet.DataMapper-bin-1.3.0.zip.asc">PGP</a>] (Apache
+      General Availability)
+    </li>
+    <li><a href="[preferred]/ibatis/binaries/ibatis.net/IBatisNet.DataAccess-bin-1.7.0.zip"
+           onClick="javascript:urchinTracker('/downloads/DataAccess170');">DataAccess 1.7</a> [<a
+        href="[preferred]/ibatis/binaries/ibatis.net/IBatisNet.DataAccess-bin-1.7.0.zip.md5">MD5</a>] [<a
+        href="[preferred]/ibatis/binaries/ibatis.net/IBatisNet.DataAccess-bin-1.7.0.zip.asc">PGP</a>] (Apache
+      General Availability)
+    </li>
+    <li><a href="[preferred]/ibatis/source/ibatis.net/Source.356824.zip"
+           onClick="javascript:urchinTracker('/downloads/DotNetSource356824');">Source Revision 356824</a> [<a
+        href="[preferred]/ibatis/source/ibatis.net/Source.356824.zip.md5">MD5</a>] [<a
+        href="[preferred]/ibatis/source/ibatis.net/Source.356824.zip.asc">PGP</a>]
+    </li>
+  </ul>
+
+  <ul>
+    <li><a href="http://sourceforge.net/project/showfiles.php?group_id=109704">Old Releases (at SourceForge)</a>
+    </li>
+  </ul>
+</div>
+</div>
+
+</div>
+<!-- end content -->
+<!-- start sidebar -->
+<div id="sidebar">
+  <ul>
+    <li>
+      <h2>Resources</h2>
+      <ul>
+        <li><b>Community</b></li>
+        <li><a title="iBATIS Wiki" href="http://opensource.atlassian.com/confluence/oss/display/IBATIS/Home"
+               target="_new">Wiki</a></li>
+        <li><a title="iBATIS FAQ"
+               href="http://opensource.atlassian.com/confluence/oss/display/IBATIS/Frequently+Asked+Questions"
+               target="_new">FAQ</a></li>
+        <li><a title="Subversion"
+               href="http://svn.apache.org/repos/asf/ibatis/trunk"
+               target="_new">Subversion</a>
+            (<a style="background:none;padding-left:0"
+                title="FishEye"
+                href="http://fisheye6.cenqua.com/viewrep/ibatis"
+                target="_new">FishEye</a>)</li>
+
+
+        <li><b>Issue Tracking</b></li>
+        <li><a title="iBATIS for .NET Issue Tracker" href="http://issues.apache.org/jira/browse/IBATISNET"
+               target="_new">JIRA Issue Tracker</a></li>
+        <li><a title="iBATIS Issue Tracker Sign Up Page" href="http://issues.apache.org/jira/secure/Signup!default.jspa"
+               target="_new">JIRA Sign Up Page</a></li>
+
+
+        <li><b>Mailing Lists</b></li>
+        <li><a href="mailto:user-cs-subscribe@ibatis.apache.org">Subscribe</a> (<a
+            style="background:none;padding-left:0" href="mailto:user-cs-digest-subscribe@ibatis.apache.org">Digest</a>)
+        </li>
+        <li><a href="mailto:user-cs-unsubscribe@ibatis.apache.org">Unsubscribe</a> (<a
+            style="background:none;padding-left:0" href="mailto:user-cs-digest-unsubscribe@ibatis.apache.org">Digest</a>)
+        </li>
+        <li><a href="mailto:user-cs@ibatis.apache.org">New Message</a></li>
+        <li><a href="http://www.mail-archive.com/user-cs@ibatis.apache.org/" target="_new">Archives/Search</a></li>
+
+
+        <li><b>Online API Docs</b></li>
+        <li><a target="_blank" href="/docs/dotnet/datamapper/index.html">C# DataMapper Developer Guide</a></li>
+        <li><a target="_blank" href="/docs/dotnet/dataaccess/index.html">C# DataAccess Developer Guide</a></li>
+        <li><a target="_blank" href="/SDK/dotnet/index.html">SDK</a></li>
+
+
+        <li><b>Documentation</b></li>
+        <li>&nbsp;&nbsp;&nbsp;1.6.2 / 1.9.2</li>
+        <li><a href="[preferred]/ibatis/binaries/ibatis.net/Doc-DataMapper-1.6.2.zip">DataMapper 1.6.2 Docs</a></li>
+        <li><a href="[preferred]/ibatis/binaries/ibatis.net/Doc-DataAccess-1.9.2.zip">DataAccess 1.9.2 Docs</a></li>
+        <li>&nbsp;&nbsp;&nbsp;1.6.1 / 1.9.1</li>
+        <li><a href="[preferred]/ibatis/binaries/ibatis.net/Doc-DataMapper-1.6.1.zip">DataMapper 1.6.1 Docs</a></li>
+        <li><a href="[preferred]/ibatis/binaries/ibatis.net/Doc-DataAccess-1.9.1.zip">DataAccess 1.9.1 Docs</a></li>
+        <li>&nbsp;&nbsp;&nbsp;1.5.1 / 1.8.1</li>
+        <li><a href="[preferred]/ibatis/binaries/ibatis.net/Doc-DataMapper-1.5.1.zip">DataMapper 1.5.1 GA Docs</a></li>
+        <li><a href="[preferred]/ibatis/binaries/ibatis.net/Doc-DataAccess-1.8.1.zip">DataAccess 1.8.1 GA Docs</a></li>
+        <li>&nbsp;&nbsp;&nbsp;1.3.0 / 1.7.0</li>
+        <li><a href="[preferred]/ibatis/binaries/ibatis.net/Doc-DataMapper-1.3.0.zip">DataMapper 1.3 GA Docs</a></li>
+        <li><a href="[preferred]/ibatis/binaries/ibatis.net/Doc-DataAccess-1.7.0.zip">DataAccess 1.7 GA Docs</a></li>
+      </ul>
+    </li>
+  </ul>
+</div>
+<!-- end sidebar -->
+
+</body>
+</html>
