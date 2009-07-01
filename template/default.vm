@@ -16,7 +16,7 @@
 </div>
 <hr/>
 <div id="logo">
-  <img alt="ibatis" src="images/logo.gif"/><img alt="ibatis" src="images/ibatis.gif"/>
+  <img style="float:right" alt="ibatis" src="images/logo.gif"/><img alt="ibatis" src="images/ibatis.gif"/>
 </div>
 <hr/>
 <!-- end header -->
@@ -24,8 +24,8 @@
 <div id="menu">
   <ul>
     <li><a href="index.html">Home</a></li>
-    <li><a href="java.html">Java</a></li>
-    <li><a href="dotnet.html">.NET</a></li>
+    <li><a href="java.cgi">Java</a></li>
+    <li><a href="dotnet.cgi">.NET</a></li>
     <li><a href="team.html">Team</a></li>
     <li><a href="about.html">About</a></li>
   </ul>
