@@ -15,7 +15,7 @@
     select *
     from names
     <where>
-      <foreach collection="names" item="name">
+      <foreach collection="names" item="name" separator="or">
         <foreach collection="name.firstNames" item="firstName" separator="or">
           (lastName = #{name.lastName} and firstName = #{firstName})
         </foreach>

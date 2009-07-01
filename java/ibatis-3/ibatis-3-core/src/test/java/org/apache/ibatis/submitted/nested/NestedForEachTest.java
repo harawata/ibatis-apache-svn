@@ -89,4 +89,31 @@ public class NestedForEachTest {
             sqlSession.close();
         }
     }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testNestedSelect2() {
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        try {
+            Name name = new Name();
+            name.setLastName("Flintstone");
+            name.addFirstName("Fred");
+            name.addFirstName("Wilma");
+            
+            Parameter parameter = new Parameter();
+            parameter.addName(name);
+            
+            name = new Name();
+            name.setLastName("Rubble");
+            name.addFirstName("Betty");
+            parameter.addName(name);
+            
+            List<Map<String, Object>> answer =
+                sqlSession.selectList("org.apache.ibatis.submitted.nested.nestedSelect", parameter);
+            
+            assertEquals(3, answer.size());
+        } finally {
+            sqlSession.close();
+        }
+    }
 }
