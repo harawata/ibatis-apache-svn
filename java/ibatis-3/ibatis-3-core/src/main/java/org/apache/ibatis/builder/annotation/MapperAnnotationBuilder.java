@@ -245,9 +245,19 @@ public class MapperAnnotationBuilder {
   }
 
   private SqlCommandType getSqlCommandType(Method method) {
-    Class[] types = {Select.class, Insert.class, Update.class, Delete.class};
+    Class[] types = {Select.class, Insert.class, Update.class, Delete.class,
+            SelectProvider.class, InsertProvider.class, UpdateProvider.class, DeleteProvider.class};
     Class type = chooseAnnotationType(method, types);
     if (type != null) {
+      if (type == SelectProvider.class) {
+        type = Select.class;
+      } else if (type == InsertProvider.class) {
+        type = Insert.class;
+      } else if (type == UpdateProvider.class) {
+          type = Update.class;
+      } else if (type == DeleteProvider.class) {
+          type = Delete.class;
+      }
       return SqlCommandType.valueOf(type.getSimpleName().toUpperCase());
     }
     return SqlCommandType.UNKNOWN;

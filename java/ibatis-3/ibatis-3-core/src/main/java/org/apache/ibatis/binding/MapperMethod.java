@@ -76,17 +76,10 @@ public class MapperMethod {
   }
 
   private void determineCommandType() {
-    String methodName = method.getName();
-    if (methodName.startsWith("insert") || methodName.startsWith("create")) {
-      type = SqlCommandType.INSERT;
-    } else if (methodName.startsWith("update") || methodName.startsWith("save")) {
-      type = SqlCommandType.UPDATE;
-    } else if (methodName.startsWith("delete") || methodName.startsWith("remove")) {
-      type = SqlCommandType.DELETE;
-    } else if (methodName.startsWith("select") || methodName.startsWith("find")) {
-      type = SqlCommandType.SELECT;
-    } else {
-      throw new BindingException("Unkown execution method for: " + commandName);
+    MappedStatement ms = config.getMappedStatement(commandName);
+    type = ms.getSqlCommandType();
+    if (type == SqlCommandType.UNKNOWN) {
+      throw new BindingException("Unknown execution method for: " + commandName);
     }
   }
 
