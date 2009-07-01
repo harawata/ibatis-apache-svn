@@ -1,186 +1,161 @@
 <html>
 <head>
-  <title>iBATIS News</title>
+  <title>iBATIS Home</title>
+  <script type="text/javascript" src="popup.js">
+
+  </script>
 </head>
 
 <body>
-<div id="Block">
-  <table class="quickTable" >
-    <tbody>
-      <tr>
-        <th class="java"><a href="javadownloads.cgi">iBATIS for Java</a></th>
-        <th class="cs"><a href="dotnetdownloads.cgi">iBATIS for .NET</a></th>
-        <th class="rb"><a href="docs/ruby">iBATIS for Ruby</a></th>
-      </tr>
-    </tbody>
-  </table>
 
-  <img alt="iBATIS Data Mapper process" src="flow.jpg" align="right"/>
+<!-- start content -->
+<div id="content">
 
-  <h2>What is iBATIS?</h2>
+  <div class="post">
+    <h1 class="title">What is iBATIS?</h1>
 
-  <p>The <a title="iBATIS DataMapper framework" href="overview.html">
-    iBATIS Data Mapper framework</a> makes it easier to use a database with Java and
-    .NET applications. iBATIS couples objects with stored procedures or SQL statements
-    using a XML descriptor. Simplicity is the biggest advantage of the iBATIS Data
-    Mapper over object relational mapping tools.</p>
+    <div class="entry">
+      <p>The
+        iBATIS Data Mapper framework makes it easier to use a database with Java and
+        .NET applications. iBATIS couples objects with stored procedures or SQL statements
+        using a XML descriptor. Simplicity is the biggest advantage of the iBATIS Data
+        Mapper over object relational mapping tools.</p>
 
-  <p>To use the iBATIS Data Mapper, you rely on
-    your own objects, XML, and SQL. There is little to learn that you don't already
-    know. With the iBATIS Data Mapper, you have the full power of both SQL and stored
-    procedures at your fingertips.</p>
+      <p>To use the iBATIS Data Mapper, you rely on
+        your own objects, XML, and SQL. There is little to learn that you don't already
+        know. With the iBATIS Data Mapper, you have the full power of both SQL and stored
+        procedures at your fingertips.</p>
 
-  <p>Are you interested but want to know what others have said? Well, first see the various
-    <a title="iBATIS Articles and Other Coverage"
-       href="http://opensource.atlassian.com/confluence/oss/display/IBATIS/Articles+and+other+coverage+of+iBATIS"
-       target="_new">articles and books</a>
-    that have covered iBATIS and read some of our
-    <a title="iBATIS Feedback"
-       href="http://opensource.atlassian.com/confluence/oss/display/IBATIS/Feedback+and+Experiences" target="_new">user
-      feedback</a>.
-    Then, learn how to simple it is to use the iBATIS Data Mapper by reading our
-    <a title="SQL Maps for Java Tutorial"
-       href="http://cvs.apache.org/dist/ibatis/ibatis.java/docs/iBATIS-SqlMaps-2-Tutorial_en.pdf">Java Tutorial</a> or <a
-      title="iBATIS.NET DataMapper Quick Start Guide"
-      href="http://opensource.atlassian.com/confluence/oss/display/IBATIS/Quick+Start+Guide" target="_new">.NET Quick
-    Start Guide</a>!</p>
+      <p>Are you interested but want to know what others have said? Well, first see the various
+        <a title="iBATIS Articles and Other Coverage"
+           href="http://opensource.atlassian.com/confluence/oss/display/IBATIS/Articles+and+other+coverage+of+iBATIS"
+           target="_new">articles and books</a>
+        that have covered iBATIS and read some of our
+        <a title="iBATIS Feedback"
+           href="http://opensource.atlassian.com/confluence/oss/display/IBATIS/Feedback+and+Experiences" target="_new">user
+          feedback</a>.
+        Then, learn how to simple it is to use the iBATIS Data Mapper by reading our
+        <a title="SQL Maps for Java Tutorial"
+           href="http://cvs.apache.org/dist/ibatis/ibatis.java/docs/iBATIS-SqlMaps-2-Tutorial_en.pdf">Java Tutorial</a>
+        or
+        <a
+            title="iBATIS.NET DataMapper Quick Start Guide"
+            href="http://opensource.atlassian.com/confluence/oss/display/IBATIS/Quick+Start+Guide" target="_new">.NET
+          Quick
+          Start Guide</a>!</p>
+
+    </div>
+  </div>
+
+
+  <div class="post">
+    <h1 class="title">Ibator Version 1.2.1 Released</h1>
+
+    <p class="meta">
+      <small>Posted by Jeff Butler on Dec 22, 2008</small>
+    </p>
+    <div class="entry">
+      <p>Ibator version 1.2.1 is released. This version fixes a couple of bugs
+        that manifested in the Eclipse plugin, enhances the Plugin API, and adds a couple of features
+        to the Eclipse plugin. Even though this is a relatively minor release, we recommend that
+        everyone upgrade. See the
+        <a href="http://ibatis.apache.org/docs/tools/ibator/whatsNew.html">What's New?</a>
+        section of the online documentation for full details.</p>
+
+      <p class="more"><a href="ibator.html">Get Ibator Here &hellip;</a></p>
+    </div>
+  </div>
+
+
+  <div class="post">
+    <h1 class="title">iBATIS.NET DataMapper 1.6.2 and DataAccess 1.9.2 BETA</h1>
+
+    <p class="meta">
+      <small>Posted by Gilles Bayon on Nov 1, 2008</small>
+    </p>
+    <div class="entry">
+      <p>The iBATIS.NET team is proud to announce that the BETA release of DataAccess V1.9.2 and DataMapper
+        V1.6.2 are now available.</p>
+
+      <p>This release includes bug fixes and enhancements.</p>
+
+      <p>Vote to General Availability status is expecting in two weeks. Thanks once again for your feedback. Enjoy!</p>
+
+      <p/>
+
+      <p class="more"><a href="dotnet.cgi">Download iBATIS.NET DataMapper &hellip;</a></p>
+    </div>
+  </div>
+
+  <div class="post">
+    <h1 class="title">iBATIS 2.3.4 GA Released.</h1>
+
+    <p class="meta">
+      <small>Posted by Clinton Begin Sep 19, 2008</small>
+    </p>
+    <div class="entry">
+      <p>After releasing 2.3.3 some bugs were discovered. We quickly released a 2.3.4 fix release. After a
+        couple weeks of no negative reports we are promoting the release to GA.</p>
+
+      <p class="more"><a href="java.cgi">Get the 2.3.4 GA from the Java downloads page now! &hellip;</a></p>
+    </div>
+  </div>
 
 </div>
+<!-- end content -->
 
-  <h2>News</h2>
 
-<h3>Apache iBATIS Ibator Version 1.2.1 Released</h3>
-<p>(December 22, 2008) Ibator version 1.2.1 is released. This version fixes a couple of bugs
- that manifested in the Eclipse plugin, enhances the Plugin API, and adds a couple of features
- to the Eclipse plugin.  Even though this is a relatively minor release, we recommend that
- everyone upgrade.  See the
- <a href="http://ibatis.apache.org/docs/tools/ibator/whatsNew.html">What's New?</a>
- section of the online documentation for full details.</p>
-
-<p><b><a href="ibator.html">Get Ibator Here</a></b></p>
-
-<h3>iBATIS.NET DataMapper 1.6.2 and DataAccess 1.9.2 BETA</h3>
-
-<p>(November 1, 2008) The iBATIS.NET team is proud to announce that the BETA release of DataAccess V1.9.2 and DataMapper V1.6.2 are now available.</p>
-
-<p>This release includes bug fixes and enhancements.</p>
-<p>Vote to General Availability status is expecting in two weeks. Thanks once again for your feedback. Enjoy!</p>
-
-<a onclick="ShowHide('DataMapper')" class="release">View Release Notes</a>
-<div style="display:none" id="DataMapper"  class="release">       
-<h4>Bug</h4>
-<ul>
-<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-17'>IBATISNET-17</a>] -         Different bugs using Complex Properties
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-211'>IBATISNET-211</a>] -         The behaviors inconsistence between CommitTransaction and RollbackTransaction in SqlMapSession
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-215'>IBATISNET-215</a>] -         Improve TypeResolver by ignoring space in type definition
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-229'>IBATISNET-229</a>] -         Namespace problems on resultMapping when used with discriminator
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-231'>IBATISNET-231</a>] -         sqlServer20005 misspelled in providers.config
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-232'>IBATISNET-232</a>] -         Nested left joins with group by cause NPE when two subsequent levels have null values
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-234'>IBATISNET-234</a>] -         typeAlias does not work for generics with 2 or more generic parameters
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-239'>IBATISNET-239</a>] -         System.InvalidCastException when Stored Procedure out parameters are null
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-241'>IBATISNET-241</a>] -         Group must use &quot;pre-instantiated&quot; result objects 
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-242'>IBATISNET-242</a>] -         Cache error with QueryForObject&lt;T&gt; 
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-243'>IBATISNET-243</a>] -         Lists of primitives in result maps doesn't work
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-246'>IBATISNET-246</a>] -         SqlMap.xsd is incorrect: sql element can have an include sub-element 
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-248'>IBATISNET-248</a>] -         DefaultPreparedCommand log not thread safe 
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-249'>IBATISNET-249</a>] -         Incorrect process of  &quot;extends&quot; in parameterMap nodes
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-252'>IBATISNET-252</a>] -         DefaultPreparedCommand.ApplyParameterMap logging errors when multiple threads call same statement at same time.
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-253'>IBATISNET-253</a>] -         N+1 issue when using sql timestamp data type
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-254'>IBATISNET-254</a>] -         Better support for nested result maps when using dictionary
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-260'>IBATISNET-260</a>] -         ResultMap extends not work for constructor
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-275'>IBATISNET-275</a>] -         SessionStore gets instantiated with wrong daoManagerId during configuration.
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-283'>IBATISNET-283</a>] -         Result mappings should work with interfaces when QueryForObject is passed an existing object
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-285'>IBATISNET-285</a>] -         flushInterval ist calculated wrong
-</li>
-</ul>
-<h4>        Improvement
-</h4>
-<ul>
-<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-108'>IBATISNET-108</a>] -         Resources.GetEmbeddedResourceAsXmlDocument( )
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-233'>IBATISNET-233</a>] -         SQLite Provider node uses abandoned library. Updated node included
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-240'>IBATISNET-240</a>] -         Allows a properties.config file to begin by a root element appSettings
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-245'>IBATISNET-245</a>] -         Stored procedure parameter cache should be cleared when map is reset using ConfigureAndWatch.
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-251'>IBATISNET-251</a>] -         Support syntax &quot;Key1,Key2&quot; for composite key in result mapping (old syntax)
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-258'>IBATISNET-258</a>] -         Read encrypted database properties from web.config
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-270'>IBATISNET-270</a>] -         ParseGenericArguments IsMatch is very slow
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-279'>IBATISNET-279</a>] -         Cannot run iBatis query from timer handler
-</li>
-</ul> 
-<h4>        New Feature
-</h4>
-<ul>
-<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-3'>IBATISNET-3</a>] -         Dyna SQL: Support for #value# parameter
-</li>
-</ul>
-                            
+<!-- start sidebar -->
+<div id="sidebar">
+  <ul>
+    <li>
+      <h2>1000 words</h2>
+      <ul>
+        <li><a style="padding-left:0;background:none" href="#" onClick="jkpopimage('images/flow.jpg', 550, 350, '1000 words.'); return false"><img alt="iBATIS Data Mapper process" src="images/flow_sm.jpg"/></a></li>
+      </ul>
+    </li>
+    <li>
+      <h2>Hype</h2>
+      <ul>
+        <li><a target="_blank" href="http://opensource.atlassian.com/confluence/oss/pages/viewpage.action?pageId=25">Who's
+          using iBATIS?</a></li>
+        <li><a target="_blank"
+               href="http://opensource.atlassian.com/confluence/oss/display/IBATIS/Articles+and+other+coverage+of+iBATIS">Articles
+          and Books</a></li>
+        <li><a target="_blank"
+               href="http://opensource.atlassian.com/confluence/oss/display/IBATIS/Feedback+and+Experiences">User
+          Feedback</a></li>
+      </ul>
+    </li>
+    <li>
+      <h2>Community</h2>
+      <ul>
+        <li><b>Community</b></li>
+        <li><a title="iBATIS Wiki" href="http://opensource.atlassian.com/confluence/oss/display/IBATIS/Home"
+               target="_new">Wiki</a></li>
+        <li><a title="iBATIS FAQ"
+               href="http://opensource.atlassian.com/confluence/oss/display/IBATIS/Frequently+Asked+Questions"
+               target="_new">FAQ</a></li>
+        <li><a title="Subversion"
+               href="http://svn.apache.org/repos/asf/ibatis/trunk"
+               target="_new">Subversion</a>
+          (<a style="background:none;padding-left:0"
+              title="FishEye"
+              href="http://fisheye6.cenqua.com/viewrep/ibatis"
+              target="_new">FishEye</a>)
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h2>Archives</h2>
+      <ul>
+        <li><a href="archive.html">News Archive</a></li>
+        <li><a href="events.html">Past Events</a></li>
+      </ul>
+    </li>
+  </ul>
 </div>
-
-<p/>
-<p><b><a href="dotnetdownloads.cgi">Download iBATIS.NET DataMapper 1.6.2 and DataAccess 1.9.2 (BETA)!</a></b></p>
-
-<h3>iBATIS 2.3.4 GA Released.<h3>
-
-<p>(Sep 19, 2008) After releasing 2.3.3 some bugs were discovered. We quickly released a 2.3.4 fix release. After a couple weeks of no negative reports we are promoting the release to GA.
-<p>
-<a href="http://ibatis.apache.org/javadownloads.cgi">Get the 2.3.4 GA from the Java downloads page now!</a>
-<p/>
-
-<h3>Call for Official QA/Testing Team Members</h3>
-<p>(Jul 16, 2008) It seems that we have two very distinct types of teams using iBATIS:</p>
-<ul>
-  <li>Adventurous bleeding edge types</li>
-  <li>Conservative stable types</li>
-</ul>
-<p>It's hard to cater to both groups, so we've come up with a way that these groups can help each other.  We've now provided access to 
-a <b>Parabuild continuous build server</b>.  The software and hosting is graciously provided by <b>Viewtier Systems</b>.  This will
-allow the bleeding edge types to simply download the latest and greatest software, without waiting for a formal release by us.</p>
-
-<p><b>In addition, we'd like to invite some of these teams or individuals to become a formal QA/Testing group for iBATIS.</b></p>
-
-<p>This doesn't have to mean a lot of work! The best candidates are teams with excellent test suites for their applications and those who use a lot of the different features
-of iBATIS in different or even odd ways.  We especially want to target groups who are using <b>Spring</b> or other 3rd party software that integrates
-or works closely with iBATIS.  Alone we cannot test every single deployment, but together we can.  This will allow us to learn about potential 
-integration problems sooner and allow us to get to General Availability status faster.  
-</p>
-<p>The continuous integration link and instructions can be found on the <a href="javadownloads.cgi">Java Downloads</a> page.</p>
-<p><b>If you'd like to register yourself or your team as a formal tester</b>, please send an email to the mailing list. Or to Clinton Begin if you'd 
-like to remain anonymous (you should know my email if you're on the list). Of course I recommend you keep it wide open and identify yourselves both for 
-credit and so that you can share knowledge with other testers or teams</p>
-<p>Thanks to all!</p>
-
-<h3>iBATIS 2.3.3 BETA Released.  And it will remain beta until...</h3>
-<p>(Jul 16, 2008) Practically moments after promoting iBATIS 2.3.2 to GA, a number of nasty bugs were discovered, particularly with the Spring integration.  We refactored a lot of 
-"internal" (i.e. non-client) code in these latest versions, and so as an end-user, you really need to test the betas!  So from now on, we're going to wait until we get enough confirmation 
-from actual production implementations (either through test suites or staging environments) that things are working well.  I'm thinking at least 20 responses before moving to GA. Maybe in the long run we'll 
-identify dedicated testers who are willing to update to the latest beta and run a comprehensive application test suite against it. </p>
-<p><b><a href="javadownloads.cgi">Get the 2.3.3 Beta from the Java downloads page now!</a></b></p>
+<!-- end sidebar -->
 
 </body>
 </html>

@@ -1,41 +1,115 @@
 <html>
-<head>    
-    <title>iBATIS Team</title>
-</head>
-
 <body>
+<div id="content">
 
-<h2>Committers</h2>
+  <div class="post">
+    <h1 class="title">Team iBATIS</h1>
 
-<ul>
-  <li>Clinton Begin</li>
-  <li>Gilles Bayon</li>
-  <li>Brandon Goodin</li>
-  <li>Larry Meadors</li>
-  <li>Ron Grabowski</li>
-  <li>Jeff Butler</li>
-  <li>Nathan Maves</li>
-  <li>Kai Grabfelder</li>
-</ul>
+    <div class="entry">
 
-<!-- Emeritus 
-  <li>Ted Husted</li>
-  <li>Roberto Rabe</li>
-  <li>Sven Boden</li>
-  <li>Brice Ruth</li>
-  <li>Jon Tirsen</li>
--->
+      <h2>Committers</h2>
 
-<h2>Thanks to...</h2>
+      <ul>
+        <li>Clinton Begin</li>
+        <li>Brandon Goodin</li>
+        <li>Larry Meadors</li>
+        <li>Ron Grabowski</li>
+        <li>Jeff Butler</li>
+        <li>Nathan Maves</li>
+        <li>Kai Grabfelder</li>
+        <li>Michael Schall</li>
+        <li>Michael McCurrey</li>
+      </ul>
 
-<ul>
-  <li>All of the authors of the articles, feedback and shared experiences that appear on our 
-    <a href="http://opensource.atlassian.com/confluence/oss/display/IBATIS/Home">wiki</a></li>
-  <li>The Spring Team - For integration, improvements and involvement over the years. - http://www.springframework.org </li>
-  <li>The Hibernate Team - For being good neighbours in a complex problem space. - http://www.hibernate.org</li>
-  <li>The Castle Project - http://www.castleproject.org</li>
-</ul>
+      <!-- Emeritus
+        <li>Gilles Bayon</li>
+        <li>Ted Husted</li>
+        <li>Roberto Rabe</li>
+        <li>Sven Boden</li>
+        <li>Brice Ruth</li>
+        <li>Jon Tirsen</li>
+      -->
+
+      <h2>Thanks to...</h2>
+
+      <ul>
+        <li>All of the authors of the articles, feedback and shared experiences that appear on our
+          <a href="http://opensource.atlassian.com/confluence/oss/display/IBATIS/Home">wiki</a></li>
+        <li>The Spring Team - For integration, improvements and involvement over the years. -
+          http://www.springframework.org
+        </li>
+        <li>The Hibernate Team - For being good neighbours in a complex problem space. - http://www.hibernate.org</li>
+        <li>The Castle Project - http://www.castleproject.org</li>
+      </ul>
+
+      <p>
+        The iBATIS team would like to thank the following companies<br/>
+        for providing complimentary access to their world-class software.
+      </p>
+
+      <p>
+        <a target="_new" href="http://www.jetbrains.com"><img align="middle"
+                                                              src="http://www.jetbrains.com/img/logos/banner_general.gif"
+                                                              border="0" alt="JetBrains"/></a>
+      </p>
+
+      <p>
+        <a target="_new" href="http://www.atlassian.com"><img align="middle"
+                                                              src="http://search.atlassian.com/images/logo.gif"
+                                                              border="0" alt="Atlassian"/></a>
+      </p>
+
+      <p>
+        <a target="_new" href="http://www.aquafold.com/"><img
+            src="http://www.aquafold.com/images/Aqua_Fold_Logo_16color.gif"
+            border="0" alt="AquaFold"/></a>
+      </p>
+
+
+    </div>
+
+  </div>
+</div>
+
+<div id="sidebar">
+  <ul>
+    <li>
+      <h2>Resources</h2>
+      <ul>
+        <li><b>Community</b></li>
+        <li><a title="iBATIS Wiki" href="http://opensource.atlassian.com/confluence/oss/display/IBATIS/Home"
+               target="_new">Wiki</a></li>
+        <li><a title="iBATIS FAQ"
+               href="http://opensource.atlassian.com/confluence/oss/display/IBATIS/Frequently+Asked+Questions"
+               target="_new">FAQ</a></li>
+        <li><a title="Subversion"
+               href="http://svn.apache.org/repos/asf/ibatis/trunk"
+               target="_new">Subversion</a>
+            (<a style="background:none;padding-left:0"
+                title="FishEye"
+                href="http://fisheye6.cenqua.com/viewrep/ibatis"
+                target="_new">FishEye</a>)</li>
+
+        <li><b>Dev Team Mailing List</b></li>
+        <li><a href="mailto:dev-subscribe@ibatis.apache.org">Subscribe</a></li>
+
+        <li><a href="mailto:dev-unsubscribe@ibatis.apache.org">Unsubscribe</a></li>
+        <li><a href="mailto:dev@ibatis.apache.org">New Message</a></li>
+        <li><a href="http://www.mail-archive.com/dev@ibatis.apache.org/" target="_new">Archives/Search</a></li>
+
+        <li><b>Subversion Commits List</b></li>
+        <li><a href="mailto:commits-subscribe@ibatis.apache.org">Subscribe</a></li>
+        <li><a href="mailto:commits-unsubscribe@ibatis.apache.org">Unsubscribe</a></li>
+        <li><a href="http://www.mail-archive.com/commits@ibatis.apache.org/" target="_new">Archives/Search</a></li>
+
+        <li><b>Procedures</b></li>
+        <li><a href="http://opensource.atlassian.com/confluence/oss/display/IBATIS/iBATIS+Release+Process">Releasing a New Version</a></li>
+        <li><a href="http://opensource.atlassian.com/confluence/oss/display/IBATIS/Updating+the+Website">Updating the Website</a></li>
+
+      </ul>
+    </li>
+  </ul>
+</div>
 
 </body>
-
 </html>
