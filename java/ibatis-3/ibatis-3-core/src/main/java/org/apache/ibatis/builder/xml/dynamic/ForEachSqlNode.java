@@ -32,9 +32,10 @@ public class ForEachSqlNode implements SqlNode {
     int i = 0;
     for (Object o : iterable) {
       first = applySeparator(context, first);
-      applyItem(context, o, i);
+      int uniqueNumber = context.getUniqueNumber();
+      applyItem(context, o, uniqueNumber);
       applyIndex(context, i);
-      contents.apply(new FilteredDynamicContext(context, item, i));
+      contents.apply(new FilteredDynamicContext(context, item, uniqueNumber));
       i++;
     }
     applyClose(context);
@@ -116,6 +117,11 @@ public class ForEachSqlNode implements SqlNode {
       });
 
       delegate.appendSql(parser.parse(sql));
+    }
+    
+    @Override
+    public int getUniqueNumber() {
+      return delegate.getUniqueNumber();
     }
 
   }

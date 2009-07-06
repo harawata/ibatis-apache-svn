@@ -72,6 +72,11 @@ public class PrefixSqlNode implements SqlNode {
     public String getSql() {
       return delegate.getSql();
     }
+
+    @Override
+    public int getUniqueNumber() {
+      return delegate.getUniqueNumber();
+    }
   }
 
 }

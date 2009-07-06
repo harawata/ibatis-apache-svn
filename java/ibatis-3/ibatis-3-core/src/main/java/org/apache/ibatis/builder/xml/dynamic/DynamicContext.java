@@ -8,6 +8,7 @@ public class DynamicContext {
 
   private Map<String,Object> bindings = new HashMap<String,Object>();
   private StringBuilder sqlBuilder = new StringBuilder();
+  private int uniqueNumber = 0;
 
   public DynamicContext(Object parameterObject) {
     if (parameterObject instanceof Map) {
@@ -37,5 +38,8 @@ public class DynamicContext {
   public String getSql() {
     return sqlBuilder.toString().trim();
   }
-
+  
+  public int getUniqueNumber() {
+    return uniqueNumber++;
+  }
 }
