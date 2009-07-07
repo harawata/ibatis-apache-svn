@@ -155,7 +155,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     for (int i = 1, n = rsmd.getColumnCount(); i <= n; i++) {
       boolean useLabel = mappedStatement.getConfiguration().isUseColumnLabel();
       String columnLabel = (useLabel ? rsmd.getColumnLabel(i) : rsmd.getColumnName(i));
-      columnLabel.toUpperCase();
+      columnLabel = columnLabel.toUpperCase();
       String propName = metaResultObject.findProperty(columnLabel);
       colSet.add(columnLabel);
       if (propName != null) {
