@@ -104,7 +104,7 @@ public class MetaClass {
       if (propertyName != null) {
         builder.append(propertyName);
         builder.append(".");
-        MetaClass metaProp = metaClassForProperty(prop.getName());
+        MetaClass metaProp = metaClassForProperty(propertyName);
         metaProp.buildProperty(prop.getChildren(), builder);
       }
     } else {
