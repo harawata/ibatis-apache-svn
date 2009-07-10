@@ -12,7 +12,7 @@ public class DynamicContext {
 
   public DynamicContext(Object parameterObject) {
     if (parameterObject instanceof Map) {
-      bindings = (Map<String,Object>)parameterObject;
+      bindings.putAll((Map<String,Object>)parameterObject);
     } else if (parameterObject != null) {
       MetaObject metaObject = MetaObject.forObject(parameterObject);
       String[] names = metaObject.getGetterNames();
@@ -20,6 +20,7 @@ public class DynamicContext {
         bindings.put(name,metaObject.getValue(name));
       }
     }
+    bindings.put("_parameter", parameterObject);
   }
 
   public Map<String, Object> getBindings() {
