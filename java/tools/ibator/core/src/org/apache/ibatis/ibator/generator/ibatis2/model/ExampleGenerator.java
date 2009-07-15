@@ -22,7 +22,6 @@ import java.util.List;
 import org.apache.ibatis.ibator.api.CommentGenerator;
 import org.apache.ibatis.ibator.api.FullyQualifiedTable;
 import org.apache.ibatis.ibator.api.IntrospectedColumn;
-import org.apache.ibatis.ibator.api.IntrospectedTable;
 import org.apache.ibatis.ibator.api.dom.OutputUtilities;
 import org.apache.ibatis.ibator.api.dom.java.CompilationUnit;
 import org.apache.ibatis.ibator.api.dom.java.Field;
@@ -32,6 +31,7 @@ import org.apache.ibatis.ibator.api.dom.java.JavaVisibility;
 import org.apache.ibatis.ibator.api.dom.java.Method;
 import org.apache.ibatis.ibator.api.dom.java.Parameter;
 import org.apache.ibatis.ibator.api.dom.java.TopLevelClass;
+import org.apache.ibatis.ibator.generator.AbstractJavaGenerator;
 import org.apache.ibatis.ibator.generator.ibatis2.Ibatis2FormattingUtilities;
 import org.apache.ibatis.ibator.internal.rules.IbatorRules;
 import org.apache.ibatis.ibator.internal.util.JavaBeansUtil;
@@ -43,7 +43,7 @@ import org.apache.ibatis.ibator.internal.util.messages.Messages;
  * @author Jeff Butler
  *
  */
-public class ExampleGenerator extends BaseModelClassGenerator {
+public class ExampleGenerator extends AbstractJavaGenerator {
 
     private boolean generateForJava5;
 
@@ -199,8 +199,7 @@ public class ExampleGenerator extends BaseModelClassGenerator {
         topLevelClass.addMethod(method);
 
         // now generate the inner class that holds the AND conditions
-        topLevelClass.addInnerClass(getCriteriaInnerClass(topLevelClass,
-                introspectedTable));
+        topLevelClass.addInnerClass(getCriteriaInnerClass(topLevelClass));
 
         List<CompilationUnit> answer = new ArrayList<CompilationUnit>();
         if (ibatorContext.getPlugins().modelExampleClassGenerated(topLevelClass, introspectedTable)) {
@@ -209,8 +208,7 @@ public class ExampleGenerator extends BaseModelClassGenerator {
         return answer;
     }
 
-    private InnerClass getCriteriaInnerClass(TopLevelClass topLevelClass,
-            IntrospectedTable introspectedTable) {
+    private InnerClass getCriteriaInnerClass(TopLevelClass topLevelClass) {
         Field field;
         Method method;
 

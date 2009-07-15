@@ -121,7 +121,18 @@ public class FullyQualifiedJavaType implements Comparable<FullyQualifiedJavaType
     public List<String> getImportList() {
         List<String> answer = new ArrayList<String>();
         if (isExplicitlyImported()) {
-            answer.add(baseQualifiedName);
+            int index = baseShortName.indexOf('.');
+            if (index == -1) {
+                answer.add(baseQualifiedName);
+            } else {
+                // an inner class is specified, only import the top
+                // level class
+                StringBuilder sb = new StringBuilder();
+                sb.append(packageName);
+                sb.append('.');
+                sb.append(baseShortName.substring(0, index));
+                answer.add(sb.toString());
+            }
         }
         
         for (FullyQualifiedJavaType fqjt : typeArguments) {
@@ -338,9 +349,16 @@ public class FullyQualifiedJavaType implements Comparable<FullyQualifiedJavaType
     
     private void simpleParse(String typeSpecification) {
         baseQualifiedName = typeSpecification.trim();
-        int lastIndex = baseQualifiedName.lastIndexOf('.');
-        if (lastIndex == -1) {
-            baseShortName = typeSpecification;
+        if (baseQualifiedName.contains(".")) {
+            packageName = getPackage(baseQualifiedName);
+            baseShortName = baseQualifiedName.substring(packageName.length() + 1);
+            if ("java.lang".equals(packageName)) { //$NON-NLS-1$
+                explicitlyImported = false;
+            } else {
+                explicitlyImported = true;
+            }
+        } else {
+            baseShortName = baseQualifiedName;
             explicitlyImported = false;
             packageName = ""; //$NON-NLS-1$
             
@@ -371,14 +389,6 @@ public class FullyQualifiedJavaType implements Comparable<FullyQualifiedJavaType
             } else {
                 primitive = false;
                 primitiveTypeWrapper = null;
-            }
-        } else {
-            baseShortName = baseQualifiedName.substring(lastIndex + 1);
-            packageName = baseQualifiedName.substring(0, lastIndex);
-            if ("java.lang".equals(packageName)) { //$NON-NLS-1$
-                explicitlyImported = false;
-            } else {
-                explicitlyImported = true;
             }
         }
     }
@@ -421,5 +431,33 @@ public class FullyQualifiedJavaType implements Comparable<FullyQualifiedJavaType
         if (StringUtility.stringHasValue(finalType)) {
             typeArguments.add(new FullyQualifiedJavaType(finalType));
         }
+    }
+    
+    /**
+     * Returns the pack name of a fully qualified type.
+     * 
+     * This method relies on convention - we assume that package names
+     * are all lower case.  Not totally fool proof, but correct in
+     * most instances.
+     * 
+     * @param baseQualifiedName
+     * @return
+     */
+    private static String getPackage(String baseQualifiedName) {
+        StringBuilder sb = new StringBuilder();
+        StringTokenizer st = new StringTokenizer(baseQualifiedName, ".");
+        while (st.hasMoreTokens()) {
+            String s = st.nextToken();
+            if (Character.isUpperCase(s.charAt(0))) {
+                break;
+            } else {
+                if (sb.length() > 0) {
+                    sb.append('.');
+                }
+                sb.append(s);
+            }
+        }
+        
+        return sb.toString();
     }
 }

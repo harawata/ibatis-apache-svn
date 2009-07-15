@@ -27,6 +27,7 @@ import org.apache.ibatis.ibator.api.dom.java.Field;
 import org.apache.ibatis.ibator.api.dom.java.JavaVisibility;
 import org.apache.ibatis.ibator.api.dom.java.Method;
 import org.apache.ibatis.ibator.api.dom.java.TopLevelClass;
+import org.apache.ibatis.ibator.generator.AbstractJavaGenerator;
 import org.apache.ibatis.ibator.generator.RootClassInfo;
 import org.apache.ibatis.ibator.internal.util.messages.Messages;
 
@@ -35,7 +36,7 @@ import org.apache.ibatis.ibator.internal.util.messages.Messages;
  * @author Jeff Butler
  *
  */
-public class RecordWithBLOBsGenerator extends BaseModelClassGenerator {
+public class RecordWithBLOBsGenerator extends AbstractJavaGenerator {
 
     public RecordWithBLOBsGenerator() {
         super();
