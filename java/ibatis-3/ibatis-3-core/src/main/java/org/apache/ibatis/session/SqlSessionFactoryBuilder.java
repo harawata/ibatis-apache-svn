@@ -26,10 +26,14 @@ public class SqlSessionFactoryBuilder {
     try {
       XMLConfigBuilder parser = new XMLConfigBuilder(reader, environment, props);
       Configuration config = parser.parse();
-      return new DefaultSqlSessionFactory(config);
+      return build(config);
     } catch (Exception e) {
       throw ExceptionFactory.wrapException("Error building SqlSession.", e);
     }
+  }
+
+  public SqlSessionFactory build(Configuration config) {
+    return new DefaultSqlSessionFactory(config);
   }
 
 }
