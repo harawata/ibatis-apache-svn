@@ -100,7 +100,7 @@ public class DynamicSqlSourceTest extends BaseDataTest {
   }
 
   @Test
-  public void shouldPrefixWHEREInsteadOfANDForFirstCondition() throws Exception {
+  public void shouldTrimWHEREInsteadOfANDForFirstCondition() throws Exception {
     final String expected = "SELECT * FROM BLOG WHERE ID = ?";
     DynamicSqlSource source = createDynamicSqlSource(
         new TextSqlNode("SELECT * FROM BLOG"),
@@ -115,7 +115,7 @@ public class DynamicSqlSourceTest extends BaseDataTest {
   }
 
   @Test
-  public void shouldPrefixWHEREInsteadOfORForSecondCondition() throws Exception {
+  public void shouldTrimWHEREInsteadOfORForSecondCondition() throws Exception {
     final String expected = "SELECT * FROM BLOG WHERE NAME = ?";
     DynamicSqlSource source = createDynamicSqlSource(
         new TextSqlNode("SELECT * FROM BLOG"),
@@ -130,7 +130,7 @@ public class DynamicSqlSourceTest extends BaseDataTest {
   }
 
   @Test
-  public void shouldPrefixWHEREInsteadOfANDForBothConditions() throws Exception {
+  public void shouldTrimWHEREInsteadOfANDForBothConditions() throws Exception {
     final String expected = "SELECT * FROM BLOG WHERE ID = ? OR NAME = ?";
     DynamicSqlSource source = createDynamicSqlSource(
         new TextSqlNode("SELECT * FROM BLOG"),
@@ -145,7 +145,7 @@ public class DynamicSqlSourceTest extends BaseDataTest {
   }
 
   @Test
-  public void shouldPrefixNoWhereClause() throws Exception {
+  public void shouldTrimNoWhereClause() throws Exception {
     final String expected = "SELECT * FROM BLOG";
     DynamicSqlSource source = createDynamicSqlSource(
         new TextSqlNode("SELECT * FROM BLOG"),
@@ -160,7 +160,7 @@ public class DynamicSqlSourceTest extends BaseDataTest {
   }
 
   @Test
-  public void shouldPrefixSETInsteadOfCOMMAForBothConditions() throws Exception {
+  public void shouldTrimSETInsteadOfCOMMAForBothConditions() throws Exception {
     final String expected = "UPDATE BLOG SET ID = ? , NAME = ?";
     DynamicSqlSource source = createDynamicSqlSource(
         new TextSqlNode("UPDATE BLOG"),
@@ -175,7 +175,7 @@ public class DynamicSqlSourceTest extends BaseDataTest {
   }
 
   @Test
-  public void shouldPrefixNoSetClause() throws Exception {
+  public void shouldTrimNoSetClause() throws Exception {
     final String expected = "UPDATE BLOG";
     DynamicSqlSource source = createDynamicSqlSource(
         new TextSqlNode("UPDATE BLOG"),

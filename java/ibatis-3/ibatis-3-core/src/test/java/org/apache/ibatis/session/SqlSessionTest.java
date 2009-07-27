@@ -151,6 +151,32 @@ public class SqlSessionTest extends BaseDataTest {
     }
   }
 
+  @Test @Ignore
+  public void shouldUpdateAuthorIfNecessary() throws Exception {
+    SqlSession session = sqlMapper.openSession();
+    Author original;
+    Author updated;
+    try {
+      original = (Author) session.selectOne("domain.blog.mappers.AuthorMapper.selectAuthor", 101);
+      original.setEmail("new@email.com");
+      original.setBio(null);
+      session.update("domain.blog.mappers.AuthorMapper.updateAuthorIfNecessary", original);
+
+      updated = (Author) session.selectOne("domain.blog.mappers.AuthorMapper.selectAuthor", 101);
+      assertEquals(original.getEmail(), updated.getEmail());
+      session.commit();
+    } finally {
+      session.close();
+    }
+    try {
+      session = sqlMapper.openSession();
+      updated = (Author) session.selectOne("domain.blog.mappers.AuthorMapper.selectAuthor", 101);
+      assertEquals(original.getEmail(), updated.getEmail());
+    } finally {
+      session.close();
+    }
+  }
+
   @Test
   public void shouldDeleteAuthor() throws Exception {
     SqlSession session = sqlMapper.openSession();

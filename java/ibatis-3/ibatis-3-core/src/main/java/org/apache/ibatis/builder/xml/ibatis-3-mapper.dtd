@@ -130,7 +130,7 @@ alias CDATA #REQUIRED
 type CDATA #REQUIRED
 >
 
-<!ELEMENT select (#PCDATA | include | prefix | where | set | foreach | choose | if)*>
+<!ELEMENT select (#PCDATA | include | trim | where | set | foreach | choose | if)*>
 <!ATTLIST select
 id CDATA #REQUIRED
 parameterMap CDATA #IMPLIED
@@ -145,7 +145,7 @@ flushCache (true|false) #IMPLIED
 useCache (true|false) #IMPLIED
 >
 
-<!ELEMENT insert (#PCDATA | selectKey | include | prefix | where | set | foreach | choose | if)*>
+<!ELEMENT insert (#PCDATA | selectKey | include | trim | where | set | foreach | choose | if)*>
 <!ATTLIST insert
 id CDATA #REQUIRED
 parameterMap CDATA #IMPLIED
@@ -157,7 +157,7 @@ keyProperty CDATA #IMPLIED
 useGeneratedKeys (true|false) #IMPLIED
 >
 
-<!ELEMENT selectKey (#PCDATA | include | prefix | where | set | foreach | choose | if)*>
+<!ELEMENT selectKey (#PCDATA | include | trim | where | set | foreach | choose | if)*>
 <!ATTLIST selectKey
 resultType CDATA #IMPLIED
 statementType (STATEMENT|PREPARED|CALLABLE) #IMPLIED
@@ -165,7 +165,7 @@ keyProperty CDATA #IMPLIED
 order (BEFORE|AFTER) #IMPLIED
 >
 
-<!ELEMENT update (#PCDATA | include | prefix | where | set | foreach | choose | if)*>
+<!ELEMENT update (#PCDATA | include | trim | where | set | foreach | choose | if)*>
 <!ATTLIST update
 id CDATA #REQUIRED
 parameterMap CDATA #IMPLIED
@@ -175,7 +175,7 @@ flushCache (true|false) #IMPLIED
 statementType (STATEMENT|PREPARED|CALLABLE) #IMPLIED
 >
 
-<!ELEMENT delete (#PCDATA | include | prefix | where | set | foreach | choose | if)*>
+<!ELEMENT delete (#PCDATA | include | trim | where | set | foreach | choose | if)*>
 <!ATTLIST delete
 id CDATA #REQUIRED
 parameterMap CDATA #IMPLIED
@@ -192,20 +192,20 @@ statementType (STATEMENT|PREPARED|CALLABLE) #IMPLIED
 refid CDATA #REQUIRED
 >
 
-<!ELEMENT sql (#PCDATA | include | prefix | where | set | foreach | choose | if)*>
+<!ELEMENT sql (#PCDATA | include | trim | where | set | foreach | choose | if)*>
 <!ATTLIST sql
 id CDATA #REQUIRED
 >
 
-<!ELEMENT prefix (#PCDATA | include | prefix | where | set | foreach | choose | if)*>
-<!ATTLIST prefix
+<!ELEMENT trim (#PCDATA | include | trim | where | set | foreach | choose | if)*>
+<!ATTLIST trim
 with CDATA #IMPLIED
 overrides CDATA #IMPLIED
 >
-<!ELEMENT where (#PCDATA | include | prefix | where | set | foreach | choose | if)*>
-<!ELEMENT set (#PCDATA | include | prefix | where | set | foreach | choose | if)*>
+<!ELEMENT where (#PCDATA | include | trim | where | set | foreach | choose | if)*>
+<!ELEMENT set (#PCDATA | include | trim | where | set | foreach | choose | if)*>
 
-<!ELEMENT foreach (#PCDATA | include | prefix | where | set | foreach | choose | if)*>
+<!ELEMENT foreach (#PCDATA | include | trim | where | set | foreach | choose | if)*>
 <!ATTLIST foreach
 collection CDATA #REQUIRED
 item CDATA #IMPLIED
@@ -216,13 +216,13 @@ separator CDATA #IMPLIED
 >
 
 <!ELEMENT choose (when* , otherwise?)>
-<!ELEMENT when (#PCDATA | include | prefix | where | set | foreach | choose | if)*>
+<!ELEMENT when (#PCDATA | include | trim | where | set | foreach | choose | if)*>
 <!ATTLIST when
 test CDATA #REQUIRED
 >
-<!ELEMENT otherwise (#PCDATA | include | prefix | where | set | foreach | choose | if)*>
+<!ELEMENT otherwise (#PCDATA | include | trim | where | set | foreach | choose | if)*>
 
-<!ELEMENT if (#PCDATA | include | prefix | where | set | foreach | choose | if)*>
+<!ELEMENT if (#PCDATA | include | trim | where | set | foreach | choose | if)*>
 <!ATTLIST if
 test CDATA #REQUIRED
 >

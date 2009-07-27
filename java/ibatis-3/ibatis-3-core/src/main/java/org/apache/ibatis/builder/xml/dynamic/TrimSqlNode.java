@@ -2,13 +2,13 @@ package org.apache.ibatis.builder.xml.dynamic;
 
 import java.util.*;
 
-public class PrefixSqlNode implements SqlNode {
+public class TrimSqlNode implements SqlNode {
 
   private SqlNode contents;
   private String stringToPrefixWith;
   private List<String> stringsToOverride = new ArrayList<String>();
 
-  public PrefixSqlNode(SqlNode contents, String with, String overrides) {
+  public TrimSqlNode(SqlNode contents, String with, String overrides) {
     this.contents = contents;
     this.stringToPrefixWith = with;
     this.stringsToOverride = parseOverrides(overrides);

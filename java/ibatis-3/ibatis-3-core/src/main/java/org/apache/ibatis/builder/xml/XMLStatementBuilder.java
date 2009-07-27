@@ -87,7 +87,7 @@ public class XMLStatementBuilder extends BaseBuilder {
   private Map<String, NodeHandler> nodeHandlers = new HashMap<String, NodeHandler>() {
     {
       put("include", new IncludeNodeHandler());
-      put("prefix", new PrefixHandler());
+      put("trim", new TrimHandler());
       put("where", new WhereHandler());
       put("set", new SetHandler());
       put("foreach", new ForEachHandler());
@@ -162,14 +162,14 @@ public class XMLStatementBuilder extends BaseBuilder {
     }
   }
 
-  private class PrefixHandler implements NodeHandler {
+  private class TrimHandler implements NodeHandler {
     public void handleNode(XNode nodeToHandle, List<SqlNode> targetContents) {
       List<SqlNode> contents = parseDynamicTags(nodeToHandle);
       MixedSqlNode mixedSqlNode = new MixedSqlNode(contents);
       String with = nodeToHandle.getStringAttribute("with");
       String overrides = nodeToHandle.getStringAttribute("overrides");
-      PrefixSqlNode prefix = new PrefixSqlNode(mixedSqlNode, with, overrides);
-      targetContents.add(prefix);
+      TrimSqlNode trim = new TrimSqlNode(mixedSqlNode, with, overrides);
+      targetContents.add(trim);
     }
   }
 
