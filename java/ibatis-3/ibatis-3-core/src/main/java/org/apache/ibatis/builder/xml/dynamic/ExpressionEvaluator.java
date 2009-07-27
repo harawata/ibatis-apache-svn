@@ -2,6 +2,7 @@ package org.apache.ibatis.builder.xml.dynamic;
 
 import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.ognl.*;
+import org.apache.ibatis.mapping.SqlMapperException;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -22,6 +23,7 @@ public class ExpressionEvaluator {
   public Iterable evaluateIterable(String expression, Object parameterObject) {
     try {
       Object value = Ognl.getValue(expression, parameterObject);
+      if (value == null) throw new SqlMapperException("The expression '" +expression+ "' evaluated to a null value.");
       if (value instanceof Iterable) return (Iterable) value;
       if (value.getClass().isArray()) return Arrays.asList((Object[])value);
       throw new BuilderException("Error evaluating expression '"+expression+"'.  Return value ("+value+") was not iterable.");

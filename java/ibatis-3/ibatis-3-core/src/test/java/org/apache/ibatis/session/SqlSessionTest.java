@@ -553,4 +553,20 @@ public class SqlSessionTest extends BaseDataTest {
     }
   }
 
+  @Test
+  public void shouldFindPostsInList() throws Exception {
+    SqlSession session = sqlMapper.openSession();
+    try {
+      List<Post> posts = session.selectList("domain.blog.mappers.PostMapper.selectPostIn",
+          new ArrayList(){{
+              add(1);
+              add(3);
+              add(5);
+            }});
+      assertEquals(3, posts.size());
+    } finally {
+      session.close();
+    }
+  }
+
 }

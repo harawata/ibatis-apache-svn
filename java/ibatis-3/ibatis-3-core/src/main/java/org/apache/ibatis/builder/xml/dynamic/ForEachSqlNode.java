@@ -26,7 +26,8 @@ public class ForEachSqlNode implements SqlNode {
   }
 
   public boolean apply(DynamicContext context) {
-    final Iterable iterable = evaluator.evaluateIterable(collectionExpression, context.getBindings());    
+    Map<String, Object> bindings = context.getBindings();
+    final Iterable iterable = evaluator.evaluateIterable(collectionExpression, bindings);    
     boolean first = true;
     applyOpen(context);
     int i = 0;
