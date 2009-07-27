@@ -151,7 +151,7 @@ public class SqlSessionTest extends BaseDataTest {
     }
   }
 
-  @Test @Ignore
+  @Test
   public void shouldUpdateAuthorIfNecessary() throws Exception {
     SqlSession session = sqlMapper.openSession();
     Author original;

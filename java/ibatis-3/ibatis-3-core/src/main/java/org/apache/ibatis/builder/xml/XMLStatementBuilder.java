@@ -166,9 +166,11 @@ public class XMLStatementBuilder extends BaseBuilder {
     public void handleNode(XNode nodeToHandle, List<SqlNode> targetContents) {
       List<SqlNode> contents = parseDynamicTags(nodeToHandle);
       MixedSqlNode mixedSqlNode = new MixedSqlNode(contents);
-      String with = nodeToHandle.getStringAttribute("with");
-      String overrides = nodeToHandle.getStringAttribute("overrides");
-      TrimSqlNode trim = new TrimSqlNode(mixedSqlNode, with, overrides);
+      String prefix = nodeToHandle.getStringAttribute("prefix");
+      String prefixOverrides = nodeToHandle.getStringAttribute("prefixOverrides");
+      String suffix= nodeToHandle.getStringAttribute("suffix");
+      String suffixOverrides = nodeToHandle.getStringAttribute("suffixOverrides");
+      TrimSqlNode trim = new TrimSqlNode(mixedSqlNode, prefix, prefixOverrides, suffix, suffixOverrides);
       targetContents.add(trim);
     }
   }

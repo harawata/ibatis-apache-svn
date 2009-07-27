@@ -22,7 +22,7 @@
             AND id IN
             <foreach item="item_id" index="index" open="(" close=")" separator="," collection="ids">#{ids[${index}]}</foreach>
           </if>
-          <trim with="AND">
+          <trim prefix="AND">
             <include refid="byBlogId"/>
           </trim>
         </otherwise>

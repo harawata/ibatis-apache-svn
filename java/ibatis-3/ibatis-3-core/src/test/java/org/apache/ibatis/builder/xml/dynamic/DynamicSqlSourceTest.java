@@ -101,7 +101,7 @@ public class DynamicSqlSourceTest extends BaseDataTest {
 
   @Test
   public void shouldTrimWHEREInsteadOfANDForFirstCondition() throws Exception {
-    final String expected = "SELECT * FROM BLOG WHERE ID = ?";
+    final String expected = "SELECT * FROM BLOG WHERE  ID = ?";
     DynamicSqlSource source = createDynamicSqlSource(
         new TextSqlNode("SELECT * FROM BLOG"),
         new WhereSqlNode(mixedContents(
@@ -116,7 +116,7 @@ public class DynamicSqlSourceTest extends BaseDataTest {
 
   @Test
   public void shouldTrimWHEREInsteadOfORForSecondCondition() throws Exception {
-    final String expected = "SELECT * FROM BLOG WHERE NAME = ?";
+    final String expected = "SELECT * FROM BLOG WHERE  NAME = ?";
     DynamicSqlSource source = createDynamicSqlSource(
         new TextSqlNode("SELECT * FROM BLOG"),
         new WhereSqlNode(mixedContents(
@@ -131,7 +131,7 @@ public class DynamicSqlSourceTest extends BaseDataTest {
 
   @Test
   public void shouldTrimWHEREInsteadOfANDForBothConditions() throws Exception {
-    final String expected = "SELECT * FROM BLOG WHERE ID = ? OR NAME = ?";
+    final String expected = "SELECT * FROM BLOG WHERE  ID = ?   OR NAME = ?";
     DynamicSqlSource source = createDynamicSqlSource(
         new TextSqlNode("SELECT * FROM BLOG"),
         new WhereSqlNode(mixedContents(
@@ -161,13 +161,13 @@ public class DynamicSqlSourceTest extends BaseDataTest {
 
   @Test
   public void shouldTrimSETInsteadOfCOMMAForBothConditions() throws Exception {
-    final String expected = "UPDATE BLOG SET ID = ? , NAME = ?";
+    final String expected = "UPDATE BLOG SET ID = ?,  NAME = ?";
     DynamicSqlSource source = createDynamicSqlSource(
         new TextSqlNode("UPDATE BLOG"),
         new SetSqlNode(mixedContents(
-          new IfSqlNode(mixedContents(new TextSqlNode("   , ID = ?   ")), "true"
+          new IfSqlNode(mixedContents(new TextSqlNode(" ID = ?, ")), "true"
           ),
-          new IfSqlNode(mixedContents(new TextSqlNode(", NAME = ?  ")), "true"
+          new IfSqlNode(mixedContents(new TextSqlNode(" NAME = ?, ")), "true"
           )
         )));
     BoundSql boundSql = source.getBoundSql(null);

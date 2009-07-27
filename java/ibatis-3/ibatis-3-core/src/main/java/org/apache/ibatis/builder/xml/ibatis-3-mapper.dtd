@@ -199,8 +199,10 @@ id CDATA #REQUIRED
 
 <!ELEMENT trim (#PCDATA | include | trim | where | set | foreach | choose | if)*>
 <!ATTLIST trim
-with CDATA #IMPLIED
-overrides CDATA #IMPLIED
+prefix CDATA #IMPLIED
+prefixOverrides CDATA #IMPLIED
+suffix CDATA #IMPLIED
+suffixOverrides CDATA #IMPLIED
 >
 <!ELEMENT where (#PCDATA | include | trim | where | set | foreach | choose | if)*>
 <!ELEMENT set (#PCDATA | include | trim | where | set | foreach | choose | if)*>
