@@ -68,7 +68,16 @@ public class XMLConfigBuilder extends BaseBuilder {
       for (XNode child : parent.getChildren()) {
         String alias = child.getStringAttribute("alias");
         String type = child.getStringAttribute("type");
-        typeAliasRegistry.registerAlias(alias, type);
+        try {
+          Class clazz = Class.forName(type);
+          if (alias == null) {
+            typeAliasRegistry.registerAlias(clazz);
+          } else {
+            typeAliasRegistry.registerAlias(alias, clazz);
+          }
+        } catch (ClassNotFoundException e) {
+          throw new BuilderException("Error registering typeAlias for '" + alias + "'. Cause: " + e, e);
+        }
       }
     }
   }

@@ -26,8 +26,8 @@ value CDATA #REQUIRED
 
 <!ELEMENT typeAlias EMPTY>
 <!ATTLIST typeAlias
-alias CDATA #REQUIRED
 type CDATA #REQUIRED
+alias CDATA #IMPLIED
 >
 
 <!ELEMENT typeHandlers (typeHandler+)>
