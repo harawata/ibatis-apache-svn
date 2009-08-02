@@ -7,6 +7,6 @@ import java.lang.annotation.ElementType;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface CacheDomainRef {
+public @interface CacheNamespaceRef {
   public abstract Class value();
 }

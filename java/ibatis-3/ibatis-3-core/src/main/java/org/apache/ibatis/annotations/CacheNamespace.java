@@ -10,7 +10,7 @@ import java.lang.annotation.ElementType;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface CacheDomain {
+public @interface CacheNamespace {
   public abstract Class<? extends org.apache.ibatis.cache.Cache> implementation() default PerpetualCache.class;
 
   public abstract Class<? extends org.apache.ibatis.cache.Cache> eviction() default LruCache.class;

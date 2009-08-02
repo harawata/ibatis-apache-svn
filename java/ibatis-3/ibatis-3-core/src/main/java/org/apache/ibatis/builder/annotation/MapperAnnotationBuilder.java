@@ -52,14 +52,14 @@ public class MapperAnnotationBuilder {
   }
 
   private void parseCache() {
-    CacheDomain cacheDomain = (CacheDomain) type.getAnnotation(CacheDomain.class);
+    CacheNamespace cacheDomain = (CacheNamespace) type.getAnnotation(CacheNamespace.class);
     if (cacheDomain != null) {
       assistant.useNewCache(cacheDomain.implementation(), cacheDomain.eviction(), cacheDomain.flushInterval(), cacheDomain.size(), !cacheDomain.readWrite(), null);
     }
   }
 
   private void parseCacheRef() {
-    CacheDomainRef cacheDomainRef = (CacheDomainRef) type.getAnnotation(CacheDomainRef.class);
+    CacheNamespaceRef cacheDomainRef = (CacheNamespaceRef) type.getAnnotation(CacheNamespaceRef.class);
     if (cacheDomainRef != null) {
       assistant.useCacheRef(cacheDomainRef.value().getName());
     }

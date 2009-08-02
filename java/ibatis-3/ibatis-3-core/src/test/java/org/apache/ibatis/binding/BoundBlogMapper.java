@@ -5,7 +5,7 @@ import org.apache.ibatis.annotations.*;
 
 import java.util.*;
 
-@CacheDomain
+@CacheNamespace
 public interface BoundBlogMapper {
 
   //======================================================

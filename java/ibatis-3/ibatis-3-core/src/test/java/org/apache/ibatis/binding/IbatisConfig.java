@@ -3,6 +3,7 @@ package org.apache.ibatis.binding;
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.ibatis.session.defaults.DefaultSqlSessionFactory;
 import org.apache.ibatis.transaction.TransactionFactory;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
@@ -28,7 +29,7 @@ public class IbatisConfig {
       configuration.getTypeAliasRegistry().registerAlias(Author.class);
       configuration.addMapper(BoundBlogMapper.class);
       configuration.addMapper(BoundAuthorMapper.class);
-      return new DefaultSqlSessionFactory(configuration);
+      return new SqlSessionFactoryBuilder().build(configuration);
     } catch (Exception e) {
       throw new RuntimeException("Error initializing SqlSessionFactory. Cause: " + e, e);
     }
