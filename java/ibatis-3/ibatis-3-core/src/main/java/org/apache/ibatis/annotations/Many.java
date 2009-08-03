@@ -8,10 +8,5 @@ import java.lang.annotation.ElementType;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface Many {
-  public abstract Class javaType();
-
   public abstract String select() default "";
-
-  public abstract ConstructorArgs constructor() default @ConstructorArgs;
-
 }

@@ -24,5 +24,5 @@ public @interface Result {
 
   public abstract One one() default @One;
 
-  public abstract Many many() default @Many(javaType = void.class);
+  public abstract Many many() default @Many;
 }

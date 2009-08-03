@@ -9,7 +9,4 @@ import java.lang.annotation.ElementType;
 @Target(ElementType.METHOD)
 public @interface One {
   public abstract String select() default "";
-
-  public abstract ConstructorArgs constructor() default @ConstructorArgs;
-
 }
