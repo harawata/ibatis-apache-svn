@@ -9,6 +9,8 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Properties;
 
+import sun.nio.cs.US_ASCII;
+
 public class ResourcesTest extends BaseDataTest {
 
   private static final ClassLoader CLASS_LOADER = ResourcesTest.class.getClassLoader();
@@ -65,13 +67,25 @@ public class ResourcesTest extends BaseDataTest {
   @Test
   public void shouldGetResourceAsFile() throws Exception {
     File file = Resources.getResourceAsFile(JPETSTORE_PROPERTIES);
-    assertTrue(file.toURL().toString().endsWith("jpetstore/jpetstore-hsqldb.properties"));
+    assertTrue(file.getAbsolutePath().endsWith("jpetstore/jpetstore-hsqldb.properties"));
   }
 
   @Test
   public void shouldGetResourceAsFileWithClassloader() throws Exception {
     File file = Resources.getResourceAsFile(CLASS_LOADER, JPETSTORE_PROPERTIES);
-    assertTrue(file.toURL().toString().endsWith("jpetstore/jpetstore-hsqldb.properties"));
+    assertTrue(file.getAbsolutePath().endsWith("jpetstore/jpetstore-hsqldb.properties"));
+  }
+
+  @Test
+  public void shouldGetResourceAsPropertiesWithOutClassloader() throws Exception {
+    Properties file = Resources.getResourceAsProperties(JPETSTORE_PROPERTIES);
+    assertNotNull(file);
+  }
+
+  @Test
+  public void shouldGetResourceAsPropertiesWithClassloader() throws Exception {
+    Properties file = Resources.getResourceAsProperties(CLASS_LOADER, JPETSTORE_PROPERTIES);
+    assertNotNull(file);
   }
 
   @Test
@@ -92,5 +106,51 @@ public class ResourcesTest extends BaseDataTest {
     assertNotNull(clazz);
   }
 
+  @Test(expected = ClassNotFoundException.class)
+  public void shouldNotFindThisClass() throws ClassNotFoundException {
+    Resources.classForName("some.random.class.that.does.not.Exist");
+  }
 
+  @Test
+  public void shouldGetReader() throws IOException {
+
+    // save the value
+    Charset charset = Resources.getCharset();
+
+    // charset
+    Resources.setCharset(new US_ASCII());
+    assertNotNull(Resources.getResourceAsReader(JPETSTORE_PROPERTIES));
+
+    // no charset
+    Resources.setCharset(null);
+    assertNotNull(Resources.getResourceAsReader(JPETSTORE_PROPERTIES));
+
+    // clean up
+    Resources.setCharset(charset);
+
+  }
+
+  @Test
+  public void shouldGetReaderWithClassLoader() throws IOException {
+
+    // save the value
+    Charset charset = Resources.getCharset();
+
+    // charset
+    Resources.setCharset(new US_ASCII());
+    assertNotNull(Resources.getResourceAsReader(getClass().getClassLoader(), JPETSTORE_PROPERTIES));
+
+    // no charset
+    Resources.setCharset(null);
+    assertNotNull(Resources.getResourceAsReader(getClass().getClassLoader(), JPETSTORE_PROPERTIES));
+
+    // clean up
+    Resources.setCharset(charset);
+
+  }
+  
+  @Test
+  public void stupidJustForCoverage() {
+    assertNotNull(new Resources());
+  }
 }
