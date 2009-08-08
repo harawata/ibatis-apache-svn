@@ -9,7 +9,10 @@
   <artifactId>ibatis-3-compat</artifactId>
   <name>ibatis-3-compat</name>
   <packaging>jar</packaging>
-  <url>http://maven.apache.org</url>
+  <url>http://ibatis.apache.org</url>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
   <build>
     <plugins>
       <plugin>
