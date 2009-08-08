@@ -65,7 +65,16 @@
         all of the principles that have made iBATIS popular.  There are still no required 3rd party dependencies,
         it's simpler than ever, and yet far more powerful!  More information will come in the next few days to
         help you get started.  
-        <p class="more"><a href="java.cgi">Get it from the iBATIS for Java page. &hellip;</a></p>
+		</p>
+		<h4>Introducing the iBATIS Schema Migration System</h4>
+		<p>
+		Along with iBATIS 3, we're happy to introduce the iBATIS Schema Migration System (or iBATIS Migrations for short).  
+		This powerful tool was inspired by Rails Migrations and similar tools like dbdeploy to enable good database
+		change management practices, help teams to work concurrently without stepping all over each other and avoid
+		having to centralize database changes.  Once you work this way, you'll find it very hard to work any other way again.
+ 		Developers and DBAs will appreciate it equally. 
+		</p>	
+        <p class="more"><a href="java.cgi">Get it all from the iBATIS for Java page &hellip;</a></p>
     </div>
   </div>
 
