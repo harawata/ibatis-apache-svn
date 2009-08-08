@@ -47,6 +47,25 @@
     </div>
   </div>
 
+  <div class="post">
+    <h1 class="title">iBATIS 3.0 for Java Released (BETA 1)</h1>
+
+    <p class="meta">
+      <small>Posted by Clinton Begin on Aug 8, 2008</small>
+    </p>
+    <div class="entry">
+      <p>A month ago iBATIS turned 7 years old, and while we're celebrating a little late, today we're
+	    happy to announce iBATIS 3.0 for Java. 
+	    iBATIS 3.0 is a complete rewrite from the ground up, and thus represents the biggest change
+	    since the very first version of iBATIS in released in 2002.  There are a lot of modern features that
+        take advantage of (now ubiquitous) Java 5 features and includes simplified design and some 
+        great new tools for helping you build great database driven applications.  iBATIS 3.0 carries forward
+        all of the principles that have made iBATIS popular.  There are still no required 3rd party dependencies,
+        it's simpler than ever, and yet far more powerful!  More information will come in the next few days to
+        help you get started.  
+        <p class="more"><a href="java.cgi">Get it from the iBATIS for Java page. &hellip;</a></p>
+    </div>
+  </div>
 
   <div class="post">
     <h1 class="title">Ibator Version 1.2.1 Released</h1>
