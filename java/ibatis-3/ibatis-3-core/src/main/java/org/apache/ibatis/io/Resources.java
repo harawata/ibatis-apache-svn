@@ -1,8 +1,7 @@
 package org.apache.ibatis.io;
 
 import java.io.*;
-import java.net.URL;
-import java.net.URLConnection;
+import java.net.*;
 import java.nio.charset.Charset;
 import java.util.Properties;
 
@@ -11,8 +10,7 @@ import java.util.Properties;
  */
 public class Resources {
 
-  //  private static ClassLoader defaultClassLoader;
-  private static ClassLoaderWrapper classLoaderWrapper = new ClassLoaderWrapper();
+  private static ClassLoader defaultClassLoader;
 
   /**
    * Charset to use when calling getResourceAsReader.
@@ -20,7 +18,8 @@ public class Resources {
    */
   private static Charset charset;
 
-  Resources() {}
+  private Resources() {
+  }
 
   /**
    * Returns the default classloader (may be null).
@@ -28,7 +27,7 @@ public class Resources {
    * @return The default classloader
    */
   public static ClassLoader getDefaultClassLoader() {
-    return classLoaderWrapper.defaultClassLoader;
+    return defaultClassLoader;
   }
 
   /**
@@ -37,7 +36,7 @@ public class Resources {
    * @param defaultClassLoader - the new default ClassLoader
    */
   public static void setDefaultClassLoader(ClassLoader defaultClassLoader) {
-    classLoaderWrapper.defaultClassLoader = defaultClassLoader;
+    Resources.defaultClassLoader = defaultClassLoader;
   }
 
   /**
@@ -48,7 +47,7 @@ public class Resources {
    * @throws java.io.IOException If the resource cannot be found or read
    */
   public static URL getResourceURL(String resource) throws IOException {
-    return classLoaderWrapper.getResourceAsURL(resource);
+    return getResourceURL(getClassLoader(), resource);
   }
 
   /**
@@ -60,7 +59,11 @@ public class Resources {
    * @throws java.io.IOException If the resource cannot be found or read
    */
   public static URL getResourceURL(ClassLoader loader, String resource) throws IOException {
-    return classLoaderWrapper.getResourceAsURL(resource, loader);
+    URL url = null;
+    if (loader != null) url = loader.getResource(resource);
+    if (url == null) url = ClassLoader.getSystemResource(resource);
+    if (url == null) throw new IOException("Could not find resource " + resource);
+    return url;
   }
 
   /**
@@ -71,7 +74,7 @@ public class Resources {
    * @throws java.io.IOException If the resource cannot be found or read
    */
   public static InputStream getResourceAsStream(String resource) throws IOException {
-    return classLoaderWrapper.getResourceAsStream(resource);
+    return getResourceAsStream(getClassLoader(), resource);
   }
 
   /**
@@ -83,7 +86,11 @@ public class Resources {
    * @throws java.io.IOException If the resource cannot be found or read
    */
   public static InputStream getResourceAsStream(ClassLoader loader, String resource) throws IOException {
-    return classLoaderWrapper.getResourceAsStream(resource, loader);
+    InputStream in = null;
+    if (loader != null) in = loader.getResourceAsStream(resource);
+    if (in == null) in = ClassLoader.getSystemResourceAsStream(resource);
+    if (in == null) throw new IOException("Could not find resource " + resource);
+    return in;
   }
 
   /**
@@ -93,7 +100,8 @@ public class Resources {
    * @return The resource
    * @throws java.io.IOException If the resource cannot be found or read
    */
-  public static Properties getResourceAsProperties(String resource) throws IOException {
+  public static Properties getResourceAsProperties(String resource)
+      throws IOException {
     Properties props = new Properties();
     InputStream in = getResourceAsStream(resource);
     props.load(in);
@@ -109,7 +117,8 @@ public class Resources {
    * @return The resource
    * @throws java.io.IOException If the resource cannot be found or read
    */
-  public static Properties getResourceAsProperties(ClassLoader loader, String resource) throws IOException {
+  public static Properties getResourceAsProperties(ClassLoader loader, String resource)
+      throws IOException {
     Properties props = new Properties();
     InputStream in = getResourceAsStream(loader, resource);
     props.load(in);
@@ -125,11 +134,14 @@ public class Resources {
    * @throws java.io.IOException If the resource cannot be found or read
    */
   public static Reader getResourceAsReader(String resource) throws IOException {
+    Reader reader;
     if (charset == null) {
-      return new InputStreamReader(getResourceAsStream(resource));
+      reader = new InputStreamReader(getResourceAsStream(resource));
     } else {
-      return new InputStreamReader(getResourceAsStream(resource), charset);
+      reader = new InputStreamReader(getResourceAsStream(resource), charset);
     }
+
+    return reader;
   }
 
   /**
@@ -141,11 +153,14 @@ public class Resources {
    * @throws java.io.IOException If the resource cannot be found or read
    */
   public static Reader getResourceAsReader(ClassLoader loader, String resource) throws IOException {
+    Reader reader;
     if (charset == null) {
-      return new InputStreamReader(getResourceAsStream(loader, resource));
+      reader = new InputStreamReader(getResourceAsStream(loader, resource));
     } else {
-      return new InputStreamReader(getResourceAsStream(loader, resource), charset);
+      reader = new InputStreamReader(getResourceAsStream(loader, resource), charset);
     }
+
+    return reader;
   }
 
   /**
@@ -218,7 +233,24 @@ public class Resources {
    * @throws ClassNotFoundException If the class cannot be found (duh!)
    */
   public static Class classForName(String className) throws ClassNotFoundException {
-    return classLoaderWrapper.classForName(className);
+    Class clazz = null;
+    try {
+      clazz = getClassLoader().loadClass(className);
+    } catch (Exception e) {
+      // Ignore.  Failsafe below.
+    }
+    if (clazz == null) {
+      clazz = Class.forName(className);
+    }
+    return clazz;
+  }
+
+  private static ClassLoader getClassLoader() {
+    if (defaultClassLoader != null) {
+      return defaultClassLoader;
+    } else {
+      return Thread.currentThread().getContextClassLoader();
+    }
   }
 
   public static Charset getCharset() {
