@@ -15,7 +15,7 @@
   <h2>Download</h2>
 
   <form action="[location]" method="get" id="SelectMirror">
-    <p>The currently selected mirror is <b>[preferred]</b>. If you encounter a problem with this
+    <p>The currently selected mirror is <b>[preferred]</b>. If you have encountered a problem with this
       mirror, please select another mirror.
       <select name="Preferred"> [if-any http] [for http]
         <option value="[http]">[http]</option>
