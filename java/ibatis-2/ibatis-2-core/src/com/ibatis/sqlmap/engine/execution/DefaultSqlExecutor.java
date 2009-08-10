@@ -25,7 +25,9 @@ import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
+import com.ibatis.sqlmap.engine.config.SqlMapConfiguration;
 import com.ibatis.sqlmap.engine.impl.SqlMapClientImpl;
 import com.ibatis.sqlmap.engine.impl.SqlMapExecutorDelegate;
 import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMap;
@@ -290,6 +292,10 @@ public class DefaultSqlExecutor implements SqlExecutor {
         cleanupResultObjectFactory();
       }
     }
+  }
+  
+  public void init(SqlMapConfiguration config, Properties globalProps) {
+    // No implementation is required in DefaultSqlExecutor.
   }
 
   private ResultSet handleMultipleResults(PreparedStatement ps, StatementScope statementScope, int skipResults, int maxResults, RowHandlerCallback callback) throws SQLException {

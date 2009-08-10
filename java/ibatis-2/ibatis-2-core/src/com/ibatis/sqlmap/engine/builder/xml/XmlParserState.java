@@ -136,6 +136,7 @@ public class XmlParserState {
       if (customizedSQLExecutor != null) {
         try {
           config.getClient().getDelegate().setCustomExecutor(customizedSQLExecutor);
+          config.getClient().getDelegate().getSqlExecutor().init(config, globalProps);
         } catch (Exception e) {
           config.getErrorContext().setCause(e);
           config.getErrorContext().setMoreInfo("Loading of customizedSQLExecutor failed. Please check Properties file.");

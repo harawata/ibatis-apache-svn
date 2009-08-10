@@ -3,7 +3,9 @@ package com.ibatis.sqlmap.engine.execution;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Properties;
 
+import com.ibatis.sqlmap.engine.config.SqlMapConfiguration;
 import com.ibatis.sqlmap.engine.mapping.statement.RowHandlerCallback;
 import com.ibatis.sqlmap.engine.scope.SessionScope;
 import com.ibatis.sqlmap.engine.scope.StatementScope;
@@ -116,4 +118,12 @@ public interface SqlExecutor {
    * @param sessionScope - the session to clean up
    */
   public void cleanup(SessionScope sessionScope);
+  
+  /**
+   * Initializing SQL Executor by passing configuration and global properties.
+   * 
+   * @param config - the configuration class, which contains complete configuration info
+   * @param globalProps
+   */
+  public void init(SqlMapConfiguration config, Properties globalProps);
 }
