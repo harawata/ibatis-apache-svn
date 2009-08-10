@@ -8,6 +8,13 @@
   <version>SNAPSHOT</version>
   <name>iBATIS SQL Maps</name>
   <url>http://ibatis.apache.org</url>
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses> 
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/ibatis/</connection>
     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/ibatis/</developerConnection>
