@@ -15,14 +15,19 @@
  */
 package com.ibatis.common.jdbc;
 
-import com.ibatis.common.resources.Resources;
-
-
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.PrintWriter;
 import java.io.Reader;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.Driver;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import com.ibatis.common.resources.Resources;
 
 /**
  * Tool to run database scripts
@@ -180,13 +185,13 @@ public class ScriptRunner {
             ResultSetMetaData md = rs.getMetaData();
             int cols = md.getColumnCount();
             for (int i = 0; i < cols; i++) {
-              String name = md.getColumnLabel(i);
+              String name = md.getColumnLabel(i + 1);
               print(name + "\t");
             }
             println("");
             while (rs.next()) {
               for (int i = 0; i < cols; i++) {
-                String value = rs.getString(i);
+                String value = rs.getString(i + 1);
                 print(value + "\t");
               }
               println("");
