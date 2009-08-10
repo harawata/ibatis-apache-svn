@@ -15,19 +15,18 @@
  */
 package com.ibatis.sqlmap.engine.mapping.result.loader;
 
-import com.ibatis.common.beans.ClassInfo;
-
-import com.ibatis.sqlmap.engine.impl.SqlMapClientImpl;
-import com.ibatis.sqlmap.engine.type.DomTypeMarker;
-import net.sf.cglib.proxy.Enhancer;
-import net.sf.cglib.proxy.InvocationHandler;
-
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+
+import net.sf.cglib.proxy.Enhancer;
+import net.sf.cglib.proxy.LazyLoader;
+import net.sf.cglib.proxy.NoOp;
+
+import com.ibatis.common.beans.ClassInfo;
+import com.ibatis.sqlmap.engine.impl.SqlMapClientImpl;
+import com.ibatis.sqlmap.engine.type.DomTypeMarker;
 
 /**
  * Class to lazily load results into objects (uses CGLib to improve performance)
@@ -63,7 +62,7 @@ public class EnhancedLazyResultLoader {
   }
 
 
-  private static class EnhancedLazyResultLoaderImpl implements InvocationHandler {
+  private static class EnhancedLazyResultLoaderImpl implements LazyLoader {
 
 
     protected SqlMapClientImpl client;
@@ -112,34 +111,19 @@ public class EnhancedLazyResultLoader {
       }
     }
 
-    public Object invoke(Object o, Method method, Object[] objects) throws Throwable {
-      if ("finalize".hashCode() == method.getName().hashCode()
-          && "finalize".equals(method.getName())) {
-        return null;
-      } else {
-        loadObject();
-        if (resultObject != null) {
-          try {
-            return method.invoke(resultObject, objects);
-          } catch (Throwable t) {
-            throw ClassInfo.unwrapThrowable(t);
-          }
-        } else {
-          return null;
-        }
-      }
-    }
-
-    private synchronized void loadObject() {
-      if (!loaded) {
-        try {
-          loaded = true;
-          resultObject = ResultLoader.getResult(client, statementName, parameterObject, targetType);
-        } catch (SQLException e) {
-          throw new RuntimeException("Error lazy loading result. Cause: " + e, e);
-        }
-      }
-    }
+	public Object loadObject() throws Exception {
+		try {
+			Object result = ResultLoader.getResult(client, statementName, parameterObject, targetType);
+			if (result == null) {
+				// if no result is available return a proxy with a default object is returned
+				// because the loadObject() method must not return null
+				result = Enhancer.create(targetType, NoOp.INSTANCE);
+			}
+			return result;
+		} catch (SQLException e) {
+			throw new RuntimeException("Error lazy loading result. Cause: " + e, e);
+		}
+	}
   }
 
 

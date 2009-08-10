@@ -5,6 +5,8 @@ Build Number: @buildNum@
 Next Version
 ------------------------------
 
+ o IBATIS-618 - Provide SQLExecutor's an opportunity to initialise state at initialization time  
+ o IBATIS-595 - IllegalAccessException if a default-method is called in Lazy-Loaded Proxy objects
  o iBATIS-540 - cleanup result object factory after use to avoid leaks
  o iBATIS-436 - Defaults for <settings/> element aren't applied if it doesn't exist: changed default values of lazyLoadingEnabled, cacheModelsEnabled and statementCacheEnabled to true if no <settings /> element present
  o IBATIS-508 - Lock occurs when heavy traffic: removed double synchronization
