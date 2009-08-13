@@ -32,7 +32,7 @@ public class ScriptCommand extends BaseCommand {
       }
       for (Change change : migrations) {
         if (shouldRun(change, v1, v2)) {
-          out.println("--// " + change.getFilename());
+          out.println("-- " + change.getFilename());
           File file = scriptFile(change.getFilename());
           FileReader fileReader = new FileReader(file);
           MigrationReader migrationReader = new MigrationReader(fileReader, undo, variables);

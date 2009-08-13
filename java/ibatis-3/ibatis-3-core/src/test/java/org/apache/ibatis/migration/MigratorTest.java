@@ -50,7 +50,7 @@ public class MigratorTest extends BaseDataTest {
     File f = getExampleDir();
 
     Migrator.main(args("--path=" + f.getAbsolutePath(), "bootstrap", "--env=development"));
-    assertTrue(buffer.toString().contains("--// Bootstrap.sql"));
+    assertTrue(buffer.toString().contains("--  Bootstrap.sql"));
     buffer.clear();
 
     Migrator.main(args("--path=" + f.getAbsolutePath(), "status"));
@@ -103,7 +103,7 @@ public class MigratorTest extends BaseDataTest {
     assertTrue(buffer.toString().contains("20080827200213"));
     assertTrue(buffer.toString().contains("20080827200214"));
     assertFalse(buffer.toString().contains("20080827200215"));
-    assertFalse(buffer.toString().contains("--//@UNDO"));
+    assertFalse(buffer.toString().contains("-- @UNDO"));
     buffer.clear();
 
     Migrator.main(args("--path=" + f.getAbsolutePath(), "script","20080827200215", "20080827200213"));
@@ -113,7 +113,7 @@ public class MigratorTest extends BaseDataTest {
     assertTrue(buffer.toString().contains("20080827200213"));
     assertTrue(buffer.toString().contains("20080827200214"));
     assertTrue(buffer.toString().contains("20080827200215"));
-    assertTrue(buffer.toString().contains("--//@UNDO"));
+    assertTrue(buffer.toString().contains("-- @UNDO"));
     buffer.clear();
   }
 
