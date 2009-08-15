@@ -158,7 +158,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       columnLabel = columnLabel.toUpperCase();
       String propName = metaResultObject.findProperty(columnLabel);
       colSet.add(columnLabel);
-      if (propName != null) {
+      if (propName != null && metaResultObject.hasSetter(propName)) {
         propSet.add(propName);
         Class javaType = metaResultObject.getSetterType(propName);
         TypeHandler typeHandler = typeHandlerRegistry.getTypeHandler(javaType);

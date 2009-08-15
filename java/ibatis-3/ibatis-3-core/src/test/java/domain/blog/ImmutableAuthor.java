@@ -3,12 +3,12 @@ package domain.blog;
 import java.io.Serializable;
 
 public class ImmutableAuthor implements Serializable {
-  protected int id;
-  protected String username;
-  protected String password;
-  protected String email;
-  protected String bio;
-  protected Section favouriteSection;
+  protected final int id;
+  protected final String username;
+  protected final String password;
+  protected final String email;
+  protected final String bio;
+  protected final Section favouriteSection;
 
   public ImmutableAuthor(Integer id, String username, String password, String email, String bio, Section section) {
     this.id = id;
