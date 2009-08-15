@@ -14,6 +14,7 @@ public class XMLMapperBuilder extends BaseBuilder {
   private XPathParser parser;
   private MapperBuilderAssistant builderAssistant;
   private Map<String, XNode> sqlFragments;
+  private String resource;
 
   public XMLMapperBuilder(Reader reader, Configuration configuration, String resource, Map<String, XNode> sqlFragments, String namespace) {
     this(reader, configuration, resource,sqlFragments);
@@ -25,11 +26,15 @@ public class XMLMapperBuilder extends BaseBuilder {
     this.builderAssistant = new MapperBuilderAssistant(configuration, resource);
     this.parser = new XPathParser(reader, true, new XMLMapperEntityResolver(), configuration.getVariables());
     this.sqlFragments = sqlFragments;
+    this.resource = resource;
   }
 
   public void parse() {
-    configurationElement(parser.evalNode("/mapper"));
-    bindMapperForNamespace();
+    if (!configuration.isResourceLoaded(resource)) {
+      configuration.addLoadedResource(resource);
+      configurationElement(parser.evalNode("/mapper"));
+      bindMapperForNamespace();
+    }
   }
 
   public XNode getSqlFragment(String refid) {

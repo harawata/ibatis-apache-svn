@@ -50,6 +50,8 @@ public class Configuration {
   private final Map<String, ParameterMap> parameterMaps = new StrictMap<String, ParameterMap>("Parameter Maps collection");
   private final Map<String, KeyGenerator> keyGenerators = new StrictMap<String, KeyGenerator>("Key Generators collection");
 
+  private final Set<String> loadedResources = new HashSet<String>();
+
   public Configuration(Environment environment) {
     this();
     this.environment = environment;
@@ -67,6 +69,14 @@ public class Configuration {
     typeAliasRegistry.registerAlias("LRU", LruCache.class.getName());
     typeAliasRegistry.registerAlias("SOFT", SoftCache.class.getName());
     typeAliasRegistry.registerAlias("WEAK", WeakCache.class.getName());
+  }
+
+  public void addLoadedResource(String resource) {
+    loadedResources.add(resource);
+  }
+
+  public boolean isResourceLoaded(String resource) {
+    return loadedResources.contains(resource);
   }
 
   public Environment getEnvironment() {

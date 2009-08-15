@@ -16,24 +16,30 @@ import java.util.*;
 
 public class MapperAnnotationBuilder {
 
+  private Configuration configuration;
   private MapperBuilderAssistant assistant;
   private Class type;
 
-  public MapperAnnotationBuilder(Configuration config, Class type) {
+  public MapperAnnotationBuilder(Configuration configuration, Class type) {
     String resource = type.getName().replace('.', '/') + ".java (best guess)";
-    this.assistant = new MapperBuilderAssistant(config, resource);
+    this.assistant = new MapperBuilderAssistant(configuration, resource);
+    this.configuration = configuration;
     this.type = type;
   }
 
   public void parse() {
-    loadXmlResource();
-    assistant.setCurrentNamespace(type.getName());
-    parseCache();
-    parseCacheRef();
-    Method[] methods = type.getMethods();
-    for (Method method : methods) {
-      parseResultsAndConstructorArgs(method);
-      parseStatement(method);
+    String resource = type.toString();
+    if (!configuration.isResourceLoaded(resource)) {
+      configuration.addLoadedResource(resource);
+      loadXmlResource();
+      assistant.setCurrentNamespace(type.getName());
+      parseCache();
+      parseCacheRef();
+      Method[] methods = type.getMethods();
+      for (Method method : methods) {
+        parseResultsAndConstructorArgs(method);
+        parseStatement(method);
+      }
     }
   }
 
