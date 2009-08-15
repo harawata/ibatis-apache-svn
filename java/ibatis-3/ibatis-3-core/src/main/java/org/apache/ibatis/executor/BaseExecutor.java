@@ -103,6 +103,7 @@ public abstract class BaseExecutor implements Executor {
     cacheKey.update(ms.getId());
     cacheKey.update(offset);
     cacheKey.update(limit);
+    cacheKey.update(boundSql.getSql());
     List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
     if (parameterMappings.size() > 0 && parameterObject != null) {
       TypeHandlerRegistry typeHandlerRegistry = ms.getConfiguration().getTypeHandlerRegistry();
