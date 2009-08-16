@@ -1,0 +1,32 @@
+<div class="post">
+  <h1 class="title">Tips</h1>
+
+  <div class="entry">
+    <p><a name="verify">&nbsp;</a>It is good practice to verify the integrity of the downloaded files using the PGP or
+      MD5
+      signatures. The Apache HTTP Server project has a good page on
+      why you should verify releases <a href="http://httpd.apache.org/dev/verification.html">here</a>.
+    </p>
+
+    <p>The PGP signatures can be verified using PGP or GPG. First download the
+      <a href="http://www.apache.org/dist/ibatis/KEYS">KEYS</a>
+      as well as the asc signature file for the relevant distribution.
+      Make sure you get these files from the
+      <a href="http://www.apache.org/dist/ibatis/">main distribution directory</a>, rather than
+      from a mirror (the links above are correct in this manner). Then verify the signatures using
+      pgp or gpg.</p>
+
+    <p>Alternatively, you can verify the MD5 signature on the files. A unix program called
+      <code>md5</code>
+      or <code>md5sum</code> is included in many unix distributions. It is also available as
+      part of
+      <a href="http://www.gnu.org/software/textutils/textutils.html">GNU Textutils</a>.
+      Windows users can get binary md5 programs from
+      <a href="http://www.md5summer.org/">here</a>,
+      <a href="http://www.fourmilab.ch/md5/">here</a>,
+      <a href="http://www.pc-tools.net/win32/md5sums/">here</a>, or
+      <a href="http://www.slavasoft.com/fsum/">here</a>.
+    </p>
+
+  </div>
+</div>

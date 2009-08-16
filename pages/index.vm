@@ -1,0 +1,191 @@
+<html>
+<head>
+  <title>iBATIS Home</title>
+  <script type="text/javascript" src="popup.js">
+
+  </script>
+</head>
+
+<body>
+
+<!-- start content -->
+<div id="content">
+
+<!-- Temporary removal for iBATIS 3.0 Launch
+  <div class="post">
+    <h1 class="title">What is iBATIS?</h1>
+
+    <div class="entry">
+      <p>The
+        iBATIS Data Mapper framework makes it easier to use a database with Java and
+        .NET applications. iBATIS couples objects with stored procedures or SQL statements
+        using a XML descriptor. Simplicity is the biggest advantage of the iBATIS Data
+        Mapper over object relational mapping tools.</p>
+
+      <p>To use the iBATIS Data Mapper, you rely on
+        your own objects, XML, and SQL. There is little to learn that you don't already
+        know. With the iBATIS Data Mapper, you have the full power of both SQL and stored
+        procedures at your fingertips.</p>
+
+      <p>Are you interested but want to know what others have said? Well, first see the various
+        <a title="iBATIS Articles and Other Coverage"
+           href="http://opensource.atlassian.com/confluence/oss/display/IBATIS/Articles+and+other+coverage+of+iBATIS"
+           target="_new">articles and books</a>
+        that have covered iBATIS and read some of our
+        <a title="iBATIS Feedback"
+           href="http://opensource.atlassian.com/confluence/oss/display/IBATIS/Feedback+and+Experiences" target="_new">user
+          feedback</a>.
+        Then, learn how to simple it is to use the iBATIS Data Mapper by reading our
+        <a title="SQL Maps for Java Tutorial"
+           href="http://cvs.apache.org/dist/ibatis/ibatis.java/docs/iBATIS-SqlMaps-2-Tutorial_en.pdf">Java Tutorial</a>
+        or
+        <a
+            title="iBATIS.NET DataMapper Quick Start Guide"
+            href="http://opensource.atlassian.com/confluence/oss/display/IBATIS/Quick+Start+Guide" target="_new">.NET
+          Quick
+          Start Guide</a>!</p>
+
+    </div>
+  </div>
+-->
+
+  <div class="post">
+    <h1 class="title">iBATIS 3 for Java Released (BETA 1)</h1>
+
+    <p class="meta">
+      <small>Posted by Clinton Begin on Aug 8, 2008</small>
+    </p>
+    <div class="entry">
+      <p>A month ago iBATIS turned 7 years old, and while we're celebrating a little late, today we're
+	    happy to announce iBATIS 3 for Java. 
+	    iBATIS 3 is a complete rewrite from the ground up and thus represents the biggest change
+	    since the very first version of iBATIS released in 2002.  There are a lot of modern features that
+        take advantage of Java 5.  iBATIS 3 includes simplified design and some 
+        great new tools for helping you build great database driven applications.  iBATIS 3 carries forward
+        all of the principles that have made iBATIS popular.  There are still no required 3rd party dependencies,
+        it's simpler than ever, and yet far more powerful!  More information will come in the next few days to
+        help you get started.  
+		</p>
+		<h4>Introducing the iBATIS Schema Migration System</h4>
+		<p>
+		Along with iBATIS 3, we're happy to introduce the iBATIS Schema Migration System (or iBATIS Migrations for short).  
+		This powerful tool was inspired by Rails Migrations and similar tools like dbdeploy to enable good database
+		change management practices, help teams to work concurrently without stepping all over each other and avoid
+		having to centralize database changes.  Once you work this way, you'll find it very hard to work any other way again.
+ 		Developers and DBAs will appreciate it equally. 
+		</p>	
+        <p class="more"><a href="java.cgi">Get it all from the iBATIS for Java page &hellip;</a></p>
+    </div>
+  </div>
+
+  <div class="post">
+    <h1 class="title">Ibator Version 1.2.1 Released</h1>
+
+    <p class="meta">
+      <small>Posted by Jeff Butler on Dec 22, 2008</small>
+    </p>
+    <div class="entry">
+      <p>Ibator version 1.2.1 is released. This version fixes a couple of bugs
+        that manifested in the Eclipse plugin, enhances the Plugin API, and adds a couple of features
+        to the Eclipse plugin. Even though this is a relatively minor release, we recommend that
+        everyone upgrade. See the
+        <a href="http://ibatis.apache.org/docs/tools/ibator/whatsNew.html">What's New?</a>
+        section of the online documentation for full details.</p>
+
+      <p class="more"><a href="ibator.html">Get Ibator Here &hellip;</a></p>
+    </div>
+  </div>
+
+
+  <div class="post">
+    <h1 class="title">iBATIS.NET DataMapper 1.6.2 and DataAccess 1.9.2 BETA</h1>
+
+    <p class="meta">
+      <small>Posted by Gilles Bayon on Nov 1, 2008</small>
+    </p>
+    <div class="entry">
+      <p>The iBATIS.NET team is proud to announce that the BETA release of DataAccess V1.9.2 and DataMapper
+        V1.6.2 are now available.</p>
+
+      <p>This release includes bug fixes and enhancements.</p>
+
+      <p>Vote to General Availability status is expecting in two weeks. Thanks once again for your feedback. Enjoy!</p>
+
+      <p/>
+
+      <p class="more"><a href="dotnet.cgi">Download iBATIS.NET DataMapper &hellip;</a></p>
+    </div>
+  </div>
+
+  <div class="post">
+    <h1 class="title">iBATIS 2.3.4 GA Released.</h1>
+
+    <p class="meta">
+      <small>Posted by Clinton Begin Sep 19, 2008</small>
+    </p>
+    <div class="entry">
+      <p>After releasing 2.3.3 some bugs were discovered. We quickly released a 2.3.4 fix release. After a
+        couple weeks of no negative reports we are promoting the release to GA.</p>
+
+      <p class="more"><a href="java.cgi">Get the 2.3.4 GA from the Java downloads page now! &hellip;</a></p>
+    </div>
+  </div>
+
+</div>
+<!-- end content -->
+
+
+<!-- start sidebar -->
+<div id="sidebar">
+  <ul>
+    <li>
+      <h2>1000 words</h2>
+      <ul>
+        <li><a style="padding-left:0;background:none" href="#" onClick="jkpopimage('images/flow.jpg', 550, 350, '1000 words.'); return false"><img alt="iBATIS Data Mapper process" src="images/flow_sm.jpg"/></a></li>
+      </ul>
+    </li>
+    <li>
+      <h2>Hype</h2>
+      <ul>
+        <li><a target="_blank" href="http://opensource.atlassian.com/confluence/oss/pages/viewpage.action?pageId=25">Who's
+          using iBATIS?</a></li>
+        <li><a target="_blank"
+               href="http://opensource.atlassian.com/confluence/oss/display/IBATIS/Articles+and+other+coverage+of+iBATIS">Articles
+          and Books</a></li>
+        <li><a target="_blank"
+               href="http://opensource.atlassian.com/confluence/oss/display/IBATIS/Feedback+and+Experiences">User
+          Feedback</a></li>
+      </ul>
+    </li>
+    <li>
+      <h2>Community</h2>
+      <ul>
+        <li><b>Community</b></li>
+        <li><a title="iBATIS Wiki" href="http://opensource.atlassian.com/confluence/oss/display/IBATIS/Home"
+               target="_new">Wiki</a></li>
+        <li><a title="iBATIS FAQ"
+               href="http://opensource.atlassian.com/confluence/oss/display/IBATIS/Frequently+Asked+Questions"
+               target="_new">FAQ</a></li>
+        <li><a title="Subversion"
+               href="http://svn.apache.org/repos/asf/ibatis/trunk"
+               target="_new">Subversion</a>
+          (<a style="background:none;padding-left:0"
+              title="FishEye"
+              href="http://fisheye6.cenqua.com/viewrep/ibatis"
+              target="_new">FishEye</a>)
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h2>Archives</h2>
+      <ul>
+        <li><a href="archive.html">News Archive</a></li>
+        <li><a href="events.html">Past Events</a></li>
+      </ul>
+    </li>
+  </ul>
+</div>
+<!-- end sidebar -->
+
+</body>
+</html>
